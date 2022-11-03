@@ -1,0 +1,80 @@
+{
+	"pages": [
+		{
+			"path": "pages/cl/index",
+			"style": {
+				"navigationBarTitleText": "彩铃"
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		}
+	],
+	"subPackages": [
+		{
+			"root": "pagesCommon",
+			"pages": [
+				{
+					"path": "list/index",
+					"style": {
+						"navigationBarTitleText": "公共包页面示例",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "pagesSpcl",
+			"pages": [
+				{
+					"path": "test/test",
+					"style": {
+						"navigationBarTitleText": "视频彩铃包页面示例",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		},
+		{
+			"root": "pagesYpcl",
+			"pages": [
+				{
+					"path": "list/index",
+					"style": {
+						"navigationBarTitleText": "音频包页面示例",
+						"enablePullDownRefresh": false
+					}
+				}
+			]
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#909399",
+		"selectedColor": "#303133",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [
+			{
+				"pagePath": "pages/cl/index",
+				"iconPath": "static/tabbar/component.png",
+				"selectedIconPath": "static/tabbar/component_select.png",
+				"text": "彩铃"
+			},
+			{
+				"pagePath": "pages/mine/index",
+				"iconPath": "static/tabbar/template.png",
+				"selectedIconPath": "static/tabbar/template_select.png",
+				"text": "我的"
+			}
+		]
+	}
+}
