@@ -1,14 +1,6 @@
 <template>
   <view class="content">
-    <image
-      class="logo"
-      src="/static/logo.png"
-    />
-    <view>
-      <text class="title">
-        {{ title }}
-      </text>
-    </view>
+    我的页面
     <!-- 自定义Tabbar -->
     <custom-tabbar
       :tab-bar="tabBar"
@@ -18,27 +10,18 @@
 </template>
 
 <script>
-import testService from "../../api/test";
-import CustomTabbar from "../../components/CustomTabbar/CustomTabbar.vue";
+import CustomTabbar from "@/components/CustomTabbar/CustomTabbar.vue";
 export default {
   name: "Index",
   components: { CustomTabbar },
   data () {
     return {
-      title: "Hello",
       tabBar: this.$store.getters.tabbarList,
     };
   },
   onLoad () {
   },
   methods: {
-    getAi () {
-      testService.aiFunction().then(
-        res => {
-
-        },
-      );
-    },
   },
 };
 </script>

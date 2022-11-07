@@ -3,7 +3,9 @@
 		{
 			"path": "pages/cl/index",
 			"style": {
-				"navigationBarTitleText": "彩铃"
+				"navigationBarTitleText": "彩铃",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{
