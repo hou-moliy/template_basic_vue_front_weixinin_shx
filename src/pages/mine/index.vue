@@ -10,10 +10,8 @@
 </template>
 
 <script>
-import CustomTabbar from "@/components/CustomTabbar/CustomTabbar.vue";
 export default {
   name: "Index",
-  components: { CustomTabbar },
   data () {
     return {
       tabBar: this.$store.getters.tabbarList,
@@ -22,6 +20,7 @@ export default {
   onLoad () {
   },
   methods: {
+
   },
 };
 </script>

@@ -104,7 +104,6 @@ export default {
     const pages = getCurrentPages();
     // 页面栈中的最后一个即为项为当前页面，route属性为页面路径
     this.pageUrl = pages[pages.length - 1].route;
-    // if (this.tabBar && this.tabBar.list && this.tabBar.list.length > 0) this.tbs_SwitchTab(0);
   },
   methods: {
     tbs_SwitchTab (item, i) {
