@@ -19,7 +19,11 @@
           show-scrollbar="false"
           :scroll-left="scrollLeft"
           scroll-with-animation
-          :class="['swiper-nav', tabList.length == 1 ? 'empty-nav' : '',`swiper-nav-${scrollNavStation}`]"
+          :class="[
+            'swiper-nav',
+            tabList.length == 1 ? 'empty-nav' : '',
+            `swiper-nav-${scrollNavStation}`,
+          ]"
           @scroll="scrollNav"
         >
           <view
@@ -61,7 +65,7 @@
       </view>
     </view>
     <!-- 内容组件区域 -->
-    <view :style="{'margin-top':`-${navHeight}px`}">
+    <view :style="{ 'margin-top': `-${navHeight}px` }">
       <swiper
         class="swiper"
         touchable="false"
@@ -110,422 +114,10 @@
             0030 发现页 内嵌web-view 可配置h5
             0031 新热门专题、可跳转新专题模块
             0032 赛事预约 -->
-
-            <view
-              v-for="(pageConfig, pageConfigIndex) in swipeItem.pageConfig"
-              :key="pageConfig.moduleFlag"
-            >
-              <image
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfigIndex === 0 &&
-                    pageConfig.moduleFlag !== '0001'
-                "
-                class="spcl_banner_bg_image"
-                :src="swipeItem.headerBgUrl"
-              />
-
-              <view v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0001'
-                ">
-                <find-banner-swiper
-                  :params="pageConfig.configV2"
-                  @buryBannerId="buryBannerId"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </view>
-
-              <!-- icon图标展示页面 -->
-              <view
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0002'
-                "
-                :style="{ margin: '12rpx 20rpx 0 20rpx' }"
-              >
-                <find-icon-list
-                  :params="pageConfig.configV2"
-                  @buryIconListId="buryIconListId"
-                  @openLoginPopup="openLoginPopup"
-                  @open="open"
-                />
-              </view>
-              <!-- 广告位轮播 -->
-              <view v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0021'
-                ">
-                <findAdvertise
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </view>
-
-              <!-- 最新直播 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0003'
-                "
-                margin="50rpx 0 30rpx 0"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-new-live
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 热门推荐 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0004'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-ad-structure
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-              <!-- 可配置跳转 新热门专题 -->
-              <find-block
-                v-if="pageConfig.moduleFlag === '0031'"
-                :padding="'50rpx 4% 30rpx 4%'"
-                :params="pageConfig.configV2"
-                :block-padding="0"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-new-hot-topic
-                  :params="pageConfig.configV2"
-                  :page-load-status="pageLoadStatus"
-                  style="width: 100%"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-              <!-- 精选海报 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0005'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-image-block
-                  ref="findMiguPic3"
-                  :params="pageConfig.configV2"
-                  :is-login="isLogin"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 辽宁特惠 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0006'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-ad-structure
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 风景 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0007'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <view class="scenery-out-wrap">
-                  <find-scenery-recommend
-                    :params="pageConfig.configV2"
-                    :page-load-status="pageLoadStatus"
-                    @openLoginPopup="openLoginPopup"
-                  />
-                </view>
-              </find-block>
-              <!-- 赛事预约 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0032' &&
-                    newGamesList.length
-                "
-                margin="50rpx 0 30rpx 0"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-choiceness-games
-                  v-if="newGamesList.length"
-                  :params="pageConfig.configV2"
-                  :off-set-num="offSetNum"
-                  :new-games-list="newGamesList"
-                  @openLoginPopup="openLoginPopup"
-                  @exitSubGame="exitSubGame"
-                  @subGame="subGame"
-                />
-              </find-block>
-              <!-- 咪咕视频彩铃样式   左右滑动 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0023'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <view class="scenery-out-wrap">
-                  <find-migu-recommend
-                    :params="pageConfig.configV2"
-                    :is-login="loginFlag"
-                    @openLoginPopup="openLoginPopup"
-                  />
-                </view>
-              </find-block>
-
-              <!-- 音频专题 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0008'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-ad-structure
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 你会使用5G助手么 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0009'
-                "
-                :margin="'50rpx 0 30rpx 0'"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-ad-structure
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-              <!-- 直播中的订阅按钮 -->
-              <view
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0010'
-                "
-                :style="{ margin: '20rpx 0 0 0' }"
-              >
-                <find-live-subscribe
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </view>
-              <!-- 直播 -->
-              <view
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0011'
-                "
-                class="live-tab-wrap"
-              >
-                <find-live-water-falls
-                  ref="findLiveWaterFalls"
-                  :params="pageConfig.configV2"
-                  :show-more-flag="
-                    pageConfigIndex != swipeItem.pageConfig.length - 1 &&
-                      pageConfig.configV2.pageName == 'recommend_page'
-                  "
-                  @openLoginPopup="openLoginPopup"
-                />
-              </view>
-
-              <!-- 视频彩铃 -->
-              <view
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0013'
-                "
-                style="margin-top: 38rpx"
-              >
-                <cxVideo
-                  :is-login="loginFlag"
-                  :special-news="specialNews"
-                  :is-load-status="isLoadStatus"
-                  :label-list="labelList"
-                  :iop-list="iopList"
-                  :params="swipeItem.pageConfig"
-                  @getIopList="getIopList"
-                  @refreshList="refreshList"
-                  @refreshLabelList="refreshLabelList"
-                  @refreshMoreList="refreshMoreList"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </view>
-              <!-- 内嵌 web-view -->
-              <view
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0030'
-                "
-                style="margin-top: 38rpx"
-              >
-                <find-web-view :params="pageConfig.configV2" />
-              </view>
-              <!-- 音频彩铃 -->
-              <view
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0014'
-                "
-                style="margin-top: 38rpx"
-              >
-                <cxMusic
-                  :label="cxMusicLabel"
-                  :home="this"
-                  :music-list-init="cxMusicList"
-                  :current-label-tab="currentLabelTab"
-                  :is-leave-current-page="isLeaveCurrentPage"
-                  @open="open"
-                  @swiperChange="swiperChildChange"
-                  @login="login"
-                />
-                <uni-load-more
-                  class="loadingicon"
-                  icon-size="20"
-                  icon-type="circle"
-                  :status="isLoadMoreStatus"
-                />
-              </view>
-
-              <!-- 咪咕视频 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0015'
-                "
-                margin="58rpx 0 30rpx 0"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-migu-video-falls
-                  ref="findMiguVideoFalls"
-                  margin="40rpx"
-                  :is-login="loginFlag"
-                  :params="pageConfig.configV2"
-                  :show-more-flag="
-                    pageConfigIndex != swipeItem.pageConfig.length - 1 &&
-                      pageConfig.configV2.pageName == 'recommend_page'
-                  "
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 咪咕图片-咪咕视频 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0016'
-                "
-                margin="50rpx 0 30rpx 0"
-                :params="pageConfig.configV2"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-image-falls
-                  ref="findMiguPic"
-                  :params="pageConfig.configV2"
-                  :is-login="isLogin"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-              <!-- 咪咕圈圈 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0017'
-                "
-                :params="pageConfig.configV2"
-                margin="58rpx 0 30rpx 0"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-image-falls
-                  ref="findMiguPic2"
-                  :params="pageConfig.configV2"
-                  :is-login="isLogin"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-              <!-- 今日推荐 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0018'
-                "
-                :params="pageConfig.configV2"
-                margin="58rpx 0 30rpx 0"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-ad-structure
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 精选权益 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0019'
-                "
-                :params="pageConfig.configV2"
-                margin="50rpx 0 30rpx 0"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-ad-structure
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-
-              <!-- 全部视频 -->
-              <find-block
-                v-if="
-                  pageName == swipeItem.pageName &&
-                    pageConfig.moduleFlag === '0020'
-                "
-                :params="pageConfig.configV2"
-                margin="50rpx 0 30rpx 0"
-                @openLoginPopup="openLoginPopup"
-              >
-                <find-short-video-block
-                  :params="pageConfig.configV2"
-                  @openLoginPopup="openLoginPopup"
-                />
-              </find-block>
-            </view>
+            <eb-config-container
+              ref="EbConfig"
+              :page-config-list="swipeItem.pageConfig"
+            />
           </scroll-view>
         </swiper-item>
       </swiper>
@@ -541,9 +133,11 @@
 <script>
 import FindService from "@/api/find/tabAndbanner";
 import Util from "@/utils/tools.js";
+import ebConfigContainer from "../../components/eb-comp/eb-config-container/eb-config-container.vue";
 
 export default {
   name: "Index",
+  components: { ebConfigContainer },
   data () {
     return {
       tabBar: this.$store.getters.tabbarList, // 底部导航栏
@@ -648,17 +242,17 @@ export default {
   methods: {
     // 跨页面通信监听
     dispatchPageEvent () {
-      uni.$on("changeTabByMore", (data) => {
+      uni.$on("changeTabByMore", data => {
         this.changeTabByMore(data);
       });
-      uni.$on("changeTabByMore", (data) => {
+      uni.$on("changeTabByMore", data => {
         this.changeTabByMore(data);
       });
     },
     // 初始化页面样式宽高等
     getPageWidthHeight () {
       uni.getSystemInfo({
-        success: (res) => {
+        success: res => {
           this.navHeight = res.statusBarHeight;
           this.windowHeight = res.windowHeight;
           this.windowsWidth = res.windowWidth;
@@ -692,11 +286,11 @@ export default {
         if (!this.pageName) {
           this.pageName = this.tabList[0].pageName;
           this.currentTab = this.tabList.filter(
-            (item) => item.pageName === this.pageName,
+            item => item.pageName === this.pageName,
           )[0].sort;
         } else {
           this.currentTab = this.tabList.filter(
-            (item) => item.pageName === this.pageName,
+            item => item.pageName === this.pageName,
           )[0].sort;
         }
         this.swiperTab = this.currentTab ? this.currentTab - 1 : 0;
@@ -712,7 +306,7 @@ export default {
           .in(this)
           .selectAll(".tab-item")
           .boundingClientRect()
-          .exec((data) => {
+          .exec(data => {
             if (data[0][this.tabList.length - 1].right > this.windowsWidth) {
               this.isOutWindow = true;
             }
@@ -724,9 +318,13 @@ export default {
     },
     scrollNavFun (event) {
       this.scrollInfo = event.detail;
-      if (event.detail.scrollLeft <= 10) { // 滑动到了最左端
+      if (event.detail.scrollLeft <= 10) {
+        // 滑动到了最左端
         this.scrollNavStation = "left";
-      } else if (event.detail.scrollWidth <= (event.detail.scrollLeft + this.rpxTopx(730))) {
+      } else if (
+        event.detail.scrollWidth <=
+        event.detail.scrollLeft + this.rpxTopx(730)
+      ) {
         this.scrollNavStation = "right";
       } else {
         this.scrollNavStation = "center";
@@ -753,7 +351,7 @@ export default {
     },
     // 点击查看更多按钮事件
     changeTabByMore (pageName) {
-      const current = this.tabList.filter((e) => {
+      const current = this.tabList.filter(e => {
         return pageName === e.pageName;
       })[0].sort;
       this.swiperTab = current - 1;
@@ -767,7 +365,7 @@ export default {
         .in(this)
         .selectAll(".tab-item")
         .boundingClientRect()
-        .exec((data) => {
+        .exec(data => {
           const width = data[0][current].width;
           const margin = 80;
           let newLeft = 0;
@@ -789,19 +387,13 @@ export default {
     },
     // 滚动到底部监听
     scrolltolower () {
-      // 最外层滚动到底部
-      if (this.$refs.findLiveWaterFalls) {
-        this.$refs.findLiveWaterFalls[0].onScollBottom();
-      }
-      if (this.$refs.findMiguVideoFalls) {
-        this.$refs.findMiguVideoFalls[0].onScollBottom();
-      }
-
-      if (this.buryKey[this.pageName].page == "sp_pv") {
-        this.onReachScollBottom();
-      } else if (this.buryKey[this.pageName].page == "yp_pv") {
-        this.onYpReachScollBottom();
-      }
+      console.log(this.$refs, "ppp");
+      console.log(this.$refs.EbConfig, this.pageName);
+      this.$nextTick(() => {
+        if (this.$refs.EbConfig) {
+          this.$refs.EbConfig[this.swiperTab].onScollBottom();
+        }
+      });
     },
     // 子组件打开登录弹窗
     openLoginPopup () {
