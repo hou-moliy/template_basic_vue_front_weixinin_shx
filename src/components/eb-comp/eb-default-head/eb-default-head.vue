@@ -1,34 +1,34 @@
 <template>
-  <view
-    class="block"
-    :style="{ padding: blockPadding }"
-  >
-    <view
-      class="block-box"
-      :style="{ margin, padding }"
-    >
+  <view class="block" :style="{ padding: blockPadding }">
+    <view class="block-box" :style="{ margin, padding }">
       <view class="block-box__title">
         <view>
           <img
-            v-if="params.tagIcon !== '' && params.pageName === 'ln_spcl_index'"
+            v-if="
+              pageConfig.tagIcon !== '' &&
+              pageConfig.pageName === 'ln_spcl_index'
+            "
             class="spcl-icon"
             :src="params.tagIcon"
-          >
+          />
         </view>
-        <span v-if="params.showTitleFlag">{{ params.title }}</span>
+        <span v-if="pageConfig.showTitleFlag">{{ pageConfig.title }}</span>
         <view>
           <img
-            v-if="params.tagIcon !== '' && params.pageName !== 'ln_spcl_index'"
-            :src="params.tagIcon"
-          >
+            v-if="
+              pageConfig.tagIcon !== '' &&
+              pageConfig.pageName !== 'ln_spcl_index'
+            "
+            :src="pageConfig.tagIcon"
+          />
         </view>
       </view>
       <view
-        v-if="params.showMoreFlag"
+        v-if="pageConfig.showMoreFlag"
         class="block-box__button"
         @click="jumpTo"
       >
-        {{ params.moreTitle?params.moreTitle:'查看更多' }}
+        {{ pageConfig.moreTitle ? pageConfig.moreTitle : "查看更多" }}
       </view>
     </view>
     <!-- 组件 -->
@@ -68,7 +68,7 @@ export default {
       default: "0rpx 34rpx",
     },
   },
-  data () {
+  data() {
     // 这里存放数据
     return {
       staticImgs: this.$staticImgs,
@@ -78,7 +78,7 @@ export default {
   computed: {},
   watch: {
     params: {
-      handler (n, o) {
+      handler(n, o) {
         console.log("n", n);
         console.log("o", o);
       },
@@ -87,13 +87,16 @@ export default {
     },
   },
   // 生命周期 - 创建完成（可以访问当前this实例）
-  created () { },
+  created() {},
   // 生命周期 - 挂载完成（可以访问DOM元素）
-  mounted () { },
+  mounted() {},
   // 方法集合
   methods: {
-    async jumpTo () {
-      await this.$store.dispatch("getCustomorderList", `seeMore_rec_${this.pageConfig.moduleId}`);
+    async jumpTo() {
+      await this.$store.dispatch(
+        "getCustomorderList",
+        `seeMore_rec_${this.pageConfig.moduleId}`,
+      );
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");
         return;
@@ -118,7 +121,7 @@ export default {
       }
     },
     // 处理不同栏目下查看更多的埋点
-    handleAnalysis () {
+    handleAnalysis() {
       const { pageName, moduleId } = this.pageConfig;
       switch (pageName) {
         case "recommend_page": // 推荐

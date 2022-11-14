@@ -4,9 +4,11 @@
       v-for="(pageConfig, pageConfigIndex) in pageConfigList"
       :key="pageConfigIndex"
     >
-      <view v-if="
+      <view
+        v-if="
           pageConfig.moduleFlag === '0001' && pageConfig.configV2.isShow == '1'
-        ">
+        "
+      >
         <eb-background-banner
           :page-config="pageConfig.configV2"
           @buryBannerId="buryBannerId"
@@ -24,9 +26,11 @@
           @open="open"
         />
       </view>
-      <view v-if="
+      <view
+        v-if="
           pageConfig.moduleFlag === '0021' && pageConfig.configV2.isShow == '1'
-        ">
+        "
+      >
         <eb-advertise
           :page-config="pageConfig.configV2"
           @openLoginPopup="openLoginPopup"
@@ -55,7 +59,7 @@
         :block-padding="0"
         @openLoginPopup="openLoginPopup"
       >
-        <eb-topic-roll-transverse
+        <eb-ad-roll-transverse
           :page-config="pageConfig.configV2"
           :page-load-status="pageLoadStatus"
           style="width: 100%"
@@ -273,16 +277,16 @@ export default {
       default: () => [],
     },
   },
-  data () {
+  data() {
     return {};
   },
-  created () { },
-  mounted () {
+  created() {},
+  mounted() {
     console.log("一样一样");
   },
   methods: {
     // 滚动到底部监听
-    onScollBottom () {
+    onScollBottom() {
       this.$nextTick(() => {
         console.log(this.$refs, "lll");
       });
@@ -294,7 +298,7 @@ export default {
       }
     },
     // 子组件打开登录弹窗
-    openLoginPopup () {
+    openLoginPopup() {
       console.log("登录弹窗");
       // this.$refs.popup_login.open();
     },

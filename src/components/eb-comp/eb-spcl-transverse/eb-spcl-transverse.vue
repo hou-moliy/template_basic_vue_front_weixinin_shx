@@ -1,17 +1,7 @@
 <template>
-  <view
-    v-if="wfList.length"
-    class="scenery-wrap"
-  >
-    <scroll-view
-      :scroll-x="true"
-      class="items-box"
-    >
-      <view
-        v-for="(item, index) in wfList"
-        :key="index"
-        class="item-wrap"
-      >
+  <view v-if="wfList.length" class="scenery-wrap">
+    <scroll-view :scroll-x="true" class="items-box">
+      <view v-for="(item, index) in wfList" :key="index" class="item-wrap">
         <video-item
           :item="item"
           :radius="24"
@@ -40,14 +30,14 @@ export default {
     pageConfig: {
       required: true,
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     pageLoadStatus: {
       type: Boolean,
       default: false,
     },
   },
-  data () {
+  data() {
     return {
       wfList: [],
       moduleId: "",
@@ -55,21 +45,21 @@ export default {
     };
   },
   watch: {
-    pageLoadStatus (value) {
+    pageLoadStatus(value) {
       console.log(value, "页面切换状态");
       if (value) {
         this.getWfList();
       }
     },
   },
-  created () {
+  created() {
     this.getWfList();
   },
   methods: {
     programaAnalysis,
     // 请求列表数据
-    async getWfList () {
-      this.moduleId = this.params.moduleId;
+    async getWfList() {
+      this.moduleId = this.pageConfig.moduleId;
       if (!this.moduleId) return;
       const params = {
         labelId: this.moduleId,
@@ -82,7 +72,7 @@ export default {
       });
     },
     // 分享
-    shareVideo ({ ringId, target }) {
+    shareVideo({ ringId, target }) {
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
       } else {
@@ -103,7 +93,7 @@ export default {
         });
       }
     },
-    handleTips ({ opType }) {
+    handleTips({ opType }) {
       if (opType === 1) {
         this.$tips("点赞成功");
       } else if (opType === 0) {
@@ -112,7 +102,7 @@ export default {
       this.getWfList();
     },
     // 点赞
-    giveLikes ({ ringId, target, opType }) {
+    giveLikes({ ringId, target, opType }) {
       // opType 1点赞，0取消
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
@@ -135,7 +125,7 @@ export default {
       };
       this.handleSpclUserBehavior(params);
     },
-    handleSpclUserBehavior (params) {
+    handleSpclUserBehavior(params) {
       cxVideoService.getSpclUserBehavior(params).then(({ data: res }) => {
         this.isClickLike = false;
         if (res.code === 200) {
