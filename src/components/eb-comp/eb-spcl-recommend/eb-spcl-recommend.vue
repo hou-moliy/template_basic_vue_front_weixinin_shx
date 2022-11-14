@@ -20,70 +20,72 @@
       >
         <view
           v-for="(item, index) in dataList"
-          v-if="index % 2 === 0"
           :key="index"
         >
-          <!-- 元素 -->
-          <view class="video-box-new more-new-item-column">
-            <view
-              :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
-              :data-topic="'moreVideo'"
-              @click="$emit('goToPlayVideo', $event, dataList)"
-            >
-              <view class="img-box-more">
-                <image
-                  class="new-img"
-                  :src="
-                    item.coverUrl
-                      ? item.coverUrl
-                      : item.openVCoverUrl
-                        ? item.openVCoverUrl
-                        : item.openHCoverUrl
-                  "
-                  mode="aspectFill"
-                />
-                <view class="morel-new-title">
-                  <view class="morel-new-titleText">
-                    {{ item.ringName }}
+          <template v-if="index % 2 === 0">
+            <!-- 元素 -->
+            <view class="video-box-new more-new-item-column">
+              <view
+                :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
+                :data-topic="'moreVideo'"
+                @click="$emit('goToPlayVideo', $event, dataList)"
+              >
+                <view class="img-box-more">
+                  <image
+                    class="new-img"
+                    :src="
+                      item.coverUrl
+                        ? item.coverUrl
+                        : item.openVCoverUrl
+                          ? item.openVCoverUrl
+                          : item.openHCoverUrl
+                    "
+                    mode="aspectFill"
+                  />
+                  <view class="morel-new-title">
+                    <view class="morel-new-titleText">
+                      {{ item.ringName }}
+                    </view>
                   </view>
                 </view>
               </view>
             </view>
-          </view>
+          </template>
         </view>
       </view>
       <view class="waterfall-column">
         <view
           v-for="(item, index) in dataList"
-          v-if="index % 2 !== 0"
           :key="index"
         >
-          <view class="video-box-new more-new-item-column">
-            <view
-              :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
-              :data-topic="'moreVideo'"
-              @click="$emit('goToPlayVideo', $event, dataList)"
-            >
-              <view class="img-box-more">
-                <image
-                  class="new-img"
-                  :src="
-                    item.coverUrl
-                      ? item.coverUrl
-                      : item.openVCoverUrl
-                        ? item.openVCoverUrl
-                        : item.openHCoverUrl
-                  "
-                  mode="aspectFill"
-                />
-                <view class="morel-new-title">
-                  <view class="morel-new-titleText">
-                    {{ item.ringName }}
+          <template v-if="index % 2 !== 0">
+            <view class="video-box-new more-new-item-column">
+              <view
+                :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
+                :data-topic="'moreVideo'"
+                @click="$emit('goToPlayVideo', $event, dataList)"
+              >
+                <view class="img-box-more">
+                  <image
+                    class="new-img"
+                    :src="
+                      item.coverUrl
+                        ? item.coverUrl
+                        : item.openVCoverUrl
+                          ? item.openVCoverUrl
+                          : item.openHCoverUrl
+                    "
+                    mode="aspectFill"
+                  />
+                  <view class="morel-new-title">
+                    <view class="morel-new-titleText">
+                      {{ item.ringName }}
+                    </view>
                   </view>
                 </view>
               </view>
             </view>
-          </view>
+          </template>
         </view>
       </view>
     </waterfall>

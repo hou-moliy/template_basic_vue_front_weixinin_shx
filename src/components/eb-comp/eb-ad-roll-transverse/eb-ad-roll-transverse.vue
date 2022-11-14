@@ -31,13 +31,9 @@ import adService from "@/api/ad/index.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       default: () => { },
-    },
-    topicNum: {
-      type: Number,
-      default: 6,
     },
   },
   data () {
@@ -50,11 +46,10 @@ export default {
   },
   methods: {
     // 使用运营位接口 获取专题列表
-
     getAdLIst () {
       const params = {
-        pageName: this.params.pageName,
-        code: this.params.moduleId,
+        pageName: this.pageConfig.pageName,
+        code: this.pageConfig.moduleId,
       };
       adService.getAdvertisement(params).then((res) => {
         console.log("test-22", res);
@@ -64,7 +59,7 @@ export default {
         }
       });
     },
-    // 去专题详情
+    // 去详情
     goToTopicDetail (item) {
       console.log("item---8-22", item);
       navigateToAny(item);

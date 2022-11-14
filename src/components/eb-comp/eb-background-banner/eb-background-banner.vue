@@ -1,4 +1,3 @@
-<!--test.vue-->
 <template>
   <view>
     <view class="spcl_music_banner">
@@ -43,7 +42,7 @@ import tabAndbannerService from "@/api/find/tabAndbanner.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       default: () => { },
     },
@@ -66,8 +65,7 @@ export default {
 
   methods: {
     getBannerByPageName () {
-      const { pageName } = this.params;
-
+      const { pageName } = this.pageConfig;
       // 获取bannner
       tabAndbannerService
         .getBanner({

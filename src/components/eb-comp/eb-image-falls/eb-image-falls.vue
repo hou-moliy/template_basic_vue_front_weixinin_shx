@@ -95,7 +95,7 @@ export default {
     operateItem,
   },
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       default: () => { },
     },
@@ -127,7 +127,7 @@ export default {
     },
     getWfList () { // flag，true表示刷新或首次加载,false表示加载更多
       const wfParams = this.wfParams;
-      wfParams.moduleId = this.params.moduleId;
+      wfParams.moduleId = this.pageConfig.moduleId;
       pictureService.getPictureList(wfParams).then(({
         data: res,
       }) => {

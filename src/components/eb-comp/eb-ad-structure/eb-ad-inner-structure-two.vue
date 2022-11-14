@@ -162,12 +162,11 @@ export default {
   components: {},
   props: {
     // 接口传入参数
-    params: {
+    pageConfig: {
       type: Object,
       requrie: true,
       default: () => { },
     },
-    //
     isShowBtn: {
       type: Number,
       default: 1,
@@ -190,8 +189,8 @@ export default {
   methods: {
     getAdLIst () {
       const params = {
-        pageName: this.params.pageName,
-        code: this.params.moduleId,
+        pageName: this.pageConfig.pageName,
+        code: this.pageConfig.moduleId,
       };
       adService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
@@ -201,7 +200,7 @@ export default {
     },
     async bannerClickEvent (item) {
       // 埋点
-      programaAnalysis(this.params, item.id);
+      programaAnalysis(this.pageConfig, item.id);
       await this.$store.dispatch("getCustomorderList", `runAd_${item.id}`);
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");

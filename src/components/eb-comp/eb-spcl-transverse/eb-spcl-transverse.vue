@@ -1,5 +1,4 @@
 <template>
-  <!-- 风景组件 -->
   <view
     v-if="wfList.length"
     class="scenery-wrap"
@@ -38,10 +37,15 @@ export default {
     videoItem,
   },
   props: {
-    params: {
+    pageConfig: {
       required: true,
+      type: Object,
+      default: () => { },
     },
-    pageLoadStatus: false,
+    pageLoadStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {

@@ -106,8 +106,10 @@ export default {
     operateItem,
   },
   props: {
-    params: {
+    pageConfig: {
       required: true,
+      type: Object,
+      default: () => { },
     },
     isLogin: {
       type: Boolean,
@@ -133,17 +135,7 @@ export default {
       miguVideoList: [],
     };
   },
-
   computed: {
-    // miguVideoList() {
-    //   return this.$store.state.miguVideo.miguVideoList;
-    // },
-    // isLoadStatus() {
-    //   return this.$store.state.miguVideo.isLoadStatus;
-    // },
-    // total() {
-    //   return this.$store.state.miguVideo.total;
-    // },
   },
   watch: {
     params: {
@@ -167,6 +159,7 @@ export default {
     this.getWfList();
   },
   mounted () { },
+  // eslint-disable-next-line no-dupe-keys
   beforeDestroy () {
     this.$store.commit("miguVideo/SET_MIGU_VIDEO_LIST", []);
   },

@@ -219,15 +219,6 @@ export default {
 }
 
 .swiper-item-content {
-  // width: 446rpx;
-  // height: 824rpx;
-  // animation: to-big 0.5s;
-
-  // image {
-  // 	width: 446rpx;
-  // 	height: 824rpx;
-  // 	border-radius: 20rpx;
-  // }
   transform: scale(1.13);
 }
 
@@ -239,14 +230,6 @@ export default {
 
 .swiper-item-content-side {
   transform: scale(1);
-  // width: 400rpx;
-  // height: 716rpx;
-
-  // image {
-  // 	width: 400rpx;
-  // 	height: 716rpx;
-  // 	border-radius: 20rpx;
-  // }
 }
 
 .oper-btn-box {
@@ -258,7 +241,6 @@ export default {
 .oper-btn {
   width: 445rpx;
   height: 78rpx;
-  // background: linear-gradient(90deg, #FF6F50, #FF008C);
   border-radius: 40rpx;
   font-size: 36rpx;
   font-weight: bold;

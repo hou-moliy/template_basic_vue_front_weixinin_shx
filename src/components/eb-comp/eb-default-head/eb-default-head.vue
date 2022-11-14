@@ -46,7 +46,7 @@ export default {
   props: {
     // 当前模块的数据
     // 包括 blockTitle 标题  tagIcon 标题图片  navitgateUrl 查看更多跳转地址 showMoreFlag 查看更多按钮控制 showTitleFlag 标题控制 moduleId
-    params: {
+    pageConfig: {
       type: Object,
       default: () => {
         return {};
@@ -93,7 +93,7 @@ export default {
   // 方法集合
   methods: {
     async jumpTo () {
-      await this.$store.dispatch("getCustomorderList", `seeMore_rec_${this.params.moduleId}`);
+      await this.$store.dispatch("getCustomorderList", `seeMore_rec_${this.pageConfig.moduleId}`);
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");
         return;
@@ -101,25 +101,25 @@ export default {
       if (this.$store.state.offlinePopup.offlineFlag) {
         return;
       }
-      if (this.params.eventType === 5) {
+      if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
-        this.$parent.changeTabByMore(this.params.eventUrl);
+        this.$parent.changeTabByMore(this.pageConfig.eventUrl);
       } else {
         this.handleAnalysis();
-        uni.setStorageSync("moreData", this.params);
-        let params = this.params.eventUrl;
+        uni.setStorageSync("moreData", this.pageConfig);
+        let params = this.pageConfig.eventUrl;
         // 请统一使用eventUrl字段作为跳转路径
-        if (this.params.eventUrl.indexOf("?") > -1) {
-          params = `${this.params.eventUrl}&moduleId=${this.params.moduleId}&pageName=${this.params.title}&showDirection=V`;
+        if (this.pageConfig.eventUrl.indexOf("?") > -1) {
+          params = `${this.pageConfig.eventUrl}&moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
         } else {
-          params = `${this.params.eventUrl}?moduleId=${this.params.moduleId}&pageName=${this.params.title}&showDirection=V`;
+          params = `${this.pageConfig.eventUrl}?moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
         }
         navigateToAny(params);
       }
     },
     // 处理不同栏目下查看更多的埋点
     handleAnalysis () {
-      const { pageName, moduleId } = this.params;
+      const { pageName, moduleId } = this.pageConfig;
       switch (pageName) {
         case "recommend_page": // 推荐
           this.$analysis.dispatch("fxtj_id_ckgd", moduleId);

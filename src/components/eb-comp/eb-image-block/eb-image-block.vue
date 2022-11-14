@@ -42,7 +42,7 @@ export default {
     imageItem,
   },
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       default: () => { },
     },
@@ -79,7 +79,7 @@ export default {
     },
     getBlockList () {
       const params = {
-        moduleId: this.params.moduleId,
+        moduleId: this.pageConfig.moduleId,
       };
       this.isFinished = false;
       pictureService.getPictureListBlcok(params).then(res => {

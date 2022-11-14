@@ -41,8 +41,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    params: {
+    pageConfig: {
       required: true,
+      type: Object,
+      default: () => { },
     },
   },
   data () {
@@ -63,7 +65,7 @@ export default {
     },
     // 请求列表数据
     async getWfList () {
-      const { moduleId } = this.params;
+      const { moduleId } = this.pageConfig;
       if (!moduleId) return;
       const params = {
         moduleId,

@@ -165,7 +165,7 @@ export default {
   // import引入的组件需要注入到对象中才能使用
   props: {
     // 接口传入参数
-    params: {
+    pageConfig: {
       requrie: true,
       type: Object,
       default: () => { },
@@ -187,15 +187,9 @@ export default {
   // 监听属性 类似于data概念
   computed: {},
   // 监控data中的数据变化
-  watch: {
-
-  },
-
+  watch: {},
   // 生命周期 - 创建完成（可以访问当前this实例）
-  created () {
-    // this.params.moduleName
-
-  },
+  created () { },
   // 生命周期 - 挂载完成（可以访问DOM元素）
   mounted () {
     this.getAdLIst();
@@ -204,8 +198,8 @@ export default {
   methods: {
     getAdLIst () {
       const params = {
-        pageName: this.params.pageName,
-        code: this.params.moduleId,
+        pageName: this.pageConfig.pageName,
+        code: this.pageConfig.moduleId,
       };
       adService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
@@ -215,7 +209,7 @@ export default {
     },
     async bannerClickEvent (item) {
       // 埋点
-      programaAnalysis(this.params, item.id);
+      programaAnalysis(this.pageConfig, item.id);
       await this.$store.dispatch("getCustomorderList", `runAd_${item.id}`);
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");

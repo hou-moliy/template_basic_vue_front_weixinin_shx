@@ -83,7 +83,7 @@ export default {
     livfallItem,
   },
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       required: true,
     },
@@ -139,7 +139,7 @@ export default {
     async getWfList (flag = true) { // flag，true表示刷新或首次加载,false表示加载更多
       const {
         moduleId,
-      } = this.params;
+      } = this.pageConfig;
       const wfParams = {
         ...this.wfParams,
         moduleId,
