@@ -167,11 +167,13 @@ export default {
     // 接口传入参数
     params: {
       requrie: true,
-      default: "",
+      type: Object,
+      default: () => { },
     },
     //
     isShowBtn: {
       type: Number,
+      default: 1,
     },
   },
   data () {

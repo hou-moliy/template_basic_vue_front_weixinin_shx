@@ -162,16 +162,16 @@ import {
 
 export default {
   components: {},
-  // import引入的组件需要注入到对象中才能使用
   props: {
     // 接口传入参数
     params: {
       requrie: true,
-      default: "",
+      type: Object,
+      default: () => { },
     },
-    //
     isShowBtn: {
       type: Number,
+      default: 1,
     },
   },
   data () {

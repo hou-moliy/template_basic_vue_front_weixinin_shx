@@ -123,12 +123,6 @@ export default {
   }
 }
 
-.ad-banner {
-  // height: 142rpx;
-  // margin-top: 20rpx;
-  // margin-bottom: 30rpx;
-}
-
 .ad-banner-box {
   width: 100%;
   display: flex;
