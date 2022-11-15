@@ -1,5 +1,8 @@
 <template>
-  <view class="mask" @touchmove.stop.prevent="() => {}">
+  <view
+    class="mask"
+    @touchmove.stop.prevent="() => {}"
+  >
     <view :class="flag ? 'offline' : 'offlineClose'">
       <image
         class="offline_popup_image"
@@ -15,16 +18,25 @@
         <view class="offline_content_text">
           {{
             pageDownDialog.windowDesc ||
-            "尊敬的客户，您好，小程序正在升级中，部分功能暂时不可用，请您谅解~"
+              "尊敬的客户，您好，小程序正在升级中，部分功能暂时不可用，请您谅解~"
           }}
         </view>
-        <view v-if="strategyType == '2'" class="offline_content_time">
+        <view
+          v-if="strategyType == '2'"
+          class="offline_content_time"
+        >
           预计恢复时间：
           <text>{{ endTime }}</text>
         </view>
       </view>
-      <view v-if="dialogCancellable == '1'" class="offline_button">
-        <view class="offline_button_cancel" @click="cancel">
+      <view
+        v-if="dialogCancellable == '1'"
+        class="offline_button"
+      >
+        <view
+          class="offline_button_cancel"
+          @click="cancel"
+        >
           {{ pageDownDialog.buttonName || "我知道了" }}
         </view>
       </view>
@@ -34,29 +46,29 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       flag: true,
       staticImgs: this.$staticImgs,
     };
   },
-  mounted() {},
   computed: {
-    strategyType() {
+    strategyType () {
       return this.$store.state.offlinePopup.strategyType;
     },
-    endTime() {
+    endTime () {
       return this.$store.state.offlinePopup.endTime;
     },
-    dialogCancellable() {
+    dialogCancellable () {
       return this.$store.state.offlinePopup.dialogCancellable;
     },
-    pageDownDialog() {
+    pageDownDialog () {
       return uni.getStorageSync("pageDownDialog")[0];
     },
   },
+  mounted () { },
   methods: {
-    cancel() {
+    cancel () {
       this.flag = false;
       this.$store.commit("SET_OFFLINEPOPUPSHOW", false);
       this.$emit("cancel");
