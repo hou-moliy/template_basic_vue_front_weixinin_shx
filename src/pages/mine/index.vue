@@ -1,6 +1,5 @@
 <template>
   <view class="content">
-    我的页面
     <!-- 自定义Tabbar -->
     <custom-tabbar
       :tab-bar="tabBar"
