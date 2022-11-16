@@ -330,7 +330,6 @@ const unitChange = (size) => {
 
 // 跳转判定
 const navigateToAny = async function (item, callback) {
-  console.log(item, "tempUrl---------------------------------------");
   uni.showLoading({
     title: "",
     mask: true,
@@ -339,175 +338,18 @@ const navigateToAny = async function (item, callback) {
     switch (item.eventType) {
       case 1:
         // 1-跳转外部url
-        if (item.freeLogin) {
-          if (item.freeLogin == 3) {
-            // 3-快特效
-            console.log("item", item);
-            myAPI
-              .diyLogin({
-                platId: "ktx",
-              })
-              .then((res) => {
-                if (res.status === 200) {
-                  if (res.data.code === 200) {
-                    uni.setStorageSync("ckH5Data", item.eventUrl);
-                    uni.hideLoading();
-                    uni.navigateTo({
-                      url: `/pagesCommon/webView/diy?token=${res.data.data}`,
-                    });
-                  } else {
-                    uni.hideLoading();
-                    uni.showToast({
-                      title: res.data.message,
-                      duration: 2000,
-                      icon: "none",
-                    });
-                  }
-                } else {
-                  uni.hideLoading();
-                  uni.showToast({
-                    title: res.errMsg,
-                    duration: 2000,
-                    icon: "none",
-                  });
-                }
-              });
-          } else if (item.freeLogin == 4) {
-            // 4-嗨购
-            uni.hideLoading();
-          } else {
-            let tempEventUrl = item.eventUrl;
-            tempEventUrl = await freeLoginFun(item.eventUrl);
-            uni.setStorageSync("ckH5Data", tempEventUrl);
-            uni.hideLoading();
-            uni.navigateTo({
-              url: "/pagesCommon/webView/ckWebview",
-            });
-          }
-        } else {
-          let tempEventUrl = item.eventUrl;
-          tempEventUrl = await freeLoginFun(item.eventUrl);
-          console.log(tempEventUrl, "tempEventUrl");
-          uni.setStorageSync("ckH5Data", tempEventUrl);
-          uni.hideLoading();
-          uni.navigateTo({
-            url: "/pagesCommon/webView/ckWebview",
-          });
-        }
+        handleExternalLink(item, callback);
         break;
       case 2:
         // 2-跳转自身小程序内地址
-        uni.hideLoading();
-        uni.navigateTo({
-          url: item.eventUrl,
-          fail: function () {
-            uni.switchTab({
-              url: item.eventUrl,
-            });
-          },
-        });
+        handleInternalLink(item, callback);
         break;
       case 4:
         // 4-跳转外部小程序
-        if (!item.freeLogin) {
-          let tempEventUrl = item.eventUrl;
-          tempEventUrl = await freeLoginFun(item.eventUrl);
-          uni.hideLoading();
-          wx.navigateToMiniProgram({
-            appId: item.outAppId || item.appId || item.appid,
-            path: tempEventUrl,
-            extraData: {},
-            envVersion: "release",
-            success (res) {
-              if (callback) {
-                callback("success");
-              }
-            },
-          });
-        } else if (item.freeLogin == 5) {
-          blindBoxService
-            .hcyauth({
-              channel: "hcy",
-            })
-            .then((res) => {
-              uni.hideLoading();
-              if (res.data.code == 200 && res.data.data) {
-                const data = res.data.data;
-                wx.navigateToMiniProgram({
-                  appId: item.outAppId || item.appId || item.appid,
-                  path: `${item.eventUrl}account=${data.account}=&artifact=${data.artifact}&avatar=null&isEncode=true`,
-                  extraData: {},
-                  envVersion: "release",
-                  success (res) {
-                    if (callback) {
-                      callback("success");
-                    }
-                  },
-                });
-              } else {
-                wx.navigateToMiniProgram({
-                  appId: item.outAppId || item.appId || item.appid,
-                  path: `${item.eventUrl}`,
-                  extraData: {},
-                  envVersion: "release",
-                  success (res) {
-                    if (callback) {
-                      callback("success");
-                    }
-                  },
-                });
-              }
-            })
-            .catch(() => {
-              uni.hideLoading();
-              wx.navigateToMiniProgram({
-                appId: item.outAppId || item.appId || item.appid,
-                path: `${item.eventUrl}`,
-                extraData: {},
-                envVersion: "release",
-                success (res) {
-                  if (callback) {
-                    callback();
-                  }
-                },
-              });
-            });
-        } else {
-          let tempEventUrl = item.eventUrl;
-          tempEventUrl = await freeLoginFun(item.eventUrl);
-          uni.hideLoading();
-          wx.navigateToMiniProgram({
-            appId: item.outAppId || item.appId || item.appid,
-            path: tempEventUrl,
-            extraData: {},
-            envVersion: "release",
-            success (res) {
-              if (callback) {
-                callback("success");
-              }
-            },
-          });
-        }
+        handleExternalProgram(item, callback);
         break;
-      case 9:
       case 5:
-        // 判断当前页面所在位置：
-        console.log(getCurrentPages(), "----------");
-        const currentPages = getCurrentPages();
-        if (currentPages.length > 0) {
-          const currentRouter = currentPages[currentPages.length - 1].route;
-          if (currentRouter.indexOf("liaoNingFind/views/index") > -1) {
-            uni.hideLoading();
-            uni.$emit("changeTabByMore", item.eventUrl);
-            return;
-          }
-        }
-        // 判断下当前页面地址，是否为fxPageName
-        uni.setStorageSync("fxPageName", item.eventUrl);
-        uni.hideLoading();
-        uni.switchTab({
-          url: "/pages/liaoNingFind/views/index",
-        });
+        handleFaXianPage(item, callback);
         break;
       default:
         uni.hideLoading();
@@ -516,6 +358,67 @@ const navigateToAny = async function (item, callback) {
     uni.hideLoading();
   }
 };
+
+//  处理外部跳转
+const handleExternalLink = async (item, callback) => {
+  let tempEventUrl = item.eventUrl;
+  tempEventUrl = await freeLoginFun(item.eventUrl);
+  console.log(tempEventUrl, "tempEventUrl");
+  uni.setStorageSync("ckH5Data", tempEventUrl);
+  uni.hideLoading();
+  uni.navigateTo({
+    url: "/pagesCommon/webView/ckWebview",
+  });
+}
+// 处理小程序内部地址（非发现页面）
+const handleInternalLink = () => {
+  uni.hideLoading();
+  uni.navigateTo({
+    url: item.eventUrl,
+    fail: function () {
+      uni.switchTab({
+        url: item.eventUrl,
+      });
+    },
+  });
+}
+// 处理跳转外部小程序
+const handleExternalProgram = async (item, callback) => {
+  let tempEventUrl = item.eventUrl;
+  tempEventUrl = await freeLoginFun(item.eventUrl);
+  uni.hideLoading();
+  wx.navigateToMiniProgram({
+    appId: item.outAppId || item.appId || item.appid,
+    path: tempEventUrl,
+    extraData: {},
+    envVersion: "release",
+    success (res) {
+      if (callback) {
+        callback("success");
+      }
+    }
+  });
+}
+// 处理跳转小程序发现页面
+const handleFaXianPage = (item, callback) => {
+  // 判断当前页面所在位置：
+  const currentPages = getCurrentPages();
+  if (currentPages.length > 0) {
+    const currentRouter = currentPages[currentPages.length - 1].route;
+    if (currentRouter.indexOf("liaoNingFind/views/index") > -1) {
+      uni.hideLoading();
+      uni.$emit("changeTabByMore", item.eventUrl);
+      return;
+    }
+  }
+  // 判断下当前页面地址，是否为fxPageName
+  uni.setStorageSync("fxPageName", item.eventUrl);
+  uni.hideLoading();
+  uni.switchTab({
+    url: "/pages/liaoNingFind/views/index",
+  });
+}
+
 
 // 渠道记录
 const postRecord = (channelId, path) => {
@@ -614,7 +517,6 @@ const freeLoginFun = (eventUrl) => {
     tokenStr = tokenStr.replace(/\$token\{/, "");
     tokenStr = tokenStr.replace(/\}/, "");
     const tokenArr = tokenStr.split("_");
-    // if(tokenArr)
     if (tokenArr[0] == "tyrz") {
       myAPI
         .freeLoginAuth({

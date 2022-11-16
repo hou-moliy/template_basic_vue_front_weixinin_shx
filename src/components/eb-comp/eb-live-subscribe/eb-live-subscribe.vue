@@ -27,8 +27,10 @@ import liveService from "@/api/live/live.js";
 export default {
   name: "FindLiveSubscribe",
   props: {
-    params: {
+    pageConfig: {
       required: true,
+      type: Object,
+      default: () => { },
     },
   },
   data () {
@@ -43,7 +45,6 @@ export default {
     },
   },
   created () {
-    console.log(this.params, "params");
     this.getLiveStatus();
   },
   methods: {

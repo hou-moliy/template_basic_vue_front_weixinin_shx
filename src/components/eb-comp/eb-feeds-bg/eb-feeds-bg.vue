@@ -223,11 +223,11 @@ export default {
   },
   methods: {
     getAdLIst () {
-      this.params = {
+      const params = {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
-      adService.getAdvertisement(this.params).then(res => {
+      adService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
           this.portalAds = res.data.data;
         }
@@ -237,7 +237,7 @@ export default {
     },
     async bannerClickEvent (item) {
       // 埋点
-      programaAnalysis(this.params, item.id);
+      programaAnalysis(this.pageConfig, item.id);
       await this.$store.dispatch("getCustomorderList", `runAd_${item.id}`);
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");

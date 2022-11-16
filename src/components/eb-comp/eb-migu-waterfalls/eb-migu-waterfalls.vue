@@ -1,28 +1,12 @@
 <template>
-  <view
-    class="more-news"
-    :style="{ marginTop }"
-  >
-    <waterfall
-      :column-count="3"
-      column-width="auto"
-      class="waterfall-box"
-    >
+  <view class="more-news" :style="{ marginTop }">
+    <waterfall :column-count="3" column-width="auto" class="waterfall-box">
       <!-- 左侧 -->
       <view class="waterfall-column waterfall-column-left">
-        <block
-          v-for="(item, index) in miguVideoList"
-          :key="index"
-        >
-          <view
-            v-if="index % 2 === 0"
-            class="more-new-item-column"
-          >
+        <block v-for="(item, index) in miguVideoList" :key="index">
+          <view v-if="index % 2 === 0" class="more-new-item-column">
             <!-- 运营位 -->
-            <view
-              v-if="item.sourceType == 2"
-              class="recommend-wrap"
-            >
+            <view v-if="item.sourceType == 2" class="recommend-wrap">
               <operate-item
                 :item="item"
                 @openLoginPopup="openLoginPopup"
@@ -30,10 +14,7 @@
               />
             </view>
             <!-- 元素 -->
-            <view
-              v-else
-              class="video-box-new"
-            >
+            <view v-else class="video-box-new">
               <video-item
                 :item="item"
                 :video-list="miguVideoList"
@@ -49,14 +30,8 @@
       </view>
       <!-- 右侧 -->
       <view class="waterfall-column">
-        <block
-          v-for="(item, index) in miguVideoList"
-          :key="index"
-        >
-          <view
-            v-if="index % 2 !== 0"
-            class="more-new-item-column"
-          >
+        <block v-for="(item, index) in miguVideoList" :key="index">
+          <view v-if="index % 2 !== 0" class="more-new-item-column">
             <!-- 运营位 -->
             <view v-if="item.sourceType == 2">
               <operate-item
@@ -66,10 +41,7 @@
               />
             </view>
             <!-- 元素 -->
-            <view
-              v-else
-              class="video-box-new"
-            >
+            <view v-else class="video-box-new">
               <video-item
                 :item="item"
                 :video-list="miguVideoList"
@@ -106,8 +78,10 @@ export default {
     operateItem,
   },
   props: {
-    params: {
+    pageConfig: {
       required: true,
+      type: Object,
+      default: () => {},
     },
     isLogin: {
       type: Boolean,
@@ -122,7 +96,7 @@ export default {
       default: false,
     },
   },
-  data () {
+  data() {
     return {
       wfParams: {
         moduleId: 1,
@@ -133,51 +107,41 @@ export default {
       miguVideoList: [],
     };
   },
-
-  computed: {
-    // miguVideoList() {
-    //   return this.$store.state.miguVideo.miguVideoList;
-    // },
-    // isLoadStatus() {
-    //   return this.$store.state.miguVideo.isLoadStatus;
-    // },
-    // total() {
-    //   return this.$store.state.miguVideo.total;
-    // },
-  },
+  computed: {},
   watch: {
     params: {
-      handler (n, o) { },
+      handler(n, o) {},
       deep: true,
       immediate: true,
     },
     showMoreFlag: {
-      handler (n, o) { },
+      handler(n, o) {},
       deep: true,
       immediate: true,
     },
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     this.$store.commit("miguVideo/SET_MIGU_VIDEO_LIST", []);
     this.$store.commit("miguVideo/SET_TOTAL", 0);
     this.$store.commit("miguVideo/SET_LOAD_STATUS", "more");
   },
-  created () {
+  created() {
     this.getWfList();
   },
-  mounted () { },
-  beforeDestroy () {
+  mounted() {},
+  // eslint-disable-next-line no-dupe-keys
+  beforeDestroy() {
     this.$store.commit("miguVideo/SET_MIGU_VIDEO_LIST", []);
   },
   methods: {
     programaAnalysis,
     // 强制刷新
-    handleFresh () {
+    handleFresh() {
       this.$forceUpdate();
     },
     // 滚动触底
-    onScollBottom () {
+    onScollBottom() {
       const curCount = this.miguVideoList.length;
       if (curCount >= this.total) {
         // 没有数据了
@@ -188,13 +152,13 @@ export default {
       this.getWfList(false);
     },
     // 打开登录弹窗
-    openLoginPopup () {
+    openLoginPopup() {
       this.$emit("openLoginPopup");
     },
     // 获取咪咕视频列表
-    async getWfList (flag = true) {
+    async getWfList(flag = true) {
       // flag，true表示刷新或首次加载,false表示加载更多
-      const { pageName, moduleId } = this.params;
+      const { pageName, moduleId } = this.pageConfig;
       const wfParams = {
         ...this.wfParams,
         pageName,
@@ -226,7 +190,7 @@ export default {
       });
     },
     // 分享
-    shareVideo ({ videoId, target, item }) {
+    shareVideo({ videoId, target, item }) {
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
         return;
@@ -244,7 +208,7 @@ export default {
       );
     },
     // 点赞
-    giveLikes ({ videoId, target, optype, item }) {
+    giveLikes({ videoId, target, optype, item }) {
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
         return;
@@ -263,7 +227,7 @@ export default {
       );
     },
     // 处理接口
-    handlecountVideoOperation (params, item) {
+    handlecountVideoOperation(params, item) {
       this.videoOperation({
         params,
         item,
@@ -271,7 +235,7 @@ export default {
       this.$forceUpdate();
     },
     // 点赞触发方法
-    videoOperation (payload) {
+    videoOperation(payload) {
       const { params, item } = payload;
       return miguService.countVideoOperation(params).then(({ data: res }) => {
         if (res.code === 200) {

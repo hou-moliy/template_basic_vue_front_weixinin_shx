@@ -2,21 +2,21 @@
   <view>
     <ebInnerStructure
       v-if="showFlag === 0"
-      :params="params"
+      :page-config="pageConfig"
       :is-show-btn="isShowBtn"
       @openLoginPopup="openLoginPopup"
       @bannerClickEvent="bannerClickEvent"
     />
     <ebInnerStructureTwo
       v-if="showFlag === 1"
-      :params="params"
+      :page-config="pageConfig"
       :is-show-btn="isShowBtn"
       @openLoginPopup="openLoginPopup"
       @bannerClickEvent="bannerClickEvent"
     />
     <ebInnerStructureThree
       v-if="showFlag === 2"
-      :params="params"
+      :page-config="pageConfig"
       :is-show-btn="isShowBtn"
       @openLoginPopup="openLoginPopup"
       @bannerClickEvent="bannerClickEvent"
@@ -36,7 +36,7 @@ export default {
   },
   props: {
     // 接口传入参数
-    params: {
+    pageConfig: {
       type: Object,
       default () {
         return {};
@@ -53,10 +53,10 @@ export default {
     isShowBtn () {
       const noList = ["0004", "0006", "0008", "0019"];
       const hasList = ["0009", "0018"];
-      if (this.params.moduleFlag) {
-        if (noList.includes(this.params.moduleFlag)) {
+      if (this.pageConfig.moduleFlag) {
+        if (noList.includes(this.pageConfig.moduleFlag)) {
           return 0;
-        } else if (hasList.includes(this.params.moduleFlag)) {
+        } else if (hasList.includes(this.pageConfig.moduleFlag)) {
           return 1;
         } else {
           return 0;
@@ -69,11 +69,11 @@ export default {
       const styleOneList = ["0009", "0018", "0019"];
       const styleTwoList = ["0004", "0006"];
       const styleThreeList = ["0008"];
-      if (styleOneList.includes(this.params.moduleFlag)) {
+      if (styleOneList.includes(this.pageConfig.moduleFlag)) {
         return 0;
-      } else if (styleTwoList.includes(this.params.moduleFlag)) {
+      } else if (styleTwoList.includes(this.pageConfig.moduleFlag)) {
         return 1;
-      } else if (styleThreeList.includes(this.params.moduleFlag)) {
+      } else if (styleThreeList.includes(this.pageConfig.moduleFlag)) {
         return 2;
       } else {
         return NaN;
@@ -94,20 +94,6 @@ export default {
     // 运营位点击了
     bannerClickEvent (item) {
       console.log(1);
-      // const {
-      //   pageName,
-      //   moduleId,
-      // } = this.params;
-      // switch (pageName) {
-      //   case "recommend_page":
-      //     this.$analysis.dispatch("fxtj_id_id", `${moduleId}_${item.id}`);
-      //     break;
-      //   case "mgimg_page":
-      //     this.$analysis.dispatch("fxmgtp_id_id", `${moduleId}_${item.id}`);
-      //     break;
-      //   default:
-      //     break;
-      // }
     },
   },
 };

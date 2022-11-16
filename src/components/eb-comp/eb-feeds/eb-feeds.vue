@@ -211,7 +211,6 @@ export default {
     return {
       staticImgs: this.$staticImgs,
       portalAd: [],
-      params: {},
     };
   },
   // 生命周期 - 挂载完成（可以访问DOM元素）
@@ -221,12 +220,12 @@ export default {
   // 方法集合
   methods: {
     getAdLIst () {
-      this.params = {
+      const params = {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
       adService
-        .getAdvertisement(this.params)
+        .getAdvertisement(params)
         .then(res => {
           if (res.data.code === 200) {
             this.portalAd = res.data.data;
@@ -239,7 +238,7 @@ export default {
     async bannerClickEvent (item) {
       console.log(item);
       // 埋点
-      programaAnalysis(this.params, item.id);
+      programaAnalysis(this.pageConfig, item.id);
       await this.$store.dispatch("getCustomorderList", `runAd_${item.id}`);
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");

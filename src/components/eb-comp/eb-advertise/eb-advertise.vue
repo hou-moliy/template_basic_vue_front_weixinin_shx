@@ -52,7 +52,7 @@ import { navigateToAny } from "@/utils/tools.js";
 export default {
   name: "FindAdvertise",
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       default: () => { },
     },
@@ -71,8 +71,8 @@ export default {
     // 获取轮播广告资源
     getAdvertising () {
       const params = {
-        pageName: this.params.pageName,
-        code: this.params.pageModule,
+        pageName: this.pageConfig.pageName,
+        code: this.pageConfig.pageModule,
       };
       adService.getAdvertise(params).then((res) => {
         console.log("test", res);
@@ -86,9 +86,9 @@ export default {
     // 广告事件
     async jump (e) {
       console.log("广告", e);
-      if (this.params.pageName === "recommend_page") {
+      if (this.pageConfig.pageName === "recommend_page") {
         this.$analysis.dispatch("fxtj_xx_gg_id", e.id);
-      } else if (this.params.pageName === "ln_spcl_index") {
+      } else if (this.pageConfig.pageName === "ln_spcl_index") {
         this.$analysis.dispatch("fxspcl_xx_gg_id", e.id);
       }
       await this.$store.dispatch("getCustomorderList", `advertise_${e.id}`);

@@ -98,7 +98,8 @@ export default {
       default: () => ["like", "share"],
     },
     moduleId: {
-      type: [String | Number],
+      type: String,
+      default: "",
     },
     radius: {
       type: Number,
@@ -129,18 +130,10 @@ export default {
     },
     // 点赞
     giveLikes (ringId, target, opType) {
-      // this.$store.dispatch('getCustomorderList','a')
-      // if(Boolean(this.$store.state.offlinePopup.offlineFlag)){
-      // 	return
-      // }
       this.$emit("giveLikes", { ringId, target, opType });
     },
     // 详情页播放视频
     goToPlayVideo (e, videoList, item) {
-      // this.$store.dispatch('getCustomorderList','a')
-      // if(Boolean(this.$store.state.offlinePopup.offlineFlag)){
-      // 	return
-      // }
       this.$store.commit("getVideoList", videoList);
       if (e.currentTarget.dataset.topic == "moreVideo") {
         uni.setStorageSync("isPlayFromIndex", false);
@@ -164,9 +157,6 @@ export default {
 
 <style lang="scss">
 .video-item {
-  &-wrap {
-  }
-
   &-info {
     width: 100%;
     height: 480rpx;

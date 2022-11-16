@@ -25,7 +25,7 @@ export default {
   name: "FindBannerSwiper",
 
   props: {
-    params: {
+    pageConfig: {
       type: Object,
       default: () => { },
     },
@@ -46,7 +46,7 @@ export default {
   methods: {
     getIconList () {
       // 获取icon
-      const { pageName } = this.params;
+      const { pageName } = this.pageConfig;
       ckService
         .getCkIcon({
           target: pageName,
