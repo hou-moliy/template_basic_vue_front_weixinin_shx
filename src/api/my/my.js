@@ -30,6 +30,8 @@ const freeLoginAuth = params => axios.get(baseUrlTyrz + "/threelogin/hcyauth", p
 
 // 辽友会会员信息查询
 const lyhGetUserInfo = params => axios.get(baseUrl + "/lyh/getUserInfo", params);
+// 获取短信验证码
+const getAuthCodeLn=params => axios.get(baseUrl + "/sso/getAuthCodeLn", params);
 
 export default {
   emailLogin,
@@ -49,5 +51,6 @@ export default {
   judgeTargetPhone,
   freeLoginAuth,
   lyhGetUserInfo,
+  getAuthCodeLn
 
 };

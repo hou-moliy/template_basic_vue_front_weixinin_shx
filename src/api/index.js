@@ -20,7 +20,7 @@ axios.interceptors.request.use(config => {
   // config.headers["x-requested-width"] = "XMLHttpRequest";
   // config.headers.Authorization = uni.getStorageSync("Authorization");
   // config.headers["Content-Type"] = "application/json; charset=utf-8";
-  config.header = Headers;
+  config.headers = Headers;
   if (!config.data) return config;
   if (config.data.isUpload) {
     config.headers["Content-Type"] = "multipart/form-data";

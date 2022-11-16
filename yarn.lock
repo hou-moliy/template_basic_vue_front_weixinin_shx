@@ -13379,6 +13379,11 @@ wxml-minifier@0.0.1:
   dependencies:
     "@leejim/wxml-parser" "^0.1.1"
 
+wxmp-rsa@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmmirror.com/wxmp-rsa/-/wxmp-rsa-2.1.0.tgz#3c6603e1ded2587506ef273527a8d04aaa96da51"
+  integrity sha512-VbWMJ+vf8t7G93sjkqjCn5yGy/Si3M8uD6OFebqjJWJ1R0WCyle7X6SNia7WWG6Qe1F2/OWxhbcSGA6ebUBwIA==
+
 x-domhandler@^2.4.2:
   version "2.4.2"
   resolved "https://registry.npmmirror.com/x-domhandler/-/x-domhandler-2.4.2.tgz#21afb2d71977118688e49e05c30894497ce3d5e9"
