@@ -8,6 +8,7 @@ const idKey = "QSSHAREPOSTER_IDKEY"; // drawArray自动生成的idkey
 let isMp = false;
 // #ifdef MP
 isMp = true;
+console.log(isMp);
 // #endif
 
 let nbgScale = 1;

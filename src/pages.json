@@ -42,6 +42,13 @@
 						"navigationBarTitleText": "公共的模板化配置页面",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "share/shareVideo",
+					"style": {
+						"navigationBarTitleText": "分享视频彩铃海报",
+						"enablePullDownRefresh": false
+					}
 				}
 			    ,{
                     "path" : "policy/policy",

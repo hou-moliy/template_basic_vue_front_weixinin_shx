@@ -19,12 +19,26 @@ export const navigateByEventType = (event, outmethod) => {
 };
 
 // Toast提示
-export const showTost = (title, icon = "none", duration = 2000) => {
+export const showToast = (title, icon = "none", duration = 2000) => {
   uni.showToast({
     title,
     icon,
     duration: 2000,
   });
+};
+
+// Loading
+export const showLoading = (title, mask = true, duration = 2000, callback = () => { }) => {
+  uni.showLoading({
+    title,
+    mask,
+  });
+  if (duration) {
+    setTimeout(() => {
+      uni.hideLoading();
+      callback();
+    }, duration);
+  }
 };
 export const programaAnalysis = (params, id) => {
   const {
