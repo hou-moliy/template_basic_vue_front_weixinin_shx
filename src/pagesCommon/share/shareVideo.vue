@@ -68,13 +68,6 @@
           </button>
         </view>
       </view>
-      <!-- 提示成功 -->
-      <view
-        v-show="maskBCTxt"
-        class="maskBCTxt"
-      >
-        海报已保存至本地相册
-      </view>
     </view>
     <view class="hideCanvasView">
       <canvas
@@ -106,7 +99,6 @@ export default {
       videoDetail: {},
       maskShow: false,
       maskTxtShow: false,
-      maskBCTxt: false,
       userName: "",
       shareCont: "",
       period: "",
@@ -581,20 +573,5 @@ page {
       color: rgba(255, 183, 56, 1);
     }
   }
-}
-
-.maskBCTxt {
-  position: fixed;
-  background: black;
-  opacity: 0.7;
-  z-index: 1003;
-  color: white;
-  top: 45%;
-  left: 15%;
-  width: 70%;
-  height: 78rpx;
-  text-align: center;
-  line-height: 75rpx;
-  font-size: 30rpx;
 }
 </style>
