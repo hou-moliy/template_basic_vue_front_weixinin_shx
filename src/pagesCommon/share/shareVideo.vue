@@ -102,7 +102,7 @@ export default {
       canvasId: "goods_poster",
       scene: "",
       staticImgs: this.$staticImgs,
-      qrCodeUrl: "", // 二维码图片
+      qrCodeUrl: `${this.globalData.staticImgs}/shxmp/init/qr.jpg`, // 二维码图片
       videoDetail: {},
       maskShow: false,
       maskTxtShow: false,
@@ -114,66 +114,17 @@ export default {
       videoId: "",
       phoneNumber: "",
       pageName: "",
-      pageFirstLoad: true,
+      pageFirstLoad: true, // 是否第一次加载页面
+      shareType: 1, // 分享类型，1是视频彩铃，其他值是音频彩铃
     };
   },
   onLoad (options) {
-    // 自测开始
-    this.videoId = "600926000002698008";
-    this.getVideoDetail();
-    this.shareFc();
-    // 自测结束
-
-    if (uni.getStorageSync("Authorization")) {
-      if (options.videoId) {
-        this.videoId = options.videoId;
-        this.getVideoDetail();
-      }
-      uni.showLoading({
-        title: "绘制中...",
-      });
-      if (options.pageName) {
-        this.pageName = options.pageName;
-      } else {
-        this.pageName = "";
-      }
-      const userInfo = uni.getStorageSync("userInfo");
-      const phone = uni.getStorageSync("phone");
-      if (phone) {
-        if (userInfo) {
-          this.avatarUrl = userInfo.avatarUrl;
-          this.userName = userInfo.nickName;
-        } else {
-          this.userName = phone.substring(0, 3) + "****" + phone.substring(7);
-          this.avatarUrl = `${this.globalData.staticImgs}/lnmp/avater_def.png`;
-        }
-        this.phoneNumber = phone;
-        this.qrcodeJk();
-      }
-    }
+    this.initData(options);
   },
   async onShow () {
     // await this.$getAuthInfo();
     if (!this.pageFirstLoad) {
-      if (uni.getStorageSync("Authorization")) {
-        this.getVideoDetail();
-        uni.showLoading({
-          title: "绘制中...",
-        });
-        const userInfo = uni.getStorageSync("userInfo");
-        const phone = uni.getStorageSync("phone");
-        if (phone) {
-          if (userInfo) {
-            this.avatarUrl = userInfo.avatarUrl;
-            this.userName = userInfo.nickName;
-          } else {
-            this.userName = phone.substring(0, 3) + "****" + phone.substring(7);
-            this.avatarUrl = `${this.globalData.staticImgs}/lnmp/avater_def.png`;
-          }
-          this.phoneNumber = phone;
-          this.qrcodeJk();
-        }
-      }
+      this.initData();
     }
   },
   onHide () {
@@ -211,9 +162,28 @@ export default {
     };
   },
   methods: {
+    // 初始化页面数据
+    initData (options) {
+      // if (uni.getStorageSync("Authorization")) return;
+      this.videoId = options?.videoId || "600926000002698008";
+      this.pageName = options?.pageName;
+      this.shareType = parseInt(options?.shareType);
+      const userInfo = uni.getStorageSync("userInfo");
+      const phone = uni.getStorageSync("phone") || "13006463380";
+      this.$loading("绘制中");
+      this.getVideoDetail();
+      if (phone) {
+        this.avatarUrl = userInfo.avatarUrl || `${this.globalData.staticImgs}/lnmp/avater_def.png`;
+        this.userName = userInfo.nickName || `${phone.substring(0, 3)}****${phone.substring(7)}`;
+        this.phoneNumber = phone;
+        // this.qrcodeJk();
+        // 自测开始
+        this.shareFc();
+        // 自测结束
+      }
+    },
     // 获取二维码
     qrcodeJk () {
-      const that = this;
       // 二维码页面
       const mpath = encodeURI(
         "/pagesCommon/share/openShare?phonenumber=" +
@@ -229,7 +199,7 @@ export default {
         .then((resp) => {
           this.qrCodeUrl = resp.data;
           setTimeout(() => {
-            that.qrToImg();
+            this.qrToImg();
           }, 500);
         });
     },
@@ -275,172 +245,141 @@ export default {
           posterCanvasId: this.canvasId, // canvasId
           delayTimeScale: 20, // 延时系数
           drawDelayTime: 500, // draw延时时间
-          drawArray: ({ bgObj, type, bgScale }) => this.setDrawArray({ bgObj, type, bgScale }),
-          setCanvasWH: ({ bgObj, type, bgScale }) => {
+          drawArray: ({ bgObj, type, bgScale }) => this.shareType === 1 ? this.setDrawSpArray({ bgObj, type, bgScale }) : this.setDrawYpArray({ bgObj, type, bgScale }),
+          setCanvasWH: ({ bgObj }) => {
             // 为动态设置画布宽高的方法，
             this.poster = bgObj;
           },
         });
-        // console.log('海报生成成功, 时间:' + new Date() + '， 临时路径: ' + d.poster.tempFilePath);
+        console.log("海报生成成功, 时间:" + new Date() + "， 临时路径: " + d.poster.tempFilePath);
         this.$set(this.poster, "finalPath", d.poster.tempFilePath);
         // 要删除本地文件
         uni.getFileSystemManager().unlink({
           filePath: this.qrCodeUrl,
-          success: (res) => {
-          },
           fail: (err) => {
             console.log("删除失败", err);
           },
         });
-      } catch (e) { }
+      } catch (e) {
+        console.log(e);
+      }
     },
-    // 设置海报的绘制元素
-    setDrawArray ({ bgObj, type, bgScale }) {
+    // 设置音频海报的绘制元素
+    setDrawYpArray ({ bgObj }) {
       // const dx = bgObj.width * 0.3;
       // const fontSize = bgObj.width * 0.042;
       // const lineHeight = bgObj.height * 0.04;
+      // 位置 ：背景宽*x=当前元素位置（高保上 比如距离顶部20rpx）,x = 20/背景宽
+      // 宽度 ：背景宽*x=当前元素宽度（高保上 元素宽为100rpx）,x = 100/背景宽
       // 可直接return数组，也可以return一个promise对象, 但最终resolve一个数组, 这样就可以方便实现后台可控绘制海报
+      const coverUrl = Util.forwardingURL(this.videoDetail.coverUrl || this.videoDetail.coverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openHCoverUrl);
+      const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.jpg`;
       return new Promise((resolve) => {
         resolve([
-          {
-            type: "image", // 封面图
-            url: Util.forwardingURL(
-              this.videoDetail.coverUrl ||
-              this.videoDetail.coverUrl ||
-              this.videoDetail.openVCoverUrl ||
-              this.videoDetail.openVCoverUrl ||
-              this.videoDetail.openHCoverUrl,
-            ),
-            alpha: 1,
-            mode: "aspectFill",
-            drawDelayTime: 800, // draw延时时间
-            dx: bgObj.width * 0,
-            dy: bgObj.width * 0,
-            infoCallBack (imageInfo) {
-              return {
-                dWidth: bgObj.width * 1,
-                dHeight: bgObj.width * 1.37,
-              };
-            },
-          },
-          {
-            type: "image", // 播放按钮
-            url: `${this.globalData.staticImgs}/lnmp/play.png`,
-            alpha: 1,
-            drawDelayTime: 800, // draw延时时间
-            dx: bgObj.width * 0.395,
-            dy: bgObj.width * 0.721,
-            infoCallBack (imageInfo) {
-              return {
-                dWidth: bgObj.width * 0.211,
-                dHeight: bgObj.width * 0.211,
-              };
-            },
-          },
-          {
-            type: "image", // 头像
-            url: this.avatarUrl,
-            alpha: 1,
-            dx: bgObj.width * 0.063,
-            dy: bgObj.width * 1.295,
-            infoCallBack (imageInfo) {
-              const scale = (bgObj.width * 0.127) / imageInfo.height;
-              return {
-                circleSet: {
-                  x: (imageInfo.width * scale) / 2,
-                  y: (bgObj.width * 0.127) / 2,
-                  r: (bgObj.width * 0.127) / 2,
-                }, // 圆形图片 , 若circleSet与roundRectSet一同设置 优先circleSet设置
-                dWidth: imageInfo.width * scale, // 因为设置了圆形图片 所以要乘以2
-                dHeight: bgObj.width * 0.127,
-              };
-            },
-          },
-          {
-            type: "text", // 昵称
-            text: this.userName,
-            size: "32",
-            color: "#333",
-            alpha: 1,
-            textAlign: "middle",
-            textBaseline: "middle",
-            fontWeight: "bold",
-            infoCallBack (textLength) {
-              return {
-                dx: bgObj.width * 0.063,
-                dy: bgObj.width * 1.465,
-              };
-            },
-            serialNum: 0,
-            id: "tag1", // 自定义标识
-          },
+          // 封面图
+          this.handleCoverImg(coverUrl, bgObj.width * 0.05, bgObj.width * 0.05, bgObj.width * 0.9, bgObj.width * 1.32),
+          // 头像
+          this.handleHeadImg(bgObj),
+          // 昵称
+          this.handleText(this.userName, "32", "#333", "bold", bgObj.width * 0.063, bgObj.width * 1.465),
           // 描述
-          {
-            type: "text",
-            text: "向您推荐了一首视频彩铃",
-            size: "24",
-            color: "#666",
-            alpha: 1,
-            textAlign: "middle",
-            textBaseline: "middle",
-            infoCallBack (textLength) {
-              return {
-                dx: bgObj.width * 0.063,
-                dy: bgObj.width * 1.541,
-              };
-            },
-            serialNum: 0,
-            id: "tag1", // 自定义标识
-          },
+          this.handleText("向您推荐了热门榜单-经典老歌", "22", "#666", "", bgObj.width * 0.063, bgObj.width * 1.541),
           // 二维码
-          {
-            type: "image",
-            url: this.qrCodeUrl,
-            alpha: 1,
-            drawDelayTime: 800, // draw延时时间
-            dx: bgObj.width * 0.74,
-            dy: bgObj.width * 1.465,
-            infoCallBack (imageInfo) {
-              return {
-                dWidth: bgObj.width * 0.206,
-                dHeight: bgObj.width * 0.206,
-              };
-            },
-          },
-          // 手机符号
-          {
-            type: "image",
-            url: `${this.globalData.staticImgs}/lnmp/share-phone.png`,
-            alpha: 1,
-            drawDelayTime: 800, // draw延时时间
-            dx: bgObj.width * 0.063,
-            dy: bgObj.width * 1.638,
-            infoCallBack (imageInfo) {
-              return {
-                dWidth: bgObj.width * 0.237,
-                dHeight: bgObj.width * 0.098,
-              };
-            },
-          },
-          {
-            type: "text", // 描述
-            text: "立即扫码观看",
-            size: "22",
-            color: "#666",
-            alpha: 1,
-            textAlign: "middle",
-            textBaseline: "middle",
-            infoCallBack (textLength) {
-              return {
-                dx: bgObj.width * 0.735,
-                dy: bgObj.width * 1.689,
-              };
-            },
-            serialNum: 0,
-            id: "tag1", // 自定义标识
-          },
+          this.handleCoverImg(this.qrCodeUrl, bgObj.width * 0.74, bgObj.width * 1.525, bgObj.width * 0.206, bgObj.width * 0.206),
+          // 铃机一动图片
+          this.handleCoverImg(shareUrl, bgObj.width * 0.063, bgObj.width * 1.608, bgObj.width * 0.237, bgObj.width * 0.098),
+          // 描述
+          this.handleText("赶紧扫码体验吧~", "22", "#666", "", bgObj.width * 0.063, bgObj.width * 1.739),
         ]);
       });
+    },
+    // 设置视频彩铃海报的绘制元素
+    setDrawSpArray ({ bgObj }) {
+      const coverUrl = Util.forwardingURL(this.videoDetail.coverUrl || this.videoDetail.coverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openHCoverUrl);
+      const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.jpg`;
+      const playUrl = `${this.globalData.staticImgs}/lnmp/play.png`;
+      return new Promise((resolve) => {
+        resolve([
+          // 封面图
+          this.handleCoverImg(coverUrl, 0, 0, bgObj.width * 1, bgObj.width * 1.37),
+          // 播放按钮
+          this.handleCoverImg(playUrl, bgObj.width * 0.395, bgObj.width * 0.721, bgObj.width * 0.211, bgObj.width * 0.211),
+          // 头像
+          this.handleHeadImg(bgObj),
+          // 昵称
+          this.handleText(this.userName, "32", "#333", "bold", bgObj.width * 0.063, bgObj.width * 1.465),
+          // 描述
+          this.handleText("向您推荐了一首视频彩铃", "24", "#666", "", bgObj.width * 0.063, bgObj.width * 1.541),
+          // 二维码
+          this.handleCoverImg(this.qrCodeUrl, bgObj.width * 0.74, bgObj.width * 1.465, bgObj.width * 0.206, bgObj.width * 0.206),
+          // 铃机一动图片
+          this.handleCoverImg(shareUrl, bgObj.width * 0.063, bgObj.width * 1.608, bgObj.width * 0.237, bgObj.width * 0.098),
+          // 描述
+          this.handleText("赶紧扫码体验吧~", "22", "#666", "", bgObj.width * 0.685, bgObj.width * 1.719),
+        ]);
+      });
+    },
+    // 处理封面图
+    handleCoverImg (url, dx, dy, dWidth, dHeight) {
+      return {
+        type: "image",
+        url,
+        alpha: 1,
+        mode: "aspectFill",
+        drawDelayTime: 800, // draw延时时间
+        dx,
+        dy,
+        infoCallBack () {
+          return {
+            dWidth,
+            dHeight,
+          };
+        },
+      };
+    },
+    // 处理头像
+    handleHeadImg (bgObj) {
+      return {
+        type: "image",
+        url: this.avatarUrl,
+        alpha: 1,
+        dx: bgObj.width * 0.063,
+        dy: bgObj.width * 1.295,
+        infoCallBack (imageInfo) {
+          const scale = (bgObj.width * 0.127) / imageInfo.height;
+          return {
+            circleSet: {
+              x: (imageInfo.width * scale) / 2,
+              y: (bgObj.width * 0.127) / 2,
+              r: (bgObj.width * 0.127) / 2,
+            }, // 圆形图片 , 若circleSet与roundRectSet一同设置 优先circleSet设置
+            dWidth: imageInfo.width * scale, // 因为设置了圆形图片 所以要乘以2
+            dHeight: bgObj.width * 0.127,
+          };
+        },
+      };
+    },
+    // 处理文字
+    handleText (text, size, color, fontWeight, dx, dy) {
+      return {
+        type: "text", // 昵称
+        text,
+        size,
+        color,
+        alpha: 1,
+        textAlign: "middle",
+        textBaseline: "middle",
+        fontWeight,
+        infoCallBack () {
+          return {
+            // dx: bgObj.width * 0.063,
+            // dy: bgObj.width * 1.465,
+            dx,
+            dy,
+          };
+        },
+        serialNum: 0,
+      };
     },
     // 点击分享朋友圈，保存海报
     sharePyq () {
