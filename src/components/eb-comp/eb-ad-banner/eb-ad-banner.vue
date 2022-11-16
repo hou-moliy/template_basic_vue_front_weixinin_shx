@@ -1,32 +1,17 @@
 <template>
-  <view
-    v-if="dataList[0].portalAd[0].url"
-    class="ad-banner-view"
-  >
-    <view
-      v-if="pageConfig.tagIcon"
-      class="more-topic-top-img"
-    >
+  <view v-if="dataList[0].portalAd[0].url" class="ad-banner-view">
+    <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
       <image :src="pageConfig.tagIcon" />
     </view>
-    <block
-      v-for="(inItem, inIndex) in dataList"
-      :key="inIndex"
-    >
-      <swiper
-        v-if="inItem.style == 5"
-        class="ad-banner"
-      >
+    <block v-for="(inItem, inIndex) in dataList" :key="inIndex">
+      <swiper v-if="inItem.style == 5" class="ad-banner">
         <swiper-item
           v-for="(item, index) in dataList"
           :key="index"
           @click="navigateToH5(item)"
         >
           <view class="ad-banner-box">
-            <image
-              class="ad-banner-image"
-              :src="item.url"
-            />
+            <image class="ad-banner-image" :src="item.url" />
           </view>
         </swiper-item>
       </swiper>
@@ -38,10 +23,7 @@
           @click="navigateToH5(contenItem)"
         >
           <view class="ad-banner-box">
-            <image
-              class="ad-banner-image"
-              :src="contenItem.url"
-            />
+            <image class="ad-banner-image" :src="contenItem.url" />
           </view>
         </view>
       </block>
@@ -53,14 +35,13 @@
 import templateService from "@/api/template/topic.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
-
   props: {
     pageConfig: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
   },
-  data () {
+  data() {
     return {
       staticImgs: this.$staticImgs,
       popTit: "温馨提示",
@@ -70,12 +51,12 @@ export default {
     };
   },
 
-  created () {
+  created() {
     this.getAdBanner();
   },
 
   methods: {
-    getAdBanner () {
+    getAdBanner() {
       const params = {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
@@ -88,7 +69,7 @@ export default {
       });
     },
 
-    async navigateToH5 (event) {
+    async navigateToH5(event) {
       this.$emit("buryBannerId", event.id);
       await this.$store.dispatch("getCustomorderList", `swiper_${event.id}`);
       console.log(

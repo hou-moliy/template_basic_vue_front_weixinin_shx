@@ -16,20 +16,15 @@
             style="border-radius: 20rpx"
             @click="navigateToH5(item)"
           >
+            <image class="spcl_banner_image" :src="item.url" />
             <image
-              class="spcl_banner_image"
-              :src="item.url"
-            />
-            <image
+              v-if="item.headerBgUrl"
               class="spcl_banner_bg_image"
               :src="item.headerBgUrl"
             />
           </swiper-item>
         </swiper>
-        <view
-          v-if="totalSwiper"
-          class="indicator"
-        >
+        <view v-if="totalSwiper" class="indicator">
           {{ currentSwiper + "/" + totalSwiper }}
         </view>
       </view>
@@ -38,16 +33,16 @@
 </template>
 
 <script>
-import tabAndbannerService from "@/api/find/tabAndbanner.js";
+import AdService from "@/api/ad/index.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
   },
-  data () {
+  data() {
     return {
       staticImgs: this.$staticImgs,
       popTit: "温馨提示",
@@ -59,31 +54,29 @@ export default {
     };
   },
 
-  created () {
+  created() {
     this.getBannerByPageName();
   },
 
   methods: {
-    getBannerByPageName () {
+    getBannerByPageName() {
       const { pageName } = this.pageConfig;
       // 获取bannner
-      tabAndbannerService
-        .getBanner({
-          target: pageName,
-        })
-        .then(res => {
-          this.cxVideoBanner = res.data.data;
-          this.totalSwiper = res.data.data.length;
-          // this.$emit('changeBanner', this.cxVideoBanner[0])
-        });
+      AdService.getBanner({
+        target: pageName,
+      }).then(res => {
+        this.cxVideoBanner = res.data.data;
+        this.totalSwiper = res.data.data.length;
+        // this.$emit('changeBanner', this.cxVideoBanner[0])
+      });
     },
 
-    changebanner (event) {
+    changeBanner(event) {
       this.currentSwiper = event.detail.current + 1;
       // this.$emit('changeBanner', this.cxVideoBanner[event.detail.current])
     },
 
-    async navigateToH5 (event) {
+    async navigateToH5(event) {
       this.$emit("buryBannerId", event.id);
       await this.$store.dispatch("getCustomorderList", `swiper_${event.id}`);
       console.log(
