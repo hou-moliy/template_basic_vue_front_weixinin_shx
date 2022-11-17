@@ -11,6 +11,7 @@
       >
         <eb-background-banner
           :page-config="pageConfig.configV2"
+          :comp-top="compTop && pageConfigIndex == 0"
           @buryBannerId="buryBannerId"
           @openLoginPopup="openLoginPopup"
         />
@@ -45,16 +46,16 @@ export default {
       default: true,
     },
   },
-  data() {
+  data () {
     return {};
   },
-  created() {},
-  mounted() {
+  created () {},
+  mounted () {
     console.log("一样一样");
   },
   methods: {
     // 滚动到底部监听
-    onScollBottom() {
+    onScollBottom () {
       this.$nextTick(() => {
         console.log(this.$refs, "lll");
       });
@@ -66,7 +67,7 @@ export default {
       }
     },
     // 子组件打开登录弹窗
-    openLoginPopup() {
+    openLoginPopup () {
       console.log("登录弹窗");
       // this.$refs.popup_login.open();
     },
