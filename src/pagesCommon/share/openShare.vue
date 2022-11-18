@@ -1,3 +1,4 @@
+// 视频彩铃分享打开页面
 <template>
   <view class="container">
     <!-- 自定义导航栏 -->
@@ -18,7 +19,10 @@
       </view>
     </view>
     <!-- 全屏播放组件 -->
-    <fullScreenVideo :video-detail="videoDetail" />
+    <fullScreenVideo
+      :video-detail="videoDetail"
+      :is-slide="false"
+    />
   </view>
 </template>
 
@@ -81,7 +85,7 @@ export default {
     // 回到首页
     goHome () {
       uni.switchTab({
-        url: "/pages/liaoNingFind/views/index",
+        url: "/pages/cl/index",
       });
     },
     // 检查用户是否登录

@@ -198,7 +198,7 @@
     </view>
     <!-- 滑动提示 -->
     <view
-      v-if="isFirstPlay && step === 3"
+      v-if=" isSlide && isFirstPlay && step === 3"
       class="slide-image"
       @click="isFirstPlay = false"
     >
@@ -214,10 +214,14 @@ export default {
     clVideo,
   },
   props: {
-    videoDetail: {
+    videoDetail: { // 视频彩铃详情
       type: Object,
       require: true,
       default: () => { },
+    },
+    isSlide: { // 是否展示滑动提示，默认展示
+      type: Boolean,
+      default: true,
     },
   },
   data () {
@@ -234,7 +238,7 @@ export default {
         share: true,
         preview: true,
       }, // 是否展示设置按钮，默认展示
-      isFirstPlay: true, // 是否第一次
+      isFirstPlay: false, // 是否第一次
       step: 1, // 新手引导步骤
     };
   },
@@ -251,6 +255,8 @@ export default {
           // 播放器展示高度、宽度
           this.videoHeight = `${res.windowHeight}px`;
           this.videoWidth = `${res.windowWidth}px`;
+          // 是否展示引导弹窗
+          this.isFirstPlay = !!uni.getStorageSync("userPlayVideo");
         });
       });
     },
@@ -318,7 +324,7 @@ export default {
     },
     // 分享到微信或者朋友圈
     shareEvent (ringId) {
-      if (!uni.getStorageSync("Authorization")) {
+      if (uni.getStorageSync("Authorization")) {
         const data = {
           ringId,
           target: "fx",
@@ -626,7 +632,7 @@ export default {
   border-radius: 50%;
   z-index: 1;
   opacity: 0;
-  box-shadow: -16px 0px 40px 16px rgba(179, 123, 245, 0.3); /* 阴影效果 */
+  box-shadow: 0 0 0 6rpx #9e79ff; /* 阴影效果 */
   transform: translate(-50%, -50%);
 }
 /* 第一个圆圈动画 */

@@ -130,6 +130,8 @@ export default {
   background: white;
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
+  height: 98px;
+  box-shadow: -1.04px -3.86px 27px 4px rgba(0, 0, 0, 0.06);
 }
 
 .tab-bar-item {
@@ -142,11 +144,11 @@ export default {
 }
 
 .tab-bar-item .cover-image {
-  width: 27px;
-  height: 27px;
+  width: 60rpx;
+  height: 60rpx;
 }
 
 .tab-bar-item .cover-view {
-  font-size: 10px;
+  font-size: 24rpx;
 }
 </style>

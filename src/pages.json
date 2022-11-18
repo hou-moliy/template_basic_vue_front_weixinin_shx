@@ -109,14 +109,14 @@
     "list": [
       {
         "pagePath": "pages/cl/index",
-        "iconPath": "static/tabbar/component.png",
-        "selectedIconPath": "static/tabbar/component_select.png",
+        "iconPath": "static/tabbar/cl_tabbar.png",
+        "selectedIconPath": "static/tabbar/cl_active_tabbar.png",
         "text": "彩铃"
       },
       {
         "pagePath": "pages/mine/index",
-        "iconPath": "static/tabbar/template.png",
-        "selectedIconPath": "static/tabbar/template_select.png",
+        "iconPath": "static/tabbar/mine_tabbar.png",
+        "selectedIconPath": "static/tabbar/mine_active_tabbar.png",
         "text": "我的"
       }
     ]

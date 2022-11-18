@@ -2,7 +2,7 @@
   <view
     class="content"
     :style="{
-      backgroundImage: 'url(' + `${staticImgs}/lnmp/shareMuisc-bj.png` + ')',
+      backgroundImage: 'url(' + `${staticImgs}/shxmp/init/share_bg.png` + ')',
     }"
   >
     <view
@@ -19,10 +19,10 @@
           <view class="share-mode-wx">
             <button open-type="share">
               <view class="share-mode-wx-img">
-                <img :src="`${staticImgs}/lnmp/shareMuisc-wx.png`">
+                <img :src="`${staticImgs}/shxmp/init/share_wx.png`">
               </view>
               <view class="share-mode-wx-title">
-                分享给朋友
+                分享给微信朋友
               </view>
             </button>
           </view>
@@ -31,12 +31,18 @@
             @click="sharePyq"
           >
             <view class="share-mode-wx-img">
-              <img :src="`${staticImgs}/lnmp/shareMuisc-pyq.png`">
+              <img :src="`${staticImgs}/shxmp/init/share_pyq.png`">
             </view>
             <view class="share-mode-wx-title">
-              保存分享到朋友圈
+              保存分享朋友圈
             </view>
           </view>
+        </view>
+        <view
+          class="close-btn"
+          @click="goBack"
+        >
+          <image :src="`${staticImgs}/shxmp/init/close.png`" />
         </view>
       </view>
       <!-- 遮罩 -->
@@ -165,7 +171,7 @@ export default {
       this.$loading("绘制中");
       this.getVideoDetail();
       if (phone) {
-        this.avatarUrl = userInfo.avatarUrl || `${this.globalData.staticImgs}/lnmp/avater_def.png`;
+        this.avatarUrl = userInfo.avatarUrl || `${this.globalData.staticImgs}/shxmp/init/avater_def.png`;
         this.userName = userInfo.nickName || `${phone.substring(0, 3)}****${phone.substring(7)}`;
         this.phoneNumber = phone;
         // this.qrcodeJk();
@@ -174,15 +180,16 @@ export default {
         // 自测结束
       }
     },
+    // 返回上一页
+    goBack () {
+      uni.navigateBack();
+    },
     // 获取二维码
     qrcodeJk () {
       // 二维码页面
-      const mpath = encodeURI(
-        "/pagesCommon/share/openShare?phonenumber=" +
-        this.phoneNumber +
-        "&videoId=" +
-        this.videoId,
-      );
+      const shareVideoUrl = encodeURI(`/pagesCommon/share/openShare?phonenumber=${this.phoneNumber}&videoId=${this.videoId}`);
+      const shareClUrl = encodeURI(`/pagesCommon/share/openShare?phonenumber=${this.phoneNumber}&videoId=${this.videoId}`);
+      const mpath = this.shareType === 1 ? shareVideoUrl : shareClUrl;
       ShareService
         .qrcode({
           path: mpath,
@@ -230,10 +237,7 @@ export default {
         const d = await getSharePoster({
           _this: this, // 若在组件中使用 必传
           alpha: 0.92,
-          backgroundImage: `${this.globalData.staticImgs}/lnmp/shareVideo-bg.png`, // 接口返回的背景图
-          formData: {
-            // 访问接口获取背景图携带自定义数据
-          },
+          backgroundImage: `${this.globalData.staticImgs}/shxmp/init/share_bg.png`, // 接口返回的背景图
           posterCanvasId: this.canvasId, // canvasId
           delayTimeScale: 20, // 延时系数
           drawDelayTime: 500, // draw延时时间
@@ -265,7 +269,7 @@ export default {
       // 宽度 ：背景宽*x=当前元素宽度（高保上 元素宽为100rpx）,x = 100/背景宽
       // 可直接return数组，也可以return一个promise对象, 但最终resolve一个数组, 这样就可以方便实现后台可控绘制海报
       const coverUrl = Util.forwardingURL(this.videoDetail.coverUrl || this.videoDetail.coverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openHCoverUrl);
-      const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.jpg`;
+      const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.png`;
       return new Promise((resolve) => {
         resolve([
           // 封面图
@@ -288,8 +292,8 @@ export default {
     // 设置视频彩铃海报的绘制元素
     setDrawSpArray ({ bgObj }) {
       const coverUrl = Util.forwardingURL(this.videoDetail.coverUrl || this.videoDetail.coverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openVCoverUrl || this.videoDetail.openHCoverUrl);
-      const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.jpg`;
-      const playUrl = `${this.globalData.staticImgs}/lnmp/play.png`;
+      const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.png`;
+      const playUrl = `${this.globalData.staticImgs}/shxmp/init/play.png`;
       return new Promise((resolve) => {
         resolve([
           // 封面图
@@ -463,8 +467,9 @@ page {
 .btns {
   width: 100%;
   margin-top: 60rpx;
+  margin-bottom: 120rpx;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
   align-items: center;
   .share-hy {
     image {
@@ -515,6 +520,15 @@ page {
       button::after {
         border: none;
       }
+    }
+  }
+  .close-btn {
+    width: 33rpx;
+    height: 34rpx;
+    margin-top: 78rpx;
+    image {
+      width: 100%;
+      height: 100%;
     }
   }
 }
