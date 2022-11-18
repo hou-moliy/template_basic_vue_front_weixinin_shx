@@ -41,7 +41,7 @@
 
 <script>
 import AdService from "@/api/ad/index.js";
-import { navigateToAny } from "@/utils/tools.js";
+import { navigateToAny } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
@@ -88,7 +88,8 @@ export default {
     },
 
     async navigateToH5 (event) {
-      this.$emit("buryBannerId", event.id);
+      console.log(event);
+      // this.$emit("buryBannerId", event.id);
       await this.$store.dispatch("getCustomorderList", `swiper_${event.id}`);
       console.log(
         this.$store.state.offlinePopup,

@@ -1,8 +1,16 @@
 <template>
   <view class="swiper-tab">
-    <view class="tab-container" :style="{ background: tabBackground }">
+    <view
+      class="tab-container"
+      :style="{ background: tabBackground }"
+    >
       <!-- 头部标题区域 -->
-      <view class="title" style="margin-top: 100rpx">彩铃</view>
+      <view
+        class="title"
+        style="margin-top: 100rpx"
+      >
+        彩铃
+      </view>
       <!-- 头部Tab区域 -->
       <view :class="['tab', `tab-${scrollNavStation}`]">
         <scroll-view
@@ -39,7 +47,7 @@
                         : '',
                   }"
                   class="tab-item-hr"
-                />
+                >
               </view>
             </view>
           </view>
@@ -68,7 +76,10 @@
         }"
         @change="swiperChange"
       >
-        <swiper-item v-for="swipeItem in tabList" :key="swipeItem.id">
+        <swiper-item
+          v-for="swipeItem in tabList"
+          :key="swipeItem.id"
+        >
           <scroll-view
             scroll-y="true"
             :style="{ height: `${windowHeight - navHeight}px` }"
@@ -117,20 +128,22 @@
       </swiper>
     </view>
     <!-- 自定义Tabbar -->
-    <custom-tabbar :tab-bar="tabBar" :mid-button="true" />
+    <custom-tabbar
+      :tab-bar="tabBar"
+      :mid-button="true"
+    />
   </view>
 </template>
 
 <script>
 import FindService from "@/api/find/tabAndbanner";
 import Util from "@/utils/tools.js";
-import ebConfigContainer from "../../components/eb-comp/eb-config-container/eb-config-container.vue";
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
 
 export default {
   name: "Index",
-  components: { ebConfigContainer, ebConfigContainerAsync },
-  data() {
+  components: { ebConfigContainerAsync },
+  data () {
     return {
       tabBar: this.$store.getters.tabbarList, // 底部导航栏
       tabList: [], // 头部Tab
@@ -194,16 +207,16 @@ export default {
       },
     };
   },
-  created() {
+  created () {
     this.getPageWidthHeight();
   },
-  onLoad() {
+  onLoad () {
     this.dispatchPageEvent();
   },
-  onShow() {
+  onShow () {
     this.getTabList();
   },
-  onShareAppMessage(res) {
+  onShareAppMessage (res) {
     if (res.from === "button") {
       console.log("发现分享", res);
       // 来自页面内分享按钮
@@ -233,7 +246,7 @@ export default {
   },
   methods: {
     // 跨页面通信监听
-    dispatchPageEvent() {
+    dispatchPageEvent () {
       uni.$on("changeTabByMore", data => {
         this.changeTabByMore(data);
       });
@@ -242,7 +255,7 @@ export default {
       });
     },
     // 初始化页面样式宽高等
-    getPageWidthHeight() {
+    getPageWidthHeight () {
       uni.getSystemInfo({
         success: res => {
           this.navHeight = res.statusBarHeight;
@@ -251,16 +264,16 @@ export default {
         },
       });
     },
-    swichNavDebounce(e) {
+    swichNavDebounce (e) {
       this.swichNavInfo = e;
       Util.debounce(this.swichNav, 200, true)();
     },
-    swichNav() {
+    swichNav () {
       const { current } = this.swichNavInfo.currentTarget.dataset;
       this.swiperTab = current - 1;
       this.currentTab = current;
     },
-    swiperContainerScroll(e) {
+    swiperContainerScroll (e) {
       if (e.detail.scrollTop > 30) {
         this.tabBackground = "#ff704f";
       } else {
@@ -270,10 +283,11 @@ export default {
       }
     },
     // 获取tabList
-    async getTabList() {
+    async getTabList () {
       await FindService.getTab({ tabTarget: "fx" }).then(res => {
         if (res.data.code === 200) {
           this.tabList = res.data.data;
+          console.log(res.data.data);
         }
         if (!this.pageName) {
           this.pageName = this.tabList[0].pageName;
@@ -290,7 +304,7 @@ export default {
       });
     },
     // 判断tab是否超出屏幕
-    checkTabOverFlow() {
+    checkTabOverFlow () {
       this.$nextTick(() => {
         // 判断tab是否超出屏幕
         uni
@@ -305,10 +319,10 @@ export default {
           });
       });
     },
-    scrollNav(event) {
+    scrollNav (event) {
       Util.debounce(this.scrollNavFun, 10, true)(event);
     },
-    scrollNavFun(event) {
+    scrollNavFun (event) {
       this.scrollInfo = event.detail;
       if (event.detail.scrollLeft <= 10) {
         // 滑动到了最左端
@@ -322,15 +336,15 @@ export default {
         this.scrollNavStation = "center";
       }
     },
-    rpxTopx(num) {
+    rpxTopx (num) {
       const retNum = (uni.getSystemInfoSync().screenWidth / 750) * num;
       return retNum;
     },
-    swiperChange(e) {
+    swiperChange (e) {
       this.swiperChangeInfo = e;
       Util.debounce(this.swiperNavDebounce, 200, true)();
     },
-    swiperNavDebounce() {
+    swiperNavDebounce () {
       const e = this.swiperChangeInfo;
       const { current } = e.detail;
       this.swiperTab = current;
@@ -342,7 +356,7 @@ export default {
       }
     },
     // 点击查看更多按钮事件
-    changeTabByMore(pageName) {
+    changeTabByMore (pageName) {
       const current = this.tabList.filter(e => {
         return pageName === e.pageName;
       })[0].sort;
@@ -351,7 +365,7 @@ export default {
       this.pageName = this.tabList[current - 1].pageName;
     },
     // 改变头部导航
-    changeTab(current) {
+    changeTab (current) {
       uni
         .createSelectorQuery()
         .in(this)
@@ -378,7 +392,7 @@ export default {
         });
     },
     // 滚动到底部监听
-    scrolltolower() {
+    scrolltolower () {
       console.log(this.$refs, "ppp");
       console.log(this.$refs.EbConfig, this.pageName);
       this.$nextTick(() => {
@@ -388,7 +402,7 @@ export default {
       });
     },
     // 子组件打开登录弹窗
-    openLoginPopup() {
+    openLoginPopup () {
       console.log("登录弹窗");
       // this.$refs.popup_login.open();
     },
