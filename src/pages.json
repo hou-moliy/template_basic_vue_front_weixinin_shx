@@ -66,6 +66,13 @@
             "navigationBarTitleText": "视频彩铃包页面示例",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "ai/ai",
+          "style": {
+            "navigationBarTitleText": "AI换铃",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },
