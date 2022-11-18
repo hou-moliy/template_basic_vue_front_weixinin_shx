@@ -53,6 +53,13 @@
 						"navigationBarTitleText": "",
 						"enablePullDownRefresh": false
 					}
+				},
+				{
+					"path": "share/openShare",
+					"style": {
+						"navigationBarTitleText": "呼叫预览页面",
+						"navigationStyle": "custom"
+					}
 				}
 			]
 		},
