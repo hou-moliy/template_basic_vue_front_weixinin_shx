@@ -157,21 +157,13 @@
 
 <script>
 import * as axios from "@/api/index.js";
-// import uniPopup from '@/components/uni-popup/uni-popup.vue'
-// import uniPopupLoginTips from '@/components/uni-popup/uni-popup-login-tips.vue'
 import loginService from "@/api/my/my.js";
-// import videoService from '@/api/cx/video.js'
 import miguService from "@/api/migu/migu.js";
-// import assistantService from '@/api/assistant/index.js'
 // import analysisService from '@/api/analysis/analysis.js'
-// import aiService from '@/api/ai/index.js'
 import {
   rsaEncryption,
   rsaDecryption,
 } from "@/utils/rsa.js";
-// import { log } from "../../utils/QS-SharePoster/app";
-// import { encode, decode, Base64 } from '@/utils/base.js'
-// import { phoneFilter, debounce } from '@/utils/tools.js'
 export default {
   name: "LoginPage",
   data () {
@@ -660,7 +652,7 @@ height: 100%;
 
   .bottom-box {
     position: fixed;
-    bottom: 160rpx;
+    bottom: 79rpx;
     width: 100%;
     text-align: center;
 
