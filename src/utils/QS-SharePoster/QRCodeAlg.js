@@ -1,12 +1,12 @@
 /**
-     * 获取单个字符的utf8编码
-     * unicode BMP平面约65535个字符
-     * @param {num} code
-     * return {array}
-     */
+    * 获取单个字符的utf8编码
+    * unicode BMP平面约65535个字符
+    * @param {num} code
+    * return {array}
+    */
 function unicodeFormat8 (code) {
   // 1 byte
-  let c0, c1, c2;
+  var c0, c1, c2;
   if (code < 128) {
     return [code];
     // 2 bytes
@@ -23,34 +23,34 @@ function unicodeFormat8 (code) {
   }
 }
 /**
-     * 获取字符串的utf8编码字节串
-     * @param {string} string
-     * @return {array}
-     */
+ * 获取字符串的utf8编码字节串
+ * @param {string} string
+ * @return {array}
+ */
 function getUTF8Bytes (string) {
-  const utf8codes = [];
-  for (let i = 0; i < string.length; i++) {
-    const code = string.charCodeAt(i);
-    const utf8 = unicodeFormat8(code);
-    for (let j = 0; j < utf8.length; j++) {
+  var utf8codes = [];
+  for (var i = 0; i < string.length; i++) {
+    var code = string.charCodeAt(i);
+    var utf8 = unicodeFormat8(code);
+    for (var j = 0; j < utf8.length; j++) {
       utf8codes.push(utf8[j]);
     }
   }
   return utf8codes;
 }
 /**
-     * 二维码算法实现
-     * @param {string} data              要编码的信息字符串
-     * @param {num} errorCorrectLevel 纠错等级
-     */
+ * 二维码算法实现
+ * @param {string} data              要编码的信息字符串
+ * @param {num} errorCorrectLevel 纠错等级
+ */
 export default function QRCodeAlg (data, errorCorrectLevel) {
-  this.typeNumber = -1; // 版本
+  this.typeNumber = -1; //版本
   this.errorCorrectLevel = errorCorrectLevel;
-  this.modules = null; // 二维矩阵，存放最终结果
-  this.moduleCount = 0; // 矩阵大小
-  this.dataCache = null; // 数据缓存
-  this.rsBlocks = null; // 版本数据信息
-  this.totalDataCount = -1; // 可使用的数据量
+  this.modules = null; //二维矩阵，存放最终结果
+  this.moduleCount = 0; //矩阵大小
+  this.dataCache = null; //数据缓存
+  this.rsBlocks = null; //版本数据信息
+  this.totalDataCount = -1; //可使用的数据量
   this.data = data;
   this.utf8bytes = getUTF8Bytes(data);
   this.make();
@@ -58,29 +58,29 @@ export default function QRCodeAlg (data, errorCorrectLevel) {
 QRCodeAlg.prototype = {
   constructor: QRCodeAlg,
   /**
-           * 获取二维码矩阵大小
-           * @return {num} 矩阵大小
-           */
+   * 获取二维码矩阵大小
+   * @return {num} 矩阵大小
+   */
   getModuleCount: function () {
     return this.moduleCount;
   },
   /**
-           * 编码
-           */
+   * 编码
+   */
   make: function () {
     this.getRightType();
     this.dataCache = this.createData();
     this.createQrcode();
   },
   /**
-           * 设置二位矩阵功能图形
-           * @param  {bool} test 表示是否在寻找最好掩膜阶段
-           * @param  {num} maskPattern 掩膜的版本
-           */
+   * 设置二位矩阵功能图形
+   * @param  {bool} test 表示是否在寻找最好掩膜阶段
+   * @param  {num} maskPattern 掩膜的版本
+   */
   makeImpl: function (maskPattern) {
     this.moduleCount = this.typeNumber * 4 + 17;
     this.modules = new Array(this.moduleCount);
-    for (let row = 0; row < this.moduleCount; row++) {
+    for (var row = 0; row < this.moduleCount; row++) {
       this.modules[row] = new Array(this.moduleCount);
     }
     this.setupPositionProbePattern(0, 0);
@@ -95,16 +95,16 @@ QRCodeAlg.prototype = {
     this.mapData(this.dataCache, maskPattern);
   },
   /**
-           * 设置二维码的位置探测图形
-           * @param  {num} row 探测图形的中心横坐标
-           * @param  {num} col 探测图形的中心纵坐标
-           */
+   * 设置二维码的位置探测图形
+   * @param  {num} row 探测图形的中心横坐标
+   * @param  {num} col 探测图形的中心纵坐标
+   */
   setupPositionProbePattern: function (row, col) {
-    for (let r = -1; r <= 7; r++) {
+    for (var r = -1; r <= 7; r++) {
       if (row + r <= -1 || this.moduleCount <= row + r) continue;
-      for (let c = -1; c <= 7; c++) {
+      for (var c = -1; c <= 7; c++) {
         if (col + c <= -1 || this.moduleCount <= col + c) continue;
-        if ((r >= 0 && r <= 6 && (c == 0 || c == 6)) || (c >= 0 && c <= 6 && (r == 0 || r == 6)) || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
+        if ((0 <= r && r <= 6 && (c == 0 || c == 6)) || (0 <= c && c <= 6 && (r == 0 || r == 6)) || (2 <= r && r <= 4 && 2 <= c && c <= 4)) {
           this.modules[row + r][col + c] = true;
         } else {
           this.modules[row + r][col + c] = false;
@@ -113,16 +113,16 @@ QRCodeAlg.prototype = {
     }
   },
   /**
-           * 创建二维码
-           * @return {[type]} [description]
-           */
+   * 创建二维码
+   * @return {[type]} [description]
+   */
   createQrcode: function () {
-    let minLostPoint = 0;
-    let pattern = 0;
-    let bestModules = null;
-    for (let i = 0; i < 8; i++) {
+    var minLostPoint = 0;
+    var pattern = 0;
+    var bestModules = null;
+    for (var i = 0; i < 8; i++) {
       this.makeImpl(i);
-      const lostPoint = QRUtil.getLostPoint(this);
+      var lostPoint = QRUtil.getLostPoint(this);
       if (i == 0 || minLostPoint > lostPoint) {
         minLostPoint = lostPoint;
         pattern = i;
@@ -136,11 +136,11 @@ QRCodeAlg.prototype = {
     }
   },
   /**
-           * 设置定位图形
-           * @return {[type]} [description]
-           */
+   * 设置定位图形
+   * @return {[type]} [description]
+   */
   setupTimingPattern: function () {
-    for (let r = 8; r < this.moduleCount - 8; r++) {
+    for (var r = 8; r < this.moduleCount - 8; r++) {
       if (this.modules[r][6] != null) {
         continue;
       }
@@ -152,20 +152,20 @@ QRCodeAlg.prototype = {
     }
   },
   /**
-           * 设置矫正图形
-           * @return {[type]} [description]
-           */
+   * 设置矫正图形
+   * @return {[type]} [description]
+   */
   setupPositionAdjustPattern: function () {
-    const pos = QRUtil.getPatternPosition(this.typeNumber);
-    for (let i = 0; i < pos.length; i++) {
-      for (let j = 0; j < pos.length; j++) {
-        const row = pos[i];
-        const col = pos[j];
+    var pos = QRUtil.getPatternPosition(this.typeNumber);
+    for (var i = 0; i < pos.length; i++) {
+      for (var j = 0; j < pos.length; j++) {
+        var row = pos[i];
+        var col = pos[j];
         if (this.modules[row][col] != null) {
           continue;
         }
-        for (let r = -2; r <= 2; r++) {
-          for (let c = -2; c <= 2; c++) {
+        for (var r = -2; r <= 2; r++) {
+          for (var c = -2; c <= 2; c++) {
             if (r == -2 || r == 2 || c == -2 || c == 2 || (r == 0 && c == 0)) {
               this.modules[row + r][col + c] = true;
             } else {
@@ -177,30 +177,30 @@ QRCodeAlg.prototype = {
     }
   },
   /**
-           * 设置版本信息（7以上版本才有）
-           * @param  {bool} test 是否处于判断最佳掩膜阶段
-           * @return {[type]}      [description]
-           */
+   * 设置版本信息（7以上版本才有）
+   * @param  {bool} test 是否处于判断最佳掩膜阶段
+   * @return {[type]}      [description]
+   */
   setupTypeNumber: function (test) {
-    const bits = QRUtil.getBCHTypeNumber(this.typeNumber);
-    for (let i = 0; i < 18; i++) {
-      const mod = (!test && ((bits >> i) & 1) == 1);
+    var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+    for (var i = 0; i < 18; i++) {
+      var mod = (!test && ((bits >> i) & 1) == 1);
       this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
       this.modules[i % 3 + this.moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
     }
   },
   /**
-           * 设置格式信息（纠错等级和掩膜版本）
-           * @param  {bool} test
-           * @param  {num} maskPattern 掩膜版本
-           * @return {}
-           */
+   * 设置格式信息（纠错等级和掩膜版本）
+   * @param  {bool} test
+   * @param  {num} maskPattern 掩膜版本
+   * @return {}
+   */
   setupTypeInfo: function (test, maskPattern) {
-    const data = (QRErrorCorrectLevel[this.errorCorrectLevel] << 3) | maskPattern;
-    const bits = QRUtil.getBCHTypeInfo(data);
+    var data = (QRErrorCorrectLevel[this.errorCorrectLevel] << 3) | maskPattern;
+    var bits = QRUtil.getBCHTypeInfo(data);
     // vertical
-    for (let i = 0; i < 15; i++) {
-      const mod = (!test && ((bits >> i) & 1) == 1);
+    for (var i = 0; i < 15; i++) {
+      var mod = (!test && ((bits >> i) & 1) == 1);
       if (i < 6) {
         this.modules[i][8] = mod;
       } else if (i < 8) {
@@ -209,6 +209,7 @@ QRCodeAlg.prototype = {
         this.modules[this.moduleCount - 15 + i][8] = mod;
       }
       // horizontal
+      var mod = (!test && ((bits >> i) & 1) == 1);
       if (i < 8) {
         this.modules[8][this.moduleCount - i - 1] = mod;
       } else if (i < 9) {
@@ -221,15 +222,15 @@ QRCodeAlg.prototype = {
     this.modules[this.moduleCount - 8][8] = (!test);
   },
   /**
-           * 数据编码
-           * @return {[type]} [description]
-           */
+   * 数据编码
+   * @return {[type]} [description]
+   */
   createData: function () {
-    const buffer = new QRBitBuffer();
-    const lengthBits = this.typeNumber > 9 ? 16 : 8;
-    buffer.put(4, 4); // 添加模式
+    var buffer = new QRBitBuffer();
+    var lengthBits = this.typeNumber > 9 ? 16 : 8;
+    buffer.put(4, 4); //添加模式
     buffer.put(this.utf8bytes.length, lengthBits);
-    for (let i = 0, l = this.utf8bytes.length; i < l; i++) {
+    for (var i = 0, l = this.utf8bytes.length; i < l; i++) {
       buffer.put(this.utf8bytes[i], 8);
     }
     if (buffer.length + 4 <= this.totalDataCount * 8) {
@@ -253,84 +254,85 @@ QRCodeAlg.prototype = {
     return this.createBytes(buffer);
   },
   /**
-           * 纠错码编码
-           * @param  {buffer} buffer 数据编码
-           * @return {[type]}
-           */
+   * 纠错码编码
+   * @param  {buffer} buffer 数据编码
+   * @return {[type]}
+   */
   createBytes: function (buffer) {
-    let offset = 0;
-    let maxDcCount = 0;
-    let maxEcCount = 0;
-    const length = this.rsBlock.length / 3;
-    const rsBlocks = [];
-    for (let i = 0; i < length; i++) {
-      const count = this.rsBlock[i * 3 + 0];
-      const totalCount = this.rsBlock[i * 3 + 1];
-      const dataCount = this.rsBlock[i * 3 + 2];
-      for (let j = 0; j < count; j++) {
+    var offset = 0;
+    var maxDcCount = 0;
+    var maxEcCount = 0;
+    var length = this.rsBlock.length / 3;
+    var rsBlocks = new Array();
+    for (var i = 0; i < length; i++) {
+      var count = this.rsBlock[i * 3 + 0];
+      var totalCount = this.rsBlock[i * 3 + 1];
+      var dataCount = this.rsBlock[i * 3 + 2];
+      for (var j = 0; j < count; j++) {
         rsBlocks.push([dataCount, totalCount]);
       }
     }
-    const dcdata = new Array(rsBlocks.length);
-    const ecdata = new Array(rsBlocks.length);
-    for (let r = 0; r < rsBlocks.length; r++) {
-      const dcCount = rsBlocks[r][0];
-      const ecCount = rsBlocks[r][1] - dcCount;
+    var dcdata = new Array(rsBlocks.length);
+    var ecdata = new Array(rsBlocks.length);
+    for (var r = 0; r < rsBlocks.length; r++) {
+      var dcCount = rsBlocks[r][0];
+      var ecCount = rsBlocks[r][1] - dcCount;
       maxDcCount = Math.max(maxDcCount, dcCount);
       maxEcCount = Math.max(maxEcCount, ecCount);
       dcdata[r] = new Array(dcCount);
-      for (let i = 0; i < dcdata[r].length; i++) {
+      for (var i = 0; i < dcdata[r].length; i++) {
         dcdata[r][i] = 0xff & buffer.buffer[i + offset];
       }
       offset += dcCount;
-      const rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
-      const rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
-      const modPoly = rawPoly.mod(rsPoly);
+      var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+      var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+      var modPoly = rawPoly.mod(rsPoly);
       ecdata[r] = new Array(rsPoly.getLength() - 1);
-      for (let i = 0; i < ecdata[r].length; i++) {
-        const modIndex = i + modPoly.getLength() - ecdata[r].length;
+      for (var i = 0; i < ecdata[r].length; i++) {
+        var modIndex = i + modPoly.getLength() - ecdata[r].length;
         ecdata[r][i] = (modIndex >= 0) ? modPoly.get(modIndex) : 0;
       }
     }
-    const data = new Array(this.totalDataCount);
-    let index = 0;
-    for (let i = 0; i < maxDcCount; i++) {
-      for (let r = 0; r < rsBlocks.length; r++) {
+    var data = new Array(this.totalDataCount);
+    var index = 0;
+    for (var i = 0; i < maxDcCount; i++) {
+      for (var r = 0; r < rsBlocks.length; r++) {
         if (i < dcdata[r].length) {
           data[index++] = dcdata[r][i];
         }
       }
     }
-    for (let i = 0; i < maxEcCount; i++) {
-      for (let r = 0; r < rsBlocks.length; r++) {
+    for (var i = 0; i < maxEcCount; i++) {
+      for (var r = 0; r < rsBlocks.length; r++) {
         if (i < ecdata[r].length) {
           data[index++] = ecdata[r][i];
         }
       }
     }
     return data;
+
   },
   /**
-           * 布置模块，构建最终信息
-           * @param  {} data
-           * @param  {} maskPattern
-           * @return {}
-           */
+   * 布置模块，构建最终信息
+   * @param  {} data
+   * @param  {} maskPattern
+   * @return {}
+   */
   mapData: function (data, maskPattern) {
-    let inc = -1;
-    let row = this.moduleCount - 1;
-    let bitIndex = 7;
-    let byteIndex = 0;
-    for (let col = this.moduleCount - 1; col > 0; col -= 2) {
+    var inc = -1;
+    var row = this.moduleCount - 1;
+    var bitIndex = 7;
+    var byteIndex = 0;
+    for (var col = this.moduleCount - 1; col > 0; col -= 2) {
       if (col == 6) col--;
       while (true) {
-        for (let c = 0; c < 2; c++) {
+        for (var c = 0; c < 2; c++) {
           if (this.modules[row][col - c] == null) {
-            let dark = false;
+            var dark = false;
             if (byteIndex < data.length) {
               dark = (((data[byteIndex] >>> bitIndex) & 1) == 1);
             }
-            const mask = QRUtil.getMask(maskPattern, row, col - c);
+            var mask = QRUtil.getMask(maskPattern, row, col - c);
             if (mask) {
               dark = !dark;
             }
@@ -350,21 +352,21 @@ QRCodeAlg.prototype = {
         }
       }
     }
-  },
+  }
 };
 /**
-     * 填充字段
-     */
+ * 填充字段
+ */
 QRCodeAlg.PAD0 = 0xEC;
 QRCodeAlg.PAD1 = 0x11;
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // 纠错等级对应的编码
-// ---------------------------------------------------------------------
-const QRErrorCorrectLevel = [1, 0, 3, 2];
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
+var QRErrorCorrectLevel = [1, 0, 3, 2];
+//---------------------------------------------------------------------
 // 掩膜版本
-// ---------------------------------------------------------------------
-const QRMaskPattern = {
+//---------------------------------------------------------------------
+var QRMaskPattern = {
   PATTERN000: 0,
   PATTERN001: 1,
   PATTERN010: 2,
@@ -372,15 +374,15 @@ const QRMaskPattern = {
   PATTERN100: 4,
   PATTERN101: 5,
   PATTERN110: 6,
-  PATTERN111: 7,
+  PATTERN111: 7
 };
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // 工具类
-// ---------------------------------------------------------------------
-const QRUtil = {
+//---------------------------------------------------------------------
+var QRUtil = {
   /*
-   每个版本矫正图形的位置
-  */
+  每个版本矫正图形的位置
+   */
   PATTERN_POSITION_TABLE: [
     [],
     [6, 18],
@@ -421,36 +423,36 @@ const QRUtil = {
     [6, 28, 54, 80, 106, 132, 158],
     [6, 32, 58, 84, 110, 136, 162],
     [6, 26, 54, 82, 110, 138, 166],
-    [6, 30, 58, 86, 114, 142, 170],
+    [6, 30, 58, 86, 114, 142, 170]
   ],
   G15: (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
   G18: (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
   G15_MASK: (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1),
   /*
-          BCH编码格式信息
-           */
+  BCH编码格式信息
+   */
   getBCHTypeInfo: function (data) {
-    let d = data << 10;
+    var d = data << 10;
     while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
       d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15)));
     }
     return ((data << 10) | d) ^ QRUtil.G15_MASK;
   },
   /*
-          BCH编码版本信息
-           */
+  BCH编码版本信息
+   */
   getBCHTypeNumber: function (data) {
-    let d = data << 12;
+    var d = data << 12;
     while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
       d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18)));
     }
     return (data << 12) | d;
   },
   /*
-          获取BCH位信息
-           */
+  获取BCH位信息
+   */
   getBCHDigit: function (data) {
-    let digit = 0;
+    var digit = 0;
     while (data != 0) {
       digit++;
       data >>>= 1;
@@ -458,14 +460,14 @@ const QRUtil = {
     return digit;
   },
   /*
-          获取版本对应的矫正图形位置
-           */
+  获取版本对应的矫正图形位置
+   */
   getPatternPosition: function (typeNumber) {
     return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
   },
   /*
-          掩膜算法
-           */
+  掩膜算法
+   */
   getMask: function (maskPattern, i, j) {
     switch (maskPattern) {
       case QRMaskPattern.PATTERN000:
@@ -489,28 +491,28 @@ const QRUtil = {
     }
   },
   /*
-          获取RS的纠错多项式
-           */
+  获取RS的纠错多项式
+   */
   getErrorCorrectPolynomial: function (errorCorrectLength) {
-    let a = new QRPolynomial([1], 0);
-    for (let i = 0; i < errorCorrectLength; i++) {
+    var a = new QRPolynomial([1], 0);
+    for (var i = 0; i < errorCorrectLength; i++) {
       a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0));
     }
     return a;
   },
   /*
-          获取评价
-           */
+  获取评价
+   */
   getLostPoint: function (qrCode) {
-    const moduleCount = qrCode.getModuleCount();
-    let lostPoint = 0;
-    let darkCount = 0;
-    for (let row = 0; row < moduleCount; row++) {
-      let sameCount = 0;
-      let head = qrCode.modules[row][0];
-      for (let col = 0; col < moduleCount; col++) {
-        const current = qrCode.modules[row][col];
-        // level 3 评价
+    var moduleCount = qrCode.getModuleCount(),
+      lostPoint = 0,
+      darkCount = 0;
+    for (var row = 0; row < moduleCount; row++) {
+      var sameCount = 0;
+      var head = qrCode.modules[row][0];
+      for (var col = 0; col < moduleCount; col++) {
+        var current = qrCode.modules[row][col];
+        //level 3 评价
         if (col < moduleCount - 6) {
           if (current && !qrCode.modules[row][col + 1] && qrCode.modules[row][col + 2] && qrCode.modules[row][col + 3] && qrCode.modules[row][col + 4] && !qrCode.modules[row][col + 5] && qrCode.modules[row][col + 6]) {
             if (col < moduleCount - 10) {
@@ -524,9 +526,9 @@ const QRUtil = {
             }
           }
         }
-        // level 2 评价
+        //level 2 评价
         if ((row < moduleCount - 1) && (col < moduleCount - 1)) {
-          let count = 0;
+          var count = 0;
           if (current) count++;
           if (qrCode.modules[row + 1][col]) count++;
           if (qrCode.modules[row][col + 1]) count++;
@@ -535,7 +537,7 @@ const QRUtil = {
             lostPoint += 3;
           }
         }
-        // level 1 评价
+        //level 1 评价
         if (head ^ current) {
           sameCount++;
         } else {
@@ -545,18 +547,18 @@ const QRUtil = {
           }
           sameCount = 1;
         }
-        // level 4 评价
+        //level 4 评价
         if (current) {
           darkCount++;
         }
       }
     }
-    for (let col = 0; col < moduleCount; col++) {
-      let sameCount = 0;
-      let head = qrCode.modules[0][col];
-      for (let row = 0; row < moduleCount; row++) {
-        const current = qrCode.modules[row][col];
-        // level 3 评价
+    for (var col = 0; col < moduleCount; col++) {
+      var sameCount = 0;
+      var head = qrCode.modules[0][col];
+      for (var row = 0; row < moduleCount; row++) {
+        var current = qrCode.modules[row][col];
+        //level 3 评价
         if (row < moduleCount - 6) {
           if (current && !qrCode.modules[row + 1][col] && qrCode.modules[row + 2][col] && qrCode.modules[row + 3][col] && qrCode.modules[row + 4][col] && !qrCode.modules[row + 5][col] && qrCode.modules[row + 6][col]) {
             if (row < moduleCount - 10) {
@@ -570,7 +572,7 @@ const QRUtil = {
             }
           }
         }
-        // level 1 评价
+        //level 1 评价
         if (head ^ current) {
           sameCount++;
         } else {
@@ -583,19 +585,19 @@ const QRUtil = {
       }
     }
     // LEVEL4
-    const ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+    var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
     lostPoint += ratio * 10;
     return lostPoint;
-  },
+  }
 
 };
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // QRMath使用的数学工具
-// ---------------------------------------------------------------------
-const QRMath = {
+//---------------------------------------------------------------------
+var QRMath = {
   /*
   将n转化为a^m
-  */
+   */
   glog: function (n) {
     if (n < 1) {
       throw new Error("glog(" + n + ")");
@@ -603,8 +605,8 @@ const QRMath = {
     return QRMath.LOG_TABLE[n];
   },
   /*
-          将a^m转化为n
-           */
+  将a^m转化为n
+   */
   gexp: function (n) {
     while (n < 0) {
       n += 255;
@@ -615,36 +617,36 @@ const QRMath = {
     return QRMath.EXP_TABLE[n];
   },
   EXP_TABLE: new Array(256),
-  LOG_TABLE: new Array(256),
+  LOG_TABLE: new Array(256)
 
 };
-for (let i = 0; i < 8; i++) {
+for (var i = 0; i < 8; i++) {
   QRMath.EXP_TABLE[i] = 1 << i;
 }
-for (let i = 8; i < 256; i++) {
+for (var i = 8; i < 256; i++) {
   QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4] ^ QRMath.EXP_TABLE[i - 5] ^ QRMath.EXP_TABLE[i - 6] ^ QRMath.EXP_TABLE[i - 8];
 }
-for (let i = 0; i < 255; i++) {
+for (var i = 0; i < 255; i++) {
   QRMath.LOG_TABLE[QRMath.EXP_TABLE[i]] = i;
 }
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // QRPolynomial 多项式
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 /**
-     * 多项式类
-     * @param {Array} num   系数
-     * @param {num} shift a^shift
-     */
+ * 多项式类
+ * @param {Array} num   系数
+ * @param {num} shift a^shift
+ */
 function QRPolynomial (num, shift) {
   if (num.length == undefined) {
     throw new Error(num.length + "/" + shift);
   }
-  let offset = 0;
+  var offset = 0;
   while (offset < num.length && num[offset] == 0) {
     offset++;
   }
   this.num = new Array(num.length - offset + shift);
-  for (let i = 0; i < num.length - offset; i++) {
+  for (var i = 0; i < num.length - offset; i++) {
     this.num[i] = num[i + offset];
   }
 }
@@ -656,38 +658,38 @@ QRPolynomial.prototype = {
     return this.num.length;
   },
   /**
-           * 多项式乘法
-           * @param  {QRPolynomial} e 被乘多项式
-           * @return {[type]}   [description]
-           */
+   * 多项式乘法
+   * @param  {QRPolynomial} e 被乘多项式
+   * @return {[type]}   [description]
+   */
   multiply: function (e) {
-    const num = new Array(this.getLength() + e.getLength() - 1);
-    for (let i = 0; i < this.getLength(); i++) {
-      for (let j = 0; j < e.getLength(); j++) {
+    var num = new Array(this.getLength() + e.getLength() - 1);
+    for (var i = 0; i < this.getLength(); i++) {
+      for (var j = 0; j < e.getLength(); j++) {
         num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i)) + QRMath.glog(e.get(j)));
       }
     }
     return new QRPolynomial(num, 0);
   },
   /**
-           * 多项式模运算
-           * @param  {QRPolynomial} e 模多项式
-           * @return {}
-           */
+   * 多项式模运算
+   * @param  {QRPolynomial} e 模多项式
+   * @return {}
+   */
   mod: function (e) {
-    const tl = this.getLength();
-    const el = e.getLength();
+    var tl = this.getLength(),
+      el = e.getLength();
     if (tl - el < 0) {
       return this;
     }
-    const num = new Array(tl);
-    for (let i = 0; i < tl; i++) {
+    var num = new Array(tl);
+    for (var i = 0; i < tl; i++) {
       num[i] = this.get(i);
     }
     while (num.length >= el) {
-      const ratio = QRMath.glog(num[0]) - QRMath.glog(e.get(0));
+      var ratio = QRMath.glog(num[0]) - QRMath.glog(e.get(0));
 
-      for (let i = 0; i < e.getLength(); i++) {
+      for (var i = 0; i < e.getLength(); i++) {
         num[i] ^= QRMath.gexp(QRMath.glog(e.get(i)) + ratio);
       }
       while (num[0] == 0) {
@@ -695,16 +697,16 @@ QRPolynomial.prototype = {
       }
     }
     return new QRPolynomial(num, 0);
-  },
+  }
 };
 
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // RS_BLOCK_TABLE
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 /*
-    二维码各个版本信息[块数, 每块中的数据块数, 每块中的信息块数]
-     */
-const RS_BLOCK_TABLE = [
+二维码各个版本信息[块数, 每块中的数据块数, 每块中的信息块数]
+ */
+var RS_BLOCK_TABLE = [
   // L
   // M
   // Q
@@ -947,27 +949,27 @@ const RS_BLOCK_TABLE = [
   [19, 148, 118, 6, 149, 119],
   [18, 75, 47, 31, 76, 48],
   [34, 54, 24, 34, 55, 25],
-  [20, 45, 15, 61, 46, 16],
+  [20, 45, 15, 61, 46, 16]
 ];
 
 /**
-     * 根据数据获取对应版本
-     * @return {[type]} [description]
-     */
+ * 根据数据获取对应版本
+ * @return {[type]} [description]
+ */
 QRCodeAlg.prototype.getRightType = function () {
-  for (let typeNumber = 1; typeNumber < 41; typeNumber++) {
-    const rsBlock = RS_BLOCK_TABLE[(typeNumber - 1) * 4 + this.errorCorrectLevel];
+  for (var typeNumber = 1; typeNumber < 41; typeNumber++) {
+    var rsBlock = RS_BLOCK_TABLE[(typeNumber - 1) * 4 + this.errorCorrectLevel];
     if (rsBlock == undefined) {
       throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + this.errorCorrectLevel);
     }
-    const length = rsBlock.length / 3;
-    let totalDataCount = 0;
-    for (let i = 0; i < length; i++) {
-      const count = rsBlock[i * 3 + 0];
-      const dataCount = rsBlock[i * 3 + 2];
+    var length = rsBlock.length / 3;
+    var totalDataCount = 0;
+    for (var i = 0; i < length; i++) {
+      var count = rsBlock[i * 3 + 0];
+      var dataCount = rsBlock[i * 3 + 2];
       totalDataCount += dataCount * count;
     }
-    const lengthBytes = typeNumber > 9 ? 2 : 1;
+    var lengthBytes = typeNumber > 9 ? 2 : 1;
     if (this.utf8bytes.length + lengthBytes < totalDataCount || typeNumber == 40) {
       this.typeNumber = typeNumber;
       this.rsBlock = rsBlock;
@@ -977,25 +979,25 @@ QRCodeAlg.prototype.getRightType = function () {
   }
 };
 
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // QRBitBuffer
-// ---------------------------------------------------------------------
+//---------------------------------------------------------------------
 function QRBitBuffer () {
-  this.buffer = [];
+  this.buffer = new Array();
   this.length = 0;
 }
 QRBitBuffer.prototype = {
   get: function (index) {
-    const bufIndex = Math.floor(index / 8);
+    var bufIndex = Math.floor(index / 8);
     return ((this.buffer[bufIndex] >>> (7 - index % 8)) & 1);
   },
   put: function (num, length) {
-    for (let i = 0; i < length; i++) {
+    for (var i = 0; i < length; i++) {
       this.putBit(((num >>> (length - i - 1)) & 1));
     }
   },
   putBit: function (bit) {
-    const bufIndex = Math.floor(this.length / 8);
+    var bufIndex = Math.floor(this.length / 8);
     if (this.buffer.length <= bufIndex) {
       this.buffer.push(0);
     }
@@ -1003,5 +1005,5 @@ QRBitBuffer.prototype = {
       this.buffer[bufIndex] |= (0x80 >>> (this.length % 8));
     }
     this.length++;
-  },
+  }
 };

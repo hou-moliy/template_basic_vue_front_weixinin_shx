@@ -79,6 +79,13 @@
             "navigationBarTitleText": "AI换铃",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "spclLibrary/index",
+          "style": {
+            "navigationBarTitleText": "视菜铃音库",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },

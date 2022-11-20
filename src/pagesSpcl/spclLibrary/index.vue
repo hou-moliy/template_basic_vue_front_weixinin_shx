@@ -3,182 +3,140 @@
     <view class="cur-ring-t">
       <view
         class="cur-ring-t-item"
-        :class="navFlag == 'curt'?'count':''"
+        :class="navFlag == 'curt' ? 'count' : ''"
         @click="changeNav('curt')"
       >
         当前播放
       </view>
       <view
         class="cur-ring-t-item t-item-r"
-        :class="navFlag == 'lyk'?'count-lyk':''"
+        :class="navFlag == 'lyk' ? 'count-lyk' : ''"
         @click="changeNav('lyk')"
       >
         闲置铃音
       </view>
     </view>
-    <view
-      v-if="videoLists.length>0"
-      class="cur-ring-m"
-    >
-      <view
-        v-if="checkShow === true"
-        class="cur-ring-m-t"
-      >
+    <view v-if="videoLists.length > 0" class="cur-ring-m">
+      <view v-if="checkShow === true" class="cur-ring-m-t">
         <checkbox-group @change="changeVideo">
           <checkbox
-            style="transform:scale(0.7)"
+            style="transform: scale(0.7)"
             :checked="allFlag.checked"
             :value="allFlag.value"
           />
-          <text>全选({{ delCls.length }}/{{ videoLists.length>10?10:videoLists.length }})</text>
+          <text>
+            全选({{ delCls.length }}/{{
+              videoLists.length > 10 ? 10 : videoLists.length
+            }})
+          </text>
         </checkbox-group>
-        <view
-          class="mang-txt"
-          @click="delDone"
-        >
-          取消选择
-        </view>
+        <view class="mang-txt" @click="delDone">取消选择</view>
       </view>
-      <view
-        v-else
-        class="cur-ring-m-t"
-      >
+      <view v-else class="cur-ring-m-t">
         <view class="count-ring">
-          共<text style="color:#FF6F50">
+          共
+          <text style="color: #ff6f50">
             {{ videoLists.length }}
-          </text>首
+          </text>
+          首
         </view>
-        <view
-          v-if="videoLists.length > 0"
-          class="mang-txt"
-          @click="delOpen"
-        >
+        <view v-if="videoLists.length > 0" class="mang-txt" @click="delOpen">
           批量管理
         </view>
       </view>
-      <view
-        class="cur-ring-m-tips"
-        @click="toH5"
-      >
+      <view class="cur-ring-m-tips" @click="toH5">
         铃音显示不全？点击这里查看全部
       </view>
-      <view
-        class="cur-ring-m-f"
-        :class="checkShow?'isDelete':''"
-      >
-        <!-- <checkbox-group @change="checkboxChange"> -->
+      <view class="cur-ring-m-f" :class="checkShow ? 'isDelete' : ''">
         <label
-          v-for="(videoItem,key) in videoLists"
+          v-for="(videoItem, key) in videoLists"
           :key="key"
           class="video-item"
         >
           <view
             v-show="checkShow"
             class="list-checkbox"
-            :class="videoItem.checked?'list-checked':''"
-            @click="checkboxChange(videoItem.ringId,key)"
+            :class="videoItem.checked ? 'list-checked' : ''"
+            @click="checkboxChange(videoItem.ringId, key)"
           >
-            <text
-              v-if="videoItem.checked"
-              class="iconfont icon-xuanzhong"
-            />
+            <text v-if="videoItem.checked" class="iconfont icon-xuanzhong" />
           </view>
           <image
             class="video-item-l"
             mode="aspectFit"
-            :src="videoItem.coverUrl?videoItem.coverUrl:(videoItem.openVCoverUrl?videoItem.openVCoverUrl:videoItem.openHCoverUrl)"
+            :src="
+              videoItem.coverUrl
+                ? videoItem.coverUrl
+                : videoItem.openVCoverUrl
+                ? videoItem.openVCoverUrl
+                : videoItem.openHCoverUrl
+            "
             @click.stop="seeDetail(videoItem)"
           />
           <view
             class="video-info"
-            :class="checkShow === true?'video-info-del':''"
+            :class="checkShow === true ? 'video-info-del' : ''"
             @click.stop="seeDetail(videoItem)"
           >
-            <view class="infot">{{ videoItem.ringName.length>12?`${videoItem.ringName.slice(0,12)}...`:videoItem.ringName }}</view>
-            <view class="infof">有效期：{{ videoItem.overdueTime?videoItem.overdueTime:'' }}</view>
+            <view class="infot">
+              {{
+                videoItem.ringName.length > 12
+                  ? `${videoItem.ringName.slice(0, 12)}...`
+                  : videoItem.ringName
+              }}
+            </view>
+            <view class="infof">
+              有效期：{{ videoItem.overdueTime ? videoItem.overdueTime : "" }}
+            </view>
           </view>
           <view
             v-show="!checkShow"
             class="video-mangicon"
-            @click.stop="mangEven(videoItem.ringId,navFlag)"
+            @click.stop="mangEven(videoItem.ringId, navFlag)"
           >
             <image :src="`${staticImgs}/lnmp/manag-icon.png`" />
           </view>
         </label>
       </view>
-      <view
-        v-show="checkShow"
-        class="del-video-item"
-        @click="delVideoItems"
-      >
+      <view v-show="checkShow" class="del-video-item" @click="delVideoItems">
         <image
           class="del-video-item-image"
           :src="`${staticImgs}/lnmp/del-icon.png`"
         />
-        <view class="del-video-item-tips">
-          立即删除
-        </view>
+        <view class="del-video-item-tips">立即删除</view>
       </view>
     </view>
-    <view
-      v-else-if="isLoad==='loaded'"
-      class="cur-ring-m"
-    >
+    <!-- 空白展示 -->
+    <view v-else-if="isLoad === 'loaded'" class="cur-ring-m">
       <image
         class="no-record"
         :src="`${staticImgs}/lnmp/no-playRec-icon.png`"
       />
-      <view
-        v-if="navFlag == 'lyk'"
-        class="no-record-tips1"
-      >
+      <view v-if="navFlag == 'lyk'" class="no-record-tips1">
         您当前无闲置铃音
       </view>
-      <view
-        v-else
-        class="no-record-tips1"
-      >
-        您当前未设置播放
-      </view>
-      <view class="no-record-tips2">
-        赶快去设置吧~
-      </view>
-      <view
-        class="go-to-see"
-        @click="goToCx"
-      >
-        去设置
-      </view>
-      <view
-        class="go-to-h5"
-        @click="toH5"
-      >
-        铃音显示不全？点击这里查看全部
-      </view>
+      <view v-else class="no-record-tips1">您当前未设置播放</view>
+      <view class="no-record-tips2">赶快去设置吧~</view>
+      <view class="go-to-see" @click="goToCx">去设置</view>
+      <view class="go-to-h5" @click="toH5">铃音显示不全？点击这里查看全部</view>
     </view>
     <clSharePanel
       :panel-show="panelShow"
       pages-flag="true"
-      :current-list="currentList"
-      @hidenPanelBtn="hidenPanelBtn"
-      @shareEven="shareEven"
+      :currentObj="currentList"
+      @hiddenPanelBtn="hiddenPanelBtn"
+      @shareEvent="shareEvent"
       @likeEvent="likeEvent"
-      @qxszEven="qxszEven"
-      @szEven="szEven"
+      @qxSzEvent="qxSzEvent"
+      @szEvent="szEvent"
     />
     <!-- 遮罩 -->
-    <view
-      v-show="maskShow"
-      class="mask"
-    />
+    <view v-show="maskShow" class="mask" />
     <!-- toast弹窗 -->
-    <view
-      v-show="maskShow"
-      class="maskTxt"
-    >
+    <view v-show="maskShow" class="maskTxt">
       {{ maskTxts }}
     </view>
-
+    <!-- 
     <view>
       <uni-popup
         ref="popup_open"
@@ -199,22 +157,22 @@
           @multiCancelRemain="multiCancelRemain"
         />
       </uni-popup>
-    </view>
+    </view> -->
   </view>
 </template>
 
 <script>
 import clSharePanel from "@/components/cl-share-panel/cl-share-panel.vue";
 import videoService from "@/api/cx/video.js";
-import spclCustomPopup from "@/components/purchase-popup/spcl-custom-pop.vue";
+// import spclCustomPopup from "@/components/purchase-popup/spcl-custom-pop.vue";
 import miguService from "@/api/migu/migu.js";
 
 export default {
   components: {
     clSharePanel,
-    spclCustomPopup,
+    // spclCustomPopup,
   },
-  data () {
+  data() {
     return {
       staticImgs: this.$staticImgs,
       navFlag: "curt",
@@ -232,7 +190,7 @@ export default {
       },
       maskShow: false,
       maskTxts: "请勾选删除的铃音",
-      panelShow: false,
+      panelShow: true,
       delCls: [],
       stFlag: true,
       currentid: 0,
@@ -262,21 +220,19 @@ export default {
       hiddenVideoList: [],
     };
   },
-  onLoad (options) {
+  onLoad(options) {
     if (options.navflag) {
       this.navFlag = options.navflag;
     }
   },
-  onShow () {
+  onShow() {
     this.getVideoListByMigu();
   },
-  onReachBottom (e) {
-
-  },
+  onReachBottom(e) {},
 
   methods: {
     // 初始化数据
-    init () {
+    init() {
       const userData = uni.getStorageSync("userData");
       this.navFlag = "curt";
       this.checkShow = false;
@@ -309,48 +265,51 @@ export default {
       }
     },
 
-    checkAuthorization () {
+    checkAuthorization() {
       if (uni.getStorageSync("Authorization")) {
         return true;
       }
       return false;
     },
     // 获取咪咕视频
-    getVideoListByMigu () {
+    getVideoListByMigu() {
       uni.showLoading({
         title: "请求中...",
         mask: true,
       });
       miguService.getsplykInfo().then(response => {
         if (response.data.code == 200) {
-          miguService.getsplykCurrentInfo().then(res => {
-            if (res.data.code == 200) {
-              if (res.data.data && response.data.data) {
-                const userData = uni.getStorageSync("userData");
-                userData[0].vrbtResponse = response.data.data;
-                userData[0].vrbtSettingRes = res.data.data.contentIds;
-                userData[0].settingIdRes = res.data.data.settingId;
-                uni.setStorageSync("userData", userData);
-              } else if (response.data.data) {
-                const userData = uni.getStorageSync("userData");
-                userData[0].vrbtResponse = response.data.data;
-                userData[0].vrbtSettingRes = [];
-                userData[0].settingIdRes = "";
-                uni.setStorageSync("userData", userData);
-              } else {
-                const userData = uni.getStorageSync("userData");
-                userData[0].vrbtResponse = [];
-                userData[0].vrbtSettingRes = [];
-                userData[0].settingIdRes = "";
-                uni.setStorageSync("userData", userData);
+          miguService
+            .getsplykCurrentInfo()
+            .then(res => {
+              if (res.data.code == 200) {
+                if (res.data.data && response.data.data) {
+                  const userData = uni.getStorageSync("userData");
+                  userData[0].vrbtResponse = response.data.data;
+                  userData[0].vrbtSettingRes = res.data.data.contentIds;
+                  userData[0].settingIdRes = res.data.data.settingId;
+                  uni.setStorageSync("userData", userData);
+                } else if (response.data.data) {
+                  const userData = uni.getStorageSync("userData");
+                  userData[0].vrbtResponse = response.data.data;
+                  userData[0].vrbtSettingRes = [];
+                  userData[0].settingIdRes = "";
+                  uni.setStorageSync("userData", userData);
+                } else {
+                  const userData = uni.getStorageSync("userData");
+                  userData[0].vrbtResponse = [];
+                  userData[0].vrbtSettingRes = [];
+                  userData[0].settingIdRes = "";
+                  uni.setStorageSync("userData", userData);
+                }
               }
-            }
-            this.init();
-            uni.hideLoading();
-            // this.updateUserInfo()
-          }).catch(() => {
-            this.init();
-          });
+              this.init();
+              uni.hideLoading();
+              // this.updateUserInfo()
+            })
+            .catch(() => {
+              this.init();
+            });
         } else {
           uni.hideLoading();
           uni.showToast({
@@ -361,14 +320,19 @@ export default {
         }
       });
     },
-    getVideoListById (flag) {
+    getVideoListById(flag) {
       this.isRequestOver = true;
       const allVideoIdList = uni.getStorageSync("userData")[0].vrbtResponse;
-      this.currentVideoIdList = uni.getStorageSync("userData")[0].vrbtSettingRes;
+      this.currentVideoIdList =
+        uni.getStorageSync("userData")[0].vrbtSettingRes;
       this.allIdList = allVideoIdList;
       // this.videoLists = newList;
       this.videoSettingList = allVideoIdList.filter(item => {
-        return this.currentVideoIdList.findIndex(v => (v == item.ringId && item.hidden != 1)) > -1;
+        return (
+          this.currentVideoIdList.findIndex(
+            v => v == item.ringId && item.hidden != 1,
+          ) > -1
+        );
       });
       // 勾选管理初始化
       for (let i = 0; i < this.videoSettingList.length; i++) {
@@ -383,7 +347,11 @@ export default {
       // 排序处理
       const newArray = [];
       for (let i = 0; i < this.currentVideoIdList.length; i++) {
-        newArray.push(this.videoSettingList.find(item => item.ringId == this.currentVideoIdList[i]));
+        newArray.push(
+          this.videoSettingList.find(
+            item => item.ringId == this.currentVideoIdList[i],
+          ),
+        );
       }
       this.videoSettingList = newArray.filter(item => item);
       if (flag === "updateAvailable") {
@@ -391,7 +359,10 @@ export default {
         let idlevideoLists = [];
         if (this.allIdList) {
           idlevideoLists = this.allIdList.filter(item => {
-            return (this.videoSettingList.findIndex(v => (v.ringId == item.ringId)) == -1 && item.hidden != 1);
+            return (
+              this.videoSettingList.findIndex(v => v.ringId == item.ringId) ==
+                -1 && item.hidden != 1
+            );
           });
         }
         this.videoLists = idlevideoLists;
@@ -401,7 +372,11 @@ export default {
       }
       let hiddenVideoListTemp = [];
       hiddenVideoListTemp = allVideoIdList.filter(item => {
-        return this.currentVideoIdList.findIndex(v => (v == item.ringId && item.hidden == 1)) > -1;
+        return (
+          this.currentVideoIdList.findIndex(
+            v => v == item.ringId && item.hidden == 1,
+          ) > -1
+        );
       });
       // console.log('hiddenVideoListTemp', hiddenVideoListTemp)
       for (let i = 0; i < hiddenVideoListTemp.length; i++) {
@@ -411,7 +386,7 @@ export default {
       // console.log('hiddenVideoList', this.hiddenVideoList)
       // console.log('videoSettingList', this.videoSettingList)
     },
-    changeNav (info) {
+    changeNav(info) {
       this.delDone();
       if (this.isLoad == "loading") {
         return;
@@ -422,7 +397,10 @@ export default {
         // console.log('this.videoSettingList', this.videoSettingList)
         if (this.allIdList) {
           idlevideoLists = this.allIdList.filter(item => {
-            return (this.videoSettingList.findIndex(v => (v.ringId == item.ringId)) == -1 && item.hidden != 1);
+            return (
+              this.videoSettingList.findIndex(v => v.ringId == item.ringId) ==
+                -1 && item.hidden != 1
+            );
           });
         }
         // console.log('idlevideoLists', idlevideoLists)
@@ -435,12 +413,13 @@ export default {
       this.$set(this.allFlag, "checked", false);
       this.delCls = [];
     },
-    checkboxChange (ringId, index) {
+    checkboxChange(ringId, index) {
       // 取消
       if (this.videoLists[index].checked) {
         this.$set(this.videoLists[index], "checked", false);
         this.delCls.splice(this.delCls.indexOf(ringId), 1);
-      } else { // 选中
+      } else {
+        // 选中
         if (this.delCls.length > 9) {
           uni.showToast({
             title: "最多勾选10个视频彩铃哦～",
@@ -453,16 +432,19 @@ export default {
         }
       }
       // 没有了
-      if (this.delCls.length === 10 || this.delCls.length === this.videoLists.length) {
+      if (
+        this.delCls.length === 10 ||
+        this.delCls.length === this.videoLists.length
+      ) {
         this.$set(this.allFlag, "checked", true);
       } else if (this.delCls.length !== this.videoLists.length) {
         this.$set(this.allFlag, "checked", false);
       }
     },
     // 全选、反选
-    changeVideo (e) {
+    changeVideo(e) {
       // console.log(e);
-      this.videoLists.map((item) => this.$set(item, "checked", false));
+      this.videoLists.map(item => this.$set(item, "checked", false));
       if (e.detail.value.length == 0) {
         this.delCls = [];
         this.$set(this.allFlag, "checked", false);
@@ -482,7 +464,7 @@ export default {
       }
     },
     /* 删除视频彩铃 */
-    delVideoItems () {
+    delVideoItems() {
       // console.log('6666')
       if (!this.isRequestOver) {
         return false;
@@ -493,8 +475,8 @@ export default {
       const settingId = uni.getStorageSync("userData")[0].settingIdRes;
       if (this.delCls.length > 0) {
         if (this.navFlag === "curt") {
-          const spDelList = this.currentVideoIdList.filter(v =>
-            this.delCls.findIndex(item => item == v) == -1,
+          const spDelList = this.currentVideoIdList.filter(
+            v => this.delCls.findIndex(item => item == v) == -1,
           );
           // console.log('spDelList', spDelList)
           // console.log('this.delCls', this.delCls)
@@ -504,75 +486,21 @@ export default {
           if (this.hiddenVideoList.length > 0) {
             // console.log('1')
             spDelList.concat(this.hiddenVideoList);
-            miguService.modifySpcl({
-              contentIDs: spDelList,
-              settingID: settingId,
-            }).then(res => {
-              if (res.data.code == 200) {
-                this.$refs.popup_open.open();
-                this.customFlag = true;
-                this.title = "操作成功";
-                this.content = ["您成功将", `${this.delCls.length}首`, "视频彩铃取消当前播放"];
-                this.confirmConentStatus = "确定";
-                this.single = true;
-                this.islykdel = "multiCancelRemain";
-                setTimeout(() => {
-                  this.isRequestOver = true;
-                }, 1000);
-              } else {
-                this.$refs.popup_open.open();
-                this.customFlag = true;
-                this.title = "操作失败";
-                this.content = [`${this.delCls.length}首`, "视频彩铃取消当前播放失败"];
-                this.confirmConentStatus = "确定";
-                this.single = true;
-                this.islykdel = "fail";
-                setTimeout(() => {
-                  this.isRequestOver = true;
-                }, 1000);
-              }
-            });
-          } else {
-            if (spDelList.length == 0) {
-              // console.log('2')
-              miguService.canMultiVideo({
-                settingId,
-              }).then(res => {
-                if (res.data.code == 200) {
-                  // debugger
-                  this.$refs.popup_open.open();
-                  this.customFlag = true;
-                  this.title = "操作成功";
-                  this.content = ["您成功将", `${this.delCls.length}首`, "视频彩铃取消当前播放"];
-                  this.confirmConentStatus = "确定";
-                  this.single = true;
-                  this.islykdel = "multiCancel";
-                  setTimeout(() => {
-                    this.isRequestOver = true;
-                  }, 1000);
-                } else {
-                  this.$refs.popup_open.open();
-                  this.customFlag = true;
-                  this.title = "操作失败";
-                  this.content = [`${this.delCls.length}首`, "视频彩铃取消当前播放失败"];
-                  this.confirmConentStatus = "确定";
-                  this.single = true;
-                  this.islykdel = "fail";
-                  setTimeout(() => {
-                    this.isRequestOver = true;
-                  }, 1000);
-                }
-              });
-            } else {
-              miguService.modifySpcl({
+            miguService
+              .modifySpcl({
                 contentIDs: spDelList,
                 settingID: settingId,
-              }).then(res => {
+              })
+              .then(res => {
                 if (res.data.code == 200) {
                   this.$refs.popup_open.open();
                   this.customFlag = true;
                   this.title = "操作成功";
-                  this.content = ["您成功将", `${this.delCls.length}首`, "视频彩铃取消当前播放"];
+                  this.content = [
+                    "您成功将",
+                    `${this.delCls.length}首`,
+                    "视频彩铃取消当前播放",
+                  ];
                   this.confirmConentStatus = "确定";
                   this.single = true;
                   this.islykdel = "multiCancelRemain";
@@ -583,7 +511,10 @@ export default {
                   this.$refs.popup_open.open();
                   this.customFlag = true;
                   this.title = "操作失败";
-                  this.content = [`${this.delCls.length}首`, "视频彩铃取消当前播放失败"];
+                  this.content = [
+                    `${this.delCls.length}首`,
+                    "视频彩铃取消当前播放失败",
+                  ];
                   this.confirmConentStatus = "确定";
                   this.single = true;
                   this.islykdel = "fail";
@@ -592,21 +523,101 @@ export default {
                   }, 1000);
                 }
               });
+          } else {
+            if (spDelList.length == 0) {
+              // console.log('2')
+              miguService
+                .canMultiVideo({
+                  settingId,
+                })
+                .then(res => {
+                  if (res.data.code == 200) {
+                    // debugger
+                    this.$refs.popup_open.open();
+                    this.customFlag = true;
+                    this.title = "操作成功";
+                    this.content = [
+                      "您成功将",
+                      `${this.delCls.length}首`,
+                      "视频彩铃取消当前播放",
+                    ];
+                    this.confirmConentStatus = "确定";
+                    this.single = true;
+                    this.islykdel = "multiCancel";
+                    setTimeout(() => {
+                      this.isRequestOver = true;
+                    }, 1000);
+                  } else {
+                    this.$refs.popup_open.open();
+                    this.customFlag = true;
+                    this.title = "操作失败";
+                    this.content = [
+                      `${this.delCls.length}首`,
+                      "视频彩铃取消当前播放失败",
+                    ];
+                    this.confirmConentStatus = "确定";
+                    this.single = true;
+                    this.islykdel = "fail";
+                    setTimeout(() => {
+                      this.isRequestOver = true;
+                    }, 1000);
+                  }
+                });
+            } else {
+              miguService
+                .modifySpcl({
+                  contentIDs: spDelList,
+                  settingID: settingId,
+                })
+                .then(res => {
+                  if (res.data.code == 200) {
+                    this.$refs.popup_open.open();
+                    this.customFlag = true;
+                    this.title = "操作成功";
+                    this.content = [
+                      "您成功将",
+                      `${this.delCls.length}首`,
+                      "视频彩铃取消当前播放",
+                    ];
+                    this.confirmConentStatus = "确定";
+                    this.single = true;
+                    this.islykdel = "multiCancelRemain";
+                    setTimeout(() => {
+                      this.isRequestOver = true;
+                    }, 1000);
+                  } else {
+                    this.$refs.popup_open.open();
+                    this.customFlag = true;
+                    this.title = "操作失败";
+                    this.content = [
+                      `${this.delCls.length}首`,
+                      "视频彩铃取消当前播放失败",
+                    ];
+                    this.confirmConentStatus = "确定";
+                    this.single = true;
+                    this.islykdel = "fail";
+                    setTimeout(() => {
+                      this.isRequestOver = true;
+                    }, 1000);
+                  }
+                });
             }
           }
         } else {
           uni.setStorageSync("spDelList", this.delCls);
           uni.setStorageSync("navFlag", "lyk");
-          miguService.delMultiVideo(
-            this.delCls,
-          ).then(res => {
+          miguService.delMultiVideo(this.delCls).then(res => {
             if (res.data.code == 200) {
               // console.log('res.data.data', res.data.data)
               if (res.data.data.fail === 0) {
                 this.$refs.popup_open.open();
                 this.customFlag = true;
                 this.title = "删除成功";
-                this.content = ["您成功删除", `${res.data.data.success}首`, "视频彩铃"];
+                this.content = [
+                  "您成功删除",
+                  `${res.data.data.success}首`,
+                  "视频彩铃",
+                ];
                 this.confirmConentStatus = "确定";
                 this.single = true;
                 this.islykdel = "cancelAlert";
@@ -628,7 +639,12 @@ export default {
                 this.$refs.popup_open.open();
                 this.customFlag = true;
                 this.title = "删除失败";
-                this.content = "您有" + res.data.data.success + "首视频彩铃删除成功" + res.data.data.fail + "首删除失败";
+                this.content =
+                  "您有" +
+                  res.data.data.success +
+                  "首视频彩铃删除成功" +
+                  res.data.data.fail +
+                  "首删除失败";
                 this.confirmConentStatus = "确定";
                 this.single = true;
                 this.islykdel = "cancelAlert";
@@ -656,34 +672,39 @@ export default {
         });
       }
     },
-    delOpen () {
+    delOpen() {
       this.checkShow = true;
     },
     // 跳转到对应h5页面
-    toH5 () {
-      uni.setStorageSync("ckH5Data", "https://y.migu.cn/app/v3/zt/2019/ring-library/index.html");
+    toH5() {
+      uni.setStorageSync(
+        "ckH5Data",
+        "https://y.migu.cn/app/v3/zt/2019/ring-library/index.html",
+      );
       uni.navigateTo({
         url: "/pagesCommon/webView/ckWebview",
       });
     },
     // 取消勾选
-    delDone () {
+    delDone() {
       this.$set(this.allFlag, "checked", false);
-      this.videoLists.filter((r) => {
+      this.videoLists.filter(r => {
         r.checked = false;
       });
       this.delCls = [];
       this.checkShow = false;
     },
-    mangEven (ringId, navFlag) {
+    mangEven(ringId, navFlag) {
       console.log("this.videoLists", this.videoLists);
       this.currentClickId = ringId;
-      const listItem = this.videoLists.findIndex((item) => (item.ringId == ringId));
+      const listItem = this.videoLists.findIndex(item => item.ringId == ringId);
       this.currentList = this.videoLists[listItem];
       if (navFlag === "curt") {
         this.currentList.szValue = 0; // 取消当前播放
       } else {
-        const curtFlag = this.currentLists.findIndex((item) => (item.ringId == ringId));
+        const curtFlag = this.currentLists.findIndex(
+          item => item.ringId == ringId,
+        );
         if (curtFlag >= 0) {
           // 在当前播放列表存在
           this.currentList.szValue = 1; // 已设置
@@ -696,12 +717,12 @@ export default {
       // console.log("xxx");
       // console.log(this.currentList);
     },
-    hidenPanelBtn () {
+    hiddenPanelBtn() {
       // this.$analysis.dispatch('cl_share_cacel', '视频彩铃');
       this.panelShow = false;
     },
 
-    navigateToPages (path) {
+    navigateToPages(path) {
       const logFlag = this.checkAuthorization();
       if (logFlag == true) {
         uni.navigateTo({
@@ -711,7 +732,7 @@ export default {
         this.$refs.popup_login.open();
       }
     },
-    goToCx () {
+    goToCx() {
       uni.setStorageSync("fxPageName", "ln_spcl_index");
       uni.setStorageSync("userCyMsg", "sp");
       uni.switchTab({
@@ -719,17 +740,16 @@ export default {
       });
     },
     // 分享
-    shareEven (ringId) {
+    shareEvent(ringId) {
       if (uni.getStorageSync("Authorization")) {
         // 把当前面板关了
         this.panelShow = false;
-        this.navigateToPages(
-          "/pagesCommon/share/shareVideo?videoId=" + ringId,
-        );
-      } else { }
+        this.navigateToPages("/pagesCommon/share/shareVideo?videoId=" + ringId);
+      } else {
+      }
     },
     // 点赞
-    likeEvent (ringId, flag) {
+    likeEvent(ringId, flag) {
       // 取消点赞
       let data = {
         ringId,
@@ -743,7 +763,7 @@ export default {
           opType: 0,
         };
       }
-      videoService.getSpclUserBehavior(data).then((res) => {
+      videoService.getSpclUserBehavior(data).then(res => {
         if (res.data.code === 200) {
           if (res.data.data) {
             if (flag) {
@@ -761,7 +781,9 @@ export default {
               this.updateLike(false, ringId);
               // 更新更多精彩数据
               const tempMoreVideoList = this.$store.state.moreVideoList;
-              const currentIndex = tempMoreVideoList.findIndex(item => ringId === item.ringId);
+              const currentIndex = tempMoreVideoList.findIndex(
+                item => ringId === item.ringId,
+              );
               if (currentIndex > -1) {
                 tempMoreVideoList[currentIndex].extraInfo.likeCount -= 1;
                 tempMoreVideoList[currentIndex].extraInfo.like = false;
@@ -781,7 +803,9 @@ export default {
 
               // 更新更多精彩数据
               const tempMoreVideoList = this.$store.state.moreVideoList;
-              const currentIndex = tempMoreVideoList.findIndex(item => ringId === item.ringId);
+              const currentIndex = tempMoreVideoList.findIndex(
+                item => ringId === item.ringId,
+              );
               if (currentIndex > -1) {
                 tempMoreVideoList[currentIndex].extraInfo.likeCount += 1;
                 tempMoreVideoList[currentIndex].extraInfo.like = true;
@@ -805,9 +829,11 @@ export default {
       });
     },
     // 全局更新最新的
-    updateLike (flag, ringId) {
+    updateLike(flag, ringId) {
       const vrbtResponseTemp = uni.getStorageSync("userData");
-      const indexTemp = vrbtResponseTemp[0].vrbtResponse.findIndex(item => item.ringId == ringId);
+      const indexTemp = vrbtResponseTemp[0].vrbtResponse.findIndex(
+        item => item.ringId == ringId,
+      );
       vrbtResponseTemp[0].vrbtResponse[indexTemp].extraInfo.like = flag;
       uni.setStorageSync("userData", vrbtResponseTemp);
       if (flag) {
@@ -817,9 +843,11 @@ export default {
       }
       uni.setStorageSync("userData", vrbtResponseTemp);
     },
-    szEven (ringId) {
+    szEvent(ringId) {
       this.AddRingId = ringId;
-      const listItem = this.videoLists.findIndex((item) => (item.ringId == this.currentClickId));
+      const listItem = this.videoLists.findIndex(
+        item => item.ringId == this.currentClickId,
+      );
       const videoMsg = this.videoLists[listItem];
       this.$refs.popup_open.open();
       this.customFlag = true;
@@ -829,8 +857,10 @@ export default {
       this.single = false;
       this.islykdel = "settingCurrent";
     },
-    qxszEven () {
-      const listItem = this.videoLists.findIndex((item) => (item.ringId == this.currentClickId));
+    qxSzEvent() {
+      const listItem = this.videoLists.findIndex(
+        item => item.ringId == this.currentClickId,
+      );
       const videoMsg = this.videoLists[listItem];
       this.$refs.popup_open.open();
       this.customFlag = true;
@@ -842,8 +872,10 @@ export default {
     },
 
     // 闲置页面响应
-    async settingCurrentPlay () {
-      const listItem = this.videoLists.findIndex((item) => (item.ringId == this.currentClickId));
+    async settingCurrentPlay() {
+      const listItem = this.videoLists.findIndex(
+        item => item.ringId == this.currentClickId,
+      );
       const videoMsg = this.videoLists[listItem];
       uni.setStorageSync("bindVideoMsg", videoMsg);
       const currentClickIdArray = [];
@@ -859,140 +891,120 @@ export default {
       if (settingId) {
         if (this.hiddenVideoList.length > 0) {
           currentClickIdArray.concat(this.hiddenVideoList);
-          miguService.modifySpcl({
-            contentIDs: currentClickIdArray,
-            settingID: settingId,
-          }).then(res => {
-            if (res.data.code == 200) {
-              // console.log('设为当前1', res)
-              userData[0].vrbtSettingRes = currentClickIdArray;
-              uni.setStorageSync("userData", userData);
-              this.getVideoListById("updateAvailable");
-              uni.showToast({
-                title: "设置当前播放成功",
-                icon: "none",
-                duration: 2000,
-              });
-            } else {
-              uni.showToast({
-                title: res.data.message,
-                icon: "none",
-                duration: 2000,
-              });
-            }
-          });
+          miguService
+            .modifySpcl({
+              contentIDs: currentClickIdArray,
+              settingID: settingId,
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                // console.log('设为当前1', res)
+                userData[0].vrbtSettingRes = currentClickIdArray;
+                uni.setStorageSync("userData", userData);
+                this.getVideoListById("updateAvailable");
+                uni.showToast({
+                  title: "设置当前播放成功",
+                  icon: "none",
+                  duration: 2000,
+                });
+              } else {
+                uni.showToast({
+                  title: res.data.message,
+                  icon: "none",
+                  duration: 2000,
+                });
+              }
+            });
         } else {
-          miguService.modifySpcl({
-            contentIDs: currentClickIdArray,
-            settingID: settingId,
-          }).then(res => {
-            if (res.data.code == 200) {
-              // console.log('设为当前2', res)
-              userData[0].vrbtSettingRes = currentClickIdArray;
-              uni.setStorageSync("userData", userData);
-              this.getVideoListById("updateAvailable");
-              uni.showToast({
-                title: "设置当前播放成功",
-                icon: "none",
-                duration: 2000,
-              });
-            } else {
-              uni.showToast({
-                title: res.data.message,
-                icon: "none",
-                duration: 2000,
-              });
-            }
-          });
+          miguService
+            .modifySpcl({
+              contentIDs: currentClickIdArray,
+              settingID: settingId,
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                // console.log('设为当前2', res)
+                userData[0].vrbtSettingRes = currentClickIdArray;
+                uni.setStorageSync("userData", userData);
+                this.getVideoListById("updateAvailable");
+                uni.showToast({
+                  title: "设置当前播放成功",
+                  icon: "none",
+                  duration: 2000,
+                });
+              } else {
+                uni.showToast({
+                  title: res.data.message,
+                  icon: "none",
+                  duration: 2000,
+                });
+              }
+            });
         }
       } else {
         const contentId = [];
         contentId.push(this.AddRingId);
-        miguService.setCurrentSpcl({
-          contentIDs: contentId,
-        }).then(res => {
-          if (res.data.code === 200) {
-            userData[0].settingIdRes = res.data.data;
-            userData[0].vrbtSettingRes = contentId;
-            uni.setStorageSync("userData", userData);
-            // console.log('设为当前3', res)
-            this.getVideoListById("updateAvailable");
-            uni.showToast({
-              title: "设置当前播放成功",
-              icon: "none",
-              duration: 2000,
-            });
-          } else {
-            uni.showToast({
-              title: res.data.message,
-              icon: "none",
-              duration: 2000,
-            });
-          }
-        });
+        miguService
+          .setCurrentSpcl({
+            contentIDs: contentId,
+          })
+          .then(res => {
+            if (res.data.code === 200) {
+              userData[0].settingIdRes = res.data.data;
+              userData[0].vrbtSettingRes = contentId;
+              uni.setStorageSync("userData", userData);
+              // console.log('设为当前3', res)
+              this.getVideoListById("updateAvailable");
+              uni.showToast({
+                title: "设置当前播放成功",
+                icon: "none",
+                duration: 2000,
+              });
+            } else {
+              uni.showToast({
+                title: res.data.message,
+                icon: "none",
+                duration: 2000,
+              });
+            }
+          });
       }
       // })
       this.closeEvent();
     },
 
     // 取消当前播放确认
-    cancelSetting () {
-      // console.log("qxszEven");
-      const listItem = this.videoLists.findIndex((item) => (item.ringId == this.currentClickId));
+    cancelSetting() {
+      // console.log("qxSzEvent");
+      const listItem = this.videoLists.findIndex(
+        item => item.ringId == this.currentClickId,
+      );
       const videoMsg = this.videoLists[listItem];
       uni.setStorageSync("bindVideoMsg", videoMsg);
       const currentClickIdArray = [];
       for (let i = 0; i < this.videoSettingList.length; i++) {
         currentClickIdArray.push(this.videoSettingList[i].ringId);
       }
-      const delCurrentClickIdArray = currentClickIdArray.filter(v => v != this.currentClickId);
+      const delCurrentClickIdArray = currentClickIdArray.filter(
+        v => v != this.currentClickId,
+      );
       this.panelShow = false;
       uni.setStorageSync("currentClickSPId", delCurrentClickIdArray);
       uni.setStorageSync("currentClickSPStatus", 0);
       const settingId = uni.getStorageSync("userData")[0].settingIdRes;
       const userData = uni.getStorageSync("userData");
-      const delCurrentClickIdConcatArray = delCurrentClickIdArray.concat(this.hiddenVideoList);
+      const delCurrentClickIdConcatArray = delCurrentClickIdArray.concat(
+        this.hiddenVideoList,
+      );
       if (this.hiddenVideoList.length > 0) {
-        miguService.modifySpcl({
-          contentIDs: delCurrentClickIdConcatArray,
-          settingID: settingId,
-        }).then(res => {
-          if (res.data.code == 200) {
-            // console.log('取消当前1', res)
-            userData[0].vrbtSettingRes = delCurrentClickIdConcatArray;
-            uni.setStorageSync("userData", userData);
-            this.getVideoListById();
-            uni.showToast({
-              title: "取消当前播放成功",
-              icon: "none",
-              duration: 2000,
-            });
-          }
-        });
-      } else {
-        if (delCurrentClickIdConcatArray.length == 0) {
-          miguService.canMultiVideo({
-            settingId,
-          }).then(res => {
-            if (res.data.code == 200) {
-              userData[0].vrbtSettingRes = [];
-              userData[0].settingIdRes = "";
-              uni.setStorageSync("userData", userData);
-              this.getVideoListById();
-              uni.showToast({
-                title: "取消当前播放成功",
-                icon: "none",
-                duration: 2000,
-              });
-            }
-          });
-        } else {
-          miguService.modifySpcl({
+        miguService
+          .modifySpcl({
             contentIDs: delCurrentClickIdConcatArray,
             settingID: settingId,
-          }).then(res => {
+          })
+          .then(res => {
             if (res.data.code == 200) {
-              // console.log('取消当前3', res)
+              // console.log('取消当前1', res)
               userData[0].vrbtSettingRes = delCurrentClickIdConcatArray;
               uni.setStorageSync("userData", userData);
               this.getVideoListById();
@@ -1003,18 +1015,56 @@ export default {
               });
             }
           });
+      } else {
+        if (delCurrentClickIdConcatArray.length == 0) {
+          miguService
+            .canMultiVideo({
+              settingId,
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                userData[0].vrbtSettingRes = [];
+                userData[0].settingIdRes = "";
+                uni.setStorageSync("userData", userData);
+                this.getVideoListById();
+                uni.showToast({
+                  title: "取消当前播放成功",
+                  icon: "none",
+                  duration: 2000,
+                });
+              }
+            });
+        } else {
+          miguService
+            .modifySpcl({
+              contentIDs: delCurrentClickIdConcatArray,
+              settingID: settingId,
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                // console.log('取消当前3', res)
+                userData[0].vrbtSettingRes = delCurrentClickIdConcatArray;
+                uni.setStorageSync("userData", userData);
+                this.getVideoListById();
+                uni.showToast({
+                  title: "取消当前播放成功",
+                  icon: "none",
+                  duration: 2000,
+                });
+              }
+            });
         }
       }
       this.navFlag = "curt";
       this.closeEvent();
     },
-    closeEvent () {
+    closeEvent() {
       this.$refs.popup_open.close();
       this.customFlag = false;
       this.islykdel = "";
     },
     // 删除后刷新列表
-    cancelAlert () {
+    cancelAlert() {
       // 返回值
       const userData = uni.getStorageSync("userData");
       const allVideoIdList = userData[0].vrbtResponse;
@@ -1026,7 +1076,7 @@ export default {
       this.getVideoListById("updateAvailable");
       this.closeEvent();
     },
-    multiCancel () {
+    multiCancel() {
       const userData = uni.getStorageSync("userData");
       userData[0].vrbtSettingRes = [];
       userData[0].settingIdRes = "";
@@ -1034,9 +1084,9 @@ export default {
       this.getVideoListById();
       this.closeEvent();
     },
-    multiCancelRemain () {
-      const spDelList = this.currentVideoIdList.filter(v =>
-        this.delCls.findIndex(item => item == v) == -1,
+    multiCancelRemain() {
+      const spDelList = this.currentVideoIdList.filter(
+        v => this.delCls.findIndex(item => item == v) == -1,
       );
       const userData = uni.getStorageSync("userData");
       userData[0].vrbtSettingRes = spDelList;
@@ -1045,7 +1095,7 @@ export default {
       this.closeEvent();
     },
     // 预览
-    seeDetail (seeDetail) {
+    seeDetail(seeDetail) {
       // console.log(seeDetail);
       // uni.setStorageSync('videoList', [seeDetail]);
       this.$store.commit("getVideoList", this.videoLists);
@@ -1055,7 +1105,6 @@ export default {
       });
     },
   },
-
 };
 </script>
 
