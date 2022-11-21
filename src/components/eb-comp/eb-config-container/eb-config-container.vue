@@ -26,6 +26,17 @@
           @openLoginPopup="openLoginPopup"
         />
       </view>
+
+      <view
+        v-if="pageConfig.moduleFlag === '0002'"
+      >
+        <eb-icon-list
+          :page-config="pageConfig.configV2"
+          @buryIconListId="buryIconListId"
+          @openLoginPopup="openLoginPopup"
+          @open="open"
+        />
+      </view>
     </view>
   </view>
 </template>
