@@ -45,7 +45,6 @@ export default {
     }, this.asyncTiming);
   },
   mounted () {
-    console.log("模块化渲染器异步加载");
   },
   methods: {},
 };

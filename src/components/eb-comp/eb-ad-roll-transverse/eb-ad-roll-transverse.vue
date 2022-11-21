@@ -1,11 +1,11 @@
 <template>
-  <view class="hot-topic">
+  <view class="eb-ad-roll">
     <scroll-view scroll-x="true">
-      <view class="hot-topic-box">
+      <view class="eb-ad-roll-box">
         <view
-          v-for="(item, index) in videoTopicList"
+          v-for="(item, index) in adList"
           :key="index"
-          class="hot-topic-item"
+          class="eb-ad-roll-item"
           @click="goToTopicDetail(item)"
         >
           <view class="img-box-row">
@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import adService from "@/api/ad/index.js";
-import { navigateToAny } from "@/utils/tools.js";
+import AdService from "@/api/ad/index.js";
+import { navigateToAny } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
@@ -38,7 +38,7 @@ export default {
   },
   data () {
     return {
-      videoTopicList: [],
+      adList: [],
     };
   },
   mounted () {
@@ -47,21 +47,20 @@ export default {
   methods: {
     // 使用运营位接口 获取专题列表
     getAdLIst () {
+      console.log(this.pageConfig);
       const params = {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
-      adService.getAdvertisement(params).then((res) => {
-        console.log("test-22", res);
+      AdService.getAdvertisement(params).then((res) => {
         if (res.data.code === 200) {
-          this.videoTopicList = res.data.data[0].portalAd;
-          console.log("8-19", this.videoTopicList);
+          this.adList = res.data.data[0].portalAd;
+          // console.log("8-19", this.adList);
         }
       });
     },
     // 去详情
     goToTopicDetail (item) {
-      console.log("item---8-22", item);
       navigateToAny(item);
     },
   },
@@ -69,11 +68,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hot-topic {
-  .hot-topic-box {
+.eb-ad-roll {
+  .eb-ad-roll-box {
     display: flex;
 
-    .hot-topic-item {
+    .eb-ad-roll-item {
       margin-right: 20rpx;
 
       .img-box-row {
@@ -103,11 +102,11 @@ export default {
       }
     }
 
-    .hot-topic-item:nth-of-type(1) {
+    .eb-ad-roll-item:nth-of-type(1) {
       padding-left: 4%;
     }
 
-    .hot-topic-item:last-child {
+    .eb-ad-roll-item:last-child {
       padding-right: 4%;
     }
   }
