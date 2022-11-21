@@ -53,11 +53,10 @@
 import templateService from "@/api/template/topic.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
-
   props: {
     pageConfig: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
   },
   data () {

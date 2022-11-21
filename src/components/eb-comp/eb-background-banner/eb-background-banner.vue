@@ -1,14 +1,14 @@
 <template>
   <view>
-    <view class="spcl_music_banner">
-      <view class="spcl_banner-swiper">
+    <view class="ad-banner-container">
+      <view :class="compTop ? `ad-banner-swiper-top` : `ad-banner-swiper`">
         <swiper
-          class="spcl_swiper"
+          class="ad-swiper"
           autoplay="true"
           interval="3000"
           duration="500"
           :circular="true"
-          @change="changebanner"
+          @change="changeBanner"
         >
           <swiper-item
             v-for="(item, index) in cxVideoBanner"
@@ -17,11 +17,13 @@
             @click="navigateToH5(item)"
           >
             <image
-              class="spcl_banner_image"
+              class="ad-banner-image"
               :src="item.url"
             />
+            <!-- 只有当是头部组件时才展示 -->
             <image
-              class="spcl_banner_bg_image"
+              v-if="compTop && item.headerBgUrl"
+              class="ad-banner-bg-image"
               :src="item.headerBgUrl"
             />
           </swiper-item>
@@ -38,13 +40,17 @@
 </template>
 
 <script>
-import tabAndbannerService from "@/api/find/tabAndbanner.js";
-import { navigateToAny } from "@/utils/tools.js";
+import AdService from "@/api/ad/index.js";
+import { navigateToAny } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => { },
+      default: () => {},
+    },
+    compTop: {
+      type: Boolean,
+      default: false,
     },
   },
   data () {
@@ -67,24 +73,23 @@ export default {
     getBannerByPageName () {
       const { pageName } = this.pageConfig;
       // 获取bannner
-      tabAndbannerService
-        .getBanner({
-          target: pageName,
-        })
-        .then(res => {
-          this.cxVideoBanner = res.data.data;
-          this.totalSwiper = res.data.data.length;
-          // this.$emit('changeBanner', this.cxVideoBanner[0])
-        });
+      AdService.getBanner({
+        target: pageName,
+      }).then(res => {
+        this.cxVideoBanner = res.data.data;
+        this.totalSwiper = res.data.data.length;
+        // this.$emit('changeBanner', this.cxVideoBanner[0])
+      });
     },
 
-    changebanner (event) {
+    changeBanner (event) {
       this.currentSwiper = event.detail.current + 1;
       // this.$emit('changeBanner', this.cxVideoBanner[event.detail.current])
     },
 
     async navigateToH5 (event) {
-      this.$emit("buryBannerId", event.id);
+      console.log(event);
+      // this.$emit("buryBannerId", event.id);
       await this.$store.dispatch("getCustomorderList", `swiper_${event.id}`);
       console.log(
         this.$store.state.offlinePopup,
@@ -104,19 +109,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.spcl_music_banner {
+.ad-banner-container {
   width: 100%;
   // height: 381rpx;
   // background: linear-gradient(#ff6f50, #ff6f50, white);
 }
 
-.spcl_banner-swiper {
+.ad-banner-swiper-top {
   // width: 92%;
   height: 580rpx;
   position: relative;
 }
 
-.spcl_swiper {
+.ad-banner-swiper {
+  // width: 92%;
+  height: 350rpx;
+  position: relative;
+}
+
+.ad-swiper {
+  width: 100%;
+  height: 350rpx;
+  text-align: center;
+}
+
+.ad-banner-swiper-top > .ad-swiper {
   width: 100%;
   height: 580rpx;
   text-align: center;
@@ -135,7 +152,7 @@ export default {
   line-height: 33rpx;
 }
 
-.spcl_banner_image {
+.ad-banner-image {
   height: 280rpx;
   width: 686rpx;
   display: flex;
@@ -147,46 +164,12 @@ export default {
   transform: translateX(-50%);
 }
 
-.spcl_banner_bg_image {
+.ad-banner-bg-image {
   width: 100%;
   height: 463rpx;
   display: flex;
 }
 
-.spcl_music_icon {
-  width: 88%;
-  // height: 123rpx;
-  margin: 88rpx 6% 47rpx 6%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.spcl_musi_icon-item {
-  // width: 86rpx;
-  // height: 123rpx;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.spcl_music_icon image {
-  width: 84rpx;
-  height: 84rpx;
-  display: block;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.spcl_music_icon text {
-  font-size: 22rpx;
-  // line-height: 36rpx;
-  font-family: PingFang-SC-Medium;
-  color: #333333;
-  text-align: center;
-  font-weight: 500;
-  margin-top: 30rpx;
-}
 </style>
 <style>
 /* .swiper-box .wx-swiper-dot */

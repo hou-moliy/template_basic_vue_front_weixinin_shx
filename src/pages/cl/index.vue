@@ -114,7 +114,12 @@
             0030 发现页 内嵌web-view 可配置h5
             0031 新热门专题、可跳转新专题模块
             0032 赛事预约 -->
-            <eb-config-container
+            <!-- <eb-config-container-async
+              ref="EbConfig"
+              :page-config-list="swipeItem.pageConfig"
+            /> -->
+            <ebConfigContainerAsync
+              key=""
               ref="EbConfig"
               :page-config-list="swipeItem.pageConfig"
             />
@@ -133,11 +138,11 @@
 <script>
 import FindService from "@/api/find/tabAndbanner";
 import Util from "@/utils/tools.js";
-import ebConfigContainer from "../../components/eb-comp/eb-config-container/eb-config-container.vue";
+import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
 
 export default {
   name: "Index",
-  components: { ebConfigContainer },
+  components: { ebConfigContainerAsync },
   data () {
     return {
       tabBar: this.$store.getters.tabbarList, // 底部导航栏
@@ -282,6 +287,7 @@ export default {
       await FindService.getTab({ tabTarget: "fx" }).then(res => {
         if (res.data.code === 200) {
           this.tabList = res.data.data;
+          console.log(res.data.data);
         }
         if (!this.pageName) {
           this.pageName = this.tabList[0].pageName;

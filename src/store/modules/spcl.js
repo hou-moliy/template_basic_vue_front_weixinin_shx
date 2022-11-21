@@ -17,7 +17,7 @@ const actions = {
    * @return {*}
    */
   handleSpclUserOperate ({ commit }, { ringId, target, opType, mainId, pageName }) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // 记录
       videoService.getSpclUserBehavior({ ringId, target, opType, mainId, pageName }).then((res) => resolve(res.data));
     });

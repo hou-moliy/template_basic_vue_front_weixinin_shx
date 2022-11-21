@@ -1,18 +1,18 @@
 
 const state = {
   tabbarList: {
-    color: "#7A7E83", // 非选择项的字体颜色
-    selectedColor: "#3cc51f", // 选择项的字体颜色
+    color: "rgba(153,153,153,1)", // 非选择项的字体颜色
+    selectedColor: "#000", // 选择项的字体颜色
     list: [
       {
-        iconPath: "/static/tabbar/component.png",
-        selectIconPath: "/static/tabbar/component_select.png",
+        iconPath: "/static/tabbar/cl_tabbar.png",
+        selectIconPath: "/static/tabbar/cl_active_tabbar.png",
         text: "彩铃",
         pagePath: "/pages/cl/index",
       },
       {
-        iconPath: "/static/tabbar/template.png",
-        selectIconPath: "/static/tabbar/template_select.png",
+        iconPath: "/static/tabbar/mine_tabbar.png",
+        selectIconPath: "/static/tabbar/mine_active_tabbar.png",
         text: "我的",
         pagePath: "/pages/mine/index",
       },
