@@ -6,11 +6,14 @@
           v-for="(item, index) in adList"
           :key="index"
           class="eb-ad-roll-item"
-          @click="goToTopicDetail(item)"
+          @click="navigateToAny(item)"
         >
-          <view class="img-box-row">
+          <view
+            class="img-box-row"
+            :style="extraStyle"
+          >
             <img
-              class="topic-img"
+              :style="[extraStyle]"
               :src="item.url"
             >
           </view>
@@ -29,25 +32,40 @@
 <script>
 import AdService from "@/api/ad/index.js";
 import { navigateToAny } from "@/utils/navigateToAny.js";
+import { copyAttr } from "@/utils/gCopy.js";
+
 export default {
   props: {
-    pageConfig: {
-      type: Object,
-      default: () => { },
-    },
+    // pageConfig: {
+    //   type: Object,
+    //   default: () => { },
+    // },
   },
   data () {
     return {
       adList: [],
+      pageConfig: {},
+      extraStyle: {
+        width: "430",
+        height: "240",
+        borderRadius: "20",
+      },
     };
   },
   mounted () {
+    this.preHandleStyle();
     this.getAdLIst();
   },
   methods: {
+
+    preHandleStyle () {
+      this.pageConfig = JSON.parse("{\"pageName\":\"recommend_page\",\"pageModule\":\"find-new-hot-topic\",\"sort\":11,\"isShow\":1,\"showMoreFlag\":0,\"url\":null,\"title\":\"推荐页-管理\",\"showTitleFlag\":1,\"moduleId\":2764,\"moduleParams\":null,\"tagIcon\":\"https://t133.ebupt.com.cn/nresource/commonUpload/portalAd/893a3e3905504126bbb4abdb70e60912.jpg\",\"moduleFlag\":\"0031\",\"titleColor\":null,\"innerColor\":null,\"moduleType\":null,\"tipShow\":null,\"tip\":null,\"shareImgUrl\":null,\"shareTitle\":null,\"shareDesc\":null,\"moreTitle\":\"看看112\",\"extraStyle\":{\"width\": \"410\",\"height\": \"240\",\"borderRadius\":  \"20\"},\"eventUrl\":\"/pagesD/my/recenPlay\",\"eventType\":2,\"outAppId\":\"wx4e4ed37286c816c2\",\"freeLogin\":null}");
+      this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
+      console.log(this.extraStyle);
+    },
     // 使用运营位接口 获取专题列表
     getAdLIst () {
-      console.log(this.pageConfig);
+      console.log("this.pageConfig", JSON.stringify(this.pageConfig));
       const params = {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
@@ -55,12 +73,11 @@ export default {
       AdService.getAdvertisement(params).then((res) => {
         if (res.data.code === 200) {
           this.adList = res.data.data[0].portalAd;
-          // console.log("8-19", this.adList);
         }
       });
     },
-    // 去详情
-    goToTopicDetail (item) {
+    // navigateToAny
+    navigateToAny (item) {
       navigateToAny(item);
     },
   },
@@ -77,12 +94,6 @@ export default {
 
       .img-box-row {
         position: relative;
-
-        .topic-img {
-          width: 430rpx;
-          height: 240rpx;
-          border-radius: 20rpx;
-        }
       }
 
       // 标题
