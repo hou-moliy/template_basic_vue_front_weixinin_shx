@@ -426,7 +426,6 @@ export default {
         uni.hideLoading();
         return this.$toast(res.data.message);
       }
-      console.log("登录成功的情况");
       uni.setStorageSync(
         "Authorization",
         `${res.data.data.tokenHead} ${res.data.data.token}`,
@@ -435,21 +434,10 @@ export default {
       if (this.detail.userInfo) {
         uni.setStorageSync("userInfo", this.detail.userInfo);
       }
-      // vrbtResponse：个人铃音库集合
-      // vrbtSettingRes：当前设置铃音ID数组
-      // settingIdRes ：用户铃音设置ID
-      uni.setStorageSync("userData", [{
-        crbtResponse: [],
-        vrbtResponse: [],
-        crbtSettingRes: [],
-        vrbtSettingRes: [],
-        settingIdRes: "",
-        crbtContentId: "",
-      }]);
       // 绑定微信与手机号
       this.bindWxUser();
-      // 获取咪咕视频的数据
-      this.getVideoListByMigu();
+      // 获取用户铃音库数据
+      this.$store.dispatch("spcl/getUserAllVideoList");
       // 查询用户是否开启ai换铃
       // this.checkPortalUser()
       // 跳转webJS获取铃音数据
@@ -473,37 +461,6 @@ export default {
         .then((res) => {
 
         });
-    },
-    // 获取咪咕视频
-    getVideoListByMigu () {
-      miguService.getsplykInfo().then((response) => {
-        console.log(response, "response---");
-        if (response.data.code == 200) {
-          miguService.getsplykCurrentInfo().then((res) => {
-            if (res.data.code == 200) {
-              if (res.data.data && response.data.data) {
-                const userData = uni.getStorageSync("userData");
-                userData[0].vrbtResponse = response.data.data;
-                userData[0].vrbtSettingRes = res.data.data.contentIds;
-                userData[0].settingIdRes = res.data.data.settingId;
-                uni.setStorageSync("userData", userData);
-              } else if (response.data.data) {
-                const userData = uni.getStorageSync("userData");
-                userData[0].vrbtResponse = response.data.data;
-                userData[0].vrbtSettingRes = [];
-                userData[0].settingIdRes = "";
-                uni.setStorageSync("userData", userData);
-              } else {
-                const userData = uni.getStorageSync("userData");
-                userData[0].vrbtResponse = [];
-                userData[0].vrbtSettingRes = [];
-                userData[0].settingIdRes = "";
-                uni.setStorageSync("userData", userData);
-              }
-            }
-          });
-        }
-      });
     },
     // 微信登录
     async wxLogin (e, eventId) {
@@ -594,8 +551,8 @@ export default {
                 //     })
                 // }
                 this.bindWxUser();
-                // 获取咪咕视频的数据
-                this.getVideoListByMigu();
+                // 获取用户铃音库数据
+                this.$store.dispatch("spcl/getUserAllVideoList");
                 // 返回上一级
                 uni.navigateBack({
                   delta: 1,

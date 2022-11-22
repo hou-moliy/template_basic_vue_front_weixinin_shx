@@ -48,7 +48,6 @@ const actions = {
   // 获取用户所有铃音数据
   getUserAllVideoList ({ dispatch }) {
     return new Promise((resolve) => {
-      Vue.prototype.$loading("加载中...", true, 0);
       spclService.getsplykInfo().then(response => {
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
