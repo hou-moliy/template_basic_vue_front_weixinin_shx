@@ -43,38 +43,40 @@
     </view>
     <!-- 主题 -->
     <view class="theme-name">
-      我的主题彩铃
+      选择您喜欢的视频彩铃主题
     </view>
-    <view
-      v-for="(item,index) in aiTopicArray"
-      :key="index"
-      class="theme-part"
-    >
-      <view class="theme-part-content">
+
+    <view class="theme-part">
+      <view
+        v-for="(item,index) in aiTopicArray"
+        :key="index"
+        class="theme-part-content"
+      >
         <view class="theme-part-content-tile">
           <image
             class="theme-part-content-tile-icon"
             :src="item.iconUrl"
           />
+        </view>
+
+        <view class="theme-part-right">
           <view class="theme-part-content-tile-name">
             {{ item.topicName }}
           </view>
+          <view class="switch-relative">
+            <switch
+              :checked="item.isOpen"
+              color="#9E79FF"
+            />
+            <view
+              class="switch-absolute"
+              @click="themeStatusChange(item,index)"
+            />
+          </view>
         </view>
-        <view class="switch-relative">
-          <switch
-            :checked="item.isOpen"
-            color="#9E79FF"
-          />
-          <view
-            class="switch-absolute"
-            @click="themeStatusChange(item,index)"
-          />
-        </view>
-      </view>
-      <view class="theme-part-introduce">
-        说明：{{ item.topicDesc }}
       </view>
     </view>
+    <view style="height:20rpx" />
   </view>
 </template>
 
@@ -137,7 +139,7 @@ export default {
         }
       });
     },
-    // 查询用户是否开通视频彩铃
+    // 查询用户是否开通视频彩铃 //接口修改
     getSpclStatus () {
       spclService.getSpclAiStatus().then(res => {
         if (res.data.code === 200 && res.data.data === "1") {
@@ -260,7 +262,7 @@ export default {
   left: 50%;
   transform: translate(-50%, 0rpx);
   width: 686rpx;
-  height: 674rpx;
+  height: 702rpx;
   margin: 0 auto;
   border-radius: 20rpx;
   box-shadow: 0px 0px 22rpx 2rpx rgba(32, 32, 32, 0.11);
@@ -317,6 +319,7 @@ export default {
     justify-content: center;
     padding: 6rpx 0rpx;
     box-sizing: border-box;
+    box-shadow: -4rpx 13rpx 44rpx -18rpx #B37BF5;
 
     .introduce-button-open {
       font-size: 30rpx;
@@ -348,7 +351,7 @@ export default {
 
 }
 .theme-name {
-  margin: 320rpx 0 40rpx 33rpx;
+  margin: 340rpx 0 40rpx 33rpx;
   font-size: 36rpx;
   font-family: PingFang SC, PingFang SC-Bold;
   font-weight: 700;
@@ -361,7 +364,7 @@ export default {
   background: #ffffff;
   border-radius: 20rpx;
   box-shadow: 0px 0px 22rpx 2rpx rgba(32, 32, 32, 0.11);
-  padding: 29rpx 32rpx 29rpx 32rpx;
+  padding: 32rpx 32rpx 0rpx 32rpx;
   box-sizing: border-box;
   margin: 0 auto;
   margin-bottom: 30rpx;
@@ -369,7 +372,7 @@ export default {
   .theme-part-content {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24rpx;
+    margin-bottom: 26rpx;
 
     .theme-part-content-tile {
       display: flex;
@@ -391,8 +394,17 @@ export default {
         color: #333333;
       }
     }
+    .theme-part-right{
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 31rpx;
+    font-size: 30rpx;
+    color: #222222;
+    }
   }
-
   .switch-relative {
     position: relative;
   }
@@ -419,5 +431,8 @@ export default {
     -webkit-box-orient: vertical;
     line-height: 40rpx;
   }
+}
+.theme-part view:last-child .theme-part-right{
+  border-bottom: 0px
 }
 </style>
