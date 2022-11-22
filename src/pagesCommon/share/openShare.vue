@@ -60,7 +60,7 @@ export default {
     this.getVideoDetail();
   },
   onShareAppMessage () {
-    if (this.checkAuthorization()) {
+    if (uni.getStorageSync("Authorization")) {
       const userInfo = uni.getStorageSync("userInfo");
       const phone = uni.getStorageSync("phone");
       this.userName = userInfo?.nickName || `${phone.substring(0, 3)}****${phone.substring(7)}`;
@@ -87,13 +87,6 @@ export default {
       uni.switchTab({
         url: "/pages/cl/index",
       });
-    },
-    // 检查用户是否登录
-    checkAuthorization () {
-      if (uni.getStorageSync("Authorization")) {
-        return true;
-      }
-      return false;
     },
     // 获取视频彩铃详情
     getVideoDetail () {

@@ -5,37 +5,71 @@
       backgroundImage: 'url(' + `${staticImgs}/shxmp/init/share_bg.png` + ')',
     }"
   >
-    <view v-if="poster.finalPath" class="poster-box y-f">
-      <image :src="poster.finalPath" mode="widthFix" class="posterImage" />
+    <view
+      v-if="poster.finalPath"
+      class="poster-box y-f"
+    >
+      <image
+        :src="poster.finalPath"
+        mode="widthFix"
+        class="posterImage"
+      />
       <view class="btns">
         <view class="share-mode">
           <view class="share-mode-wx">
             <button open-type="share">
               <view class="share-mode-wx-img">
-                <img :src="`${staticImgs}/shxmp/init/share_wx.png`" />
+                <img :src="`${staticImgs}/shxmp/init/share_wx.png`">
               </view>
-              <view class="share-mode-wx-title">分享给微信朋友</view>
+              <view class="share-mode-wx-title">
+                分享给微信朋友
+              </view>
             </button>
           </view>
-          <view class="share-mode-wx" @click="sharePyq">
+          <view
+            class="share-mode-wx"
+            @click="sharePyq"
+          >
             <view class="share-mode-wx-img">
-              <img :src="`${staticImgs}/shxmp/init/share_pyq.png`" />
+              <img :src="`${staticImgs}/shxmp/init/share_pyq.png`">
             </view>
-            <view class="share-mode-wx-title">保存分享朋友圈</view>
+            <view class="share-mode-wx-title">
+              保存分享朋友圈
+            </view>
           </view>
         </view>
-        <view class="close-btn" @click="goBack">
+        <view
+          class="close-btn"
+          @click="goBack"
+        >
           <image :src="`${staticImgs}/shxmp/init/close.png`" />
         </view>
       </view>
       <!-- 遮罩 -->
-      <view v-show="maskShow" class="mask" />
+      <view
+        v-show="maskShow"
+        class="mask"
+      />
       <!-- toast弹窗 -->
-      <view v-show="maskTxtShow" class="maskTxt">
-        <view class="txt-cont">分享到朋友圈需要您的授权</view>
+      <view
+        v-show="maskTxtShow"
+        class="maskTxt"
+      >
+        <view class="txt-cont">
+          分享到朋友圈需要您的授权
+        </view>
         <view class="btn-cont">
-          <button class="btn-cancel" @click="closeSetPop">取消</button>
-          <button class="btn-sure" open-type="openSetting" @click="closeSetPop">
+          <button
+            class="btn-cancel"
+            @click="closeSetPop"
+          >
+            取消
+          </button>
+          <button
+            class="btn-sure"
+            open-type="openSetting"
+            @click="closeSetPop"
+          >
             前往设置
           </button>
         </view>
@@ -51,6 +85,7 @@
         }"
       />
     </view>
+    <image />
   </view>
 </template>
 
@@ -61,13 +96,13 @@ import videoService from "@/api/cx/video.js";
 import Util from "@/utils/tools.js";
 export default {
   components: {},
-  data() {
+  data () {
     return {
       poster: {},
       canvasId: "goods_poster",
       scene: "",
       staticImgs: this.$staticImgs,
-      qrCodeUrl: `${this.globalData.staticImgs}/shxmp/init/qr.jpg`, // 二维码图片
+      qrCodeUrl: "", // 二维码图片
       videoDetail: {},
       maskShow: false,
       maskTxtShow: false,
@@ -82,43 +117,37 @@ export default {
       shareType: 1, // 分享类型，1是视频彩铃，其他值是音频彩铃
     };
   },
-  onLoad(options) {
-    this.initData(options);
+  onLoad (options) {
+    this.videoId = options?.videoId;
+    this.pageName = options?.pageName;
+    this.shareType = parseInt(options?.shareType);
+    this.initData();
   },
-  async onShow() {
+  async onShow () {
     // await this.$getAuthInfo();
     if (!this.pageFirstLoad) {
       this.initData();
     }
   },
-  onHide() {
+  onHide () {
     this.pageFirstLoad = false;
     uni.hideLoading();
   },
-  onShareAppMessage(res) {
+  onShareAppMessage (res) {
     this.$analysis.dispatch("spcl_share");
     if (res.from === "button") {
-      console.log("button");
       // 来自页面内分享按钮
       const data = {
         ringId: this.videoId,
         target: "fx",
         opType: 1,
       };
-      videoService.getSpclUserBehavior(data).then(res => {
-        if (res.data.code == 200) {
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
+        if (res.code === 200) {
           this.uploadData();
-        } else {
-          uni.showToast({
-            title: "分享失败，请稍后再试",
-            icon: "none",
-            duration: 2000,
-          });
         }
       });
     }
-    console.log("no-button");
-    console.log(this.pageName, "tempVideoList");
     return {
       title: this.userName + "分享给您一首视频彩铃，赶快去看看吧～",
       path: "/pagesCommon/share/openShare?videoId=" + this.videoId,
@@ -127,13 +156,10 @@ export default {
   },
   methods: {
     // 初始化页面数据
-    initData(options) {
-      // if (uni.getStorageSync("Authorization")) return;
-      this.videoId = options?.videoId || "600926000002698008";
-      this.pageName = options?.pageName;
-      this.shareType = parseInt(options?.shareType);
+    initData () {
+      if (!uni.getStorageSync("Authorization")) return;
       const userInfo = uni.getStorageSync("userInfo");
-      const phone = uni.getStorageSync("phone") || "13006463380";
+      const phone = uni.getStorageSync("phone");
       this.$loading("绘制中");
       this.getVideoDetail().then(() => {
         if (phone) {
@@ -144,19 +170,16 @@ export default {
             userInfo.nickName ||
             `${phone.substring(0, 3)}****${phone.substring(7)}`;
           this.phoneNumber = phone;
-          // this.qrcodeJk();
-          // 自测开始
-          this.shareFc();
-          // 自测结束
+          this.qrcodeJk();
         }
       });
     },
     // 返回上一页
-    goBack() {
+    goBack () {
       uni.navigateBack();
     },
     // 获取二维码
-    qrcodeJk() {
+    qrcodeJk () {
       // 二维码页面
       const shareVideoUrl = encodeURI(
         `/pagesCommon/share/openShare?phonenumber=${this.phoneNumber}&videoId=${this.videoId}`,
@@ -167,7 +190,7 @@ export default {
       const mpath = this.shareType === 1 ? shareVideoUrl : shareClUrl;
       ShareService.qrcode({
         path: mpath,
-        width: "430",
+        width: "600",
       }).then(resp => {
         this.qrCodeUrl = resp.data;
         setTimeout(() => {
@@ -176,7 +199,7 @@ export default {
       });
     },
     // 二维码转化成图片
-    qrToImg() {
+    qrToImg () {
       const urlStr = this.qrCodeUrl;
       // 小程序二维码图片
       const fsm = uni.getFileSystemManager();
@@ -192,40 +215,38 @@ export default {
       this.shareFc();
     },
     // 获取视频彩铃详情
-    getVideoDetail() {
+    getVideoDetail () {
       const data = {
         ringId: this.videoId,
       };
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         videoService.getSpclVideoDetail(data).then(res => {
           if (res.data.code === 200) {
             this.videoDetail = res.data.data;
             resolve(this.videoDetail);
-          } else {
-            reject();
           }
         });
       });
     },
     // 关闭去设置弹窗
-    closeSetPop() {
+    closeSetPop () {
       this.maskShow = false;
       this.maskTxtShow = false;
     },
-    async shareFc() {
-      let _this = this;
+    async shareFc () {
+      const _this = this;
       try {
         const d = await getSharePoster({
-          _this: _this, // 若在组件中使用 必传
+          _this, // 若在组件中使用 必传
           alpha: 0.92,
           posterCanvasId: this.canvasId, // canvasId
           // backgroundImage: `${this.globalData.staticImgs}/shxmp/init/share_bg.png`, // 接口返回的背景图
           delayTimeScale: 20, // 延时系数
           drawDelayTime: 500, // draw延时时间
           background: {
-            height: 1031, //画布高度
-            width: 580, //画布宽度
-            backgroundColor: "#ffffff", //画布背景颜色
+            height: 1031, // 画布高度
+            width: 580, // 画布宽度
+            backgroundColor: "#ffffff", // 画布背景颜色
           },
           drawArray: ({ bgObj, type, bgScale, setBgObj }) =>
             this.setDrawSpArray({ bgObj, type, bgScale, setBgObj }),
@@ -256,7 +277,7 @@ export default {
       }
     },
     // 设置音频海报的绘制元素
-    setDrawYpArray({ bgObj }) {
+    setDrawYpArray ({ bgObj }) {
       // const dx = bgObj.width * 0.3;
       // const fontSize = bgObj.width * 0.042;
       // const lineHeight = bgObj.height * 0.04;
@@ -326,8 +347,8 @@ export default {
       });
     },
     // 设置视频彩铃海报的绘制元素
-    setDrawSpArray({ bgObj }) {
-      let url =
+    setDrawSpArray ({ bgObj }) {
+      const url =
         this.videoDetail.coverUrl ||
         this.videoDetail.openVCoverUrl ||
         this.videoDetail.openHCoverUrl;
@@ -409,13 +430,13 @@ export default {
       });
     },
     // 处理封面图
-    handleCoverImg(url, dx, dy, dWidth, dHeight) {
+    handleCoverImg (url, dx, dy, dWidth, dHeight) {
       return {
         type: "image",
         url,
         dx,
         dy,
-        infoCallBack() {
+        infoCallBack () {
           return {
             dWidth,
             dHeight,
@@ -424,14 +445,14 @@ export default {
       };
     },
     // 处理头像
-    handleHeadImg(bgObj) {
+    handleHeadImg (bgObj) {
       return {
         type: "image",
         url: this.avatarUrl,
         alpha: 1,
         dx: bgObj.width * 0.07,
         dy: bgObj.width * 1.282,
-        infoCallBack(imageInfo) {
+        infoCallBack (imageInfo) {
           const scale = (bgObj.width * 0.127) / imageInfo.height;
           return {
             circleSet: {
@@ -446,7 +467,7 @@ export default {
       };
     },
     // 处理文字
-    handleText(text, size, color, dx, dy, fontWeight = "", alpha = 1) {
+    handleText (text, size, color, dx, dy, fontWeight = "", alpha = 1) {
       return {
         type: "text", // 昵称
         text,
@@ -456,7 +477,7 @@ export default {
         textAlign: "middle",
         textBaseline: "middle",
         fontWeight,
-        infoCallBack() {
+        infoCallBack () {
           return {
             dx,
             dy,
@@ -466,7 +487,7 @@ export default {
       };
     },
     // 处理填充型钜形
-    handleFillRect(backgroundColor, alpha, dx, dy, width, height) {
+    handleFillRect (backgroundColor, alpha, dx, dy, width, height) {
       return {
         type: "fillRect",
         backgroundColor,
@@ -478,18 +499,18 @@ export default {
       };
     },
     // 点击分享朋友圈，保存海报
-    sharePyq() {
+    sharePyq () {
       this.$analysis.dispatch("spcl_share");
       const that = this;
       uni.getSetting({
-        success(res) {
+        success (res) {
           if (!res.authSetting["scope.writePhotosAlbum"]) {
             uni.authorize({
               scope: "scope.writePhotosAlbum",
-              success() {
+              success () {
                 that.saveImage();
               },
-              fail() {
+              fail () {
                 // 用户拒绝了授权，弹出设置弹窗，
                 that.maskShow = true;
                 that.maskTxtShow = true;
@@ -502,9 +523,9 @@ export default {
       });
     },
     // 更新数据
-    uploadData() {},
+    uploadData () {},
     // 保存图片
-    saveImage() {
+    saveImage () {
       if (!this.poster.finalPath) {
         return;
       }

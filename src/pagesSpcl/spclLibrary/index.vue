@@ -194,8 +194,10 @@ export default {
   },
   onShow () {
     // 获取用户的所有铃音数据
+    this.$loading("加载中...", true, 0);
     this.$store.dispatch("spcl/getUserAllVideoList").then(() => {
       this.initData();
+      uni.hideLoading();
       this.loading = false;
     });
   },
@@ -459,6 +461,7 @@ export default {
         } else {
           this.$toast(res.message);
         }
+        this.hiddenPanelBtn();
       });
     },
     // 处理点赞数据更新
