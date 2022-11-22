@@ -36,19 +36,18 @@ import { copyAttr } from "@/utils/gCopy.js";
 
 export default {
   props: {
-    // pageConfig: {
-    //   type: Object,
-    //   default: () => { },
-    // },
+    pageConfig: {
+      type: Object,
+      default: () => { },
+    },
   },
   data () {
     return {
       adList: [],
-      pageConfig: {},
       extraStyle: {
-        width: "430",
-        height: "240",
-        borderRadius: "20",
+        width: "430rpx",
+        height: "240rpx",
+        borderRadius: "20rpx",
       },
     };
   },
@@ -59,9 +58,7 @@ export default {
   methods: {
 
     preHandleStyle () {
-      this.pageConfig = JSON.parse("{\"pageName\":\"recommend_page\",\"pageModule\":\"find-new-hot-topic\",\"sort\":11,\"isShow\":1,\"showMoreFlag\":0,\"url\":null,\"title\":\"推荐页-管理\",\"showTitleFlag\":1,\"moduleId\":2764,\"moduleParams\":null,\"tagIcon\":\"https://t133.ebupt.com.cn/nresource/commonUpload/portalAd/893a3e3905504126bbb4abdb70e60912.jpg\",\"moduleFlag\":\"0031\",\"titleColor\":null,\"innerColor\":null,\"moduleType\":null,\"tipShow\":null,\"tip\":null,\"shareImgUrl\":null,\"shareTitle\":null,\"shareDesc\":null,\"moreTitle\":\"看看112\",\"extraStyle\":{\"width\": \"410\",\"height\": \"240\",\"borderRadius\":  \"20\"},\"eventUrl\":\"/pagesD/my/recenPlay\",\"eventType\":2,\"outAppId\":\"wx4e4ed37286c816c2\",\"freeLogin\":null}");
       this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
-      console.log(this.extraStyle);
     },
     // 使用运营位接口 获取专题列表
     getAdLIst () {
