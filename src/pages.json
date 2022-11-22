@@ -74,13 +74,6 @@
       "root": "pagesSpcl",
       "pages": [
         {
-          "path": "test/test",
-          "style": {
-            "navigationBarTitleText": "视频彩铃包页面示例",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
           "path": "ai/ai",
           "style": {
             "navigationBarTitleText": "AI换铃",
@@ -90,7 +83,7 @@
         {
           "path": "spclLibrary/index",
           "style": {
-            "navigationBarTitleText": "视菜铃音库",
+            "navigationBarTitleText": "我的视彩",
             "enablePullDownRefresh": false
           }
         }

@@ -26,6 +26,34 @@
           @openLoginPopup="openLoginPopup"
         />
       </view>
+
+      <view
+        v-if="pageConfig.moduleFlag === '0002'"
+      >
+        <eb-icon-list
+          :page-config="pageConfig.configV2"
+          @buryIconListId="buryIconListId"
+          @openLoginPopup="openLoginPopup"
+          @open="open"
+        />
+      </view>
+
+      <eb-default-head
+        v-if="
+          pageConfig.moduleFlag === '0031' && pageConfig.configV2.isShow == '1'
+        "
+        :padding="'50rpx 4% 30rpx 4%'"
+        :page-config="pageConfig.configV2"
+        :block-padding="0"
+        @openLoginPopup="openLoginPopup"
+      >
+        <eb-ad-roll-transverse
+          :page-config="pageConfig.configV2"
+          :page-load-status="pageLoadStatus"
+          style="width: 100%"
+          @openLoginPopup="openLoginPopup"
+        />
+      </eb-default-head>
     </view>
   </view>
 </template>
@@ -51,7 +79,6 @@ export default {
   },
   created () {},
   mounted () {
-    console.log("一样一样");
   },
   methods: {
     // 滚动到底部监听

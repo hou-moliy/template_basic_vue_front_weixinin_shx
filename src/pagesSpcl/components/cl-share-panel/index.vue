@@ -1,69 +1,94 @@
 <template name="clSharePanel">
   <view>
-    <view class="cur-ring-f" v-show="panelShow">
+    <view
+      v-show="panelShow"
+      class="cur-ring-f"
+    >
       <view class="panel-view">
         <!-- 分享 -->
         <view
           class="panel-item share-wx"
-          :class="pagesFlag == false ? 'share-wx-cg' : ''"
+          :class="pagesFlag === false ? 'share-wx-cg' : ''"
           @click="shareEvent(currentObj.ringId)"
         >
           <button>
-            <image :src="`${staticImgs}/lnmp/sp-share.png`"></image>
-            <view>分享铃音</view>
+            <image :src="`${staticImgs}/shxmp/init/sp-share.png`" />
+            <view class="panel-item-text">
+              分享铃音
+            </view>
           </button>
         </view>
         <!-- 喜欢 -->
         <view
-          class="panel-item panel-sc"
           v-show="pagesFlag && currentObj.extraInfo.like"
+          class="panel-item panel-sc"
           @click="likeEvent(currentObj.ringId, true)"
         >
-          <image :src="`${staticImgs}/lnmp/sp-liked.png`"></image>
-          <view>已添加</view>
+          <image :src="`${staticImgs}/shxmp/init/sp-liked.png`" />
+          <view class="panel-item-text">
+            已添加
+          </view>
         </view>
         <view
-          class="panel-item panel-sc"
           v-show="pagesFlag && !currentObj.extraInfo.like"
+          class="panel-item panel-sc"
           @click="likeEvent(currentObj.ringId, false)"
         >
-          <image :src="`${staticImgs}/lnmp/sp-like.png`"></image>
-          <view>添加到喜欢</view>
+          <image :src="`${staticImgs}/shxmp/init/sp-liked.png`" />
+          <view class="panel-item-text">
+            添加到喜欢
+          </view>
         </view>
         <!-- 设置 -->
-        <view class="panel-item panel-st" v-show="pagesFlag">
+        <view
+          v-show="pagesFlag"
+          class="panel-item panel-st"
+        >
           <view v-if="currentObj.szValue === 0">
             <image
-              :src="`${staticImgs}/lnmp/sp-settinged.png`"
+              :src="`${staticImgs}/shxmp/init/sp-settinged.png`"
               @click="qxSzEvent(currentObj.ringId)"
-            ></image>
-            <view @click="qxSzEvent(currentObj.ringId)">取消当前设置</view>
+            />
+            <view
+              class="panel-item-text"
+              @click="qxSzEvent(currentObj.ringId)"
+            >
+              取消当前设置
+            </view>
           </view>
           <view v-else>
             <image
-              :src="`${staticImgs}/lnmp/sp-setting.png`"
+              :src="`${staticImgs}/shxmp/init/sp-settinged.png`"
               @click="szEvent(currentObj.ringId)"
-            ></image>
-            <view @click="szEvent(currentObj.ringId)">设为视频彩铃</view>
+            />
+            <view
+              class="panel-item-text"
+              @click="szEvent(currentObj.ringId)"
+            >
+              设为视频彩铃
+            </view>
           </view>
         </view>
       </view>
       <!-- 关闭弹窗 -->
-      <view class="f-btn" @click="hiddenPanelBtn">取消</view>
+      <view
+        class="close-btn"
+        @click="hiddenPanelBtn"
+      >
+        取消
+      </view>
     </view>
     <!-- 底部遮罩 -->
-    <view class="mask mask-foot" v-show="panelShow"></view>
+    <view
+      v-show="panelShow"
+      class="mask mask-foot"
+    />
   </view>
 </template>
 
 <script>
 export default {
-  name: "clSharePanel",
-  data() {
-    return {
-      staticImgs: this.$staticImgs,
-    };
-  },
+  name: "ClSharePanel",
   props: {
     panelShow: {
       type: Boolean,
@@ -71,29 +96,37 @@ export default {
     },
     currentObj: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
-    pagesFlag: true,
+    pagesFlag: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  data () {
+    return {
+      staticImgs: this.$staticImgs,
+    };
   },
   methods: {
     // 点击取消
-    hiddenPanelBtn() {
+    hiddenPanelBtn () {
       this.$emit("hiddenPanelBtn");
     },
     // 点击分享
-    shareEvent(ringId) {
+    shareEvent (ringId) {
       this.$emit("shareEvent", ringId);
     },
     // 添加或取消我喜欢
-    likeEvent(ringId, flag) {
+    likeEvent (ringId, flag) {
       this.$emit("likeEvent", ringId, flag);
     },
     // 设为视频彩铃
-    szEvent(clid) {
+    szEvent (clid) {
       this.$emit("szEvent", clid);
     },
     // 取消设置
-    qxSzEvent(clid) {
+    qxSzEvent (clid) {
       this.$emit("qxSzEvent", clid);
     },
   },
@@ -116,19 +149,24 @@ export default {
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    color: #999999;
-    padding: 50rpx 20rpx 0 20rpx;
+    padding: 56rpx 68rpx 51rpx;
+    font-size: 24rpx;
+    font-family: PingFang SC, PingFang SC-Medium;
+    font-weight: 500;
+    text-align: center;
+    color: #222222;
+    letter-spacing: -0.48rpx;
 
     .panel-item {
-      width: 33%;
+      flex: 1;
 
       image {
         width: 88rpx;
         height: 88rpx;
       }
 
-      view {
-        margin-top: 14rpx;
+      .panel-item-text {
+        margin-top: 29rpx;
       }
     }
 
@@ -140,11 +178,11 @@ export default {
       button {
         display: inline;
         padding: 0;
-        font-size: 25rpx;
+        font-size: 24rpx;
         line-height: normal;
         border-radius: 0;
         background: #ffffff;
-        color: #999999;
+        color: #222222;
       }
 
       button::after {
@@ -153,21 +191,17 @@ export default {
     }
   }
 
-  .f-line {
+  .close-btn {
     width: 100%;
-    background: #e5e5e5;
-    height: 1rpx;
-    margin-top: 46rpx;
-  }
-
-  .f-btn {
-    color: #333333;
-    text-align: center;
-    font-size: 30rpx;
-    margin-top: 50rpx;
     height: 100rpx;
-    border-top: 1rpx solid #e5e5e5;
     line-height: 100rpx;
+    background: #f5f7f9;
+    font-size: 30rpx;
+    font-family: PingFang SC, PingFang SC-Medium;
+    font-weight: 500;
+    text-align: center;
+    color: #666666;
+    letter-spacing: -0.6rpx;
   }
 }
 
