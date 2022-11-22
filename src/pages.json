@@ -60,6 +60,13 @@
             "navigationBarTitleText": "呼叫预览页面",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "search/index",
+          "style": {
+            "navigationBarTitleText": "视频彩铃搜索",
+            "navigationStyle": "custom"
+          }
         }
       ]
     },

@@ -8,4 +8,3 @@ const globalData = {
 };
 console.log("当前环境：globalData", process.env);
 export default globalData;
-// https://uj.ln139.cn/portal/api
