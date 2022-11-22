@@ -51,15 +51,14 @@ export default {
       },
     };
   },
+  created () {
+    this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
+  },
   mounted () {
-    this.preHandleStyle();
     this.getAdLIst();
   },
   methods: {
 
-    preHandleStyle () {
-      this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
-    },
     // 使用运营位接口 获取专题列表
     getAdLIst () {
       console.log("this.pageConfig", JSON.stringify(this.pageConfig));
