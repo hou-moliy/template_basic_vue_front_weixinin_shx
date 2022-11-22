@@ -11,6 +11,21 @@ const mutations = {
     state.userSpclData = userSpclData;
     uni.setStorageSync("userSpclData", JSON.stringify(userSpclData));
   },
+  // 设置用户当前播放的数据 vrbtSettingRes
+  SET_USER_SPCL_SETTINGS (state, vrbtSettingRes) {
+    state.userSpclData.vrbtSettingRes = vrbtSettingRes;
+    this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
+  },
+  // 设置用户所有铃音数据 vrbtResponse
+  SET_USER_SPCL_ALL (state, vrbtResponse) {
+    state.userSpclData.vrbtResponse = vrbtResponse;
+    this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
+  },
+  // 设置用户铃音的settingId, settingIdRes
+  SET_USER_SPCL_SETTINGID (state, settingIdRes) {
+    state.userSpclData.settingIdRes = settingIdRes;
+    this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
+  },
 };
 
 const actions = {
@@ -33,7 +48,7 @@ const actions = {
   // 获取用户所有铃音数据
   getUserAllVideoList ({ dispatch }) {
     return new Promise((resolve) => {
-      Vue.prototype.$loading("加载中...");
+      Vue.prototype.$loading("加载中...", true, 0);
       spclService.getsplykInfo().then(response => {
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());

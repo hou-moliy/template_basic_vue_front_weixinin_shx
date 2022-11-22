@@ -29,7 +29,7 @@
       >
         <checkbox-group @change="changeVideo">
           <checkbox
-            style="transform: scale(0.7)"
+            style="transform: scale(0.7);"
             :checked="allFlag.checked"
             :value="allFlag.value"
           />
@@ -65,12 +65,6 @@
           批量管理
         </view>
       </view>
-      <!-- <view
-        class="cur-ring-m-tips"
-        @click="toH5"
-      >
-        铃音显示不全？点击这里查看全部
-      </view> -->
       <view
         class="cur-ring-m-f"
         :class="checkShow ? 'isDelete' : ''"
@@ -154,111 +148,49 @@
       @qxSzEvent="qxSzEvent"
       @szEvent="szEvent"
     />
-    <!-- 遮罩 -->
-    <view
-      v-show="maskShow"
-      class="mask"
-    />
-    <!-- toast弹窗 -->
-    <view
-      v-show="maskShow"
-      class="maskTxt"
-    >
-      {{ maskTxts }}
-    </view>
-    <!--
-    <view>
-      <uni-popup
-        ref="popup_open"
-        type="dialog"
-      >
-        <spclCustomPopup
-          :custom-flag="customFlag"
-          :single="single"
-          :islykdel="islykdel"
-          :confirm-conent="confirmConentStatus"
-          :title="title"
-          :content="content"
-          @closeEvent="closeEvent"
-          @cancelSetting="cancelSetting"
-          @settingCurrentPlay="settingCurrentPlay"
-          @cancelAlert="cancelAlert"
-          @multiCancel="multiCancel"
-          @multiCancelRemain="multiCancelRemain"
-        />
-      </uni-popup>
-    </view> -->
+    <!-- 提示类弹窗 -->
   </view>
 </template>
 
 <script>
 import clSharePanel from "../components/cl-share-panel/index.vue";
 import NoData from "../components/no-data/index.vue";
-// import spclCustomPopup from "@/components/purchase-popup/spcl-custom-pop.vue";
-import miguService from "@/api/migu/migu.js";
+import windowService from "@/api/window/index";
+import spclService from "@/api/spcl/index.js";
 
 export default {
   name: "SpclLibrary",
   components: {
     clSharePanel,
     NoData,
-    // spclCustomPopup,
   },
   data () {
     return {
       staticImgs: this.$staticImgs,
-      navFlag: "curt", // tab栏
-      currentClickId: "",
-      ringIdAllArray: [],
-      ringIdCurrentSetinggArray: [],
-      // count: 8,
-      ckIconImg: `${this.globalData.staticImgs}/mp/xy-icon.png`,
-      checkShow: false,
+      checkShow: false, // 是否展示批量删除操作栏
       allFlag: {
         value: "cb",
         checked: false,
-      },
-      maskShow: false,
-      maskTxts: "请勾选删除的铃音",
-      panelShow: false, // 控制更多操作展示
-      delCls: [],
-      stFlag: true,
-      currentid: 0,
-      currentObj: {}, // 当前操作的铃音对象
+      }, // 全选标识符
       currentLists: [],
-      userName: "您的好友",
-      status: "more",
-      contentText: {
-        contentdown: "上拉加载更多",
-        contentrefresh: "加载中.....",
-        contentnomore: "没有更多数据啦",
-      },
-      page: 1,
-      pageSize: 10,
+      navFlag: "curt", // tab栏
+      currentObj: {}, // 当前操作的铃音对象
       videoList: [], // 展示的数据
       allIdList: [], // 用户的所有铃音，id数组
       allVideoList: [], // 用户的所有铃音，对象数组
       loading: true, // 数据请求中
       currentVideoIdList: [], // 当前播放铃音，id数组
       videoSettingList: [], // 当前播放铃音，对象数组
+      panelShow: false, // 控制更多操作展示
+      delCls: [], // 选中的铃音数组
 
-      isLoad: "loaded",
-      customFlag: false,
-      single: false,
-      confirmConentStatus: "",
-      title: "",
-      content: "",
-      islykdel: "",
-      currentSettingId: "",
-      AddRingId: "",
-      isRequestOver: true,
-      hiddenVideoList: [],
     };
   },
   onLoad (options) {
     if (options.navflag) {
       this.navFlag = options.navflag;
     }
+    windowService.getWindowAll({ windowScene: "common" }).then(res => {});
   },
   onShow () {
     // 获取用户的所有铃音数据
@@ -267,7 +199,6 @@ export default {
       this.loading = false;
     });
   },
-  onReachBottom (e) { },
   computed: {
     delActive () {
       return this.checkShow && this.delCls.length > 0;
@@ -283,8 +214,6 @@ export default {
         checked: false,
       };
       this.delCls = [];
-      this.ringIdAllArray = [];
-      this.ringIdCurrentSetinggArray = [];
       this.videoList = [];
       const userSpclDataWithTimeFixed = JSON.parse(uni.getStorageSync("userSpclData"));
       const allVideoListWithTimeFixed = userSpclDataWithTimeFixed?.vrbtResponse ?? [];
@@ -302,10 +231,10 @@ export default {
         this.getVideoListById();
       }
     },
-    // 根据
+    // 获取当前应该展示的铃音（当前播放或闲置铃音）
     getVideoListById (flag) {
-      this.allVideoList = uni.getStorageSync("userSpclData").vrbtResponse;
-      this.currentVideoIdList = uni.getStorageSync("userSpclData").vrbtSettingRes;
+      this.allVideoList = this.$store.state.spcl.userSpclData.vrbtResponse;
+      this.currentVideoIdList = this.$store.state.spcl.userSpclData.vrbtSettingRes;
       // 获取当前播放的对象数组
       this.videoSettingList = this.allVideoList.filter(item => {
         return (
@@ -321,22 +250,12 @@ export default {
       for (let i = 0; i < this.allVideoList.length; i++) {
         this.allVideoList[i].checked = false;
       }
-      this.checkShow = false;
-      this.$set(this.allFlag, "checked", false);
-      this.delCls = [];
-      // 排序处理
-      const newArray = [];
-      for (let i = 0; i < this.currentVideoIdList.length; i++) {
-        newArray.push(
-          this.videoSettingList.find(
-            item => item.ringId === this.currentVideoIdList[i],
-          ),
-        );
-      }
-      this.videoSettingList = [...newArray];
-      if (flag === "updateAvailable") {
-        // 真删除闲置刷新
-        let idlevideoList = [];
+      this.updateVideoList(flag);
+    },
+    // 更新页面展示数据
+    updateVideoList (flag) {
+      let idlevideoList = [];
+      if (flag === "updateAvailable") { // 真删除、闲置刷新
         if (this.allVideoList) { // 用户的所有铃音
           idlevideoList = this.allVideoList.filter(item => {
             return (
@@ -350,26 +269,18 @@ export default {
         // 刷新当前播放
         this.videoList = this.videoSettingList;
       }
-      let hiddenVideoListTemp = [];
-      hiddenVideoListTemp = this.allVideoList.filter(item => {
-        return (
-          this.currentVideoIdList.findIndex(
-            v => v == item.ringId && item.hidden == 1,
-          ) > -1
-        );
-      });
-      for (let i = 0; i < hiddenVideoListTemp.length; i++) {
-        this.hiddenVideoList.push(hiddenVideoListTemp[i].ringId);
-      }
+      this.delDone();
     },
     // 切换Tab栏
     changeNav (info) {
       this.navFlag = info;
+      // 取消批量选择
+      this.delDone();
       if (info === "lyk") { // 闲置铃音
         let idleVideoList = [];
         if (this.allVideoList) {
           idleVideoList = this.allVideoList.filter(item => {
-            return (this.videoSettingList.findIndex(v => (v.ringId == item.ringId)) == -1 && item.hidden != 1);
+            return (this.videoSettingList.findIndex(v => (v.ringId === item.ringId)) === -1 && item.hidden !== 1);
           });
         }
         this.videoList = idleVideoList;
@@ -427,13 +338,6 @@ export default {
     // 删除视频彩铃
     delVideoItems () {
       if (this.delCls.length <= 0) return this.$toast("请勾选删除的铃音");
-      if (!this.isRequestOver) {
-        return false;
-      }
-      this.isRequestOver = false;
-      uni.removeStorageSync("afterDelCurrentVedioList");
-      const settingId = uni.getStorageSync("userSpclData").settingIdRes;
-
       if (this.navFlag === "curt") { // 当前播放页面
         this.handleDelCurt();
       } else { // 我的闲置页面
@@ -441,190 +345,44 @@ export default {
       }
     },
     // 当前播放页面的删除
-    handleDelCurt () {
-      const spDelList = this.currentVideoIdList.filter(
-        v => this.delCls.findIndex(item => item == v) == -1,
+    handleDelCurt (flag) {
+      // 剔除需要删除的id后的ids数组
+      this.currentVideoIdList = this.$store.state.spcl.userSpclData.vrbtSettingRes;
+      const contentIDs = this.currentVideoIdList.filter(
+        v => this.delCls.findIndex(item => item === v) === -1,
       );
-      uni.setStorageSync("spDelList", spDelList);
-      uni.setStorageSync("navFlag", "curt");
-      if (this.hiddenVideoList.length > 0) {
-        spDelList.concat(this.hiddenVideoList);
-        miguService
-          .modifySpcl({
-            contentIDs: spDelList,
-            settingID: settingId,
+      const settingID = this.$store.state.spcl.userSpclData.settingIdRes;
+
+      return new Promise((resolve, reject) => {
+        spclService
+          .modifySpclByIds({
+            contentIDs,
+            settingID,
           })
           .then(res => {
-            if (res.data.code == 200) {
-              this.$refs.popup_open.open();
-              this.customFlag = true;
-              this.title = "操作成功";
-              this.content = [
-                "您成功将",
-                `${this.delCls.length}首`,
-                "视频彩铃取消当前播放",
-              ];
-              this.confirmConentStatus = "确定";
-              this.single = true;
-              this.islykdel = "multiCancelRemain";
-              setTimeout(() => {
-                this.isRequestOver = true;
-              }, 1000);
-            } else {
-              this.$refs.popup_open.open();
-              this.customFlag = true;
-              this.title = "操作失败";
-              this.content = [
-                `${this.delCls.length}首`,
-                "视频彩铃取消当前播放失败",
-              ];
-              this.confirmConentStatus = "确定";
-              this.single = true;
-              this.islykdel = "fail";
-              setTimeout(() => {
-                this.isRequestOver = true;
-              }, 1000);
+            if (res.data.code === 200) {
+              // 更新用户设置的铃音数据
+              this.$store.commit("spcl/SET_USER_SPCL_SETTINGS", contentIDs);
+              // 更新当前播放数据
+              this.getVideoListById(flag);
             }
-          });
-      } else {
-        if (spDelList.length == 0) {
-          // console.log('2')
-          miguService
-            .canMultiVideo({
-              settingId,
-            })
-            .then(res => {
-              if (res.data.code == 200) {
-                // debugger
-                this.$refs.popup_open.open();
-                this.customFlag = true;
-                this.title = "操作成功";
-                this.content = [
-                  "您成功将",
-                  `${this.delCls.length}首`,
-                  "视频彩铃取消当前播放",
-                ];
-                this.confirmConentStatus = "确定";
-                this.single = true;
-                this.islykdel = "multiCancel";
-                setTimeout(() => {
-                  this.isRequestOver = true;
-                }, 1000);
-              } else {
-                this.$refs.popup_open.open();
-                this.customFlag = true;
-                this.title = "操作失败";
-                this.content = [
-                  `${this.delCls.length}首`,
-                  "视频彩铃取消当前播放失败",
-                ];
-                this.confirmConentStatus = "确定";
-                this.single = true;
-                this.islykdel = "fail";
-                setTimeout(() => {
-                  this.isRequestOver = true;
-                }, 1000);
-              }
-            });
-        } else {
-          miguService
-            .modifySpcl({
-              contentIDs: spDelList,
-              settingID: settingId,
-            })
-            .then(res => {
-              if (res.data.code == 200) {
-                this.$refs.popup_open.open();
-                this.customFlag = true;
-                this.title = "操作成功";
-                this.content = [
-                  "您成功将",
-                  `${this.delCls.length}首`,
-                  "视频彩铃取消当前播放",
-                ];
-                this.confirmConentStatus = "确定";
-                this.single = true;
-                this.islykdel = "multiCancelRemain";
-                setTimeout(() => {
-                  this.isRequestOver = true;
-                }, 1000);
-              } else {
-                this.$refs.popup_open.open();
-                this.customFlag = true;
-                this.title = "操作失败";
-                this.content = [
-                  `${this.delCls.length}首`,
-                  "视频彩铃取消当前播放失败",
-                ];
-                this.confirmConentStatus = "确定";
-                this.single = true;
-                this.islykdel = "fail";
-                setTimeout(() => {
-                  this.isRequestOver = true;
-                }, 1000);
-              }
-            });
-        }
-      }
+            resolve(res.data);
+          }).catch(err => reject(err));
+      });
     },
     // 我的闲置页面的删除
     handleDelXz () {
-      uni.setStorageSync("spDelList", this.delCls);
-      uni.setStorageSync("navFlag", "lyk");
-      miguService.delMultiVideo(this.delCls).then(res => {
-        if (res.data.code == 200) {
-          if (res.data.data.fail === 0) {
-            this.$refs.popup_open.open();
-            this.customFlag = true;
-            this.title = "删除成功";
-            this.content = [
-              "您成功删除",
-              `${res.data.data.success}首`,
-              "视频彩铃",
-            ];
-            this.confirmConentStatus = "确定";
-            this.single = true;
-            this.islykdel = "cancelAlert";
-            setTimeout(() => {
-              this.isRequestOver = true;
-            }, 1000);
-          } else if (res.data.data.success === 0) {
-            this.$refs.popup_open.open();
-            this.customFlag = true;
-            this.title = "删除失败";
-            this.content = [`${res.data.data.fail}首`, "视频彩铃删除失败"];
-            this.confirmConentStatus = "确定";
-            this.single = true;
-            this.islykdel = "fail";
-            setTimeout(() => {
-              this.isRequestOver = true;
-            }, 1000);
-          } else {
-            this.$refs.popup_open.open();
-            this.customFlag = true;
-            this.title = "删除失败";
-            this.content =
-                "您有" +
-                res.data.data.success +
-                "首视频彩铃删除成功" +
-                res.data.data.fail +
-                "首删除失败";
-            this.confirmConentStatus = "确定";
-            this.single = true;
-            this.islykdel = "cancelAlert";
-            setTimeout(() => {
-              this.isRequestOver = true;
-            }, 1000);
-          }
-        } else {
-          uni.showToast({
-            title: res.data.mag,
-            icon: "none",
-            duration: 2000,
-          });
-          setTimeout(() => {
-            this.isRequestOver = true;
-          }, 1000);
+      // 剔除需要删除的id后的数组
+      this.allVideoList = this.$store.state.spcl.userSpclData.vrbtResponse;
+      const contents = this.allVideoList.filter(
+        v => this.delCls.findIndex(item => item === v.ringId) === -1,
+      );
+      spclService.delMultiVideo(this.delCls).then(res => {
+        if (res.data.code === 200) {
+          // 更新用户铃音库数据
+          this.$store.commit("spcl/SET_USER_SPCL_ALL", contents);
+          // 更新闲置铃音数据
+          this.getVideoListById("updateAvailable");
         }
       });
     },
@@ -638,7 +396,7 @@ export default {
         url: "/pagesCommon/webView/ckWebview",
       });
     },
-    // 取消勾选
+    // 取消勾选、重置选择
     delDone () {
       this.$set(this.allFlag, "checked", false);
       this.videoList.forEach(element => {
@@ -714,272 +472,59 @@ export default {
         this.$toast("点赞成功");
       }
     },
-    // 全局更新最新的
-    updateLike (flag, ringId) {
-      const vrbtResponseTemp = uni.getStorageSync("userSpclData");
-      const indexTemp = vrbtResponseTemp[0].vrbtResponse.findIndex(
-        item => item.ringId == ringId,
-      );
-      vrbtResponseTemp[0].vrbtResponse[indexTemp].extraInfo.like = flag;
-      uni.setStorageSync("userSpclData", vrbtResponseTemp);
-      if (flag) {
-        vrbtResponseTemp[0].vrbtResponse[indexTemp].extraInfo.likeCount += 1;
-      } else {
-        vrbtResponseTemp[0].vrbtResponse[indexTemp].extraInfo.likeCount -= 1;
-      }
-      uni.setStorageSync("userSpclData", vrbtResponseTemp);
-    },
+    // 设为视频彩铃
     szEvent (ringId) {
-      this.AddRingId = ringId;
-      const listItem = this.videoList.findIndex(
-        item => item.ringId == this.currentClickId,
-      );
-      const videoMsg = this.videoList[listItem];
-      this.$refs.popup_open.open();
-      this.customFlag = true;
-      this.title = "您正在设置";
-      this.content = ["确认要把", videoMsg.ringName, "设置为当前播放吗?"];
-      this.confirmConentStatus = "确认";
-      this.single = false;
-      this.islykdel = "settingCurrent";
+      this.currentVideoIdList = this.$store.state.spcl.userSpclData.vrbtSettingRes;
+      // 当前播放铃音为空时
+      if (this.currentVideoIdList.length === 0) {
+        return this.handleCurPlayNoData([ringId]);
+      }
+      // 当前播放铃音有数据时
+      this.currentVideoIdList.push(ringId);
+      this.handleDelCurt("updateAvailable").then(res => {
+        if (res.code === 200) {
+          this.$toast("设置当前播放成功");
+        } else {
+          this.$toast(res.message);
+          this.currentVideoIdList.pop();
+        }
+        this.panelShow = false;
+      });
+    },
+    // 处理当前播放无数据时设为当前播放操作
+    handleCurPlayNoData (contentIDs) {
+      spclService.setCurrentSpcl({ contentIDs }).then(res => {
+        if (res.data.code === 200) {
+          this.$toast("设置当前播放成功");
+        } else {
+          this.$toast(res.message);
+        }
+        this.panelShow = false;
+        // 更新用户设置的铃音数据
+        this.$store.commit("spcl/SET_USER_SPCL_SETTINGS", contentIDs);
+        // 更新用户铃音设置的id
+        this.$store.commit("spcl/SET_USER_SPCL_SETTINGID", res.data.data);
+        // 刷新闲置页面数据
+        this.getVideoListById("updateAvailable");
+      });
     },
     // 取消设置视频彩铃
     qxSzEvent (ringId) {
       // 展示取消设置弹窗
-      console.log(`确认要把, ${this.currentObj.ringName}, 取消当前播放吗?`);
-    },
-
-    // 闲置页面响应
-    async settingCurrentPlay () {
-      const listItem = this.videoList.findIndex(
-        item => item.ringId === this.currentClickId,
-      );
-      const videoMsg = this.videoList[listItem];
-      uni.setStorageSync("bindVideoMsg", videoMsg);
-      const currentClickIdArray = [];
-      for (let i = 0; i < this.videoSettingList.length; i++) {
-        currentClickIdArray.push(this.videoSettingList[i].ringId);
-      }
-      currentClickIdArray.unshift(this.currentClickId);
-      uni.setStorageSync("currentClickSPId", currentClickIdArray);
-      uni.setStorageSync("currentClickSPStatus", 1);
-      this.panelShow = false;
-      const settingId = uni.getStorageSync("userSpclData").settingIdRes;
-      const userSpclData = uni.getStorageSync("userSpclData");
-      if (settingId) {
-        if (this.hiddenVideoList.length > 0) {
-          currentClickIdArray.concat(this.hiddenVideoList);
-          miguService
-            .modifySpcl({
-              contentIDs: currentClickIdArray,
-              settingID: settingId,
-            })
-            .then(res => {
-              if (res.data.code == 200) {
-                // console.log('设为当前1', res)
-                userSpclData.vrbtSettingRes = currentClickIdArray;
-                uni.setStorageSync("userSpclData", userSpclData);
-                this.getVideoListById("updateAvailable");
-                uni.showToast({
-                  title: "设置当前播放成功",
-                  icon: "none",
-                  duration: 2000,
-                });
-              } else {
-                uni.showToast({
-                  title: res.data.message,
-                  icon: "none",
-                  duration: 2000,
-                });
-              }
-            });
+      this.delCls = [ringId];
+      this.handleDelCurt().then(res => {
+        if (res.code === 200) {
+          this.$toast("取消当前播放成功");
         } else {
-          miguService
-            .modifySpcl({
-              contentIDs: currentClickIdArray,
-              settingID: settingId,
-            })
-            .then(res => {
-              if (res.data.code == 200) {
-                // console.log('设为当前2', res)
-                userSpclData.vrbtSettingRes = currentClickIdArray;
-                uni.setStorageSync("userSpclData", userSpclData);
-                this.getVideoListById("updateAvailable");
-                uni.showToast({
-                  title: "设置当前播放成功",
-                  icon: "none",
-                  duration: 2000,
-                });
-              } else {
-                uni.showToast({
-                  title: res.data.message,
-                  icon: "none",
-                  duration: 2000,
-                });
-              }
-            });
+          this.$toast(res.message);
         }
-      } else {
-        const contentId = [];
-        contentId.push(this.AddRingId);
-        miguService
-          .setCurrentSpcl({
-            contentIDs: contentId,
-          })
-          .then(res => {
-            if (res.data.code === 200) {
-              userSpclData.settingIdRes = res.data.data;
-              userSpclData.vrbtSettingRes = contentId;
-              uni.setStorageSync("userSpclData", userSpclData);
-              // console.log('设为当前3', res)
-              this.getVideoListById("updateAvailable");
-              uni.showToast({
-                title: "设置当前播放成功",
-                icon: "none",
-                duration: 2000,
-              });
-            } else {
-              uni.showToast({
-                title: res.data.message,
-                icon: "none",
-                duration: 2000,
-              });
-            }
-          });
-      }
-      // })
-      this.closeEvent();
-    },
-
-    // 取消当前播放确认
-    cancelSetting () {
-      // console.log("qxSzEvent");
-      const listItem = this.videoList.findIndex(
-        item => item.ringId == this.currentClickId,
-      );
-      const videoMsg = this.videoList[listItem];
-      uni.setStorageSync("bindVideoMsg", videoMsg);
-      const currentClickIdArray = [];
-      for (let i = 0; i < this.videoSettingList.length; i++) {
-        currentClickIdArray.push(this.videoSettingList[i].ringId);
-      }
-      const delCurrentClickIdArray = currentClickIdArray.filter(
-        v => v != this.currentClickId,
-      );
-      this.panelShow = false;
-      uni.setStorageSync("currentClickSPId", delCurrentClickIdArray);
-      uni.setStorageSync("currentClickSPStatus", 0);
-      const settingId = uni.getStorageSync("userSpclData").settingIdRes;
-      const userSpclData = uni.getStorageSync("userSpclData");
-      const delCurrentClickIdConcatArray = delCurrentClickIdArray.concat(
-        this.hiddenVideoList,
-      );
-      if (this.hiddenVideoList.length > 0) {
-        miguService
-          .modifySpcl({
-            contentIDs: delCurrentClickIdConcatArray,
-            settingID: settingId,
-          })
-          .then(res => {
-            if (res.data.code == 200) {
-              // console.log('取消当前1', res)
-              userSpclData.vrbtSettingRes = delCurrentClickIdConcatArray;
-              uni.setStorageSync("userSpclData", userSpclData);
-              this.getVideoListById();
-              uni.showToast({
-                title: "取消当前播放成功",
-                icon: "none",
-                duration: 2000,
-              });
-            }
-          });
-      } else {
-        if (delCurrentClickIdConcatArray.length == 0) {
-          miguService
-            .canMultiVideo({
-              settingId,
-            })
-            .then(res => {
-              if (res.data.code == 200) {
-                userSpclData.vrbtSettingRes = [];
-                userSpclData.settingIdRes = "";
-                uni.setStorageSync("userSpclData", userSpclData);
-                this.getVideoListById();
-                uni.showToast({
-                  title: "取消当前播放成功",
-                  icon: "none",
-                  duration: 2000,
-                });
-              }
-            });
-        } else {
-          miguService
-            .modifySpcl({
-              contentIDs: delCurrentClickIdConcatArray,
-              settingID: settingId,
-            })
-            .then(res => {
-              if (res.data.code == 200) {
-                // console.log('取消当前3', res)
-                userSpclData.vrbtSettingRes = delCurrentClickIdConcatArray;
-                uni.setStorageSync("userSpclData", userSpclData);
-                this.getVideoListById();
-                uni.showToast({
-                  title: "取消当前播放成功",
-                  icon: "none",
-                  duration: 2000,
-                });
-              }
-            });
-        }
-      }
-      this.navFlag = "curt";
-      this.closeEvent();
-    },
-    closeEvent () {
-      this.$refs.popup_open.close();
-      this.customFlag = false;
-      this.islykdel = "";
-    },
-    // 删除后刷新列表
-    cancelAlert () {
-      // 返回值
-      const userSpclData = uni.getStorageSync("userSpclData");
-      const allVideoIdList = userSpclData.vrbtResponse;
-      const newVrbtResponse = allVideoIdList.filter(v => {
-        return this.delCls.findIndex(item => item == v.ringId) == -1;
+        this.panelShow = false;
       });
-      userSpclData.vrbtResponse = newVrbtResponse;
-      uni.setStorageSync("userSpclData", userSpclData);
-      this.getVideoListById("updateAvailable");
-      this.closeEvent();
     },
-    multiCancel () {
-      const userSpclData = uni.getStorageSync("userSpclData");
-      userSpclData.vrbtSettingRes = [];
-      userSpclData.settingIdRes = "";
-      uni.setStorageSync("userSpclData", userSpclData);
-      this.getVideoListById();
-      this.closeEvent();
-    },
-    multiCancelRemain () {
-      const spDelList = this.currentVideoIdList.filter(
-        v => this.delCls.findIndex(item => item == v) == -1,
-      );
-      const userSpclData = uni.getStorageSync("userSpclData");
-      userSpclData.vrbtSettingRes = spDelList;
-      uni.setStorageSync("userSpclData", userSpclData);
-      this.getVideoListById();
-      this.closeEvent();
-    },
-    // 预览
-    seeDetail (seeDetail) {
-      // console.log(seeDetail);
-      // uni.setStorageSync('videoList', [seeDetail]);
-      this.$store.commit("getVideoList", this.videoList);
-      console.log(this.videoList, "this.videoList");
+    // 预览,跳转视频彩铃播放页面
+    seeDetail ({ ringId }) {
       uni.navigateTo({
-        url: "/pages/cxVideo/cxVideoPlay?id=" + seeDetail.ringId,
+        url: `/pages/cxVideo/cxVideoPlay?id=${ringId}`,
       });
     },
   },
