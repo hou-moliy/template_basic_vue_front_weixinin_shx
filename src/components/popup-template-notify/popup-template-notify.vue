@@ -1,7 +1,6 @@
 <template>
   <view
     v-if="popupInfo.isVisible"
-    ref="NotifyPop"
     class="EB-popup"
     @touchmove.stop.prevent="() => {}"
   >
@@ -67,29 +66,33 @@ import {
   formatRichText,
 } from "../popup-module/toos/tools";
 export default {
-  name: "EBPopup",
-  model: {
-    prop: "show",
-  },
-  // props: {
-  //   popupInfo: {
-  //     type: Object,
-  //     default: () => { },
-  //   },
-  //   show: {
-  //     type: Boolean,
-  //     default: false,
-  //   },
-  // },
+  name: "NotifyPop",
   data () {
     return {
-      popupDes: "",
+      popupDes: "", // 文本描述
+      promiseStatus: null, // 按钮点击的promise
       defaultOptions: {
         isVisible: false, // 是否展示弹窗
         windowTitle: "温馨提示", // 标题
-      },
-      popupInfo: {},
-      timer: null,
+        time: 0,
+        windowDesc: "这里是描述", // 弹窗描述
+        buttons: [
+          {
+            buttonName: "取消",
+            buttonStyle: "color:#ffffff;border-color:none;background:linear-gradient(-87deg,#fee5ff 0%, #ddddff 100%);",
+            id: 9,
+            type: 1,
+          },
+          {
+            buttonName: "确定",
+            buttonStyle: "color:#ffffff;border-color:none;background:linear-gradient(-90deg,#ff83d9 0%, #9e79ff 100%);",
+            id: 9,
+            type: 2,
+          },
+        ],
+      }, // 默认弹窗的展示
+      popupInfo: {}, // 传入的弹窗内容
+      timer: null, // 自动关闭弹窗的定时器，当传入time的时候生效
     };
   },
   watch: {
@@ -114,22 +117,30 @@ export default {
       // 自动关闭
       if (this.popupInfo.time) {
         this.timer = setTimeout(() => {
-          this.close();
+          this.popupInfo = Object.assign({}, this.defaultOptions, { isVisible: false });
         }, this.popupInfo.time * 1000);
       }
-    },
-    // 关闭弹窗
-    close () {
-      this.popupInfo = Object.assign({}, this.defaultOptions, { isVisible: false });
-    },
-    buttonClick (item, index) {
-      this.$emit("buttonClick", {
-        btnInfo: item,
-        index,
+      return new Promise((resolve, reject) => {
+        this.promiseStatus = { resolve, reject };
       });
     },
-    closePopup (popupInfo) {
-      this.$emit("closePopup", popupInfo);
+    // 关闭弹窗
+    closePopup () {
+      this.popupInfo = Object.assign({}, this.defaultOptions, { isVisible: false });
+      this.promiseStatus && this.promiseStatus.reject();
+    },
+    // 按钮点击
+    buttonClick (btnInfo, index) {
+      const res = {
+        btnInfo,
+        index,
+      };
+      if (btnInfo.type === 1) { // 关闭弹窗按钮点击
+        this.closePopup();
+      } else { // 非关闭按钮点击弹窗
+        this.popupInfo = Object.assign({}, this.defaultOptions, { isVisible: false });
+        this.promiseStatus && this.promiseStatus.resolve(res);
+      }
     },
   },
 

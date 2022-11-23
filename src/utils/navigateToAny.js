@@ -1,6 +1,7 @@
 import SsoService from "@/api/sso";
 
 const navigateToAny = async function (item, callback) {
+  console.log("123");
   uni.showLoading({
     title: "",
     mask: true,
@@ -44,6 +45,7 @@ const handleExternalLink = async (item, callback) => {
 
 const handleInternalLink = (item, callback) => {
   uni.hideLoading();
+  console.log(item.eventUrl);
   uni.navigateTo({
     url: item.eventUrl,
     fail: function () {
