@@ -1,7 +1,17 @@
 <template>
-  <view v-if="wfList.length" class="scenery-wrap">
-    <scroll-view :scroll-x="true" class="items-box">
-      <view v-for="(item, index) in wfList" :key="index" class="item-wrap">
+  <view
+    v-if="wfList.length"
+    class="scenery-wrap"
+  >
+    <scroll-view
+      :scroll-x="true"
+      class="items-box"
+    >
+      <view
+        v-for="(item, index) in wfList"
+        :key="index"
+        class="item-wrap"
+      >
         <video-item
           :item="item"
           :radius="24"
@@ -18,7 +28,7 @@
 </template>
 
 <script>
-import cxVideoService from "@/api/cx/video.js";
+import CxVideoService from "@/api/cx/video.js";
 import videoItem from "./videoItem.vue";
 import { programaAnalysis } from "@/utils/common.js";
 export default {
@@ -37,7 +47,7 @@ export default {
       default: false,
     },
   },
-  data() {
+  data () {
     return {
       wfList: [],
       moduleId: "",
@@ -45,26 +55,26 @@ export default {
     };
   },
   watch: {
-    pageLoadStatus(value) {
+    pageLoadStatus (value) {
       console.log(value, "页面切换状态");
       if (value) {
         this.getWfList();
       }
     },
   },
-  created() {
+  created () {
     this.getWfList();
   },
   methods: {
     programaAnalysis,
     // 请求列表数据
-    async getWfList() {
+    async getWfList () {
       this.moduleId = this.pageConfig.moduleId;
       if (!this.moduleId) return;
       const params = {
         labelId: this.moduleId,
       };
-      await cxVideoService.getSceneryListById(params).then(({ data: res }) => {
+      await CxVideoService.getSceneryListById(params).then(({ data: res }) => {
         if (res.code === 200) {
           if (!res.data.list.length) return;
           this.wfList = res.data.list;
@@ -72,7 +82,7 @@ export default {
       });
     },
     // 分享
-    shareVideo({ ringId, target }) {
+    shareVideo ({ ringId, target }) {
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
       } else {
@@ -93,7 +103,7 @@ export default {
         });
       }
     },
-    handleTips({ opType }) {
+    handleTips ({ opType }) {
       if (opType === 1) {
         this.$tips("点赞成功");
       } else if (opType === 0) {
@@ -102,7 +112,7 @@ export default {
       this.getWfList();
     },
     // 点赞
-    giveLikes({ ringId, target, opType }) {
+    giveLikes ({ ringId, target, opType }) {
       // opType 1点赞，0取消
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
@@ -125,8 +135,8 @@ export default {
       };
       this.handleSpclUserBehavior(params);
     },
-    handleSpclUserBehavior(params) {
-      cxVideoService.getSpclUserBehavior(params).then(({ data: res }) => {
+    handleSpclUserBehavior (params) {
+      CxVideoService.getSpclUserBehavior(params).then(({ data: res }) => {
         this.isClickLike = false;
         if (res.code === 200) {
           this.handleTips(params);
