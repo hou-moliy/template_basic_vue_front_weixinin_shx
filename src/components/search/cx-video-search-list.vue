@@ -350,7 +350,7 @@ export default {
     goToPlayVideo (e, videoList) {
       // uni.setStorageSync("videoList", videoList);
       this.$store.commit("getVideoList", videoList);
-	  this.$emit("hotKeyGoToPlay", false);
+      this.$emit("hotKeyGoToPlay", false);
       uni.navigateTo({
         url: e.currentTarget.dataset.url,
       });

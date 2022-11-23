@@ -17,7 +17,7 @@
             v-for="(item, index) in hotSelectValue"
             :key="index"
             class="cx_select_hot_list"
-            :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
+            :data-url="'/pageSpcl/spclLibrary/index?id=' + item.ringId"
             @click="clickKey($event, item)"
           >
             <view class="cx_select_hot_item">
@@ -40,11 +40,10 @@
                 v-else
                 class="cx_select_hot_numText"
               >
-                {{ index + 1 }}
+                {{ index>=9?"":0 }}{{ index + 1 }}
               </view>
               <view
                 class="cx_select_hot_tip"
-                :style="index < 3 ? 'font-weight : 700' : 'font-weight : 500'"
               >
                 {{
                   item.ringName.length > 15
@@ -194,11 +193,11 @@ export default {
   props: {
     hotSelectValue: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     cxMusicList: {
       type: Array,
-      default: [],
+      default: () => [],
       deep: true,
       immediate: true,
     },
@@ -257,9 +256,9 @@ export default {
     clickKey (e, item) {
       const tempArr = [];
       tempArr.push(item);
-      this.$analysis.dispatch("fxspcl_ss_rsbd_id", `${item.id}`);
+      // this.$analysis.dispatch("fxspcl_ss_rsbd_id", `${item.id}`);
       this.$store.commit("getVideoList", tempArr);
-	  this.$emit("clickKey");
+      this.$emit("clickKey");
       uni.navigateTo({
         url: e.currentTarget.dataset.url,
       });
@@ -407,7 +406,6 @@ export default {
           height: 36rpx;
           font-size: 26rpx;
           font-family: PingFang SC, PingFang SC-Bold;
-          font-weight: 700;
           text-align: left;
           color: #333333;
           line-height: 36rpx;
@@ -424,18 +422,17 @@ export default {
 }
 
 .cx_select_hot_numIcon {
-  width: 30rpx;
-  height: 36rpx;
+  width: 29rpx;
+  height: 23rpx;
   vertical-align: middle;
 }
 .cx_select_hot_numText {
   width: 30rpx;
   height: 36rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
   font-family: PingFang SC, PingFang SC-Bold;
-  font-weight: 700;
   text-align: left;
-  color: #666666;
+  color: #999;
   line-height: 36rpx;
   text-align: center;
 }
