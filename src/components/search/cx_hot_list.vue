@@ -17,7 +17,7 @@
             v-for="(item, index) in hotSelectValue"
             :key="index"
             class="cx_select_hot_list"
-            :data-url="'/pageSpcl/spclLibrary/index?id=' + item.ringId"
+            :data-url="'/pagesSpcl/clVideo/clVdieoPlay?id=' + item.ringId"
             @click="clickKey($event, item)"
           >
             <view class="cx_select_hot_item">
@@ -231,17 +231,8 @@ export default {
   },
   watch: {
     cxMusicList (nVal, oVal) {
-      if (nVal != oVal) {
+      if (nVal !== oVal) {
         this.isPauseMusic = false;
-        const that = this;
-        // if (this.$store.state.changePage) {
-        // 	that.currentMusic = -1
-        // 	innerAudioContext.stop()
-        // }
-        // if (this.$store.state.swiperChange) {
-        // 	that.currentMusic = -1
-        // 	innerAudioContext.stop()
-        // }
         this.playStatus = "play";
       }
     },
@@ -257,16 +248,14 @@ export default {
       const tempArr = [];
       tempArr.push(item);
       // this.$analysis.dispatch("fxspcl_ss_rsbd_id", `${item.id}`);
-      this.$store.commit("getVideoList", tempArr);
+      this.$store.commit("spcl/getVideoList", tempArr);
       this.$emit("clickKey");
       uni.navigateTo({
         url: e.currentTarget.dataset.url,
       });
     },
-    navigateToSelector () {
-      uni.navigateTo({
-        url: "/pagesD/my/login",
-      });
+    getMoreHotList () {
+      this.$emit("getMoreHotList");
     },
     leave () {
       this.currentMusic = -1;
@@ -308,9 +297,7 @@ export default {
               }
             });
           } else {
-            // console.log('fail')
             that.$emit("open", true);
-            // uni.$emit('open', true)
           }
         });
       } else {
@@ -348,9 +335,6 @@ export default {
     pauseMusic () {
       innerAudioContext.pause();
       this.isPauseMusic = true;
-    },
-    getMoreHotList () {
-      this.$emit("getMoreHotList");
     },
   },
 };
@@ -437,8 +421,8 @@ export default {
   text-align: center;
 }
 .cx_select_hot_textIcon {
-  width: 32rpx;
-  height: 32rpx;
+  width: 50rpx;
+  height: 24rpx;
   margin: auto 0;
 }
 

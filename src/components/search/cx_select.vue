@@ -115,7 +115,6 @@
 <script>
 import cxService from "@/api/cx/cx.js";
 import videoService from "@/api/cx/video.js";
-// import Util from "@/utils/tools.js";
 import cxHotList from "./cx_hot_list.vue";
 export default {
   components: { cxHotList },
@@ -156,7 +155,6 @@ export default {
   },
   watch: {
     value (val) {
-      // console.log('value改变了', val);
       if (val === "") {
         this.isSelecting = false; // 正在搜索
         this.isSelectedState = false; // 是否搜索过
@@ -184,25 +182,12 @@ export default {
     this.getMoreHotList();
   },
   methods: {
-    goToPlay (e, videoList) {
-      // this.$store.commit('getVideoList', videoList)
-      console.log(e, videoList);
+    goToPlay () {
       this.$emit("hotKeyGoToPlay", true);
-    },
-    focus () {
-      this.isFocus = true;
-      this.placeholder = "";
     },
     clickKey (item) {
       this.value = item;
       this.select();
-    },
-    blur () {
-      if (this.value == "") {
-        this.isFocus = false;
-        this.isSelectedState = false;
-        this.placeholder = "";
-      }
     },
     // 清除历史记录
     clear () {
@@ -213,17 +198,31 @@ export default {
         uni.setStorageSync("musicHotKeyArr", this.hotKeyArr);
       }
     },
-    // changeValue (e) {
-    //   if (e.detail.value == "") {
-    //     this.isSelectedState = false;
-    //   }
-    // },
     // 删除搜索
     deleteValue () {
       this.value = "";
       this.isFocus = false;
       this.isSelectedState = false;
       this.placeholder = "";
+    },
+    getHistory (hotKeyType) {
+      if (uni.getStorageSync(hotKeyType).indexOf(this.value) === -1) {
+        let tempArr = uni.getStorageSync(hotKeyType);
+        if (tempArr.length > 19) {
+          tempArr.pop();
+          uni.setStorageSync(hotKeyType, tempArr);
+        }
+
+        tempArr.unshift(this.value);
+        tempArr = tempArr.splice(0, 8);
+        uni.setStorageSync(hotKeyType, tempArr);
+      } else {
+        let tempArr = uni.getStorageSync(hotKeyType);
+        tempArr.splice(tempArr.indexOf(this.value), 1);
+        tempArr.unshift(this.value);
+        tempArr = tempArr.splice(0, 8);
+        uni.setStorageSync(hotKeyType, tempArr);
+      }
     },
     select (isClick) {
       uni.$emit("stopMusic");
@@ -238,23 +237,7 @@ export default {
       this.isSelecting = true;
       if (this.pageName === "video") {
         // 历史记录
-        if (uni.getStorageSync("videoHotKeyArr").indexOf(this.value) === -1) {
-          let tempArr = uni.getStorageSync("videoHotKeyArr");
-          if (tempArr.length > 19) {
-            tempArr.pop();
-            uni.setStorageSync("videoHotKeyArr", tempArr);
-          }
-
-          tempArr.unshift(this.value);
-          tempArr = tempArr.splice(0, 8);
-          uni.setStorageSync("videoHotKeyArr", tempArr);
-        } else {
-          let tempArr = uni.getStorageSync("videoHotKeyArr");
-          tempArr.splice(tempArr.indexOf(this.value), 1);
-          tempArr.unshift(this.value);
-          tempArr = tempArr.splice(0, 8);
-          uni.setStorageSync("videoHotKeyArr", tempArr);
-        }
+        this.getHistory("videoHotKeyArr");
         this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
         // this.$analysis.dispatch("sp_search", this.value);
         videoService.spclSearch({
@@ -282,30 +265,11 @@ export default {
             this.selectList = tempList;
             uni.$emit("setSearchList", this.selectList);
           } else {
-            return uni.showToast({
-              title: resp.data.message,
-              duration: "2000",
-              icon: "none",
-            });
+            return this.$toast(resp.data.message);
           }
         });
       } else {
-        if (uni.getStorageSync("musicHotKeyArr").indexOf(this.value) === -1) {
-          let tempArr = uni.getStorageSync("musicHotKeyArr");
-          if (tempArr.length > 19) {
-            tempArr.pop();
-            uni.setStorageSync("musicHotKeyArr", tempArr);
-          }
-          tempArr.unshift(this.value);
-          tempArr = tempArr.splice(0, 8);
-          uni.setStorageSync("musicHotKeyArr", tempArr);
-        } else {
-          let tempArr = uni.getStorageSync("musicHotKeyArr");
-          tempArr.splice(tempArr.indexOf(this.value), 1);
-          tempArr.unshift(this.value);
-          tempArr = tempArr.splice(0, 8);
-          uni.setStorageSync("musicHotKeyArr", tempArr);
-        }
+        this.getHistory("musicHotKeyArr");
         this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
         // this.$analysis.dispatch("yp_search", this.value);
         cxService.search({
@@ -333,11 +297,7 @@ export default {
             this.selectList = tempList;
             that.$emit("setSearchList", this.selectList);
           } else {
-            return uni.showToast({
-              title: resp.data.message,
-              duration: "2000",
-              icon: "none",
-            });
+            return this.$toast(resp.data.message);
           }
         });
       }
@@ -345,7 +305,7 @@ export default {
     getMoreHotList (type) {
       this.placeholder = this.defaultValue;
       this.pageName = this.defaultPageName;
-      if (type == "more" && this.pageName === "video") {
+      if (type === "more" && this.pageName === "video") {
         this.hotSelectValue = this.videoList;
       } else {
         if (this.pageName === "video") {
@@ -364,7 +324,7 @@ export default {
           if (!uni.getStorageSync("musicHotKeyArr")) {
             uni.setStorageSync("musicHotKeyArr", []);
           }
-          if (type == "more") {
+          if (type === "more") {
             this.pageNum++;
           }
           this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");

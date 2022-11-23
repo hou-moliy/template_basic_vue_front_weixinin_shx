@@ -1,8 +1,11 @@
 import videoService from "@/api/cx/video.js";
 import spclService from "@/api/spcl/index.js";
 import Vue from "vue";
+import videoTools from "@/utils/video.js";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData") || {}, // 用户视频彩铃数据
+  searchList: [], // 搜索结果列表
+  videoList: [],
 };
 
 const mutations = {
@@ -25,6 +28,21 @@ const mutations = {
   SET_USER_SPCL_SETTINGID (state, settingIdRes) {
     state.userSpclData.settingIdRes = settingIdRes;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
+  },
+  // 获取搜索列表数据
+  getSearchList (state, payload) {
+    let tempList = payload;
+    tempList = videoTools.videoInfoUpdate(tempList);
+    tempList = JSON.parse(JSON.stringify(tempList));
+    console.log(tempList, "tempList");
+    state.searchList = tempList;
+  },
+  // 获取视彩列表
+  getVideoList (state, payload) {
+    let tempList = payload;
+    tempList = videoTools.videoInfoUpdate(tempList);
+    tempList = JSON.parse(JSON.stringify(tempList));
+    state.videoList = tempList;
   },
 };
 

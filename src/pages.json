@@ -60,13 +60,6 @@
             "navigationBarTitleText": "呼叫预览页面",
             "navigationStyle": "custom"
           }
-        },
-        {
-          "path": "search/index",
-          "style": {
-            "navigationBarTitleText": "视频彩铃搜索",
-            "navigationStyle": "custom"
-          }
         }
       ]
     },
@@ -84,6 +77,20 @@
           "path": "spclLibrary/index",
           "style": {
             "navigationBarTitleText": "我的视彩",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "clVideo/clVideoSearch",
+          "style": {
+            "navigationBarTitleText": "视频彩铃搜索",
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "clVideo/clVdieoPlay",
+          "style": {
+            "navigationBarTitleText": "视频彩铃详情",
             "enablePullDownRefresh": false
           }
         }
