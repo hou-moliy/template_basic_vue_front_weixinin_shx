@@ -54,6 +54,24 @@
           @openLoginPopup="openLoginPopup"
         />
       </eb-default-head>
+
+      <!-- 风景 -->
+      <eb-default-head
+        v-if="
+          pageConfig.moduleFlag === '0007' && pageConfig.configV2.isShow == '1'
+        "
+        :margin="'50rpx 0 30rpx 0'"
+        :page-config="pageConfig.configV2"
+        @openLoginPopup="openLoginPopup"
+      >
+        <view class="scenery-out-wrap">
+          <eb-spcl-transverse
+            :page-config="pageConfig.configV2"
+            :page-load-status="pageLoadStatus"
+            @openLoginPopup="openLoginPopup"
+          />
+        </view>
+      </eb-default-head>
     </view>
   </view>
 </template>
