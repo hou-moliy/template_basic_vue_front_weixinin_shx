@@ -50,13 +50,13 @@ export default {
       return (
         windowService.getPageStatus({ targetId: payload })
           .then(res => {
-            if (res.data.code == 200) {
+            if (res.data.code === 200) {
               res.data.data.forEach(item => {
-                if ((item.strategyType == 3 && item.limited == true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
+                if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
                   commit("SET_LOGINSHOW", true);
                   commit("SET_OFFLINEFLAG", false);
                   commit("SET_OFFLINEPOPUPSHOW", false);
-                } else if ((item.strategyType == 2 || item.strategyType == 1) && item.limited == true) { // 已登录用户展示升级弹窗
+                } else if ((item.strategyType === 2 || item.strategyType === 1) && item.limited === true) { // 已登录用户展示升级弹窗
                   analysis.dispatch("onPageStatusDown", payload);
                   commit("SET_OFFLINEPOPUPSHOW", true);
                   commit("SET_OFFLINEFLAG", true);

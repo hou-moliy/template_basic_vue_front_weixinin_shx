@@ -47,11 +47,11 @@
           <view v-if="currentObj.szValue === 0">
             <image
               :src="`${staticImgs}/shxmp/init/sp-settinged.png`"
-              @click="qxSzEvent(currentObj.ringId)"
+              @click="qxSzEvent(currentObj)"
             />
             <view
               class="panel-item-text"
-              @click="qxSzEvent(currentObj.ringId)"
+              @click="qxSzEvent(currentObj)"
             >
               取消当前设置
             </view>
@@ -126,8 +126,8 @@ export default {
       this.$emit("szEvent", clid);
     },
     // 取消设置
-    qxSzEvent (clid) {
-      this.$emit("qxSzEvent", clid);
+    qxSzEvent (ringItem) {
+      this.$emit("qxSzEvent", ringItem);
     },
   },
 };
