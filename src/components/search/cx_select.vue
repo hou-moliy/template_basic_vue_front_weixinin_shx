@@ -354,14 +354,10 @@ export default {
           }
           this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
           videoService.spclHotKey({ type: 3 }).then(resp => {
-            console.log("resp", resp);
             if (resp.data.code == 200 && resp.data.data.list.length > 0) {
-              console.log("123");
               this.hotSelectValue = resp.data.data.list.slice(0, 10);
               this.videoList = resp.data.data.list;
               this.total = resp.data.data.total;
-              console.log(this.total);
-              console.log("345", this.hotSelectValue);
             }
           });
         } else {
