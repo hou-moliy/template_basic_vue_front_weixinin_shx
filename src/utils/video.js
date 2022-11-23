@@ -1,12 +1,10 @@
-
+import store from "../store";
 const videoInfoUpdate = function (list) {
   const tempList = JSON.parse(JSON.stringify(list));
+  const userData = store.state.spcl.userData;
   if (
-    uni.getStorageSync("Authorization") &&
-    uni.getStorageSync("userData")[0] &&
-    uni.getStorageSync("userData")[0].vrbtResponse
-  ) {
-    const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+    uni.getStorageSync("Authorization") && userData && userData.vrbtResponse) {
+    const isBuyList = userData.vrbtResponse;
     for (let i = 0; i < tempList.length; i++) {
       const isBuy = isBuyList.filter(
         (item) => tempList[i].ringId === item.ringId,

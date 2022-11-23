@@ -5,6 +5,7 @@
 export default {
   name: "App",
   onLaunch: function () {
+    this.$store.dispatch("window/getCommonWinow");
     console.log("App Launch");
   },
   onShow: function () {
@@ -17,7 +18,7 @@ export default {
 </script>
 
 <style lang="scss">
-page{
+page {
   height: 100%;
 }
 /*每个页面公共css */

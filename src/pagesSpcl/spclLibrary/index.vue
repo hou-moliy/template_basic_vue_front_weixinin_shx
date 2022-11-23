@@ -149,20 +149,30 @@
       @szEvent="szEvent"
     />
     <!-- 提示类弹窗 -->
+    <popup-template-notify
+      :popup-info="notifyInfo"
+      notify-info
+      :show="notifyShow"
+      @buttonClick="handleButtonClick"
+    />
+    <notifyPop ref="NotifyPop" />
   </view>
 </template>
 
 <script>
 import clSharePanel from "../components/cl-share-panel/index.vue";
 import NoData from "../components/no-data/index.vue";
-import windowService from "@/api/window/index";
 import spclService from "@/api/spcl/index.js";
+import popupTemplateNotify from "../../components/popup-module/popup-template-notify.vue";
+import notifyPop from "../../components/popup-template-notify/popup-template-notify.vue";
 
 export default {
   name: "SpclLibrary",
   components: {
     clSharePanel,
     NoData,
+    popupTemplateNotify,
+    notifyPop,
   },
   data () {
     return {
@@ -183,14 +193,15 @@ export default {
       videoSettingList: [], // 当前播放铃音，对象数组
       panelShow: false, // 控制更多操作展示
       delCls: [], // 选中的铃音数组
-
+      notifyInfo: {}, // 提示性弹窗内容
+      notifyShow: false, // 控制提示性弹窗的展示
+      windowCode: "", // 当前展示的弹窗的windowCode
     };
   },
   onLoad (options) {
     if (options.navflag) {
       this.navFlag = options.navflag;
     }
-    windowService.getWindowAll({ windowScene: "common" }).then(res => {});
   },
   onShow () {
     // 获取用户的所有铃音数据
@@ -511,18 +522,37 @@ export default {
         this.getVideoListById("updateAvailable");
       });
     },
-    // 取消设置视频彩铃
-    qxSzEvent (ringId) {
+    // 取消设置视频彩铃点击
+    qxSzEvent (ringItem) {
       // 展示取消设置弹窗
-      this.delCls = [ringId];
+      const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cancel;
+      notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+      this.$refs.NotifyPop.show(notifyInfo);
+      // this.panelShow = false;
+      // this.windowCode = "common_spcl_cancel";
+      // this.notifyInfo = notifyInfo;
+      // this.notifyShow = true;
+      // this.delCls = [ringItem.ringId];
+    },
+    // 处理取消视频彩铃
+    handleQxSzEvent () {
       this.handleDelCurt().then(res => {
         if (res.code === 200) {
           this.$toast("取消当前播放成功");
         } else {
           this.$toast(res.message);
         }
-        this.panelShow = false;
       });
+    },
+    // 弹窗按钮的点击事件
+    handleButtonClick ({ btnInfo }) {
+      if (btnInfo.type === 1) { // 关闭弹窗
+        this.notifyShow = false;
+      } else if (btnInfo.type === 2) { // 订购逻辑
+        this.handleQxSzEvent();
+      } else if (btnInfo.type === 3) { // 跳转逻辑
+
+      }
     },
     // 预览,跳转视频彩铃播放页面
     seeDetail ({ ringId }) {
@@ -536,7 +566,6 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-
   // tab栏样式
   .cur-ring-t {
     width: 90%;
@@ -626,11 +655,11 @@ export default {
       font-weight: 400;
       display: flex;
       justify-content: space-between;
-      align-items:center;
+      align-items: center;
       color: rgba(51, 51, 51, 1);
       font-size: 24rpx;
       height: 64rpx;
-      background:#F8F6FF;
+      background: #f8f6ff;
       padding: 0 20rpx;
       margin-bottom: 16rpx;
 
@@ -675,7 +704,7 @@ export default {
       box-sizing: border-box;
       checkbox-group {
         padding: 0 30rpx 150rpx 30rpx;
-         box-sizing: border-box;
+        box-sizing: border-box;
       }
 
       .video-item {
@@ -697,7 +726,7 @@ export default {
 
           .iconfont {
             font-size: 30rpx;
-            color: #8B6CF0;
+            color: #8b6cf0;
           }
         }
 
@@ -775,12 +804,12 @@ export default {
     .del-video-item {
       width: 100%;
       height: 120rpx;
-      line-height:120rpx;
+      line-height: 120rpx;
       position: fixed;
       bottom: 0;
       text-align: center;
       z-index: 99;
-      background: #C6C5C8;
+      background: #c6c5c8;
 
       .del-video-item-image {
         width: 37rpx;

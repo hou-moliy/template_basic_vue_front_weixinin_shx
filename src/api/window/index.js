@@ -6,7 +6,6 @@ const pageStatuslUrl = globalData.metaConfig;
 const getPageStatus = params => {
   // 获取当前帐号信息
   const accountInfo = wx.getAccountInfoSync();
-
   // env类型
   const envVersion = accountInfo.miniProgram.envVersion;
   console.log("version-", envVersion);
@@ -15,10 +14,8 @@ const getPageStatus = params => {
   }
   return axios.get(pageStatuslUrl + "/pageStatus/", params);
 };
-const getWindowList = params => axios.get(baseUrl + "/window/list", params); // 查弹窗接口
 const getWindowAll = params => axios.get(baseUrl + "/window/all", params); // 查弹窗接口
 export default {
-  getWindowList,
   getPageStatus,
   getWindowAll,
 };
