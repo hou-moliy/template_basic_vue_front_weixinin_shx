@@ -10,6 +10,7 @@
       <template v-if="asyncLoad">
         <eb-config-container
           :key="pageConfigIndex"
+          ref="EbConfig"
           :comp-top="false"
           :page-config-list="pageConfigList.slice(asyncIdx)"
         />
@@ -46,7 +47,11 @@ export default {
   },
   mounted () {
   },
-  methods: {},
+  methods: {
+    onScollBottom () {
+      this.$refs.EbConfig.onScollBottom();
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

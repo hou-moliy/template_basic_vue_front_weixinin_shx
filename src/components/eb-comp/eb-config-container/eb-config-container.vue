@@ -4,11 +4,9 @@
       v-for="(pageConfig, pageConfigIndex) in pageConfigList"
       :key="pageConfigIndex"
     >
-      <view
-        v-if="
+      <view v-if="
           pageConfig.moduleFlag === '0001' && pageConfig.configV2.isShow == '1'
-        "
-      >
+        ">
         <eb-background-banner
           :page-config="pageConfig.configV2"
           :comp-top="compTop && pageConfigIndex == 0"
@@ -16,20 +14,16 @@
           @openLoginPopup="openLoginPopup"
         />
       </view>
-      <view
-        v-if="
+      <view v-if="
           pageConfig.moduleFlag === '0021' && pageConfig.configV2.isShow == '1'
-        "
-      >
+        ">
         <eb-advertise
           :page-config="pageConfig.configV2"
           @openLoginPopup="openLoginPopup"
         />
       </view>
 
-      <view
-        v-if="pageConfig.moduleFlag === '0002'"
-      >
+      <view v-if="pageConfig.moduleFlag === '0002'">
         <eb-icon-list
           :page-config="pageConfig.configV2"
           @buryIconListId="buryIconListId"
@@ -72,6 +66,25 @@
           />
         </view>
       </eb-default-head>
+
+      <!-- 视频彩铃瀑布流 -->
+      <eb-default-head
+        v-if="
+          pageConfig.moduleFlag === '0007' && pageConfig.configV2.isShow == '1'
+        "
+        :margin="'50rpx 0 30rpx 0'"
+        :page-config="pageConfig.configV2"
+        @openLoginPopup="openLoginPopup"
+      >
+        <view class="spcl-out-wrap">
+          <eb-spcl-waterfalls
+            ref="EbSpclWaterFalls"
+            :page-config="pageConfig.configV2"
+            :page-load-status="pageLoadStatus"
+            @openLoginPopup="openLoginPopup"
+          />
+        </view>
+      </eb-default-head>
     </view>
   </view>
 </template>
@@ -95,20 +108,21 @@ export default {
   data () {
     return {};
   },
-  created () {},
+  created () { },
   mounted () {
   },
   methods: {
     // 滚动到底部监听
     onScollBottom () {
-      this.$nextTick(() => {
-        console.log(this.$refs, "lll");
-      });
+      console.log(this.$refs, "lll");
       if (this.$refs.EbLiveWaterFalls) {
         this.$refs.EbLiveWaterFalls[0].onScollBottom();
       }
       if (this.$refs.EbMiguWaterfalls) {
         this.$refs.EbMiguWaterfalls[0].onScollBottom();
+      }
+      if (this.$refs.EbSpclWaterFalls) {
+        this.$refs.EbSpclWaterFalls[0].onScollBottom();
       }
     },
     // 子组件打开登录弹窗
@@ -138,5 +152,8 @@ export default {
 .scenery-out-wrap {
   width: 100%;
   background-color: #fff;
+}
+.spcl-out-wrap {
+  width: 100vw;
 }
 </style>

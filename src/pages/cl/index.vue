@@ -393,10 +393,10 @@ export default {
     },
     // 滚动到底部监听
     scrolltolower () {
-      console.log(this.$refs, "ppp");
-      console.log(this.$refs.EbConfig, this.pageName);
+      console.log(this.swiperTab, "ccc");
       this.$nextTick(() => {
         if (this.$refs.EbConfig) {
+          console.log(this.$refs.EbConfig[this.swiperTab], "kkkk");
           this.$refs.EbConfig[this.swiperTab].onScollBottom();
         }
       });

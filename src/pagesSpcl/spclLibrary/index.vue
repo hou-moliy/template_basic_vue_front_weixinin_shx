@@ -197,7 +197,6 @@ export default {
     };
   },
   onLoad (options) {
-    this.$showLoginPop(this);
     if (options.navflag) {
       this.navFlag = options.navflag;
     }
