@@ -259,29 +259,27 @@ export default {
   },
   watch: {
     pageStatusLoad (value) {
-      console.log(value);
+      // console.log(value, "搜索列表页面");
       if (value === "onShow") {
-        if (this.$store.state.searchList.length > 0) {
-          this.$store.commit("getSearchList", this.$store.state.searchList);
-          this.selectList = this.$store.state.searchList;
-          this.$forceUpdate();
+        if (this.$store.state.spcl.searchList.length > 0) {
+          this.$store.commit("spcl/getSearchList", this.$store.state.searchList);
+          this.selectList = this.$store.state.spcl.searchList;
+          // console.log("仓库搜索列表", this.selectList);
         }
       }
     },
   },
   created () {
     uni.$on("setSearchList", (selectList) => {
-      // console.log("来了");
-      // console.log(selectList);
       this.selectList = selectList;
-      this.$store.commit("getSearchList", this.selectList);
+      this.$store.commit("spcl/getSearchList", this.selectList);
     });
   },
   onLoad () {
     uni.$on("changeSearchShareCount", () => {
       // console.log('come')
-      if (this.$store.state.searchList.length > 0) {
-        this.selectList = this.$store.state.searchList;
+      if (this.$store.state.spcl.searchList.length > 0) {
+        this.selectList = this.$store.state.spcl.searchList;
       }
     });
   },
@@ -292,7 +290,7 @@ export default {
       done();
     },
     // 登录弹框确认
-    login_confirm (done, value) {
+    login_confirm (done, _value) {
       // 输入框的值
       uni.navigateTo({
         url: "/pagesD/my/login",
@@ -310,7 +308,7 @@ export default {
         // console.log("暂停播放");
         this.playStatus = "play";
       });
-      innerAudioContext.onError((res) => {
+      innerAudioContext.onError((_res) => {
         // console.log(res.errMsg);
         // console.log(res.errCode);
       });
@@ -335,7 +333,7 @@ export default {
         const tempList = this.selectList;
         for (let i = 0; i < tempList.length; i++) {
           const isBuy = tempList.filter(
-            (item) => tempList[i].ringId === data.videoId,
+            (_item) => tempList[i].ringId === data.videoId,
           );
           if (isBuy[0]) {
             tempList[i].isBuyVideo = true;
@@ -380,40 +378,6 @@ export default {
           return;
         }
         this.isClickLike = true;
-        // let data = {
-        // 	ringId: ringId,
-        // 	target: 'dz',
-        // opType: 1
-        // };
-        // videoService.getSpclUserBehavior(data).then((res) => {
-        // 	if (res.data.code === 200) {
-        // 		if (res.data.data) {
-        // 			uni.showToast({
-        // 				title: "点赞成功",
-        // 				icon: "none",
-        // 				duration: 2000,
-        // 			});
-        // 			let specialNewsLists = this.selectList.filter(
-        // 				(item) => ringId === item.ringId
-        // 			);
-        // 			specialNewsLists[0].extraInfo.like = true;
-        // 			specialNewsLists[0].extraInfo.likeCount += 1;
-        // 			this.$set(this.selectList, index, specialNewsLists[0]);
-        // 			// 告诉组件父组件刷新列表
-        // 			// this.$emit('refreshList', this.specialNews)
-        // 		} else {
-        // 			uni.showToast({
-        // 				title: "您已点赞,请勿重复操作",
-        // 				icon: "none",
-        // 				duration: 2000,
-        // 			});
-        // 		}
-        // 	} else {uni.showToast({
-        // 				title: res.data.message,
-        // 				icon: "none",
-        // 				duration: 2000
-        // 	})}
-        // });
         let data = {
           ringId,
           target: "dz",
@@ -494,13 +458,9 @@ export default {
               });
             }
           })
-          .catch((err) => {
+          .catch((_err) => {
             this.isClickLike = false;
-            uni.showToast({
-              title: "请求失败",
-              icon: "none",
-              duration: 2000,
-            });
+            this.$toast("请求失败");
           });
       }
     },

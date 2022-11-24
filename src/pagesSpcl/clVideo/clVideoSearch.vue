@@ -49,13 +49,11 @@ export default {
     };
   },
   onLoad () {
-    console.log("onLoad------");
     this.pageStatusLoad = "onLoad";
     this.hotKeyGoToPlayKey = false;
     this.pageStatusLoadForSelect = "onLoad";
   },
   onShow () {
-    console.log("onShow---------");
     if (this.pageStatusLoad == "onHide") {
       this.pageStatusLoadForSelect = "onShow";
     }
