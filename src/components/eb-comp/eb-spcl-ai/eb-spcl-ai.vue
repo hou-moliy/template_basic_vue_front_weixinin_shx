@@ -46,16 +46,12 @@
 </template>
 
 <script>
-import aiPopup from "@/pagesB/components/aiPopup.vue";
 import aiService from "@/api/ai/index.js";
-import templateService from "@/api/template/topic.js";
+import AdService from "@/api/ad/index.js";
 import {
   navigateToAny,
 } from "@/utils/tools.js";
 export default {
-  components: {
-    aiPopup,
-  },
   props: {
     pageConfig: {
       type: Object,
@@ -96,7 +92,7 @@ export default {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
-      templateService.getAdvertisement(params).then(res => {
+      AdService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
           this.dataList = res.data.data;
           this.$forceUpdate();

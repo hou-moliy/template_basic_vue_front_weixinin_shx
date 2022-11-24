@@ -50,13 +50,13 @@
 </template>
 
 <script>
-import templateService from "@/api/template/topic.js";
+import AdService from "@/api/ad/index.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data () {
@@ -80,7 +80,7 @@ export default {
         code: this.pageConfig.moduleId,
       };
       console.log(params, "params");
-      templateService.getAdvertisement(params).then(res => {
+      AdService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
           this.dataList = res.data.data;
         }

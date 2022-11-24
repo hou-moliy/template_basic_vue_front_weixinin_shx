@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import templateService from "@/api/template/topic.js";
+import SpclService from "@/api/spcl/index.js";
 export default {
   props: {
     pageConfig: {
@@ -104,7 +104,7 @@ export default {
         ac: this.activityId,
         level: this.pageConfig.sort,
       };
-      templateService.getVideoByActivityId(params).then(res => {
+      SpclService.getVideoByActivityId(params).then(res => {
         if (res.data.code === 200) {
           let tempList = res.data.data;
           if (tempList.length > 12) {

@@ -7,7 +7,7 @@
         class="eb-icon-item"
         @click="navigateByEvent(item)"
       >
-        <view><image :src="item.iconUrl" /></view>
+        <image :src="item.url" />
         <!-- icon限制n位文字 -->
         <view><text>{{ item.iconTitle ? item.iconTitle.slice(0, wordLimit) : "" }}</text></view>
       </view>
@@ -44,7 +44,7 @@ export default {
       // 获取icon
       const { pageName } = this.pageConfig;
       AdService
-        .getIcon({
+        .getAdList({
           target: pageName,
         })
         .then((resp) => {
@@ -73,7 +73,6 @@ export default {
 <style lang="scss" scoped>
 .eb-icon {
   width: 100%;
-  // height: 123rpx;
   padding: 58rpx auto 45rpx auto;
   display: flex;
   flex-wrap: wrap;
@@ -81,8 +80,6 @@ export default {
 }
 
 .eb-icon-item {
-  // width: 86rpx;
-  // height: 123rpx;
   display: flex;
   margin: 14rpx 0 0rpx 0rpx;
   flex-direction: column;

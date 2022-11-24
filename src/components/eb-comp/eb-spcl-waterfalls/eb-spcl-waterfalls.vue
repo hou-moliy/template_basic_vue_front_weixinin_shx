@@ -109,6 +109,7 @@
       icon-type="circle"
       :status="isLoadStatus"
     />
+    <!-- 订购弹窗 -->
   </view>
 </template>
 
@@ -172,7 +173,7 @@ export default {
     // 获取视频列表
     getWfList (flag = true) { // flag，true表示刷新或首次加载,false表示加载更多
       const wfParams = this.wfParams;
-      // wfParams.labelId = this.pageConfig.moduleId;
+      wfParams.labelId = this.pageConfig.moduleId;
       SpclService.getSpclListByLabelId(wfParams).then(({
         data: res,
       }) => {

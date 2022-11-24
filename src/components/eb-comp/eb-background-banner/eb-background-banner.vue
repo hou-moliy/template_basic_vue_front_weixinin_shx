@@ -46,7 +46,7 @@ export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     compTop: {
       type: Boolean,
@@ -73,7 +73,7 @@ export default {
     getBannerByPageName () {
       const { pageName } = this.pageConfig;
       // 获取bannner
-      AdService.getBanner({
+      AdService.getAdList({
         target: pageName,
       }).then(res => {
         this.cxVideoBanner = res.data.data;
@@ -88,13 +88,7 @@ export default {
     },
 
     async navigateToH5 (event) {
-      console.log(event);
-      // this.$emit("buryBannerId", event.id);
-      await this.$store.dispatch("getCustomorderList", `swiper_${event.id}`);
-      console.log(
-        this.$store.state.offlinePopup,
-        "this.$store.state.offlinePopup",
-      );
+      await this.$store.dispatch("offlinePopup/getCustomorderList", `swiper_${event.id}`);
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");
         return;
@@ -169,7 +163,6 @@ export default {
   height: 463rpx;
   display: flex;
 }
-
 </style>
 <style>
 /* .swiper-box .wx-swiper-dot */

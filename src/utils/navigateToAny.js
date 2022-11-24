@@ -1,7 +1,6 @@
 import SsoService from "@/api/sso";
 
 const navigateToAny = async function (item, callback) {
-  console.log("123");
   uni.showLoading({
     title: "",
     mask: true,
@@ -45,7 +44,6 @@ const handleExternalLink = async (item, callback) => {
 
 const handleInternalLink = (item, callback) => {
   uni.hideLoading();
-  console.log(item.eventUrl);
   uni.navigateTo({
     url: item.eventUrl,
     fail: function () {
@@ -118,7 +116,7 @@ const freeLoginFun = (eventUrl) => {
     const tokenArr = tokenStr.split("_");
     if (tokenArr[0] === "tyrz") {
       SsoService
-        .freeLoginAuth({
+        .tyrzAuth({
           channel: tokenArr[1],
         })
         .then((res) => {

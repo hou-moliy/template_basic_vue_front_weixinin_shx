@@ -4,93 +4,178 @@
       v-for="(pageConfig, pageConfigIndex) in pageConfigList"
       :key="pageConfigIndex"
     >
-      <view v-if="
-          pageConfig.moduleFlag === '0001' && pageConfig.configV2.isShow == '1'
+      <template v-if="
+          pageConfig.pageModule === 'eb-background-banner' && pageConfig.isShow == 1
         ">
         <eb-background-banner
-          :page-config="pageConfig.configV2"
+          :page-config="pageConfig"
           :comp-top="compTop && pageConfigIndex == 0"
           @buryBannerId="buryBannerId"
           @openLoginPopup="openLoginPopup"
         />
-      </view>
-      <view v-if="
-          pageConfig.moduleFlag === '0021' && pageConfig.configV2.isShow == '1'
+      </template>
+      <template v-if="
+          pageConfig.moduleFlag === '0021' && pageConfig.isShow == 1
         ">
         <eb-advertise
-          :page-config="pageConfig.configV2"
+          :page-config="pageConfig"
           @openLoginPopup="openLoginPopup"
         />
-      </view>
+      </template>
 
-      <view v-if="pageConfig.moduleFlag === '0002'">
+      <template v-if="pageConfig.pageModule === 'eb-icon-list' && pageConfig.isShow == 1">
         <eb-icon-list
-          :page-config="pageConfig.configV2"
+          :page-config="pageConfig"
           @buryIconListId="buryIconListId"
           @openLoginPopup="openLoginPopup"
           @open="open"
         />
-      </view>
-
-      <eb-default-head
+      </template>
+      <eb-ad-roll-transverse
         v-if="
-          pageConfig.moduleFlag === '0031' && pageConfig.configV2.isShow == '1'
+          pageConfig.pageModule === 'eb-ad-roll-transverse' && pageConfig.isShow == 1
         "
-        :padding="'50rpx 4% 30rpx 4%'"
-        :page-config="pageConfig.configV2"
-        :block-padding="0"
+        :page-config="pageConfig"
+        :page-load-status="pageLoadStatus"
+        style="width: 100%"
         @openLoginPopup="openLoginPopup"
-      >
-        <eb-ad-roll-transverse
-          :page-config="pageConfig.configV2"
-          :page-load-status="pageLoadStatus"
-          style="width: 100%"
-          @openLoginPopup="openLoginPopup"
-        />
-      </eb-default-head>
+      />
 
       <!-- 风景 -->
-      <eb-default-head
-        v-if="
-          pageConfig.moduleFlag === '0007' && pageConfig.configV2.isShow == '1'
-        "
-        :margin="'50rpx 0 30rpx 0'"
-        :page-config="pageConfig.configV2"
-        @openLoginPopup="openLoginPopup"
-      >
-        <view class="scenery-out-wrap">
+      <template>
+        <view
+          v-if="
+            pageConfig.pageModule === 'eb-spcl-transverse' && pageConfig.isShow == 1
+          "
+          class="scenery-out-wrap"
+        >
           <eb-spcl-transverse
-            :page-config="pageConfig.configV2"
+            :page-config="pageConfig"
             :page-load-status="pageLoadStatus"
             @openLoginPopup="openLoginPopup"
           />
         </view>
-      </eb-default-head>
+      </template>
 
       <!-- 视频彩铃瀑布流 -->
-      <eb-default-head
-        v-if="
-          pageConfig.moduleFlag === '0007' && pageConfig.configV2.isShow == '1'
-        "
-        :margin="'50rpx 0 30rpx 0'"
-        :page-config="pageConfig.configV2"
-        @openLoginPopup="openLoginPopup"
-      >
-        <view class="spcl-out-wrap">
+      <template>
+        <view
+          v-if="
+            pageConfig.pageModule === 'eb-spcl-waterfalls' && pageConfig.isShow == 1
+          "
+          class="spcl-out-wrap"
+        >
           <eb-spcl-waterfalls
             ref="EbSpclWaterFalls"
-            :page-config="pageConfig.configV2"
+            :page-config="pageConfig"
             :page-load-status="pageLoadStatus"
             @openLoginPopup="openLoginPopup"
           />
         </view>
-      </eb-default-head>
+      </template>
+
+      <!-- 标题 -->
+      <template>
+        <eb-default-head
+          v-if="pageConfig.pageModule === 'eb-default-head' && pageConfig.isShow == 1"
+          :margin="'50rpx 0 30rpx 0'"
+          :page-config="pageConfig"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <!-- 广告位 无背景 -->
+      <template>
+        <view v-if="pageConfig.pageModule === 'eb-feeds' && pageConfig.isShow == 1">
+          <eb-feeds
+            :page-config="pageConfig"
+            :page-load-status="pageLoadStatus"
+            @openLoginPopup="openLoginPopup"
+          />
+        </view>
+      </template>
+
+      <!-- 广告位 有背景 -->
+
+      <template>
+        <eb-feeds-bg
+          v-if="
+            pageConfig.pageModule === 'eb-feeds-bg' && pageConfig.isShow == 1
+          "
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <!-- 运营位 -->
+      <template v-if="
+          pageConfig.pageModule === 'eb-business-list' && pageConfig.isShow === 1
+        ">
+        <eb-business-list
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!--  覆盖性头图组件-->
+      <template v-if="
+          pageConfig.pageModule === 'eb-head-img-cover' && pageConfig.isShow === 1
+        ">
+        <eb-head-img-cover
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- 普通头图组件 -->
+      <template v-if="
+          pageConfig.pageModule === 'eb-head-img' && pageConfig.isShow === 1
+        ">
+        <eb-head-img-cover
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- AI换铃声 -->
+      <template v-if="
+          pageConfig.pageModule === 'eb-spcl-ai' && pageConfig.isShow === 1
+        ">
+        <eb-spcl-ai
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!--  -->
+      <template v-if="
+          pageConfig.pageModule === 'eb-ad-img' && pageConfig.isShow === 1
+        ">
+        <eb-ad-img
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <template v-if="
+          pageConfig.pageModule === 'eb-spcl-swiper' && pageConfig.isShow === 1
+        ">
+        <eb-spcl-swiper
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
     </view>
   </view>
 </template>
 
 <script>
+import ebHeadImgCover from "../eb-head-img-cover/eb-head-img-cover.vue";
 export default {
+  components: { ebHeadImgCover },
   props: {
     pageConfigList: {
       type: Array,
