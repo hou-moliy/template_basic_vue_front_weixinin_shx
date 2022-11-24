@@ -3,21 +3,23 @@
     class="page"
     :style="{ height: height }"
   >
-    <!-- <swiper
+    <swiper
       class="swiper"
       :vertical="true"
       :current="index"
       @change="changeCurrent"
       @animationfinish="animationFinish"
     >
-      <swiper-item
-        v-for="(items, idx) in videoList"
-        :key="idx"
-        class="swiper-item"
-      >
-        <full-screen-video :video-detail="items" />
-      </swiper-item>
-    </swiper> -->
+      <template v-if="videoList.length">
+        <swiper-item
+          v-for="(item, idx) in videoList"
+          :key="idx"
+          class="swiper-item"
+        >
+          <full-screen-video :video-detail="item" />
+        </swiper-item>
+      </template>
+    </swiper>
   </view>
 </template>
 
@@ -97,60 +99,60 @@ export default {
     moduleId,
     notModulId,
   }) {
-    console.log("moduleId---", moduleId);
-    this.shareStatus = share;
-    this.shareObj = {
-      autoLoadData,
-      actions,
-      id,
-    };
-    this.orderParams = {
-      playStatus,
-      moduleId,
-      notModulId,
-    };
-    console.log("share", share);
-    // 分享进入的，需要做vuex处理
-    if (share) {
-      console.log(853);
-      this.shareFlag = true;
-      this.shareId = id;
-      this.onLoadId = id;
-      console.log("this.onLoadId", id, this.onLoadId);
-    } else {
-      // autoLoadData 用来标记是否自动加载数据，如果需要自动加载数据则传autoLoadData，不需要自动加载则不传
-      this.videoList = this.$store.state.spcl.videoList;
-      console.log("===", this.videoList);
-      if (actions) {
-        this.actions = JSON.parse(actions);
-      }
-      this.onLoadId = id;
-      this.index = this.videoList.findIndex((item) => item.ringId == id);
-      uni.setStorageSync("videoPlayIndex", this.index);
-      this.autoLoadData = autoLoadData;
-      this.isFirst = true;
-    }
-    this.playStatus = playStatus;
-    if (moduleId) {
-      this.moduleId = moduleId;
-    } else {
-      this.notModulId = notModulId;
-    }
-    // 分享进入的等同第一次的缓存逻辑
-    if (uni.getStorageSync("userPlayVideo") || share) {
-      this.isFirstPlay = false;
-    } else {
-      this.step = 1;
-      this.isFirstPlay = true;
-    }
-    // 根据胶囊外边距和高度计算自定义导航栏的外边距和高度
-    this.navMarginHeight = uni.getMenuButtonBoundingClientRect().top;
-    this.navHeight = uni.getMenuButtonBoundingClientRect().height;
+    this.videoList = this.$store.state.spcl.videoList;
+    // console.log("moduleId---", moduleId);
+    // this.shareStatus = share;
+    // this.shareObj = {
+    //   autoLoadData,
+    //   actions,
+    //   id,
+    // };
+    // this.orderParams = {
+    //   playStatus,
+    //   moduleId,
+    //   notModulId,
+    // };
+    // console.log("share", share);
+    // // 分享进入的，需要做vuex处理
+    // if (share) {
+    //   console.log(853);
+    //   this.shareFlag = true;
+    //   this.shareId = id;
+    //   this.onLoadId = id;
+    //   console.log("this.onLoadId", id, this.onLoadId);
+    // } else {
+    //   // autoLoadData 用来标记是否自动加载数据，如果需要自动加载数据则传autoLoadData，不需要自动加载则不传
+    //   // this.videoList = this.$store.state.spcl.videoList;
+    //   console.log("===", this.videoList);
+    //   if (actions) {
+    //     // this.actions = JSON.parse(actions);
+    //   }
+    //   this.onLoadId = id;
+    //   this.index = this.videoList.findIndex((item) => item.ringId == id);
+    //   uni.setStorageSync("videoPlayIndex", this.index);
+    //   this.autoLoadData = autoLoadData;
+    //   this.isFirst = true;
+    // }
+    // this.playStatus = playStatus;
+    // if (moduleId) {
+    //   this.moduleId = moduleId;
+    // } else {
+    //   this.notModulId = notModulId;
+    // }
+    // // 分享进入的等同第一次的缓存逻辑
+    // if (uni.getStorageSync("userPlayVideo") || share) {
+    //   this.isFirstPlay = false;
+    // } else {
+    //   this.step = 1;
+    //   this.isFirstPlay = true;
+    // }
+    // // 根据胶囊外边距和高度计算自定义导航栏的外边距和高度
+    // this.navMarginHeight = uni.getMenuButtonBoundingClientRect().top;
+    // this.navHeight = uni.getMenuButtonBoundingClientRect().height;
   },
 
   async onShow () {
     const that = this;
-    //
     if (uni.getStorageSync("Authorization")) {
       await videoService
         .getUserLikesList({
@@ -170,7 +172,7 @@ export default {
         that.init();
       }
     } else {
-      this.init();
+      // this.init();
     }
   },
 
@@ -239,13 +241,13 @@ export default {
             console.log("res", res.data.data);
             const newList = [];
             newList.push(res.data.data);
-            this.$store.commit("getVideoList", newList);
+            this.$store.commit("spcl/getVideoList", newList);
             this.videoList = this.$store.state.videoList;
             if (
               this.shareObj.actions &&
               this.shareObj.actions !== "undefined"
             ) {
-              this.actions = JSON.parse(this.shareObj.actions);
+              // this.actions = JSON.parse(this.shareObj.actions);
             }
             this.onLoadId = this.shareObj.id;
             this.index = this.videoList.findIndex(
@@ -275,7 +277,7 @@ export default {
       console.log("onshow");
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
-      this.$store.commit("getVideoList", this.$store.state.videoList);
+      this.$store.commit("spcl/getVideoList", this.$store.state.videoList);
       this.videoList = this.$store.state.videoList;
       this.index = this.videoList.findIndex(
         (item) => item.ringId == this.onLoadId,
@@ -359,7 +361,7 @@ export default {
           }
           this.pageNum++;
           this.videoList = tempList;
-          this.$store.commit("getVideoList", this.videoList);
+          this.$store.commit("", this.videoList);
         }
       });
     },
@@ -401,7 +403,7 @@ export default {
           }
           this.videoList = tempList;
           this.pageNum++;
-          this.$store.commit("getVideoList", this.videoList);
+          this.$store.commit("spcl/getVideoList", this.videoList);
         }
       });
     },
@@ -458,7 +460,7 @@ export default {
           }
           this.pageNum++;
           this.videoList = tempList;
-          this.$store.commit("getVideoList", this.videoList);
+          this.$store.commit("spcl/getVideoList", this.videoList);
         }
       });
     },

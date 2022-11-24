@@ -2,6 +2,7 @@ import videoService from "@/api/cx/video.js";
 import spclService from "@/api/spcl/index.js";
 import Vue from "vue";
 import videoTools from "@/utils/video.js";
+import { log } from "../../utils/QS-SharePoster/app";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData") || {}, // 用户视频彩铃数据
   searchList: [], // 搜索结果列表
@@ -37,11 +38,12 @@ const mutations = {
     console.log(tempList, "tempList");
     state.searchList = tempList;
   },
-  // 获取视彩列表
-  getVideoList (state, payload) {
-    let tempList = payload;
-    tempList = videoTools.videoInfoUpdate(tempList);
-    tempList = JSON.parse(JSON.stringify(tempList));
+  // 存视彩列表
+  SET_VIDO_LIST (state, payload) {
+    const tempList = payload;
+    // tempList = videoTools.videoInfoUpdate(tempList);
+    console.log(tempList, "获取视彩列表");
+    // tempList = JSON.parse(JSON.stringify(tempList));
     state.videoList = tempList;
   },
 };

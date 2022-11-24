@@ -3,7 +3,7 @@
     <!-- 视频彩铃内容 -->
     <view class="video-box">
       <cl-video
-        v-if="videoDetail"
+        v-if="videoDetail.ringFilePath"
         ref="clVideo"
         class="video"
         :src="videoDetail.ringFilePath"
