@@ -1,10 +1,30 @@
 import SsoService from "@/api/sso";
+import store from "../store";
 
-const navigateToAny = async function (item, callback) {
+const navigateToAny = async (item, targetId, callback = () => { }) => {
   uni.showLoading({
     title: "",
     mask: true,
   });
+  store.dispatch("offlinePopup/getCustomorderList", targetId).then(() => {
+    // 配置了策略
+    if (store.state.offlinePopup.loginShow) {
+      return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+    }
+    if (store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
+      return;
+    }
+    handleNavigateTo(item, callback);
+  }).catch(() => {
+    // 未配置策略
+    if (!uni.getStorageSync("Authorization")) {
+      return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+    }
+    handleNavigateTo(item, callback);
+  });
+  uni.hideLoading();
+};
+const handleNavigateTo = (item, callback) => {
   try {
     switch (item.eventType) {
       case 1:
@@ -29,7 +49,6 @@ const navigateToAny = async function (item, callback) {
     uni.hideLoading();
   }
 };
-
 //  处理外部跳转
 const handleExternalLink = async (item, callback) => {
   let tempEventUrl = item.eventUrl;
@@ -116,7 +135,7 @@ const freeLoginFun = (eventUrl) => {
     const tokenArr = tokenStr.split("_");
     if (tokenArr[0] === "tyrz") {
       SsoService
-        .freeLoginAuth({
+        .tyrzAuth({
           channel: tokenArr[1],
         })
         .then((res) => {

@@ -18,7 +18,7 @@
         <cover-view
           class="cover-view"
           :style="{
-            color: elColor(index)
+            color: elColor(index),
           }"
         >
           {{ item.text }}

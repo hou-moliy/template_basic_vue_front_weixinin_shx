@@ -1,78 +1,86 @@
+import windowService from "@/api/window/index";
 import analysis from "@/utils/analysis.js";
-import windowService from "@/api/window/index.js";
+const state = {
+  offlinePopupShow: false,
+  offlineFlag: false, // 是否展示下线弹窗
+  startTime: "", // 下线弹窗展示的开始时间
+  endTime: "", // 下线弹窗展示的结束时间
+  strategyType: false, // 1默认下线弹窗，2时间限制下线弹窗，3优先展示登录弹窗
+  dialogCancellable: false,
+  loginShow: false,
+};
+
+const mutations = {
+  SET_OFFLINEPOPUPSHOW (state, data) {
+    state.offlinePopupShow = data;
+  },
+  SET_OFFLINEFLAG (state, data) {
+    state.offlineFlag = data;
+  },
+  SET_STARTTIME (state, data) {
+    state.startTime = data;
+  },
+  SET_ENDTIME (state, data) {
+    state.endTime = data;
+  },
+  SET_STRATEGYTYPE (state, data) {
+    state.strategyType = data;
+  },
+  SET_DIALOGCANCELLABLE (state, data) {
+    state.dialogCancellable = data;
+  },
+  SET_LOGINSHOW (state, data) {
+    state.loginShow = data;
+  },
+};
+
+const actions = {
+  // 查询是否下线
+  getCustomorderList ({ commit, dispatch }, payload) {
+    // 初始化弹窗数据
+    commit("SET_OFFLINEFLAG", false);
+    commit("SET_OFFLINEPOPUPSHOW", false);
+    commit("SET_LOGINSHOW", false);
+    return new Promise((resolve, reject) => {
+      windowService.getPageStatus({ targetId: payload })
+        .then(res => {
+          if (res.data.code === 200) {
+            res.data.data.forEach(item => {
+              if (item.limited === false) { // 未配置相关策略
+                return reject(item.message);
+              } else if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
+                commit("SET_LOGINSHOW", true);
+                commit("SET_OFFLINEFLAG", false);
+                commit("SET_OFFLINEPOPUPSHOW", false);
+              } else if ((item.strategyType === 2 || item.strategyType === 1) && item.limited === true) { // 已登录用户展示升级弹窗
+                analysis.dispatch("onPageStatusDown", payload);
+                commit("SET_OFFLINEPOPUPSHOW", true);
+                commit("SET_OFFLINEFLAG", true);
+                commit("SET_STARTTIME", item.data.startTime);
+                commit("SET_ENDTIME", item.data.endTime);
+                commit("SET_STRATEGYTYPE", item.data.strategyType);
+                commit("SET_DIALOGCANCELLABLE", item.data.dialogCancellable);
+              }
+            });
+            resolve();
+          } else {
+            commit("SET_OFFLINEFLAG", false);
+            commit("SET_OFFLINEPOPUPSHOW", false);
+            commit("SET_LOGINSHOW", false);
+          }
+        });
+    });
+  },
+};
+
+const getters = {
+
+};
 
 export default {
-  state: {
-    offlinePopupShow: false,
-    offlineFlag: false,
-    startTime: "",
-    endTime: "",
-    strategyType: false,
-    dialogCancellable: false,
-    loginShow: false,
-  },
-  mutations: {
-    SET_OFFLINEPOPUPSHOW (state, data) {
-      state.offlinePopupShow = data;
-    },
-    SET_OFFLINEFLAG (state, data) {
-      state.offlineFlag = data;
-    },
-    SET_STARTTIME (state, data) {
-      state.startTime = data;
-    },
-    SET_ENDTIME (state, data) {
-      state.endTime = data;
-    },
-    SET_STRATEGYTYPE (state, data) {
-      state.strategyType = data;
-    },
-    SET_DIALOGCANCELLABLE (state, data) {
-      state.dialogCancellable = data;
-    },
-    SET_LOGINSHOW (state, data) {
-      state.loginShow = data;
-    },
-  },
-  actions: {
-    // 查询是否下线
-    getCustomorderList ({ commit }, payload) {
-      if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
-        windowService.getWindowList({ serviceId: "pageDownDialog" })
-          .then((res) => {
-            uni.setStorageSync("pageDownDialog", res.data.data);
-          });
-      }
-      // 初始化弹窗数据
-      commit("SET_OFFLINEFLAG", false);
-      commit("SET_OFFLINEPOPUPSHOW", false);
-      commit("SET_LOGINSHOW", false);
-      return (
-        windowService.getPageStatus({ targetId: payload })
-          .then(res => {
-            if (res.data.code === 200) {
-              res.data.data.forEach(item => {
-                if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
-                  commit("SET_LOGINSHOW", true);
-                  commit("SET_OFFLINEFLAG", false);
-                  commit("SET_OFFLINEPOPUPSHOW", false);
-                } else if ((item.strategyType === 2 || item.strategyType === 1) && item.limited === true) { // 已登录用户展示升级弹窗
-                  analysis.dispatch("onPageStatusDown", payload);
-                  commit("SET_OFFLINEPOPUPSHOW", true);
-                  commit("SET_OFFLINEFLAG", true);
-                  commit("SET_STARTTIME", item.data.startTime);
-                  commit("SET_ENDTIME", item.data.endTime);
-                  commit("SET_STRATEGYTYPE", item.data.strategyType);
-                  commit("SET_DIALOGCANCELLABLE", item.data.dialogCancellable);
-                }
-              });
-            } else {
-              commit("SET_OFFLINEFLAG", false);
-              commit("SET_OFFLINEPOPUPSHOW", false);
-              commit("SET_LOGINSHOW", false);
-            }
-          })
-      );
-    },
-  },
+  namespaced: true,
+  state,
+  actions,
+  mutations,
+  getters,
 };

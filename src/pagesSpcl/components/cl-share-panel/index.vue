@@ -59,11 +59,11 @@
           <view v-else>
             <image
               :src="`${staticImgs}/shxmp/init/sp-settinged.png`"
-              @click="szEvent(currentObj.ringId)"
+              @click="szEvent(currentObj)"
             />
             <view
               class="panel-item-text"
-              @click="szEvent(currentObj.ringId)"
+              @click="szEvent(currentObj)"
             >
               设为视频彩铃
             </view>
@@ -122,8 +122,8 @@ export default {
       this.$emit("likeEvent", ringId, flag);
     },
     // 设为视频彩铃
-    szEvent (clid) {
-      this.$emit("szEvent", clid);
+    szEvent (ringItem) {
+      this.$emit("szEvent", ringItem);
     },
     // 取消设置
     qxSzEvent (ringItem) {

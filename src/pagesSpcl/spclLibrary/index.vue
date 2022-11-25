@@ -164,7 +164,6 @@ import clSharePanel from "../components/cl-share-panel/index.vue";
 import NoData from "../components/no-data/index.vue";
 import spclService from "@/api/spcl/index.js";
 import popupTemplateNotify from "../../components/popup-module/popup-template-notify.vue";
-import notifyPop from "../../components/popup-template-notify/popup-template-notify.vue";
 
 export default {
   name: "SpclLibrary",
@@ -172,7 +171,6 @@ export default {
     clSharePanel,
     NoData,
     popupTemplateNotify,
-    notifyPop,
   },
   data () {
     return {
@@ -352,7 +350,11 @@ export default {
     delVideoItems () {
       if (this.delCls.length <= 0) return this.$toast("请勾选删除的铃音");
       if (this.navFlag === "curt") { // 当前播放页面
-        this.handleDelCurt();
+        this.handleDelCurt().then(res => {
+          if (res.code !== 200) {
+            this.$toast(res.message);
+          }
+        });
       } else { // 我的闲置页面
         this.handleDelXz();
       }
@@ -396,6 +398,8 @@ export default {
           this.$store.commit("spcl/SET_USER_SPCL_ALL", contents);
           // 更新闲置铃音数据
           this.getVideoListById("updateAvailable");
+        } else {
+          this.$toast(res.message);
         }
       });
     },
@@ -486,15 +490,22 @@ export default {
         this.$toast("点赞成功");
       }
     },
-    // 设为视频彩铃
-    szEvent (ringId) {
+    // 点击设为视频彩铃
+    szEvent (ringItem) {
+      this.panelShow = false;
+      const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cur_set;
+      notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+      this.$showNotifyPop(this, notifyInfo, () => this.handleSzEvent(ringItem));
+    },
+    // 处理设为视频彩铃接口
+    handleSzEvent (ringItem) {
       this.currentVideoIdList = this.$store.state.spcl.userSpclData.vrbtSettingRes;
       // 当前播放铃音为空时
       if (this.currentVideoIdList.length === 0) {
-        return this.handleCurPlayNoData([ringId]);
+        return this.handleCurPlayNoData([ringItem.ringId]);
       }
       // 当前播放铃音有数据时
-      this.currentVideoIdList.push(ringId);
+      this.currentVideoIdList.push(ringItem.ringId);
       this.handleDelCurt("updateAvailable").then(res => {
         if (res.code === 200) {
           this.$toast("设置当前播放成功");
@@ -502,7 +513,6 @@ export default {
           this.$toast(res.message);
           this.currentVideoIdList.pop();
         }
-        this.panelShow = false;
       });
     },
     // 处理当前播放无数据时设为当前播放操作
@@ -525,17 +535,14 @@ export default {
     // 取消设置视频彩铃点击
     qxSzEvent (ringItem) {
       // 展示取消设置弹窗
+      this.panelShow = false;
       const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cancel;
       notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
-      this.$refs.NotifyPop.show(notifyInfo);
-      // this.panelShow = false;
-      // this.windowCode = "common_spcl_cancel";
-      // this.notifyInfo = notifyInfo;
-      // this.notifyShow = true;
-      // this.delCls = [ringItem.ringId];
+      this.$showNotifyPop(this, notifyInfo, () => this.handleQxSzEvent(ringItem));
     },
-    // 处理取消视频彩铃
-    handleQxSzEvent () {
+    // 处理取消视频彩铃当前播放
+    handleQxSzEvent (ringItem) {
+      this.delCls = [ringItem.ringId];
       this.handleDelCurt().then(res => {
         if (res.code === 200) {
           this.$toast("取消当前播放成功");

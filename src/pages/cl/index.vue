@@ -65,14 +65,14 @@
       </view>
     </view>
     <!-- 内容组件区域 -->
-    <view :style="{ 'margin-top': `-${navHeight}px` }">
+    <view>
       <swiper
         class="swiper"
         touchable="false"
         :current="swiperTab"
         duration="200"
         :style="{
-          height: `${windowHeight - navHeight}px`,
+          height: `${windowHeight}px`,
         }"
         @change="swiperChange"
       >
@@ -82,7 +82,7 @@
         >
           <scroll-view
             scroll-y="true"
-            :style="{ height: `${windowHeight - navHeight}px` }"
+            :style="{ height: `${windowHeight}px` }"
             @scrolltolower="scrolltolower"
             @scroll="swiperContainerScroll"
           >
@@ -121,6 +121,7 @@
             <ebConfigContainerAsync
               key=""
               ref="EbConfig"
+              :activity-id="swipeItem.activityId"
               :page-config-list="swipeItem.pageConfig"
             />
           </scroll-view>
@@ -258,8 +259,15 @@ export default {
     getPageWidthHeight () {
       uni.getSystemInfo({
         success: res => {
-          this.navHeight = res.statusBarHeight;
-          this.windowHeight = res.windowHeight;
+          console.log("bar", res);
+          if (res.safeAreaInsets.bottom === 0) {
+            this.windowHeight = res.windowHeight;
+            // this.navHeight = res.safeArea.top;
+          } else {
+            this.windowHeight = res.safeArea.height;
+            // this.navHeight = res.safeArea.top / 2;
+          }
+          this.navHeight = res.safeArea.top;
           this.windowsWidth = res.windowWidth;
         },
       });
@@ -275,20 +283,22 @@ export default {
     },
     swiperContainerScroll (e) {
       if (e.detail.scrollTop > 30) {
-        this.tabBackground = "#ff704f";
+        this.tabBackground = "#DDDDFF";
       } else {
-        if (this.tabBackground === "#ff704f") {
+        if (this.tabBackground === "#DDDDFF") {
           this.tabBackground = "transparent";
         }
       }
     },
     // 获取tabList
     async getTabList () {
-      await FindService.getTab({ tabTarget: "fx" }).then(res => {
+      await FindService.getTab({ tabTarget: "main" }).then(res => {
         if (res.data.code === 200) {
           this.tabList = res.data.data;
-          console.log(res.data.data);
         }
+        this.tabList.forEach(e => {
+          e.activityId = e.pageName.split("_")[1];
+        });
         if (!this.pageName) {
           this.pageName = this.tabList[0].pageName;
           this.currentTab = this.tabList.filter(
@@ -393,10 +403,10 @@ export default {
     },
     // 滚动到底部监听
     scrolltolower () {
-      console.log(this.$refs, "ppp");
-      console.log(this.$refs.EbConfig, this.pageName);
+      console.log(this.swiperTab, "ccc");
       this.$nextTick(() => {
         if (this.$refs.EbConfig) {
+          console.log(this.$refs.EbConfig[this.swiperTab], "kkkk");
           this.$refs.EbConfig[this.swiperTab].onScollBottom();
         }
       });
@@ -426,7 +436,7 @@ page {
 
 .tab-container {
   z-index: 1;
-  margin-bottom: -210rpx;
+  margin-bottom: -250rpx;
   position: relative;
   top: 0;
 

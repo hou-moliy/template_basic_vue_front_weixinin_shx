@@ -7,7 +7,9 @@ const delMultiVideo = params => axios.post(baseUrl + "/spcl/delBatch", params); 
 const cancelCurPlay = params => axios.get(baseUrl + "/spcl/cancelBatch", params); // 当前播放全部取消，设为闲置铃音, 传settingId
 const modifySpclByIds = params => axios.post(baseUrl + "/spcl/modifySpcl", params); // 更新当前设置的彩铃，修改当前播放（有一条数据及以上1）取消或设为当前播放，传spclIds
 const setCurrentSpcl = params => axios.post(baseUrl + "/spcl/setCurrent", params); // 新增当前播放（当前播放无数据）
-
+const getSpclListByLabelId = (params) => axios.get(baseUrl + "/spcl/label/listWithPageAndType", params);// 根据标签ID查询铃音列表接口
+const getVideoByActivityId = (params) => axios.get(baseUrl + "/spcl/topic/getVideoByActivityId", params); // 根据活动id查询列表接口
+const getVideoByActivityIdPage = (params) => axios.get(baseUrl + "/spcl/topic/getVideoByActivityIdPage", params); // 根据活动id查询列表接口(分页)
 export default {
   getsplykInfo,
   getsplykCurrentInfo,
@@ -15,4 +17,7 @@ export default {
   cancelCurPlay,
   modifySpclByIds,
   setCurrentSpcl,
+  getSpclListByLabelId,
+  getVideoByActivityId,
+  getVideoByActivityIdPage,
 };

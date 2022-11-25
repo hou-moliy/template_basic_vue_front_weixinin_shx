@@ -85,7 +85,6 @@
         }"
       />
     </view>
-    <image />
   </view>
 </template>
 
@@ -160,7 +159,7 @@ export default {
       if (!uni.getStorageSync("Authorization")) return;
       const userInfo = uni.getStorageSync("userInfo");
       const phone = uni.getStorageSync("phone");
-      this.$loading("绘制中");
+      this.$loading("绘制中", true, 0);
       this.getVideoDetail().then(() => {
         if (phone) {
           this.avatarUrl =
@@ -207,9 +206,7 @@ export default {
       showImgData = showImgData.replace(/\\+/g, ""); // 去掉空格方法
       showImgData = showImgData.replace(/[\r\n]/g, "");
       const buffer = wx.base64ToArrayBuffer(showImgData);
-      const fileName = `${wx.env.USER_DATA_PATH}/share_img_${
-        Math.random() * 1000000
-      }.png`;
+      const fileName = `${wx.env.USER_DATA_PATH}/share_img_${Math.random() * 1000000}.png`;
       fsm.writeFileSync(fileName, buffer, "binary");
       this.qrCodeUrl = fileName;
       this.shareFc();
@@ -260,11 +257,12 @@ export default {
         });
         console.log(
           "海报生成成功, 时间:" +
-            new Date() +
-            "， 临时路径: " +
-            d.poster.tempFilePath,
+          new Date() +
+          "， 临时路径: " +
+          d.poster.tempFilePath,
         );
         this.$set(this.poster, "finalPath", d.poster.tempFilePath);
+        uni.hideLoading();
         // 要删除本地文件
         uni.getFileSystemManager().unlink({
           filePath: this.qrCodeUrl,
@@ -286,8 +284,8 @@ export default {
       // 可直接return数组，也可以return一个promise对象, 但最终resolve一个数组, 这样就可以方便实现后台可控绘制海报
       const coverUrl = Util.forwardingURL(
         this.videoDetail.coverUrl ||
-          this.videoDetail.openVCoverUrl ||
-          this.videoDetail.openHCoverUrl,
+        this.videoDetail.openVCoverUrl ||
+        this.videoDetail.openHCoverUrl,
       );
       const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.png`;
       return new Promise(resolve => {
@@ -523,7 +521,7 @@ export default {
       });
     },
     // 更新数据
-    uploadData () {},
+    uploadData () { },
     // 保存图片
     saveImage () {
       if (!this.poster.finalPath) {
@@ -556,8 +554,6 @@ page {
 .content {
   position: relative;
   width: 100%;
-  min-height: 100vh;
-  height: 100%;
   .bg_img {
     width: 100%;
     height: 100%;
@@ -568,6 +564,7 @@ page {
     flex-direction: column;
     align-items: center;
     padding-top: 45rpx;
+    box-sizing: border-box;
 
     .posterImage {
       width: 600rpx;

@@ -1,15 +1,18 @@
 <template>
   <view>
-    <view class="eb-icon">
+    <view
+      class="eb-icon"
+      :class="{'start':iconList.length ===1,'around':iconList.length>5}"
+    >
       <view
         v-for="(item, index) in iconList"
         :key="index"
         class="eb-icon-item"
         @click="navigateByEvent(item)"
       >
-        <view><image :src="item.iconUrl" /></view>
+        <image :src="item.url" />
         <!-- icon限制n位文字 -->
-        <view><text>{{ item.iconTitle ? item.iconTitle.slice(0, wordLimit) : "" }}</text></view>
+        <view><text>{{ item.title ? item.title.slice(0, wordLimit) : "" }}</text></view>
       </view>
     </view>
   </view>
@@ -27,6 +30,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -40,12 +47,13 @@ export default {
     this.getIconList();
   },
   methods: {
+    // 获取icon
     getIconList () {
-      // 获取icon
-      const { pageName } = this.pageConfig;
+      const { pageName, moduleId } = this.pageConfig;
       AdService
-        .getIcon({
+        .getAdList({
           target: pageName,
+          moduleId,
         })
         .then((resp) => {
           if (resp.data.code === 200 && resp.data.data.length > 0) {
@@ -73,16 +81,21 @@ export default {
 <style lang="scss" scoped>
 .eb-icon {
   width: 100%;
-  // height: 123rpx;
   padding: 58rpx auto 45rpx auto;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.start {
+  justify-content: flex-start;
+}
+
+.around {
   justify-content: space-around;
 }
 
 .eb-icon-item {
-  // width: 86rpx;
-  // height: 123rpx;
   display: flex;
   margin: 14rpx 0 0rpx 0rpx;
   flex-direction: column;
@@ -97,17 +110,16 @@ export default {
   display: block;
   flex-shrink: 0;
 }
-
 .eb-icon text {
-  font-size: 22rpx;
-  font-family: PingFang-SC-Medium;
-  color: #333333;
   text-align: center;
-  font-weight: 500;
-  margin-top: 18rpx;
   padding: 0rpx 10rpx;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 24rpx;
+  font-family: PingFang SC, PingFang SC-Medium;
+  font-weight: 500;
+  color: #2d2d2d;
+  line-height: 36px;
 }
 </style>
 <style>

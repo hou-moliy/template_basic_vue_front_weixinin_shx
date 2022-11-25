@@ -46,7 +46,11 @@ export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => {},
+      default: () => { },
+    },
+    activityId: {
+      type: String,
+      default: "",
     },
     compTop: {
       type: Boolean,
@@ -71,10 +75,11 @@ export default {
 
   methods: {
     getBannerByPageName () {
-      const { pageName } = this.pageConfig;
+      const { pageName, moduleId } = this.pageConfig;
       // 获取bannner
-      AdService.getBanner({
+      AdService.getAdList({
         target: pageName,
+        moduleId,
       }).then(res => {
         this.cxVideoBanner = res.data.data;
         this.totalSwiper = res.data.data.length;
@@ -86,23 +91,23 @@ export default {
       this.currentSwiper = event.detail.current + 1;
       // this.$emit('changeBanner', this.cxVideoBanner[event.detail.current])
     },
-
-    async navigateToH5 (event) {
-      console.log(event);
-      // this.$emit("buryBannerId", event.id);
-      await this.$store.dispatch("getCustomorderList", `swiper_${event.id}`);
-      console.log(
-        this.$store.state.offlinePopup,
-        "this.$store.state.offlinePopup",
-      );
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
-      navigateToAny(event);
+    navigateToH5 (event) {
+      // this.$store.dispatch("offlinePopup/getCustomorderList", `swiper_${event.id}`).then(() => {
+      //   // 配置了策略
+      //   if (this.$store.state.offlinePopup.loginShow) {
+      //     return this.$emit("openLoginPopup");
+      //   }
+      //   if (this.$store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
+      //     return;
+      //   }
+      //   navigateToAny(event);
+      // }).catch(() => {
+      //   // 未配置策略
+      //   if (!uni.getStorageSync("Authorization")) {
+      //     return this.$emit("openLoginPopup");
+      //   }
+      navigateToAny(event, `swiper_${event.id}`);
+      // });
     },
   },
 };
@@ -111,18 +116,14 @@ export default {
 <style lang="scss" scoped>
 .ad-banner-container {
   width: 100%;
-  // height: 381rpx;
-  // background: linear-gradient(#ff6f50, #ff6f50, white);
 }
 
 .ad-banner-swiper-top {
-  // width: 92%;
   height: 580rpx;
   position: relative;
 }
 
 .ad-banner-swiper {
-  // width: 92%;
   height: 350rpx;
   position: relative;
 }
@@ -160,7 +161,6 @@ export default {
   position: absolute;
   bottom: 30rpx;
   left: 50%;
-  // box-shadow: 1px 9px 16px 0px rgba(6, 0, 1, 0.12);
   transform: translateX(-50%);
 }
 
@@ -169,7 +169,6 @@ export default {
   height: 463rpx;
   display: flex;
 }
-
 </style>
 <style>
 /* .swiper-box .wx-swiper-dot */
