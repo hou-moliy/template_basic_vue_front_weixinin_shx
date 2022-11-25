@@ -4,12 +4,9 @@ const baseUrl = globalData.portalUrl;
 
 const getAdvertisement = params => axios.get(baseUrl + "/ad/advertisement", params); // 获取运营位数据
 const getAdvertise = params => axios.get(baseUrl + "/ad/advertise", params); // 获取轮播运营位数据
-const getBanner = params => axios.get(baseUrl + "/ad/", params);
-const getIcon = params => axios.get(baseUrl + "/spcl/icon", params);
-
+const getAdList = params => axios.get(baseUrl + "/ad/", params); // 获取广告位数据，banner、icon
 export default {
   getAdvertisement,
   getAdvertise,
-  getBanner,
-  getIcon,
+  getAdList,
 };

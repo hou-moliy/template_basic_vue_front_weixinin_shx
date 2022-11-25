@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import templateService from "@/api/template/topic.js";
+import SpclService from "@/api/spcl/index.js";
 import { navigateToAny } from "@/utils/tools.js";
 export default {
   props: {
@@ -132,7 +132,7 @@ export default {
         ac: this.activityId,
         level: this.pageConfig.sort,
       };
-      templateService.getVideoByActivityId(params).then((res) => {
+      SpclService.getVideoByActivityId(params).then((res) => {
         if (res.data.code === 200) {
           let tempList = res.data.data;
           if (tempList.length > 4) {
@@ -185,15 +185,16 @@ export default {
 .spcl-recommend {
   margin-bottom: 30rpx;
   padding-top: 40rpx;
+  background-color: #292727;
   .more-topic-top-img {
     display: flex;
     text-align: center;
     margin-bottom: 40rpx;
     justify-content: center;
-
+    height: 90rpx;
     image {
-      width: 100%;
-      height: 48rpx;
+      width: 60%;
+      height: 100%;
     }
   }
 

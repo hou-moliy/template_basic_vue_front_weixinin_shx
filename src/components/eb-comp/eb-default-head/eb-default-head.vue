@@ -19,10 +19,7 @@
             :src="pageConfig.tagIcon"
           >
         </view>
-        <span
-          v-if="pageConfig.showTitleFlag"
-          :style="{color: extraStyle.color}"
-        >{{ pageConfig.title }}</span>
+        <span :style="{color: extraStyle.color}">{{ pageConfig.title }}</span>
         <view>
           <img
             v-if="
@@ -35,8 +32,9 @@
         </view>
       </view>
       <view
+        v-if="pageConfig.showMoreFlag"
         class="block-box-button"
-        :style="{borderRadius: extraStyle.borderRaduis}"
+        :style="{borderRadius: extraStyle.borderRadius}"
         @click="navigateToAny"
       >
         {{ pageConfig.moreTitle || "查看更多" }}
@@ -80,7 +78,7 @@ export default {
       extraStyle: {
         position: "left",
         color: "#000",
-        borderRaduis: "26rpx",
+        borderRadius: "26rpx",
       },
       staticImgs: this.$staticImgs,
     };
@@ -95,16 +93,16 @@ export default {
     },
   },
   created () {
-    this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
   mounted () {
   },
   methods: {
     async navigateToAny () {
-      await this.$store.dispatch(
-        "getCustomorderList",
-        `seeMore_rec_${this.pageConfig.moduleId}`,
-      );
+      // await this.$store.dispatch(
+      //   "getCustomorderList",
+      //   `seeMore_rec_${this.pageConfig.moduleId}`,
+      // );
       if (this.$store.state.offlinePopup.loginShow) {
         this.$emit("openLoginPopup");
         return;
@@ -117,13 +115,14 @@ export default {
         this.$parent.changeTabByMore(this.pageConfig.eventUrl);
       } else {
         uni.setStorageSync("moreData", this.pageConfig);
-        let params = this.pageConfig.eventUrl;
+        const params = this.pageConfig;
         // 请统一使用eventUrl字段作为跳转路径
         if (this.pageConfig.eventUrl.indexOf("?") > -1) {
-          params = `${this.pageConfig.eventUrl}&moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
+          params.eventUrl = `${this.pageConfig.eventUrl}&moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
         } else {
-          params = `${this.pageConfig.eventUrl}?moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
+          params.eventUrl = `${this.pageConfig.eventUrl}?moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
         }
+        console.log(params, "params");
         navigateToAny(params);
       }
     },

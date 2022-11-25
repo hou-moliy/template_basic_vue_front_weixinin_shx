@@ -70,7 +70,7 @@ export default {
   methods: {
     cancel () {
       this.flag = false;
-      this.$store.commit("SET_OFFLINEPOPUPSHOW", false);
+      this.$store.commit("offlinePopup/SET_OFFLINEPOPUPSHOW", false);
       this.$emit("cancel");
     },
   },

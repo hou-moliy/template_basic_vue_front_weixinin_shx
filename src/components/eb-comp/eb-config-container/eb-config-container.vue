@@ -4,84 +4,182 @@
       v-for="(pageConfig, pageConfigIndex) in pageConfigList"
       :key="pageConfigIndex"
     >
-      <view
-        v-if="
-          pageConfig.moduleFlag === '0001' && pageConfig.configV2.isShow == '1'
-        "
-      >
+      <template v-if=" pageConfig.pageModule === 'eb-background-banner' && pageConfig.isShow == 1 ">
         <eb-background-banner
-          :page-config="pageConfig.configV2"
+          :page-config="pageConfig"
+          :activity-id="activityId"
           :comp-top="compTop && pageConfigIndex == 0"
           @buryBannerId="buryBannerId"
           @openLoginPopup="openLoginPopup"
         />
-      </view>
-      <view
-        v-if="
-          pageConfig.moduleFlag === '0021' && pageConfig.configV2.isShow == '1'
-        "
-      >
-        <eb-advertise
-          :page-config="pageConfig.configV2"
-          @openLoginPopup="openLoginPopup"
-        />
-      </view>
-
-      <view
-        v-if="pageConfig.moduleFlag === '0002'"
-      >
+      </template>
+      <template v-if="pageConfig.pageModule === 'eb-icon-list' && pageConfig.isShow == 1">
         <eb-icon-list
-          :page-config="pageConfig.configV2"
+          :page-config="pageConfig"
+          :activity-id="activityId"
           @buryIconListId="buryIconListId"
           @openLoginPopup="openLoginPopup"
           @open="open"
         />
-      </view>
-
-      <eb-default-head
-        v-if="
-          pageConfig.moduleFlag === '0031' && pageConfig.configV2.isShow == '1'
-        "
-        :padding="'50rpx 4% 30rpx 4%'"
-        :page-config="pageConfig.configV2"
-        :block-padding="0"
-        @openLoginPopup="openLoginPopup"
-      >
+      </template>
+      <template v-if=" pageConfig.pageModule === 'eb-ad-roll-transverse' && pageConfig.isShow == 1">
         <eb-ad-roll-transverse
-          :page-config="pageConfig.configV2"
+          :page-config="pageConfig"
+          :activity-id="activityId"
           :page-load-status="pageLoadStatus"
           style="width: 100%"
           @openLoginPopup="openLoginPopup"
         />
-      </eb-default-head>
-
+      </template>
       <!-- 风景 -->
-      <eb-default-head
-        v-if="
-          pageConfig.moduleFlag === '0007' && pageConfig.configV2.isShow == '1'
-        "
-        :margin="'50rpx 0 30rpx 0'"
-        :page-config="pageConfig.configV2"
-        @openLoginPopup="openLoginPopup"
-      >
+      <template v-if=" pageConfig.pageModule === 'eb-spcl-transverse' && pageConfig.isShow == 1">
         <view class="scenery-out-wrap">
           <eb-spcl-transverse
-            :page-config="pageConfig.configV2"
+            :page-config="pageConfig"
             :page-load-status="pageLoadStatus"
+            :activity-id="activityId"
             @openLoginPopup="openLoginPopup"
           />
         </view>
-      </eb-default-head>
+      </template>
+
+      <!-- 视频彩铃瀑布流 -->
+      <template v-if=" pageConfig.pageModule === 'eb-spcl-waterfalls' && pageConfig.isShow == 1 ">
+        <view class="spcl-out-wrap">
+          <eb-spcl-waterfalls
+            ref="EbSpclWaterFalls"
+            :page-config="pageConfig"
+            :activity-id="activityId"
+            :page-load-status="pageLoadStatus"
+            :comp-bottom="compBottom && pageConfigIndex ==pageConfigList.length "
+            @openLoginPopup="openLoginPopup"
+          />
+        </view>
+      </template>
+
+      <!-- 标题 -->
+      <template v-if="pageConfig.pageModule === 'eb-default-head' && pageConfig.isShow == 1">
+        <eb-default-head
+          :margin="'50rpx 0 30rpx 0'"
+          :page-config="pageConfig"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <!-- 广告位 无背景 -->
+      <template v-if="pageConfig.pageModule === 'eb-feeds' && pageConfig.isShow == 1">
+        <eb-feeds
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <!-- 广告位 有背景 -->
+
+      <template v-if=" pageConfig.pageModule === 'eb-feeds-bg' && pageConfig.isShow == 1">
+        <eb-feeds-bg
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <!-- 运营位 -->
+      <template v-if=" pageConfig.pageModule === 'eb-business-list' && pageConfig.isShow === 1 ">
+        <eb-business-list
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!--  覆盖性头图组件-->
+      <template v-if=" pageConfig.pageModule === 'eb-head-img-cover' && pageConfig.isShow === 1">
+        <eb-head-img-cover
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- 普通头图组件 -->
+      <template v-if=" pageConfig.pageModule === 'eb-head-img' && pageConfig.isShow === 1">
+        <eb-head-img-cover
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- AI换铃声 -->
+      <template v-if=" pageConfig.pageModule === 'eb-spcl-ai' && pageConfig.isShow === 1 ">
+        <eb-spcl-ai
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!--广告位图片  -->
+      <template v-if=" pageConfig.pageModule === 'eb-ad-img' && pageConfig.isShow === 1 ">
+        <eb-ad-img
+          :page-config="pageConfig"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- 视频横向滑动列表 -->
+      <template v-if=" pageConfig.pageModule === 'eb-spcl-swiper' && pageConfig.isShow === 1 ">
+        <eb-spcl-swiper
+          :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- 视频彩铃列表 -->
+      <template v-if="pageConfig.pageModule === 'eb-spcl-list' && pageConfig.isShow === 1 ">
+        <eb-spcl-list
+          :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- 视频彩铃推荐列表 -->
+      <template v-if=" pageConfig.pageModule === 'eb-spcl-recommend' && pageConfig.isShow === 1">
+        <eb-spcl-recommend
+          :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+      <!-- 浮动类广告位 -->
+      <template v-if=" pageConfig.pageModule === 'eb-ad-float' && pageConfig.isShow === 1">
+        <eb-ad-float
+          :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+          @click="flaotClick"
+        />
+      </template>
     </view>
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
   </view>
 </template>
 
 <script>
+import ebHeadImgCover from "../eb-head-img-cover/eb-head-img-cover.vue";
 export default {
+  components: { ebHeadImgCover },
   props: {
     pageConfigList: {
       type: Array,
       default: () => [],
+    },
+    activityId: {
+      type: String,
+      default: "",
     },
     compTop: {
       type: Boolean,
@@ -95,26 +193,25 @@ export default {
   data () {
     return {};
   },
-  created () {},
+  created () { },
   mounted () {
   },
   methods: {
     // 滚动到底部监听
     onScollBottom () {
-      this.$nextTick(() => {
-        console.log(this.$refs, "lll");
-      });
       if (this.$refs.EbLiveWaterFalls) {
         this.$refs.EbLiveWaterFalls[0].onScollBottom();
       }
       if (this.$refs.EbMiguWaterfalls) {
         this.$refs.EbMiguWaterfalls[0].onScollBottom();
       }
+      if (this.$refs.EbSpclWaterFalls) {
+        this.$refs.EbSpclWaterFalls[0].onScollBottom();
+      }
     },
     // 子组件打开登录弹窗
     openLoginPopup () {
-      console.log("登录弹窗");
-      // this.$refs.popup_login.open();
+      this.$showLoginPop(this);
     },
   },
 };
@@ -138,5 +235,8 @@ export default {
 .scenery-out-wrap {
   width: 100%;
   background-color: #fff;
+}
+.spcl-out-wrap {
+  width: 100vw;
 }
 </style>

@@ -1,5 +1,4 @@
 import windowService from "@/api/window/index";
-
 const state = {
   windowList: [],
 };
@@ -12,21 +11,29 @@ const mutations = {
 };
 
 const actions = {
-  // 获取公共配置的弹窗，如登录、设置等
+  // 获取公共配置的提示性弹窗，如登录、设置等
   getCommonWinow ({ commit, state }) {
-    // if (!state.windowList.length) return;
-    windowService.getWindowAll({ windowScene: "common" }).then(res => {
-      if (res.data.code === 200) {
-        // commit("SET_WINDOWLIST", res.data.data);
-        // uni.setStorageSync("windowList", res.data.data);
-        const windowList = res.data.data;
-        const windowAllObj = {};
-        for (const window of windowList) {
-          windowAllObj[window.windowCode] = window;
-          uni.setStorageSync("windowAllObj", windowAllObj);
+    if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
+      windowService.getWindowAll({ windowScene: "common" }).then(res => {
+        if (res.data.code === 200) {
+          const windowList = res.data.data;
+          const windowAllObj = {};
+          for (const window of windowList) {
+            windowAllObj[window.windowCode] = window;
+            uni.setStorageSync("windowAllObj", windowAllObj);
+          }
         }
-      }
-    });
+      });
+    }
+  },
+  // 获取下线弹窗
+  getOfflineWinow ({ commit, dispatch }, state) {
+    if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
+      windowService.getWindowAll({ windowCode: "pageDownDialog" })
+        .then((res) => {
+          uni.setStorageSync("pageDownDialog", res.data.data);
+        });
+    }
   },
 };
 

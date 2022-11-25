@@ -52,7 +52,8 @@ export default {
     };
   },
   created () {
-    this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+    console.log(this.extraStyle, "kkkk");
   },
   mounted () {
     this.getAdLIst();
@@ -61,13 +62,12 @@ export default {
 
     // 使用运营位接口 获取专题列表
     getAdLIst () {
-      console.log("this.pageConfig", JSON.stringify(this.pageConfig));
       const params = {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
       AdService.getAdvertisement(params).then((res) => {
-        if (res.data.code === 200) {
+        if (res.data.code === 200 && res.data.data.length) {
           this.adList = res.data.data[0].portalAd;
         }
       });

@@ -6,7 +6,7 @@ const getPageConfig = params => axios.get(baseUrl + "/page/config", params);
 
 const getBanner = params => axios.get(baseUrl + "/ad/", params);
 
-const getTab = (params) => axios.get(baseUrl + "/tab/v2", params);
+const getTab = (params) => axios.get(baseUrl + "/tab/", params);
 
 const topicsData = () => axios.get(baseUrl + "/cy/activity/featured");
 
