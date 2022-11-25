@@ -1,6 +1,7 @@
 <template>
   <view
     v-if="popupInfo.isVisible"
+    ref="NotifyPop"
     class="EB-popup"
     @touchmove.stop.prevent="() => {}"
   >

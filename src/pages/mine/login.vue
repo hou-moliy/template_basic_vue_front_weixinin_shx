@@ -156,9 +156,8 @@
 </template>
 
 <script>
-import * as axios from "@/api/index.js";
 import loginService from "@/api/my/my.js";
-import miguService from "@/api/migu/migu.js";
+// import miguService from "@/api/migu/migu.js";
 // import analysisService from '@/api/analysis/analysis.js'
 import {
   rsaEncryption,
@@ -191,12 +190,6 @@ export default {
       isShowWx: false, // 是否显示微信方式登录
       isShowYjdl: false, // 是否显示一键登录方式登录
       clickFlag: false,
-
-      // sim卡一键登录
-      isSimLogin: false,
-      simPhoneNum: "",
-      wxPopupInfo: "已成功获取您的微信头像、昵称，点击“立即登录”继续登录",
-      isShowWXBtn: true, // 是否展示wx验证按钮
 
     };
   },
@@ -285,12 +278,15 @@ export default {
     },
     // 微信获取code
     wxLoginGetCode () {
-      uni.login({
-        provider: "weixin",
-        success: (res) => {
-          console.log("code", res);
-          this.wxCode = res.code;
-        },
+      return new Promise((resolve) => {
+        uni.login({
+          provider: "weixin",
+          success: (res) => {
+            console.log("code", res);
+            this.wxCode = res.code;
+            resolve();
+          },
+        });
       });
     },
 
@@ -353,68 +349,57 @@ export default {
       };
       this.loginFlag = false;
 
-      // 验证码登录
-      uni.request({
-        url: `${this.globalData.weixinUrl}/wx/user/${this.globalData.appId}/login`, // 根据code获取sessionkey
-        data: param,
-        method: "GET",
-        success: (res2) => {
-          console.log("短信登录res2", res2);
-          uni.setStorageSync("openid", res2.data.openid);
-          uni.setStorageSync("unionid", res2.data.unionid);
-          const param = {
-            optype: 1,
-            authType: 2,
-            phone: rsaEncryption(this.phonenumber),
-            password: rsaEncryption(this.password),
-          };
-          if (this.phonenumber) {
-            if (this.validatePhone(this.phonenumber)) {
-              uni.request({
-                url: `${this.globalData.portalUrl}/sso/loginLn`,
-                data: param,
-                method: "POST",
-                success: (res) => {
-                  // this.$analysis.dispatch('dl_yzm_dlcg')
-                  // 渠道数据统计
+      const res = await loginService.getWxIds(param);
+      if (res.data.code === 200) {
+        uni.setStorageSync("openid", res.data.data.openid);
+        uni.setStorageSync("unionid", res.data.data.unionid);
+        const param = {
+          optype: 1,
+          authType: 2,
+          phone: rsaEncryption(this.phonenumber),
+          password: rsaEncryption(this.password),
+        };
+        if (this.phonenumber) {
+          if (this.validatePhone(this.phonenumber)) {
+            const res2 = await loginService.getLoginLn(param);
+            console.log(res2, "手机短信登录");
+            if (res2.data.code === 200) {
+              // this.$analysis.dispatch('dl_yzm_dlcg')
+              //     // 渠道数据统计
 
-                  // if (uni.getStorageSync("channelSource")) {
-                  //   analysisService
-                  //     .channelRecord(uni.getStorageSync(
-                  //       "channelSource"))
-                  //     .then((res) => {
-                  //       if (res.data.code == 200 && res.data
-                  //         .data) {
-                  //         uni.removeStorageSync(
-                  //           "channelSource");
-                  //       }
-                  //     });
-                  // }
-                  this.successLogin(res);
-                },
-                fail: () => {
-                  this.loginFlag = true;
-                  this.$toast("登录失败，请重试");
-                },
-              });
+              //     // if (uni.getStorageSync("channelSource")) {
+              //     //   analysisService
+              //     //     .channelRecord(uni.getStorageSync(
+              //     //       "channelSource"))
+              //     //     .then((res) => {
+              //     //       if (res.data.code == 200 && res.data
+              //     //         .data) {
+              //     //         uni.removeStorageSync(
+              //     //           "channelSource");
+              //     //       }
+              //     //     });
+              //     // }
+              this.successLogin(res2);
             } else {
-              uni.hideLoading();
               this.loginFlag = true;
-              this.$toast("请输入中国移动手机号码");
+              this.$toast("登录失败，请重试");
             }
           } else {
             uni.hideLoading();
             this.loginFlag = true;
-            this.$toast("请输入11位手机号码");
+            this.$toast("请输入中国移动手机号码");
           }
-        },
-        fail: (err) => {
-          console.error("授权登录失败：" + JSON.stringify(err));
+        } else {
           uni.hideLoading();
-          this.$toast("微信授权失败");
           this.loginFlag = true;
-        },
-      });
+          this.$toast("请输入11位手机号码");
+        }
+      } else {
+        uni.hideLoading();
+        this.$toast("微信授权失败");
+        this.loginFlag = true;
+      }
+      console.log(res, "获取openid");
     },
     // 成功登录
     successLogin (res) {
@@ -440,40 +425,26 @@ export default {
       this.$store.dispatch("spcl/getUserAllVideoList");
       // 查询用户是否开启ai换铃
       // this.checkPortalUser()
-      // 跳转webJS获取铃音数据
-      // this.getWebJsLingYingData()
       // 返回上一级
-      uni.navigateBack({ delta: 1 });
+      // uni.navigateBack({ delta: 1 });
       uni.setStorageSync("loadClData", true);
     },
+
     // 绑定微信与手机号
-    bindWxUser () {
+    async bindWxUser () {
       const userInfo = uni.getStorageSync("userInfo");
       const param = {
         ...userInfo,
         headimgUrl: userInfo.avatarUrl,
         openId: uni.getStorageSync("openid"),
-        phone: uni.getStorageSync("phone"),
         unionId: uni.getStorageSync("unionid"),
       };
-      axios
-        .post(`${this.globalData.weixinUrl}/wechat/bind`, param)
-        .then((res) => {
-
-        });
+      await loginService.bindWx(param);
     },
     // 微信登录
     async wxLogin (e, eventId) {
       await this.wxLoginGetCode();
       console.log("e", e, eventId);
-      // 管理获取手机号弹窗
-      // switch (eventId) {
-      //   case 'wx': // 微信登录
-      //     this.$analysis.dispatch('dl_vx')
-      //     break
-      //   default:
-      //     break
-      // }
       if (!this.ischecked) {
         this.$toast("请勾选协议后登录");
         return;
@@ -482,7 +453,6 @@ export default {
       const param = {
         code: this.wxCode,
       };
-      // const info = uni.getStorageSync('infoRes')
       const {
         detail,
       } = e;
@@ -493,81 +463,65 @@ export default {
         return;
       }
 
-      uni.request({
-        url: `${this.globalData.weixinUrl}/wx/user/${this.globalData.appId}/login`, // 根据code获取sessionkey
-        data: param,
-        method: "GET",
-        success: (res2) => {
-          uni.setStorageSync("openid", res2.data.openid);
-          console.log("微信一键登录res2", res2);
-          const param1 = {
-            openId: res2.data.openid,
-            encryptedData: detail.encryptedData,
-            iv: detail.iv,
-            // rawData: '22',
-            // signature: '123',
-          };
-          uni.request({
-            url: `${this.globalData.weixinUrl}/wx/user/${this.globalData.appId}/phone/v2`, // 获取手机号
-            data: param1,
-            method: "GET",
-            success: (res3) => {
-              console.log("res3", res3);
-              if (res3.statusCode === 200) {
-                // console.log(369)
-                if (res3.data.code === 506) {
-                  return uni.showToast({
-                    title: "您不是陕西移动手机号码，请使用陕西移动手机号登录",
-                    icon: "none",
-                    duration: 2000,
-                  });
-                } else if (res3.data.code !== 200) {
-                  return this.showToast(res3.data.message);
-                }
-                uni.setStorageSync("Authorization",
-                  `Bearer ${res3.data.token}`);
-                // this.$analysis.dispatch('dl_vx_dlcg')
-                console.log("phone", res3.data.phone);
-                console.log("rsaDecryption", rsaDecryption(res3.data
-                  .phone));
-                uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
-                uni.setStorageSync("loadClData", true);
-                uni.setStorageSync("userData", [{
-                  crbtResponse: [],
-                  vrbtResponse: [],
-                  crbtSettingRes: [],
-                  vrbtSettingRes: [],
-                  seetingIdRes: "",
-                  crbtContentId: "",
-                }]);
-                // 渠道数据统计
-                // if (uni.getStorageSync('channelSource')) {
-                //   analysisService
-                //     .channelRecord(uni.getStorageSync('channelSource'))
-                //     .then((res) => {
-                //       if (res.data.code == 200 && res.data.data) {
-                //         uni.removeStorageSync('channelSource')
-                //       }
-                //     })
-                // }
-                this.bindWxUser();
-                // 获取用户铃音库数据
-                this.$store.dispatch("spcl/getUserAllVideoList");
-                // 返回上一级
-                uni.navigateBack({
-                  delta: 1,
-                });
-              }
-              uni.hideLoading();
-            },
-          });
-        },
-        fail: (err) => {
-          console.error("授权登录失败：" + JSON.stringify(err));
+      const res2 = await loginService.getWxIds(param);
+      console.log(res2);
+      if (res2.data.code === 200) {
+        uni.setStorageSync("openid", res2.data.data.openid);
+        uni.setStorageSync("unionid", res2.data.data.unionid);
+        const param1 = {
+          openId: res2.data.data.openid,
+          encryptedData: detail.encryptedData,
+          iv: detail.iv,
+        };
+        const res3 = await loginService.wxuserPhone(param1);
+        console.log(res3, "微信手机号授权");
+        if (res3.data.code === 200) {
           uni.hideLoading();
-          this.showToast("授权登录失败");
-        },
-      });
+          uni.setStorageSync("Authorization",
+            `Bearer ${res3.data.token}`);
+          // this.$analysis.dispatch('dl_vx_dlcg')
+          uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
+          uni.setStorageSync("loadClData", true);
+          uni.setStorageSync("userSpclData", [
+            {
+              crbtResponse: [],
+              vrbtResponse: [],
+              crbtSettingRes: [],
+              vrbtSettingRes: [],
+              seetingIdRes: "",
+              crbtContentId: "",
+            },
+          ]);
+          // 渠道数据统计
+          // if (uni.getStorageSync('channelSource')) {
+          //   analysisService
+          //     .channelRecord(uni.getStorageSync('channelSource'))
+          //     .then((res) => {
+          //       if (res.data.code == 200 && res.data.data) {
+          //         uni.removeStorageSync('channelSource')
+          //       }
+          //     })
+          // }
+          this.bindWxUser();
+          // 获取用户铃音库数据
+          this.$store.dispatch("spcl/getUserAllVideoList");
+          // 返回上一级
+          uni.navigateBack({
+            delta: 1,
+          });
+        } else if (res3.data.code === 506) {
+          return uni.showToast({
+            title: "您不是陕西移动手机号码，请使用陕西移动手机号登录",
+            icon: "none",
+            duration: 2000,
+          });
+        } else {
+          return this.$toast(res3.data.message);
+        }
+      } else {
+        uni.hideLoading();
+        this.$toast("授权登录失败");
+      }
     },
 
   },

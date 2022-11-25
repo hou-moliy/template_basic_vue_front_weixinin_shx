@@ -140,10 +140,10 @@ export default {
           }
           if (
             uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
+            uni.getStorageSync("userSpclData")[0] &&
+            uni.getStorageSync("userSpclData")[0].vrbtResponse
           ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
             for (let i = 0; i < tempList.length; i++) {
               const isBuy = isBuyList.filter(
                 (item) => tempList[i].ringId === item.ringId,

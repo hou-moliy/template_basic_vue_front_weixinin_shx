@@ -551,6 +551,16 @@ export default {
         }
       });
     },
+    // 弹窗按钮的点击事件
+    handleButtonClick ({ btnInfo }) {
+      if (btnInfo.type === 1) { // 关闭弹窗
+        this.notifyShow = false;
+      } else if (btnInfo.type === 2) { // 订购逻辑
+        this.handleQxSzEvent();
+      } else if (btnInfo.type === 3) { // 跳转逻辑
+
+      }
+    },
     // 预览,跳转视频彩铃播放页面
     seeDetail ({ ringId }) {
       uni.navigateTo({

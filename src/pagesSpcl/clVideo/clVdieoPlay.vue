@@ -3,7 +3,38 @@
     class="page"
     :style="{ height: height }"
   >
-    <!-- <swiper
+    <!-- 自定义导航栏 -->
+    <view class="navBarBox">
+      <view
+        class="navBar"
+        :style="{
+          paddingTop: navMarginHeight + 'px',
+          height: navHeight + 'px',
+        }"
+      >
+        <view
+          v-if="!shareStatus"
+          class="icon"
+          @click="goBack"
+        >
+          <image
+            class="back"
+            :src="`${staticImgs}/shxmp/init/custom_nav_back_btn.png`"
+          />
+        </view>
+        <view
+          v-else
+          class="icon"
+          @click="goHome"
+        >
+          <image
+            class="home"
+            :src="`${staticImgs}/shxmp/init/custom_nav_home_btn.png`"
+          />
+        </view>
+      </view>
+    </view>
+    <swiper
       class="swiper"
       :vertical="true"
       :current="index"
@@ -11,21 +42,24 @@
       @animationfinish="animationFinish"
     >
       <swiper-item
-        v-for="(items, idx) in videoList"
+        v-for="(idx) in videoList"
         :key="idx"
         class="swiper-item"
       >
-        <full-screen-video :video-detail="items" />
+        <full-screen-video
+          :index="idx"
+        />
       </swiper-item>
-    </swiper> -->
+    </swiper>
   </view>
 </template>
 
 <script>
 import videoService from "@/api/cx/video.js";
 import Util, { formatCount } from "@/utils/tools.js";
+
 export default {
-  name: "ClVideoPlay",
+
   data () {
     return {
       staticImgs: this.$staticImgs,
@@ -69,6 +103,7 @@ export default {
       navMarginHeight: 0, // 自定义导航栏外边距
       navHeight: 0, // 自定义导航栏高度
       shareStatus: false, // 是否由分享进入
+      step: 0, // 新手引导步骤
       userLikeVideoList: [],
       playStatus: "", // 是否是组件 状态   0-非组件  1-组件
       moduleId: "", // page_config 的 moduleId
@@ -150,17 +185,12 @@ export default {
 
   async onShow () {
     const that = this;
-    //
+    // 获取点赞列表
     if (uni.getStorageSync("Authorization")) {
-      await videoService
-        .getUserLikesList({
-          behaviorType: "dz",
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            this.userLikeVideoList = res.data.data;
-          }
-        });
+      const res = await videoService.getUserLikesList({ behaviorType: "dz" });
+      if (res.data.code === 200) {
+        this.userLikeVideoList = res.data.data;
+      }
     }
 
     if (this.shareFlag) {
@@ -189,6 +219,9 @@ export default {
       imageUrl: `${this.staticImgs}/lnmp/share_sp.png`,
     };
   },
+  mounted () {
+    console.log("mounted");
+  },
   created () {
     console.log("created");
     uni.getSystemInfo({
@@ -203,14 +236,14 @@ export default {
         }
       },
     });
-    // this.sysheight = uni.getSystemInfoSync().windowHeight;
+    this.sysheight = uni.getSystemInfoSync().windowHeight;
     this.height = `${this.sysheight}px`;
     const width = uni.getSystemInfoSync().windowWidth;
     this.width = `${width}px`;
-    this.videoList.length = 300;
-    this.videoList.fill({
-      src: "",
-    });
+    // this.videoList.length = 300;
+    // this.videoList.fill({
+    //   src: "",
+    // });
   },
   onUnload () {
     console.log("onUnload");
@@ -224,10 +257,9 @@ export default {
     },
     goHome () {
       uni.switchTab({
-        url: "/pages/liaoNingFind/views/index",
+        url: "/pages/cl/index",
       });
     },
-
     getVideoDetail () {
       return videoService
         .getSpclVideoDetail({
@@ -239,8 +271,8 @@ export default {
             console.log("res", res.data.data);
             const newList = [];
             newList.push(res.data.data);
-            this.$store.commit("getVideoList", newList);
-            this.videoList = this.$store.state.videoList;
+            this.$store.commit("spcl/M_changeVideoList", newList);
+            this.videoList = this.$store.state.spcl.videoList;
             if (
               this.shareObj.actions &&
               this.shareObj.actions !== "undefined"
@@ -275,11 +307,12 @@ export default {
       console.log("onshow");
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
-      this.$store.commit("getVideoList", this.$store.state.videoList);
-      this.videoList = this.$store.state.videoList;
+      this.$store.commit("spcl/M_changeVideoList", this.$store.state.videoList);
+      this.videoList = this.$store.state.spcl.videoList;
       this.index = this.videoList.findIndex(
-        (item) => item.ringId == this.onLoadId,
+        (item) => item.ringId === this.onLoadId,
       );
+      // 更新list中的点赞
       this.videoList.forEach((item) => {
         if (this.userLikeVideoList.indexOf(item.ringId) > -1) {
           item.extraInfo.like = true;
@@ -294,18 +327,18 @@ export default {
         this.pageSize = 10;
       }
       this.pageNum = Math.ceil(this.videoList.length / this.pageSize) + 1;
-      this.totalNum = this.$store.state.VedioListTalNum;
-      this.labelId = this.$store.state.vedioLabelId;
+      this.totalNum = this.$store.state.spcl.VedioListTalNum;
+      this.labelId = this.$store.state.spcl.vedioLabelId;
       // 来自于最近播放页面
-      console.log("this.index", this.index, "--8--", this.labelId);
-      if (this.playStatus) {
-        this.$analysis.dispatch("spcl_bf", this.moduleId ? this.playStatus + "_" + this.moduleId + "_" + this.videoList[this.index].ringId : this.playStatus + "_" + this.notModulId + "_" + this.videoList[this.index].ringId);
-      } else {
-        this.$analysis.dispatch("spcl_bf", this.videoList[this.index].ringId);
-      }
+      // console.log("this.index", this.index, "--8--", this.labelId);
+      // if (this.playStatus) {
+      //   this.$analysis.dispatch("spcl_bf", this.moduleId ? this.playStatus + "_" + this.moduleId + "_" + this.videoList[this.index].ringId : this.playStatus + "_" + this.notModulId + "_" + this.videoList[this.index].ringId);
+      // } else {
+      //   this.$analysis.dispatch("spcl_bf", this.videoList[this.index].ringId);
+      // }
 
       if (uni.getStorageSync("Authorization")) {
-        // 记录
+        // 播放记录
         const data = {
           ringId: this.videoList[this.index].ringId,
           target: "bf",
@@ -317,9 +350,7 @@ export default {
       }
     },
     animationFinish (e) {
-      // #ifdef APP-PLUS
       this.changeCurrent(e);
-      // #endif
     },
     getNewVedioList () {
       if (this.isRequest) {
@@ -344,10 +375,10 @@ export default {
           // }
           if (
             uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
+            uni.getStorageSync("userSpclData")[0] &&
+            uni.getStorageSync("userSpclData")[0].vrbtResponse
           ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
             for (let i = 0; i < tempList.length; i++) {
               const isBuy = isBuyList.filter(
                 (item) => tempList[i].ringId === item.ringId,
@@ -359,7 +390,7 @@ export default {
           }
           this.pageNum++;
           this.videoList = tempList;
-          this.$store.commit("getVideoList", this.videoList);
+          this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
       });
     },
@@ -378,18 +409,12 @@ export default {
         this.isRequest = false;
         if (res.data.code === 200) {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
-          // for (let i = 0; i < tempList.length; i++) {
-          // 	if (tempList[i].extraInfo) {
-          // 		tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
-          // 		tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
-          // 	}
-          // }
           if (
             uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
+            uni.getStorageSync("userSpclData")[0] &&
+            uni.getStorageSync("userSpclData")[0].vrbtResponse
           ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
             for (let i = 0; i < tempList.length; i++) {
               const isBuy = isBuyList.filter(
                 (item) => tempList[i].ringId === item.ringId,
@@ -401,7 +426,7 @@ export default {
           }
           this.videoList = tempList;
           this.pageNum++;
-          this.$store.commit("getVideoList", this.videoList);
+          this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
       });
     },
@@ -419,34 +444,12 @@ export default {
         this.isRequest = false;
         if (res.data.code === 200) {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
-          // 分享和喜欢数据格式化
-          // for (let i = 0; i < tempList.length; i++) {
-          // 	if (tempList[i].extraInfo) {
-          // 		tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
-          // 		tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
-          // 	}
-          // }
           if (
             uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
+            uni.getStorageSync("userSpclData")[0] &&
+            uni.getStorageSync("userSpclData")[0].vrbtResponse
           ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
             for (let i = 0; i < tempList.length; i++) {
               const isBuy = isBuyList.filter(
                 (item) => tempList[i].ringId === item.ringId,
@@ -458,7 +461,7 @@ export default {
           }
           this.pageNum++;
           this.videoList = tempList;
-          this.$store.commit("getVideoList", this.videoList);
+          this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
       });
     },
@@ -469,11 +472,11 @@ export default {
       if (this.isFirstPlay) {
         this.isFirstPlay = false;
       }
-      if (this.playStatus) {
-        this.$analysis.dispatch("spcl_bf", this.moduleId ? this.playStatus + "_" + this.moduleId + "_" + this.videoList[this.index].ringId : this.playStatus + "_" + this.notModulId + "_" + this.videoList[this.index].ringId);
-      } else {
-        this.$analysis.dispatch("spcl_bf", this.videoList[this.index].ringId);
-      }
+      // if (this.playStatus) {
+      //   this.$analysis.dispatch("spcl_bf", this.moduleId ? this.playStatus + "_" + this.moduleId + "_" + this.videoList[this.index].ringId : this.playStatus + "_" + this.notModulId + "_" + this.videoList[this.index].ringId);
+      // } else {
+      //   this.$analysis.dispatch("spcl_bf", this.videoList[this.index].ringId);
+      // }
 
       if (uni.getStorageSync("Authorization")) {
         // 记录
@@ -513,64 +516,40 @@ export default {
         }
       }
     },
-    playEnd () {},
-    // 设置视频彩铃
-    szEvent (items) {
-      // this.$analysis.dispatch("cl_sz", "全面屏");
-      if (uni.getStorageSync("Authorization")) {
-        this.purchaseVideoMes = items;
-        this.btnType = "openAndPurchase";
-        this.$refs.popup_open_status.open();
-      } else {
-        this.$refs.popup_login.open();
-      }
-    },
-    popIsFinished (data) {
-      if (data.videoId) {
-        // 修改数据
-        const tempList = this.videoList;
-        for (let i = 0; i < tempList.length; i++) {
-          const isBuy = tempList.filter(
-            (item) => tempList[i].ringId === data.videoId,
-          );
-          if (isBuy[0]) {
-            tempList[i].isBuyVideo = true;
-          }
-        }
-        this.videoList = tempList;
-      }
-      this.purchaseVideoMes = {};
-      this.btnType = "";
-      this.$refs.popup_open_status.close();
-    },
-    navigateToPages (path) {
-      uni.navigateTo({
-        url: path,
-      });
-    },
-    // 未开通签名弹窗关闭
-    close (done) {
-      done();
-    },
-    // 登录弹框确认
-    login_confirm (done, value) {
-      // this.$analysis.dispatch("cl_login", "全面屏");
-      // 输入框的值
-      uni.navigateTo({
-        url: "/pagesD/my/login",
-      });
-      done();
-    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.page {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+.navBarBox {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+
+  .navBar {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      width: 80rpx;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .back {
+        width: 20rpx;
+        height: 32rpx;
+      }
+
+      .home {
+        width: 35rpx;
+        height: 32rpx;
+      }
+    }
+  }
 }
+
 .swiper {
   flex: 1;
   background-color: #000;
@@ -578,6 +557,47 @@ export default {
   .swiper-item {
     flex: 1;
   }
+}
+
+.left-view {
+  box-sizing: border-box;
+  margin-bottom: 20upx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 30rpx 0 30rpx;
+
+  .set-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 210rpx;
+    position: relative;
+  }
+}
+
+.left-text {
+  width: 480rpx;
+  font-size: 32rpx;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-weight: 500;
+  text-align: left;
+  color: #ffffff;
+  line-height: 48rpx;
+  text-shadow: 0rpx 2rpx 7rpx 0rpx rgba(4, 0, 0, 0.23);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 </style>
