@@ -41,12 +41,14 @@ const actions = {
     commit("SET_OFFLINEFLAG", false);
     commit("SET_OFFLINEPOPUPSHOW", false);
     commit("SET_LOGINSHOW", false);
-    return (
+    return new Promise((resolve, reject) => {
       windowService.getPageStatus({ targetId: payload })
         .then(res => {
           if (res.data.code === 200) {
             res.data.data.forEach(item => {
-              if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
+              if (item.limited === false) { // 未配置相关策略
+                return reject(item.message);
+              } else if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
                 commit("SET_LOGINSHOW", true);
                 commit("SET_OFFLINEFLAG", false);
                 commit("SET_OFFLINEPOPUPSHOW", false);
@@ -60,13 +62,14 @@ const actions = {
                 commit("SET_DIALOGCANCELLABLE", item.data.dialogCancellable);
               }
             });
+            resolve();
           } else {
             commit("SET_OFFLINEFLAG", false);
             commit("SET_OFFLINEPOPUPSHOW", false);
             commit("SET_LOGINSHOW", false);
           }
-        })
-    );
+        });
+    });
   },
 };
 

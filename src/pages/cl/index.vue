@@ -121,6 +121,7 @@
             <ebConfigContainerAsync
               key=""
               ref="EbConfig"
+              :activity-id="swipeItem.activityId"
               :page-config-list="swipeItem.pageConfig"
             />
           </scroll-view>
@@ -282,20 +283,22 @@ export default {
     },
     swiperContainerScroll (e) {
       if (e.detail.scrollTop > 30) {
-        this.tabBackground = "#ff704f";
+        this.tabBackground = "#DDDDFF";
       } else {
-        if (this.tabBackground === "#ff704f") {
+        if (this.tabBackground === "#DDDDFF") {
           this.tabBackground = "transparent";
         }
       }
     },
     // 获取tabList
     async getTabList () {
-      await FindService.getTab({ tabTarget: "fx" }).then(res => {
+      await FindService.getTab({ tabTarget: "main" }).then(res => {
         if (res.data.code === 200) {
           this.tabList = res.data.data;
-          console.log(res.data.data);
         }
+        this.tabList.forEach(e => {
+          e.activityId = e.pageName.split("_")[1];
+        });
         if (!this.pageName) {
           this.pageName = this.tabList[0].pageName;
           this.currentTab = this.tabList.filter(

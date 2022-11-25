@@ -185,16 +185,16 @@ export default {
 .spcl-recommend {
   margin-bottom: 30rpx;
   padding-top: 40rpx;
+  background-color: #292727;
   .more-topic-top-img {
     display: flex;
     text-align: center;
     margin-bottom: 40rpx;
     justify-content: center;
-    height: 60rpx;
-
+    height: 90rpx;
     image {
-      width: 100%;
-      height: 48rpx;
+      width: 60%;
+      height: 100%;
     }
   }
 

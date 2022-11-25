@@ -1,14 +1,10 @@
 <template>
-  <!-- <view
-    class="float"
-  > -->
   <image
     class="floatImage"
     :src="`${staticImgs}/lnmp/lottery_float.png`"
     :style="[position.topLeft]"
     @click="flaotClick"
   />
-  <!-- </view> -->
 </template>
 
 <script>
@@ -54,23 +50,23 @@ export default {
 
 <style lang="scss" scoped>
 // .float {
-  // position: fixed;
-  // // top: 285rpx;
-  // bottom: 30rpx;
-  // right: 20rpx;
-  // overflow: hidden;
-  // z-index: 999;
-  .floatImage {
-    position: fixed;
+// position: fixed;
+// // top: 285rpx;
+// bottom: 30rpx;
+// right: 20rpx;
+// overflow: hidden;
+// z-index: 999;
+.floatImage {
+  position: fixed;
   // top: 285rpx;
   bottom: 30rpx;
   right: 20rpx;
   overflow: hidden;
   z-index: 999;
-    width: 103rpx;
-    height: 204rpx;
-    display: inline-block;
-    vertical-align: top;
-  }
+  width: 103rpx;
+  height: 204rpx;
+  display: inline-block;
+  vertical-align: top;
+}
 // }
 </style>

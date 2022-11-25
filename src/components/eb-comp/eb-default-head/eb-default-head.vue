@@ -32,6 +32,7 @@
         </view>
       </view>
       <view
+        v-if="pageConfig.showMoreFlag"
         class="block-box-button"
         :style="{borderRadius: extraStyle.borderRadius}"
         @click="navigateToAny"
@@ -93,7 +94,6 @@ export default {
   },
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
-    console.log(this.extraStyle, "default-head");
   },
   mounted () {
   },

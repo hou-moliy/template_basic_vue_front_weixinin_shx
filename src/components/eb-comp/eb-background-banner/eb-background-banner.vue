@@ -91,17 +91,23 @@ export default {
       this.currentSwiper = event.detail.current + 1;
       // this.$emit('changeBanner', this.cxVideoBanner[event.detail.current])
     },
-
-    async navigateToH5 (event) {
-      await this.$store.dispatch("offlinePopup/getCustomorderList", `swiper_${event.id}`);
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
-      navigateToAny(event);
+    navigateToH5 (event) {
+      // this.$store.dispatch("offlinePopup/getCustomorderList", `swiper_${event.id}`).then(() => {
+      //   // 配置了策略
+      //   if (this.$store.state.offlinePopup.loginShow) {
+      //     return this.$emit("openLoginPopup");
+      //   }
+      //   if (this.$store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
+      //     return;
+      //   }
+      //   navigateToAny(event);
+      // }).catch(() => {
+      //   // 未配置策略
+      //   if (!uni.getStorageSync("Authorization")) {
+      //     return this.$emit("openLoginPopup");
+      //   }
+      navigateToAny(event, `swiper_${event.id}`);
+      // });
     },
   },
 };
@@ -110,18 +116,14 @@ export default {
 <style lang="scss" scoped>
 .ad-banner-container {
   width: 100%;
-  // height: 381rpx;
-  // background: linear-gradient(#ff6f50, #ff6f50, white);
 }
 
 .ad-banner-swiper-top {
-  // width: 92%;
   height: 580rpx;
   position: relative;
 }
 
 .ad-banner-swiper {
-  // width: 92%;
   height: 350rpx;
   position: relative;
 }
@@ -159,7 +161,6 @@ export default {
   position: absolute;
   bottom: 30rpx;
   left: 50%;
-  // box-shadow: 1px 9px 16px 0px rgba(6, 0, 1, 0.12);
   transform: translateX(-50%);
 }
 

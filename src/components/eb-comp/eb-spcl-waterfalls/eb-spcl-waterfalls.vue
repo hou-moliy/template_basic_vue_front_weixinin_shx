@@ -273,7 +273,7 @@ export default {
 <style lang="scss" scoped>
 .more-news {
   width: 100%;
-  padding: 0rpx 30rpx;
+  padding: 0rpx 30rpx 30rpx;
   box-sizing: border-box;
   border-radius: 40rpx 40rpx 0rpx 0rpx;
 

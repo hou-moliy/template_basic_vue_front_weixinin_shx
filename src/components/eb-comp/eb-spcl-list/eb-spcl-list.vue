@@ -17,93 +17,95 @@
       <view class="waterfall-column waterfall-column-left">
         <view
           v-for="(item,index) in dataList"
-          v-if="index % 2 ===0"
           :key="index"
           class="video-box-newList"
         >
           <!-- 元素 -->
-          <view class="video-box-new more-new-item-column">
-            <view
-              :data-url="'/pages/cxVideo/cxVideoPlay?id='+item.ringId"
-              :data-topic="'moreVideo'"
-              @click="$emit('goToPlayVideo',$event, dataList)"
-            >
-              <view class="img-box-more">
-                <image
-                  class="new-img"
-                  :src="item.coverUrl?item.coverUrl:(item.openVCoverUrl?item.openVCoverUrl:item.openHCoverUrl)"
-                  mode="aspectFill"
-                />
-                <view class="morel-new-title">
-                  <view class="morel-new-titleText">
-                    {{ item.ringName }}
+          <template v-if="index % 2 ===0">
+            <view class="video-box-new more-new-item-column">
+              <view
+                :data-url="'/pages/cxVideo/cxVideoPlay?id='+item.ringId"
+                :data-topic="'moreVideo'"
+                @click="$emit('goToPlayVideo',$event, dataList)"
+              >
+                <view class="img-box-more">
+                  <image
+                    class="new-img"
+                    :src="item.coverUrl?item.coverUrl:(item.openVCoverUrl?item.openVCoverUrl:item.openHCoverUrl)"
+                    mode="aspectFill"
+                  />
+                  <view class="morel-new-title">
+                    <view class="morel-new-titleText">
+                      {{ item.ringName }}
+                    </view>
                   </view>
                 </view>
               </view>
-            </view>
-            <view class="icon-box">
-              <view
-                v-if="item.isBuyVideo"
-                class="setting-btn-isBuy"
-              >
-                已设置
+              <view class="icon-box">
+                <view
+                  v-if="item.isBuyVideo"
+                  class="setting-btn-isBuy"
+                >
+                  已设置
+                </view>
+                <view
+                  v-else
+                  class="setting-btn"
+                  :style="{background: `${pageConfig.innerColor}`}"
+                  @click="$emit('purchaseVideo',item)"
+                >
+                  {{ pageConfig.title }}
+                </view>
               </view>
-              <view
-                v-else
-                class="setting-btn"
-                :style="{background: `${pageConfig.innerColor}`}"
-                @click="$emit('purchaseVideo',item)"
-              >
-                {{ pageConfig.title }}
-              </view>
             </view>
-          </view>
+          </template>
         </view>
       </view>
       <view class="waterfall-column">
         <view
           v-for="(item,index) in dataList"
-          v-if="index % 2 !==0"
           :key="index"
           class="video-box-newList"
         >
-          <view class="video-box-new more-new-item-column">
-            <view
-              :data-url="'/pages/cxVideo/cxVideoPlay?id='+item.ringId"
-              :data-topic="'moreVideo'"
-              @click="$emit('goToPlayVideo',$event, dataList)"
-            >
-              <view class="img-box-more">
-                <image
-                  class="new-img"
-                  :src="item.coverUrl?item.coverUrl:(item.openVCoverUrl?item.openVCoverUrl:item.openHCoverUrl)"
-                  mode="aspectFill"
-                />
-                <view class="morel-new-title">
-                  <view class="morel-new-titleText">
-                    {{ item.ringName }}
+          <template v-if="index % 2 !==0">
+            <view class="video-box-new more-new-item-column">
+              <view
+                :data-url="'/pages/cxVideo/cxVideoPlay?id='+item.ringId"
+                :data-topic="'moreVideo'"
+                @click="$emit('goToPlayVideo',$event, dataList)"
+              >
+                <view class="img-box-more">
+                  <image
+                    class="new-img"
+                    :src="item.coverUrl?item.coverUrl:(item.openVCoverUrl?item.openVCoverUrl:item.openHCoverUrl)"
+                    mode="aspectFill"
+                  />
+                  <view class="morel-new-title">
+                    <view class="morel-new-titleText">
+                      {{ item.ringName }}
+                    </view>
                   </view>
                 </view>
               </view>
-            </view>
 
-            <view class="icon-box">
-              <view
-                v-if="item.isBuyVideo"
-                class="setting-btn-isBuy"
-              >
-                已设置
-              </view>
-              <view
-                v-else
-                class="setting-btn"
-                :style="{background: `${pageConfig.innerColor}`}"
-                @click="$emit('purchaseVideo',item)"
-              >
-                {{ pageConfig.title }}
+              <view class="icon-box">
+                <view
+                  v-if="item.isBuyVideo"
+                  class="setting-btn-isBuy"
+                >
+                  已设置
+                </view>
+                <view
+                  v-else
+                  class="setting-btn"
+                  :style="{background: `${pageConfig.innerColor}`}"
+                  @click="$emit('purchaseVideo',item)"
+                >
+                  {{ pageConfig.title }}
+                </view>
               </view>
             </view>
-          </view>
+          </template>
         </view>
       </view>
     </waterfall>
@@ -182,6 +184,7 @@ export default {
 }
 .spcl-box {
   padding-top: 40rpx;
+  background-color: pink;
 
   .waterfall-box {
     display: flex;
@@ -315,8 +318,8 @@ export default {
   margin-bottom: 40rpx;
 
   image {
-    width: 100%;
     height: 48rpx;
+    width: 50%;
   }
 }
 </style>

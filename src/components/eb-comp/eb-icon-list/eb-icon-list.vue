@@ -1,6 +1,9 @@
 <template>
   <view>
-    <view class="eb-icon">
+    <view
+      class="eb-icon"
+      :class="{'start':iconList.length ===1,'around':iconList.length>5}"
+    >
       <view
         v-for="(item, index) in iconList"
         :key="index"
@@ -44,8 +47,8 @@ export default {
     this.getIconList();
   },
   methods: {
+    // 获取icon
     getIconList () {
-      // 获取icon
       const { pageName, moduleId } = this.pageConfig;
       AdService
         .getAdList({
@@ -81,6 +84,14 @@ export default {
   padding: 58rpx auto 45rpx auto;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.start {
+  justify-content: flex-start;
+}
+
+.around {
   justify-content: space-around;
 }
 
@@ -99,17 +110,16 @@ export default {
   display: block;
   flex-shrink: 0;
 }
-
 .eb-icon text {
-  font-size: 22rpx;
-  font-family: PingFang-SC-Medium;
-  color: #333333;
   text-align: center;
-  font-weight: 500;
-  margin-top: 18rpx;
   padding: 0rpx 10rpx;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 24rpx;
+  font-family: PingFang SC, PingFang SC-Medium;
+  font-weight: 500;
+  color: #2d2d2d;
+  line-height: 36px;
 }
 </style>
 <style>
