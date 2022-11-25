@@ -4,9 +4,11 @@
       v-for="(pageConfig, pageConfigIndex) in pageConfigList"
       :key="pageConfigIndex"
     >
-      <view v-if="
+      <view
+        v-if="
           pageConfig.moduleFlag === '0001' && pageConfig.configV2.isShow == '1'
-        ">
+        "
+      >
         <eb-background-banner
           :page-config="pageConfig.configV2"
           :comp-top="compTop && pageConfigIndex == 0"
@@ -14,9 +16,11 @@
           @openLoginPopup="openLoginPopup"
         />
       </view>
-      <view v-if="
+      <view
+        v-if="
           pageConfig.moduleFlag === '0021' && pageConfig.configV2.isShow == '1'
-        ">
+        "
+      >
         <eb-advertise
           :page-config="pageConfig.configV2"
           @openLoginPopup="openLoginPopup"
@@ -86,6 +90,7 @@
         </view>
       </eb-default-head>
     </view>
+    <eb-ad-float @click="flaotClick" />
   </view>
 </template>
 
