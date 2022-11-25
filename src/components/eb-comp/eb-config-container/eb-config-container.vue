@@ -198,6 +198,7 @@
         />
       </template>
     </view>
+    <eb-ad-float @click="flaotClick" />
   </view>
 </template>
 
