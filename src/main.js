@@ -4,7 +4,6 @@ import App from "./App";
 import analysis from "./utils/analysis.js";
 import globalData from "./globalData.js";
 import notifyPop from "./components/popup-template-notify/popup-template-notify.vue";
-
 // 引入阿里矢量图标
 import "font/font-css.css";
 import { showToast, showLoading } from "@/utils/common.js";
