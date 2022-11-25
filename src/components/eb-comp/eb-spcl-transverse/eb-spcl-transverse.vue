@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import SpclService from "@/api/spcl/index.js";
 import CxVideoService from "@/api/cx/video.js";
 import videoItem from "./videoItem.vue";
 import { programaAnalysis } from "@/utils/common.js";
@@ -40,11 +41,15 @@ export default {
     pageConfig: {
       required: true,
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     pageLoadStatus: {
       type: Boolean,
       default: false,
+    },
+    activityId: {
+      type: String,
+      default: "",
     },
   },
   data () {
@@ -72,12 +77,13 @@ export default {
       this.moduleId = this.pageConfig.moduleId;
       if (!this.moduleId) return;
       const params = {
-        labelId: this.moduleId,
+        ac: this.activityId,
+        level: this.pageConfig.sort,
       };
-      await CxVideoService.getSceneryListById(params).then(({ data: res }) => {
+      await SpclService.getVideoByActivityId(params).then(({ data: res }) => {
         if (res.code === 200) {
-          if (!res.data.list.length) return;
-          this.wfList = res.data.list;
+          if (!res.data.length) return;
+          this.wfList = res.data;
         }
       });
     },

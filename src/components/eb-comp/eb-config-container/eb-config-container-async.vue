@@ -5,6 +5,7 @@
       <eb-config-container
         :key="pageConfigIndex"
         :comp-bottom="false"
+        :activity-id="activityId"
         :page-config-list="pageConfigList.slice(0, asyncIdx)"
       />
       <template v-if="asyncLoad">
@@ -13,6 +14,7 @@
           ref="EbConfig"
           :comp-top="false"
           :page-config-list="pageConfigList.slice(asyncIdx)"
+          :activity-id="activityId"
         />
       </template>
     </template>
@@ -21,6 +23,7 @@
       ref="EbConfig"
       :key="pageConfigIndex"
       :page-config-list="pageConfigList"
+      :activity-id="activityId"
     />
   </view>
 </template>
@@ -31,6 +34,10 @@ export default {
     pageConfigList: {
       type: Array,
       default: () => [],
+    },
+    activityId: {
+      type: String,
+      default: "",
     },
   },
   data () {

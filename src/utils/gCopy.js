@@ -16,8 +16,8 @@ const attrConvertor = function (bean) {
   }
   switch (defaultDict[bean.attrName]) {
     case "rpx":
-      console.log("bean.attrValue ", bean.attrValue, /^\d+$/.test(bean.attrValue));
       if (/^\d+$/.test(bean.attrValue)) {
+        console.log("需要添加rpx", bean.attrValue, /^\d+$/.test(bean.attrValue));
         return bean.attrValue + "rpx";
       }
       return bean.attrValue;

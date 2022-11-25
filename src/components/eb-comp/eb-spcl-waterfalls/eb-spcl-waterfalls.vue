@@ -1,15 +1,21 @@
 <template>
   <view
     class="more-news"
-    :style="{'background':'#F8F6FF'}"
+    :style="[extraStyle]"
   >
     <!-- 标题 -->
-    <view class="title-wrap">
+    <view
+      v-if="pageConfig.tagIcon"
+      class="title-wrap"
+    >
       <image
         :src="pageConfig.tagIcon"
         class="tag-icon"
       />
-      <text class="title">
+      <text
+        v-if=" pageConfig.title "
+        class="title"
+      >
         {{ pageConfig.title }}
       </text>
     </view>
@@ -50,6 +56,7 @@
                 :is-login="isLogin"
                 :last-flag="index==wfList.length-1"
                 :inner-color="pageConfig.innerColor"
+                :spcl-style="pageConfig.spclStyle"
                 @click.native="programaAnalysis(params,item.imgId)"
                 @shareVideo="shareCountChange"
                 @giveLikes="likeCountChange"
@@ -89,6 +96,7 @@
                 :is-login="isLogin"
                 :inner-color="pageConfig.innerColor"
                 :last-flag="index==wfList.length-1"
+                :spcl-style="pageConfig.spclStyle"
                 @click.native="programaAnalysis(params,item.imgId)"
                 @shareVideo="shareCountChange"
                 @giveLikes="likeCountChange"
@@ -103,7 +111,7 @@
     </waterfall>
     <!-- 加载更多 -->
     <uni-load-more
-      v-if="wfList.length"
+      v-if="compBottom && wfList.length"
       class="loadingicon"
       icon-size="20"
       icon-type="circle"
@@ -117,6 +125,7 @@
 import operateItem from "./operateItem.vue";
 import spclItem from "./spclItem.vue";
 import SpclService from "@/api/spcl/index.js";
+import { copyAttr } from "@/utils/gCopy.js";
 import {
   programaAnalysis,
 } from "@/utils/common.js";
@@ -136,21 +145,32 @@ export default {
         return false;
       },
     },
-
+    activityId: {
+      type: String,
+      default: "",
+    },
+    compBottom: { // 是否是页面最后一个
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
       wfList: [],
       wfParams: {
-        labelId: 3,
         pageNum: 1,
         pageSize: 2,
       },
       total: 0, // 瀑布流总数据
       isLoadStatus: "more",
+      extraStyle: { // 默认样式
+        backgroundColor: "transparent",
+      },
     };
   },
   created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+    if (!this.compBottom) { this.wfParams.pageSize = 10; }; // 非配置化页面的最后一个就固定展示10条数据
     this.getWfList();
   },
   methods: {
@@ -161,6 +181,7 @@ export default {
     },
     // 滚动触底
     onScollBottom () {
+      if (!this.compBottom) return; // 非配置化页面的最后一个就没有上拉加载更多功能
       const curCount = this.wfList.length;
       if (curCount >= this.total) {
         // 没有数据了
@@ -173,20 +194,21 @@ export default {
     // 获取视频列表
     getWfList (flag = true) { // flag，true表示刷新或首次加载,false表示加载更多
       const wfParams = this.wfParams;
-      wfParams.labelId = this.pageConfig.moduleId;
-      SpclService.getSpclListByLabelId(wfParams).then(({
+      wfParams.ac = this.activityId;
+      wfParams.level = this.pageConfig.sort;
+      SpclService.getVideoByActivityIdPage(wfParams).then(({
         data: res,
       }) => {
         if (res.code === 200) {
-          const { records, total } = res.data;
-          if (!total && !records.length) return;
+          const { list, total } = res.data;
+          if (!total && !list.length) return;
           this.total = total;
-          const len = records.length;
+          const len = list.length;
           if (flag) {
-            this.wfList.splice(0, len, ...records);
+            this.wfList.splice(0, len, ...list);
           } else {
             const oldLen = this.wfList.length;
-            this.wfList.splice(oldLen, 0, ...records);
+            this.wfList.splice(oldLen, 0, ...list);
           }
           this.isLoadStatus =
             this.wfList.length >= total ? "nomore" : "more";

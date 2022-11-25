@@ -48,6 +48,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
     compTop: {
       type: Boolean,
       default: false,
@@ -71,10 +75,11 @@ export default {
 
   methods: {
     getBannerByPageName () {
-      const { pageName } = this.pageConfig;
+      const { pageName, moduleId } = this.pageConfig;
       // 获取bannner
       AdService.getAdList({
         target: pageName,
+        moduleId,
       }).then(res => {
         this.cxVideoBanner = res.data.data;
         this.totalSwiper = res.data.data.length;

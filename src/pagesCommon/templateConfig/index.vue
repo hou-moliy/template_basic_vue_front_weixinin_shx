@@ -1,8 +1,9 @@
 <template>
   <view>
     <ebConfigContainerAsync
-      v-if="pageConfig"
+      v-if="activityId&&pageConfig"
       :page-config-list="pageConfig"
+      :activity-id="activityId"
     />
     <!-- 下线通知 -->
     <offline-popup
@@ -23,7 +24,7 @@ export default {
   data () {
     return {
       pageName: "",
-      activityId: "",
+      activityId: "S2022112447b73",
       templateId: "",
       pageConfig: null,
     };

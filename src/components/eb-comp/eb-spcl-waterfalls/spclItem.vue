@@ -273,7 +273,7 @@ export default {
   }
 }
 .morel-new-title {
-  height: 107rpx;
+  height: 96rpx;
   font-size: 28rpx;
   font-family: PingFang SC Bold, PingFang SC Bold-Bold;
   font-weight: 500;
@@ -281,13 +281,16 @@ export default {
   color: #333333;
   line-height: 36rpx;
   overflow: hidden;
-  white-space: normal;
-  -webkit-line-clamp: 2;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   padding: 18rpx 15rpx 27rpx;
   box-sizing: border-box;
+  // 控制两行展示
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .icon-box {
   display: flex;

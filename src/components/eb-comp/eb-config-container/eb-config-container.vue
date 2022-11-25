@@ -9,6 +9,7 @@
         ">
         <eb-background-banner
           :page-config="pageConfig"
+          :activity-id="activityId"
           :comp-top="compTop && pageConfigIndex == 0"
           @buryBannerId="buryBannerId"
           @openLoginPopup="openLoginPopup"
@@ -26,21 +27,23 @@
       <template v-if="pageConfig.pageModule === 'eb-icon-list' && pageConfig.isShow == 1">
         <eb-icon-list
           :page-config="pageConfig"
+          :activity-id="activityId"
           @buryIconListId="buryIconListId"
           @openLoginPopup="openLoginPopup"
           @open="open"
         />
       </template>
-      <eb-ad-roll-transverse
-        v-if="
+      <template v-if="
           pageConfig.pageModule === 'eb-ad-roll-transverse' && pageConfig.isShow == 1
-        "
-        :page-config="pageConfig"
-        :page-load-status="pageLoadStatus"
-        style="width: 100%"
-        @openLoginPopup="openLoginPopup"
-      />
-
+        ">
+        <eb-ad-roll-transverse
+          :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          style="width: 100%"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
       <!-- 风景 -->
       <template>
         <view
@@ -52,6 +55,7 @@
           <eb-spcl-transverse
             :page-config="pageConfig"
             :page-load-status="pageLoadStatus"
+            :activity-id="activityId"
             @openLoginPopup="openLoginPopup"
           />
         </view>
@@ -68,7 +72,9 @@
           <eb-spcl-waterfalls
             ref="EbSpclWaterFalls"
             :page-config="pageConfig"
+            :activity-id="activityId"
             :page-load-status="pageLoadStatus"
+            :comp-bottom="compBottom && pageConfigIndex ==pageConfigList.length "
             @openLoginPopup="openLoginPopup"
           />
         </view>
@@ -164,6 +170,29 @@
         ">
         <eb-spcl-swiper
           :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <template v-if="
+          pageConfig.pageModule === 'eb-spcl-list' && pageConfig.isShow === 1
+        ">
+        <eb-spcl-list
+          :page-config="pageConfig"
+          :activity-id="activityId"
+          :page-load-status="pageLoadStatus"
+          @openLoginPopup="openLoginPopup"
+        />
+      </template>
+
+      <template v-if="
+          pageConfig.pageModule === 'eb-spcl-recommend' && pageConfig.isShow === 1
+        ">
+        <eb-spcl-recommend
+          :page-config="pageConfig"
+          :activity-id="activityId"
           :page-load-status="pageLoadStatus"
           @openLoginPopup="openLoginPopup"
         />
@@ -180,6 +209,10 @@ export default {
     pageConfigList: {
       type: Array,
       default: () => [],
+    },
+    activityId: {
+      type: String,
+      default: "",
     },
     compTop: {
       type: Boolean,
@@ -199,7 +232,6 @@ export default {
   methods: {
     // 滚动到底部监听
     onScollBottom () {
-      console.log(this.$refs, "lll");
       if (this.$refs.EbLiveWaterFalls) {
         this.$refs.EbLiveWaterFalls[0].onScollBottom();
       }

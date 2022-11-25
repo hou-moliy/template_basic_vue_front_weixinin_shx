@@ -1,13 +1,14 @@
 <template>
-  <view class="top-img">
-    <image
-      :src="pageConfig.tagIcon"
-      :style="pageConfig.extraStyle"
-    />
+  <view
+    class="top-img"
+    :style="[extraStyle]"
+  >
+    <image :src="pageConfig.tagIcon" />
   </view>
 </template>
 
 <script>
+import { copyAttr } from "@/utils/gCopy.js";
 export default {
   props: {
     pageConfig: {
@@ -17,24 +18,22 @@ export default {
   },
   data () {
     return {
-      styleStr: "height:1016rpx",
+      extraStyle: {
+        height: "900rpx",
+      },
     };
   },
-  methods: {
-    handleExtraStyle (style) {
-      return JSON.parse(style);
-    },
+  created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .top-img {
-  height: 900rpx;
-
   image {
     width: 100%;
-    // height: 1016rpx;
+    height: 100%;
   }
 }
 </style>

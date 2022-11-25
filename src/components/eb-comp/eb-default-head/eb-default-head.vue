@@ -33,7 +33,7 @@
       </view>
       <view
         class="block-box-button"
-        :style="{borderRadius: extraStyle.borderRaduis}"
+        :style="{borderRadius: extraStyle.borderRadius}"
         @click="navigateToAny"
       >
         {{ pageConfig.moreTitle || "查看更多" }}
@@ -77,7 +77,7 @@ export default {
       extraStyle: {
         position: "left",
         color: "#000",
-        borderRaduis: "26rpx",
+        borderRadius: "26rpx",
       },
       staticImgs: this.$staticImgs,
     };
@@ -92,7 +92,8 @@ export default {
     },
   },
   created () {
-    this.extraStyle = copyAttr(this.extraStyle, this.pageConfig.extraStyle);
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+    console.log(this.extraStyle, "default-head");
   },
   mounted () {
   },

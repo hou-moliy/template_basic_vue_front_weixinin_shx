@@ -9,7 +9,7 @@
       >
         <image :src="item.url" />
         <!-- icon限制n位文字 -->
-        <view><text>{{ item.iconTitle ? item.iconTitle.slice(0, wordLimit) : "" }}</text></view>
+        <view><text>{{ item.title ? item.title.slice(0, wordLimit) : "" }}</text></view>
       </view>
     </view>
   </view>
@@ -27,6 +27,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -42,10 +46,11 @@ export default {
   methods: {
     getIconList () {
       // 获取icon
-      const { pageName } = this.pageConfig;
+      const { pageName, moduleId } = this.pageConfig;
       AdService
         .getAdList({
           target: pageName,
+          moduleId,
         })
         .then((resp) => {
           if (resp.data.code === 200 && resp.data.data.length > 0) {
