@@ -2,11 +2,15 @@ import videoService from "@/api/cx/video.js";
 import spclService from "@/api/spcl/index.js";
 import Vue from "vue";
 import videoTools from "@/utils/video.js";
-import { log } from "../../utils/QS-SharePoster/app";
 const state = {
-  userSpclData: uni.getStorageSync("userSpclData") || {}, // 用户视频彩铃数据
+  userSpclData: uni.getStorageSync("userSpclData") || [], // 用户视频彩铃数据
   searchList: [], // 搜索结果列表
   videoList: [],
+  VedioListTalNum: 0, // 更多视彩列表总数
+  vedioLabelId: -1, // 更多精彩标签id
+  moreVideoList: [],
+  videoListFromCxVideoType: [],
+  myLikeVideoList: [],
 };
 
 const mutations = {
@@ -30,7 +34,7 @@ const mutations = {
     state.userSpclData.settingIdRes = settingIdRes;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
   },
-  // 获取搜索列表数据
+  // 修改搜索列表数据
   getSearchList (state, payload) {
     let tempList = payload;
     tempList = videoTools.videoInfoUpdate(tempList);
@@ -38,13 +42,42 @@ const mutations = {
     console.log(tempList, "tempList");
     state.searchList = tempList;
   },
-  // 存视彩列表
-  SET_VIDO_LIST (state, payload) {
-    const tempList = payload;
-    // tempList = videoTools.videoInfoUpdate(tempList);
+  // 修改视彩列表
+  M_changeVideoList (state, payload) {
+    let tempList = payload;
+    tempList = videoTools.videoInfoUpdate(tempList);
     console.log(tempList, "获取视彩列表");
-    // tempList = JSON.parse(JSON.stringify(tempList));
+    tempList = JSON.parse(JSON.stringify(tempList));
     state.videoList = tempList;
+  },
+  // 修改视彩列表总数
+  getVedioListTalNum (state, payload) {
+    state.VedioListTalNum = payload;
+  },
+  // 修改标签Id
+  getVideoLabelId (state, payload) {
+    state.vedioLabelId = payload;
+  },
+  // 修改更多精彩视频列表
+  getMoreVideoList (state, payload) {
+    let tempList = payload;
+    tempList = videoTools.videoInfoUpdate(tempList);
+    tempList = JSON.parse(JSON.stringify(tempList));
+    state.moreVideoList = tempList;
+  },
+  // 修改视频分类视频列表
+  getVideoListFromCxVideoType (state, payload) {
+    let tempList = payload;
+    tempList = videoTools.videoInfoUpdate(tempList);
+    tempList = JSON.parse(JSON.stringify(tempList));
+    state.videoListFromCxVideoType = tempList;
+  },
+  // 修改我的喜欢视频列表
+  getMyLikeVideoList (state, payload) {
+    let tempList = payload;
+    tempList = videoTools.videoInfoUpdate(tempList);
+    tempList = JSON.parse(JSON.stringify(tempList));
+    state.myLikeVideoList = tempList;
   },
 };
 
@@ -84,10 +117,10 @@ const actions = {
         .getsplykCurrentInfo()
         .then(res => {
           if (res.data.code === 200) {
-            const userSpclData = {};
-            userSpclData.vrbtResponse = response.data?.data ?? []; // 用户的所有铃音
-            userSpclData.vrbtSettingRes = res.data?.data?.contentIds ?? []; // 用户当前播放铃音
-            userSpclData.settingIdRes = res.data?.data?.settingId ?? "";
+            const userSpclData = [{}];
+            userSpclData[0].vrbtResponse = response.data?.data ?? []; // 用户的所有铃音
+            userSpclData[0].vrbtSettingRes = res.data?.data?.contentIds ?? []; // 用户当前播放铃音
+            userSpclData[0].settingIdRes = res.data?.data?.settingId ?? "";
             commit("SET_USER_SPCL_DATA", userSpclData);
           }
           resolve();

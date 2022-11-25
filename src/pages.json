@@ -91,7 +91,16 @@
           "path": "clVideo/clVdieoPlay",
           "style": {
             "navigationBarTitleText": "视频彩铃详情",
-            "enablePullDownRefresh": false
+            "enablePullDownRefresh": false,
+            "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "clVideo/clVideoPreview",
+          "style": {
+            "navigationBarTitleText": "呼叫预览",
+            "enablePullDownRefresh": false,
+            "navigationStyle": "custom"
           }
         }
       ]

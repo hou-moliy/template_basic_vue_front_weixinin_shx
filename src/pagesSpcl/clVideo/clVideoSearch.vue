@@ -6,7 +6,7 @@
     >
       <image
         :src="`${staticImgs}/shxmp/init/leftIcon.png`"
-        style="width:34rpx;height:60rpx"
+        style="width:34rpx;height:44rpx"
         @click="getback"
       />
       <view class="custom-tab-title">
@@ -92,6 +92,7 @@ export default {
 <style lang="scss">
 .custom-tab{
   display: flex;
+  align-items: center;
   padding: 44rpx 4% 0 4%;
   .custom-tab-title{
     flex: 1;

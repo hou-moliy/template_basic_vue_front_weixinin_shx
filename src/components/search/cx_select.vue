@@ -252,9 +252,9 @@ export default {
               return uni.$emit("setSearchList", this.selectList);
             }
             // 分享和喜欢数据格式化
-            if (uni.getStorageSync("Authorization") && uni.getStorageSync("userData")[0] && uni.getStorageSync("userData")[
+            if (uni.getStorageSync("Authorization") && uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[
               0].vrbtResponse) {
-              const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+              const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
               for (let i = 0; i < tempList.length; i++) {
                 const isBuy = isBuyList.filter(item => tempList[i].ringId === item.ringId);
                 if (isBuy[0]) {
@@ -284,9 +284,9 @@ export default {
               this.selectList = tempList;
               return uni.$emit("setSearchList", this.selectList);
             }
-            if (uni.getStorageSync("Authorization") && uni.getStorageSync("userData")[0] && uni.getStorageSync("userData")[
+            if (uni.getStorageSync("Authorization") && uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[
               0].crbtResponse) {
-              const isBuyList = uni.getStorageSync("userData")[0].crbtResponse;
+              const isBuyList = uni.getStorageSync("userSpclData")[0].crbtResponse;
               for (let i = 0; i < tempList.length; i++) {
                 const isBuy = isBuyList.filter(item => tempList[i].ringId === item.toneID);
                 if (isBuy[0]) {

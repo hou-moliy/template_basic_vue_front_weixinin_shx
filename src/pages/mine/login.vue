@@ -426,7 +426,7 @@ export default {
       // 查询用户是否开启ai换铃
       // this.checkPortalUser()
       // 返回上一级
-      uni.navigateBack({ delta: 1 });
+      // uni.navigateBack({ delta: 1 });
       uni.setStorageSync("loadClData", true);
     },
 
@@ -482,14 +482,16 @@ export default {
           // this.$analysis.dispatch('dl_vx_dlcg')
           uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
           uni.setStorageSync("loadClData", true);
-          uni.setStorageSync("userSpclData", {
-            crbtResponse: [],
-            vrbtResponse: [],
-            crbtSettingRes: [],
-            vrbtSettingRes: [],
-            seetingIdRes: "",
-            crbtContentId: "",
-          });
+          uni.setStorageSync("userSpclData", [
+            {
+              crbtResponse: [],
+              vrbtResponse: [],
+              crbtSettingRes: [],
+              vrbtSettingRes: [],
+              seetingIdRes: "",
+              crbtContentId: "",
+            },
+          ]);
           // 渠道数据统计
           // if (uni.getStorageSync('channelSource')) {
           //   analysisService

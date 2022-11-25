@@ -78,7 +78,7 @@
               :src="`${staticImgs}/shxmp/init/video-dzed.png`"
               :data-videoId="videoDetail.ringId"
               class="other-img img"
-              @click="changeLikeStatus($event, 0)"
+              @click="changeLikeStatus( 0)"
             />
             <view class="right-text">
               {{
@@ -198,7 +198,7 @@
     </view>
     <!-- 滑动提示 -->
     <view
-      v-if=" isSlide && isFirstPlay && step === 3"
+      v-if=" isFirstPlay && step === 3"
       class="slide-image"
       @click="isFirstPlay = false"
     >
@@ -214,14 +214,9 @@ export default {
     clVideo,
   },
   props: {
-    videoDetail: { // 视频彩铃详情
-      type: Object,
-      require: true,
-      default: () => { },
-    },
-    isSlide: { // 是否展示滑动提示，默认展示
-      type: Boolean,
-      default: true,
+    index: {
+      type: Number,
+      default: 0,
     },
   },
   data () {
@@ -240,7 +235,12 @@ export default {
       }, // 是否展示设置按钮，默认展示
       isFirstPlay: false, // 是否第一次
       step: 1, // 新手引导步骤
+      isNewIphone: false,
+      videoDetail: null,
     };
+  },
+  created () {
+    this.videoDetail = this.$store.state.spcl.videoList[this.index];
   },
   mounted () {
     this.initStyle();
@@ -256,7 +256,7 @@ export default {
           this.videoHeight = `${res.windowHeight}px`;
           this.videoWidth = `${res.windowWidth}px`;
           // 是否展示引导弹窗
-          this.isFirstPlay = !!uni.getStorageSync("userPlayVideo");
+          this.isFirstPlay = !uni.getStorageSync("userPlayVideo");
         });
       });
     },
@@ -293,7 +293,7 @@ export default {
       if (uni.getStorageSync("Authorization")) {
         // 进入预览页面
         uni.navigateTo({
-          url: `/pages/cxVideo/cxVideoPreview?videoId=${ringId}`,
+          url: `/pagesSpcl/clVideo/clVideoPreview?videoId=${ringId}`,
         });
       } else {
         // 提示登录
@@ -309,6 +309,7 @@ export default {
     },
     // 点赞 OR 取消点赞
     changeLikeStatus (opType) {
+      // 提示登录
       const data = {
         ringId: this.videoDetail.ringId,
         target: "dz",
@@ -316,11 +317,72 @@ export default {
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
         if (res.code === 200) {
-          opType === 1 ? this.$toast("点赞成功") : this.$toast("取消点赞成功");
+          // opType === 1 ? this.$toast("点赞成功") : this.$toast("取消点赞成功");
+          if (opType === 1) {
+            this.$toast("点赞成功");
+            // 更新我的喜欢列表
+            uni.$emit("changeMyLikeList", {
+              dz: true,
+              videoMsg: this.videoDetail,
+            });
+            // 将当前数据改了
+            this.videoDetail.extraInfo.like = true;
+            this.videoDetail.extraInfo.likeCount += 1;
+            // 更新仓库里的数据
+            const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
+            const list = this.$store.state.spcl.videoList;
+            list[index] = this.videoDetail;
+            this.$store.commit("spcl/M_changeVideoList", list);
+            // 更新更多精彩数据
+            this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
+            // 更新视彩分类视频列表
+            this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType");
+            // 更新搜索数据
+            this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList");
+          } else {
+            this.$toast("取消点赞成功");
+            // 修改当前数据 更新仓库
+            this.videoDetail.extraInfo.like = false;
+            this.videoDetail.extraInfo.likeCount -= 1;
+            const videoIndex = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
+            const list = this.$store.state.spcl.videoList;
+            list[videoIndex] = this.videoDetail;
+            this.$store.commit("spcl/M_changeVideoList", list);
+            // 更新我的喜欢列表
+            const myLikeVideoListTemp = this.$store.state.spcl.myLikeVideoList;
+            const myLikeIndex = myLikeVideoListTemp.indexOf(this.videoDetail.ringId);
+            if (myLikeIndex >= 0) {
+              myLikeVideoListTemp[myLikeIndex] = "";
+              this.$store.commit("spcl/getMyLikeVideoList", myLikeVideoListTemp);
+              uni.$emit("changeMyLikeList", {
+                dz: false,
+                videoid: this.videoDetail.ringId,
+              });
+            };
+            // 更新更多精彩数据
+            this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
+            // 更新视彩分类视频列表
+            this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType");
+            // 更新搜索数据
+            this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList");
+          }
         } else {
           this.$toast(res.message);
         }
       });
+    },
+    // 更新vux关于like
+    changeStoreLike (typeVideoList, storeMutations) {
+      const currentVideoId = this.videoDetail.ringId;
+      const videoList = typeVideoList;
+      const currentIndex = videoList.findIndex(
+        (item) => currentVideoId === item.ringId,
+      );
+      if (currentIndex > -1) {
+        videoList[currentIndex].extraInfo.likeCount += 1;
+        videoList[currentIndex].extraInfo.like = true;
+        this.$store.commit(storeMutations, videoList);
+      }
     },
     // 分享到微信或者朋友圈
     shareEvent (ringId) {
