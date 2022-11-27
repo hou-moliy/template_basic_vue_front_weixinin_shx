@@ -19,17 +19,11 @@
       </view>
     </view>
     <!-- 有数据的时候展示 -->
-    <view
-      v-if="!loading && videoList.length > 0"
-      class="cur-ring-m"
-    >
-      <view
-        v-if="checkShow === true"
-        class="cur-ring-m-t"
-      >
+    <view v-if="!loading && videoList.length > 0" class="cur-ring-m">
+      <view v-if="checkShow === true" class="cur-ring-m-t">
         <checkbox-group @change="changeVideo">
           <checkbox
-            style="transform: scale(0.7);"
+            style="transform: scale(0.7)"
             :checked="allFlag.checked"
             :value="allFlag.value"
           />
@@ -39,20 +33,12 @@
             }})
           </text>
         </checkbox-group>
-        <view
-          class="mang-txt"
-          @click="delDone"
-        >
-          取消选择
-        </view>
+        <view class="mang-txt" @click="delDone">取消选择</view>
       </view>
-      <view
-        v-else
-        class="cur-ring-m-t"
-      >
+      <view v-else class="cur-ring-m-t">
         <view class="count-ring">
           共
-          <text style="color: #6B61F5">
+          <text style="color: #6b61f5">
             {{ videoList.length }}
           </text>
           首
@@ -65,10 +51,7 @@
           批量管理
         </view>
       </view>
-      <view
-        class="cur-ring-m-f"
-        :class="checkShow ? 'isDelete' : ''"
-      >
+      <view class="cur-ring-m-f" :class="checkShow ? 'isDelete' : ''">
         <label
           v-for="(videoItem, key) in videoList"
           :key="key"
@@ -80,15 +63,16 @@
             :class="videoItem.checked ? 'list-checked' : ''"
             @click="checkboxChange(videoItem.ringId, key)"
           >
-            <text
-              v-if="videoItem.checked"
-              class="iconfont icon-xuanzhong"
-            />
+            <text v-if="videoItem.checked" class="iconfont icon-xuanzhong" />
           </view>
           <image
             class="video-item-l"
             mode="aspectFit"
-            :src=" videoItem.coverUrl || videoItem.openVCoverUrl || videoItem.openHCoverUrl "
+            :src="
+              videoItem.coverUrl ||
+              videoItem.openVCoverUrl ||
+              videoItem.openHCoverUrl
+            "
             @click.stop="seeDetail(videoItem)"
           />
           <view
@@ -120,23 +104,18 @@
       <view
         v-show="checkShow"
         class="del-video-item"
-        :class="{'del-active':delActive}"
+        :class="{ 'del-active': delActive }"
         @click="delVideoItems"
       >
         <image
           class="del-video-item-image"
           :src="`${staticImgs}/shxmp/init/del-icon.png`"
         />
-        <view class="del-video-item-tips">
-          立即删除
-        </view>
+        <view class="del-video-item-tips">立即删除</view>
       </view>
     </view>
     <!-- 空白展示 -->
-    <NoData
-      v-if="!loading && !videoList.length"
-      :type="navFlag"
-    />
+    <NoData v-if="!loading && !videoList.length" :type="navFlag" />
     <!-- 分享，点赞，设置的操作面板 -->
     <clSharePanel
       :panel-show="panelShow"
@@ -265,17 +244,17 @@ export default {
     },
     // 更新页面展示数据
     updateVideoList (flag) {
-      let idlevideoList = [];
+      let idleVideoList = [];
       if (flag === "updateAvailable") { // 真删除、闲置刷新
         if (this.allVideoList) { // 用户的所有铃音
-          idlevideoList = this.allVideoList.filter(item => {
+          idleVideoList = this.allVideoList.filter(item => {
             return (
               this.videoSettingList.findIndex(v => v.ringId === item.ringId) ===
               -1 && item.hidden !== 1
             );
           });
         }
-        this.videoList = idlevideoList;
+        this.videoList = idleVideoList;
       } else {
         // 刷新当前播放
         this.videoList = this.videoSettingList;
@@ -401,16 +380,6 @@ export default {
         } else {
           this.$toast(res.message);
         }
-      });
-    },
-    // 跳转到对应h5页面
-    toH5 () {
-      uni.setStorageSync(
-        "ckH5Data",
-        "https://y.migu.cn/app/v3/zt/2019/ring-library/index.html",
-      );
-      uni.navigateTo({
-        url: "/pagesCommon/webView/ckWebview",
       });
     },
     // 取消勾选、重置选择

@@ -12,7 +12,7 @@ const mutations = {
 
 const actions = {
   // 获取公共配置的提示性弹窗，如登录、设置等
-  getCommonWinow ({ commit, state }) {
+  getCommonWindow ({ commit, state }) {
     if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
       windowService.getWindowAll({ windowScene: "common" }).then(res => {
         if (res.data.code === 200) {
@@ -27,7 +27,8 @@ const actions = {
     }
   },
   // 获取下线弹窗
-  getOfflineWinow ({ commit, dispatch }, state) {
+  getOfflineWindow ({ commit, dispatch }, state) {
+    console.log("1");
     if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
       windowService.getWindowAll({ windowCode: "pageDownDialog" })
         .then((res) => {

@@ -3,7 +3,7 @@
     class="floatImage"
     :src="`${staticImgs}/lnmp/lottery_float.png`"
     :style="[position.topLeft]"
-    @click="flaotClick"
+    @click="floatClick"
   />
 </template>
 
@@ -36,29 +36,18 @@ export default {
       },
     };
   },
-  onShow () {
-
-  },
+  created () { },
   methods: {
-    // 返回任务
-    backTotask () {
-      this.$emit("flaotClick");
+    floatClick () {
+      this.$emit("floatClick");
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-// .float {
-// position: fixed;
-// // top: 285rpx;
-// bottom: 30rpx;
-// right: 20rpx;
-// overflow: hidden;
-// z-index: 999;
 .floatImage {
   position: fixed;
-  // top: 285rpx;
   bottom: 30rpx;
   right: 20rpx;
   overflow: hidden;
