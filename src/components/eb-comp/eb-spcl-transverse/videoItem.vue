@@ -4,18 +4,15 @@
     class="video-item-wrap"
     :data-url="
       '/pages/cxVideo/cxVideoPlay?id=' +
-        item.ringId +
-        '&playStatus=1' +
-        '&moduleId=' +
-        moduleId
+      item.ringId +
+      '&playStatus=1' +
+      '&moduleId=' +
+      moduleId
     "
     :data-topic="'moreVideo'"
     @click="goToPlayVideo($event, videoList, item)"
   >
-    <view
-      class="video-item-info"
-      :style="{ 'border-radius': `${radius}rpx` }"
-    >
+    <view class="video-item-info" :style="{ 'border-radius': `${radius}rpx` }">
       <!-- <image mode="" class="play-btn" :src="`${staticImgs}/lnmp/ln-find/find-play-btn.png`"></image> -->
       <image
         class="video-item-poster"
@@ -134,21 +131,9 @@ export default {
     },
     // 详情页播放视频
     goToPlayVideo (e, videoList, item) {
-      this.$store.commit("getVideoList", videoList);
-      if (e.currentTarget.dataset.topic == "moreVideo") {
-        uni.setStorageSync("isPlayFromIndex", false);
-        this.$store.commit(
-          "getVedioListTalNum",
-          uni.getStorageSync("vedioListTalNum"),
-        );
-        this.$store.commit("getVideoLabelId", uni.getStorageSync("moreLableId"));
-      } else {
-        uni.setStorageSync("isPlayFromIndex", true);
-      }
-      // 跳转的url页面
-      const { url } = e.currentTarget.dataset;
+      this.$store.commit("spcl/M_changeVideoList", videoList);
       uni.navigateTo({
-        url,
+        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${item.ringId}`,
       });
     },
   },

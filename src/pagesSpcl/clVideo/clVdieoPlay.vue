@@ -1,8 +1,5 @@
 <template>
-  <view
-    class="page"
-    :style="{ height: height }"
-  >
+  <view class="page" :style="{ height: height }">
     <!-- 自定义导航栏 -->
     <view class="navBarBox">
       <view
@@ -12,21 +9,13 @@
           height: navHeight + 'px',
         }"
       >
-        <view
-          v-if="!shareStatus"
-          class="icon"
-          @click="goBack"
-        >
+        <view v-if="!shareStatus" class="icon" @click="goBack">
           <image
             class="back"
             :src="`${staticImgs}/shxmp/init/custom_nav_back_btn.png`"
           />
         </view>
-        <view
-          v-else
-          class="icon"
-          @click="goHome"
-        >
+        <view v-else class="icon" @click="goHome">
           <image
             class="home"
             :src="`${staticImgs}/shxmp/init/custom_nav_home_btn.png`"
@@ -39,16 +28,13 @@
       :vertical="true"
       :current="index"
       @change="changeCurrent"
-      @animationfinish="animationFinish"
     >
       <swiper-item
-        v-for="(idx) in videoList"
-        :key="idx"
+        v-for="item in videoList"
+        :key="item.ringId"
         class="swiper-item"
       >
-        <full-screen-video
-          :index="idx"
-        />
+        <full-screen-video :item="item" />
       </swiper-item>
     </swiper>
   </view>
@@ -64,7 +50,7 @@ export default {
     return {
       staticImgs: this.$staticImgs,
       height: "",
-      index: 0,
+      index: 0, // 当前展示的video的index
       playCount: 2, // 剩余多少视频加载视频列表
       videoList: [],
       pageNum: 1,
@@ -211,11 +197,7 @@ export default {
     }
     return {
       title: `"${this.videoList[this.index].ringName}"太赞了！老铁看一下！`,
-      path: `/pages/cxVideo/cxVideoPlay?share=true&id=${
-        this.videoList[this.index].ringId
-      }&autoLoadData=${this.shareObj.autoLoadData}&actions=${
-        this.shareObj.actions
-      }`,
+      path: `/pages/cxVideo/cxVideoPlay?share=true&id=${this.videoList[this.index].ringId}&autoLoadData=${this.shareObj.autoLoadData}&actions=${this.shareObj.actions}`,
       imageUrl: `${this.staticImgs}/lnmp/share_sp.png`,
     };
   },
@@ -307,7 +289,6 @@ export default {
       console.log("onshow");
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
-      this.$store.commit("spcl/M_changeVideoList", this.$store.state.videoList);
       this.videoList = this.$store.state.spcl.videoList;
       this.index = this.videoList.findIndex(
         (item) => item.ringId === this.onLoadId,
@@ -346,11 +327,8 @@ export default {
           mainId: this.moduleId ? this.moduleId : this.notModulId,
           pageName: this.playStatus,
         };
-        videoService.getSpclUserBehavior(data).then((res) => {});
+        videoService.getSpclUserBehavior(data).then((res) => { });
       }
-    },
-    animationFinish (e) {
-      this.changeCurrent(e);
     },
     getNewVedioList () {
       if (this.isRequest) {
@@ -487,7 +465,7 @@ export default {
           mainId: this.moduleId ? this.moduleId : this.notModulId,
           pageName: this.playStatus,
         };
-        videoService.getSpclUserBehavior(data).then((res) => {});
+        videoService.getSpclUserBehavior(data).then((res) => { });
       }
       const isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
       const isFromRecentPlay = uni.getStorageSync("isFromRecentPlay");
@@ -599,5 +577,4 @@ export default {
   flex-direction: column;
   flex: 1;
 }
-
 </style>

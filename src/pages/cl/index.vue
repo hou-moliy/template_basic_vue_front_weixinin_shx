@@ -88,7 +88,6 @@
     </view>
     <!-- 自定义TabBar -->
     <custom-tabbar :tab-bar="tabBar" :mid-button="true" />
-    <button @click="gotLogin">判断是否登录</button>
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
     <!-- 下线通知 -->
@@ -103,7 +102,6 @@
 import TemplateService from "@/api/template/index";
 import Util from "@/utils/tools.js";
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
-import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 
 export default {
   name: "ClIndex",
@@ -180,6 +178,7 @@ export default {
   },
   onShow () {
     this.getTabList();
+    this.handleFresh();
   },
   onShareAppMessage (res) {
     if (res.from === "button") {
@@ -210,9 +209,10 @@ export default {
     }
   },
   methods: {
-    // 测试登录事件派发
-    gotLogin () {
-      navigateToAnyCheck(1, 2);
+    handleFresh () {
+      if (this.$refs.EbConfig) {
+        this.$refs.EbConfig[this.swiperTab].handleFresh();
+      }
     },
     // 跨页面通信监听
     dispatchPageEvent () {

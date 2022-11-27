@@ -62,6 +62,9 @@ export default {
     onScrollBottom () {
       this.$refs.EbConfig.onScrollBottom();
     },
+    handleFresh () {
+      this.$refs.EbConfig.handleFresh();
+    },
   },
 };
 </script>

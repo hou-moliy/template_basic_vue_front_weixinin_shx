@@ -205,7 +205,7 @@ export default {
       };
       this.delCls = [];
       this.videoList = [];
-      const userSpclDataWithTimeFixed = JSON.parse(uni.getStorageSync("userSpclData"));
+      const userSpclDataWithTimeFixed = this.$store.state.spcl.userSpclData;
       const allVideoListWithTimeFixed = userSpclDataWithTimeFixed?.vrbtResponse ?? [];
       allVideoListWithTimeFixed.map(item => {
         if (item.overdueTime) {
@@ -215,7 +215,7 @@ export default {
         }
       });
       userSpclDataWithTimeFixed.vrbtResponse = allVideoListWithTimeFixed;
-      uni.setStorageSync("userSpclData", userSpclDataWithTimeFixed);
+      uni.setStorageSync("userSpclData", [userSpclDataWithTimeFixed]);
       if (userSpclDataWithTimeFixed) {
         this.$loading("加载中...");
         this.getVideoListById();
@@ -532,8 +532,9 @@ export default {
     },
     // 预览,跳转视频彩铃播放页面
     seeDetail ({ ringId }) {
+      this.$store.commit("spcl/M_changeVideoList", this.videoList);
       uni.navigateTo({
-        url: `/pages/cxVideo/cxVideoPlay?id=${ringId}`,
+        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${ringId}`,
       });
     },
   },

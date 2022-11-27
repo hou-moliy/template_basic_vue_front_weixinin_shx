@@ -263,7 +263,9 @@ export default {
   data () {
     return {};
   },
-  created () { },
+  created () {
+    console.log("设置");
+  },
   mounted () {
   },
   methods: {
@@ -279,9 +281,25 @@ export default {
         this.$refs.EbSpclWaterFalls[0].onScrollBottom();
       }
     },
+    handleFresh () {
+      if (this.$refs.EbSpclWaterFalls) {
+        this.$refs.EbSpclWaterFalls[0].handleFresh();
+      }
+    },
     // 子组件打开登录弹窗
     openLoginPopup () {
       this.$showLoginPop(this);
+    },
+    // banner埋点
+    buryBannerId (id) {
+      // this.$analysis.dispatch(this.pageName+"_banner", id)
+    },
+    // iconList埋点
+    buryIconListId (id) {
+      //  this.$analysis.dispatch(this.pageName+"_icon", id)
+    },
+    purchaseVideo (e) {
+      console.log("设为视频彩铃");
     },
   },
 };
