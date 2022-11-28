@@ -8,3 +8,6 @@ const globalData = {
 };
 console.log("当前环境：globalData", process.env);
 export default globalData;
+
+// http://10.4.6.148:9501/portal
+// http://10.4.6.148:9502/weixin

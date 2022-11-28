@@ -18,7 +18,8 @@
     {
       "path": "pages/mine/index",
       "style": {
-        "navigationBarTitleText": "我的"
+        "navigationBarTitleText": "我的",
+        "navigationStyle": "custom"
       }
     },
     {
@@ -88,7 +89,7 @@
           }
         },
         {
-          "path": "clVideo/clVdieoPlay",
+          "path": "clVideo/clVideoPlay",
           "style": {
             "navigationBarTitleText": "视频彩铃详情",
             "enablePullDownRefresh": false,
@@ -101,6 +102,13 @@
             "navigationBarTitleText": "呼叫预览",
             "enablePullDownRefresh": false,
             "navigationStyle": "custom"
+          }
+        },
+        {
+          "path": "clVideo/clVideoType",
+          "style": {
+            "navigationBarTitleText": "视频分类",
+            "enablePullDownRefresh": false
           }
         }
       ]

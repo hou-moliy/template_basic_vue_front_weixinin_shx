@@ -194,12 +194,14 @@ export default {
     }
 
     if (this.shareFlag) {
+      console.log(1);
       const flag = await this.getVideoDetail();
       that.shareFlag = false;
       if (flag) {
         that.init();
       }
     } else {
+      console.log(2);
       this.init();
     }
   },
@@ -305,9 +307,10 @@ export default {
     },
     init () {
       console.log("onshow");
+
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
-      this.$store.commit("spcl/M_changeVideoList", this.$store.state.videoList);
+      this.$store.commit("spcl/M_changeVideoList", this.$store.state.spcl.videoList);
       this.videoList = this.$store.state.spcl.videoList;
       this.index = this.videoList.findIndex(
         (item) => item.ringId === this.onLoadId,
