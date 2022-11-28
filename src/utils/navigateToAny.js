@@ -1,12 +1,12 @@
 import SsoService from "@/api/sso";
 import store from "../store";
-
-const navigateToAny = async (item, targetId, callback = () => { }) => {
+// 跳转-需要统一验证、登录、升级弹窗的
+const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
   uni.showLoading({
     title: "",
     mask: true,
   });
-  store.dispatch("offlinePopup/getCustomorderList", targetId).then(() => {
+  await store.dispatch("offlinePopup/getCustomorderList", targetId).then(() => {
     // 配置了策略
     if (store.state.offlinePopup.loginShow) {
       return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
@@ -14,17 +14,22 @@ const navigateToAny = async (item, targetId, callback = () => { }) => {
     if (store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
       return;
     }
-    handleNavigateTo(item, callback);
+    navigateToAny(item, callback);
   }).catch(() => {
     // 未配置策略
     if (!uni.getStorageSync("Authorization")) {
       return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
     }
-    handleNavigateTo(item, callback);
+    navigateToAny(item, callback);
   });
   uni.hideLoading();
 };
-const handleNavigateTo = (item, callback) => {
+// 跳转-不需要统一验证、登录、升级弹窗的
+const navigateToAny = (item, callback) => {
+  uni.showLoading({
+    title: "",
+    mask: true,
+  });
   try {
     switch (item.eventType) {
       case 1:
@@ -162,4 +167,5 @@ const freeLoginFun = (eventUrl) => {
 
 module.exports = {
   navigateToAny,
+  navigateToAnyCheck,
 };

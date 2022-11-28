@@ -3,7 +3,7 @@ import spclService from "@/api/spcl/index.js";
 import Vue from "vue";
 import videoTools from "@/utils/video.js";
 const state = {
-  userSpclData: uni.getStorageSync("userSpclData") || [], // 用户视频彩铃数据
+  userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据
   searchList: [], // 搜索结果列表
   videoList: [],
   VedioListTalNum: 0, // 更多视彩列表总数
@@ -11,13 +11,24 @@ const state = {
   moreVideoList: [],
   videoListFromCxVideoType: [],
   myLikeVideoList: [],
+  isFirstPlay: uni.getStorageSync("isFirstPlay"), // 是否第一次,控制引导弹窗的展示
+  step: 1, // 新手引导步骤
 };
 
 const mutations = {
+  // 设置是否展示引导弹窗
+  SET_FIRST_PLAY (state, isFirstPlay) {
+    state.isFirstPlay = isFirstPlay;
+    uni.setStorageSync("isFirstPlay", isFirstPlay);
+  },
+  // 设置新手引导步骤
+  SET_STEP (state, step) {
+    state.step = step;
+  },
   // 设置用户的视频彩铃数据
   SET_USER_SPCL_DATA (state, userSpclData) {
     state.userSpclData = userSpclData;
-    uni.setStorageSync("userSpclData", JSON.stringify(userSpclData));
+    uni.setStorageSync("userSpclData", JSON.stringify([userSpclData]));
   },
   // 设置用户当前播放的数据 vrbtSettingRes
   SET_USER_SPCL_SETTINGS (state, vrbtSettingRes) {
@@ -117,11 +128,11 @@ const actions = {
         .getsplykCurrentInfo()
         .then(res => {
           if (res.data.code === 200) {
-            const userSpclData = [{}];
-            userSpclData[0].vrbtResponse = response.data?.data ?? []; // 用户的所有铃音
-            userSpclData[0].vrbtSettingRes = res.data?.data?.contentIds ?? []; // 用户当前播放铃音
-            userSpclData[0].settingIdRes = res.data?.data?.settingId ?? "";
-            commit("SET_USER_SPCL_DATA", userSpclData);
+            const spclData = {};
+            spclData.vrbtResponse = response.data?.data ?? []; // 用户的所有铃音
+            spclData.vrbtSettingRes = res.data?.data?.contentIds ?? []; // 用户当前播放铃音
+            spclData.settingIdRes = res.data?.data?.settingId ?? "";
+            commit("SET_USER_SPCL_DATA", spclData);
           }
           resolve();
         })

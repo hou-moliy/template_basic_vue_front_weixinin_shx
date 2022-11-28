@@ -1,5 +1,5 @@
 <template>
-  <view :class="['image-item',!lastFlag?'margin-style':'']">
+  <view :class="['image-item', !lastFlag ? 'margin-style' : '']">
     <view class="video-box-new more-new-item-column">
       <!-- 封面 -->
       <view @click.stop="goToPlayVideo(item)">
@@ -11,10 +11,7 @@
               :src="`${staticImgs}/shxmp/init/video-play-icon.png`"
             />
             <!-- 只展示观看人数，样式2 -->
-            <view
-              v-if="spclStyle === 2"
-              class="icon-box-two"
-            >
+            <view v-if="spclStyle === 2" class="icon-box-two">
               <image
                 :src="`${staticImgs}/shxmp/init/share-icon.png`"
                 class="favor-img"
@@ -24,14 +21,8 @@
               </text>
             </view>
             <!-- 展示转发和点赞，样式3 -->
-            <view
-              v-if="spclStyle === 3"
-              class="icon-box-three"
-            >
-              <view
-                class="icon-item share-item"
-                @click.stop="shareVideo()"
-              >
+            <view v-if="spclStyle === 3" class="icon-box-three">
+              <view class="icon-item share-item" @click.stop="shareVideo()">
                 <image
                   :src="`${staticImgs}/shxmp/init/share-icon-white.png`"
                   class="share-icon icon"
@@ -68,7 +59,7 @@
             <!-- 封面图片 -->
             <image
               class="new-img"
-              :src="item.coverUrl ||item.openVCoverUrl ||item.openHCoverUrl"
+              :src="item.coverUrl || item.openVCoverUrl || item.openHCoverUrl"
               mode="aspectFill"
             />
             <!-- 蒙层 -->
@@ -80,16 +71,10 @@
           {{ item.ringName }}
         </view>
         <!-- 操作栏样式1 -->
-        <view
-          v-if="spclStyle === 1"
-          class="icon-box"
-        >
+        <view v-if="spclStyle === 1" class="icon-box">
           <view class="icon-box-in">
             <!-- 分享 -->
-            <view
-              class="icon-item share-item"
-              @click.stop="shareVideo()"
-            >
+            <view class="icon-item share-item" @click.stop="shareVideo()">
               <image
                 :src="`${staticImgs}/shxmp/init/share-icon.png`"
                 class="share-icon icon"
@@ -122,18 +107,13 @@
             </view>
           </view>
           <!-- 设置 -->
-          <view
-            v-if="item.isBuyVideo"
-            class="setting-btn-isBuy"
-          >
-            已设置
-          </view>
+          <view v-if="item.isBuyVideo" class="setting-btn-isBuy">已设置</view>
           <!-- 已设置 -->
           <view
             v-else
             class="setting-btn"
-            :style="{background:innerColor}"
-            @click.stop="purchaseVideo(item)"
+            :style="{ background: innerColor }"
+            @click.stop="$emit('purchaseVideo', item)"
           >
             设置
           </view>
@@ -196,14 +176,6 @@ export default {
     shareVideo () {
       if (uni.getStorageSync("Authorization")) {
         this.$emit("shareVideo", this.item);
-      } else {
-        this.$emit("openLoginPopup");
-      }
-    },
-    // 设置视频彩铃
-    purchaseVideo (item) {
-      if (uni.getStorageSync("Authorization")) {
-        this.$emit("purchaseVideo", item);
       } else {
         this.$emit("openLoginPopup");
       }

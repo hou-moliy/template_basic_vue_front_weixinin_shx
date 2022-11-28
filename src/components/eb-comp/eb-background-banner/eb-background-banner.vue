@@ -16,10 +16,7 @@
             style="border-radius: 20rpx"
             @click="navigateToH5(item)"
           >
-            <image
-              class="ad-banner-image"
-              :src="item.url"
-            />
+            <image class="ad-banner-image" :src="item.url" />
             <!-- 只有当是头部组件时才展示 -->
             <image
               v-if="compTop && item.headerBgUrl"
@@ -28,10 +25,7 @@
             />
           </swiper-item>
         </swiper>
-        <view
-          v-if="totalSwiper"
-          class="indicator"
-        >
+        <view v-if="totalSwiper" class="indicator">
           {{ currentSwiper + "/" + totalSwiper }}
         </view>
       </view>
@@ -41,7 +35,7 @@
 
 <script>
 import AdService from "@/api/ad/index.js";
-import { navigateToAny } from "@/utils/navigateToAny.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
@@ -76,38 +70,20 @@ export default {
   methods: {
     getBannerByPageName () {
       const { pageName, moduleId } = this.pageConfig;
-      // 获取bannner
+      // 获取banner
       AdService.getAdList({
         target: pageName,
         moduleId,
       }).then(res => {
         this.cxVideoBanner = res.data.data;
         this.totalSwiper = res.data.data.length;
-        // this.$emit('changeBanner', this.cxVideoBanner[0])
       });
     },
-
     changeBanner (event) {
       this.currentSwiper = event.detail.current + 1;
-      // this.$emit('changeBanner', this.cxVideoBanner[event.detail.current])
     },
     navigateToH5 (event) {
-      // this.$store.dispatch("offlinePopup/getCustomorderList", `swiper_${event.id}`).then(() => {
-      //   // 配置了策略
-      //   if (this.$store.state.offlinePopup.loginShow) {
-      //     return this.$emit("openLoginPopup");
-      //   }
-      //   if (this.$store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
-      //     return;
-      //   }
-      //   navigateToAny(event);
-      // }).catch(() => {
-      //   // 未配置策略
-      //   if (!uni.getStorageSync("Authorization")) {
-      //     return this.$emit("openLoginPopup");
-      //   }
-      navigateToAny(event, `swiper_${event.id}`);
-      // });
+      navigateToAnyCheck(event, `swiper_${event.id}`);
     },
   },
 };

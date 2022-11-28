@@ -36,12 +36,16 @@ const mutations = {
 
 const actions = {
   // 查询是否下线
-  getCustomorderList ({ commit, dispatch }, payload) {
+  async getCustomorderList ({ commit, dispatch }, payload) {
     // 初始化弹窗数据
     commit("SET_OFFLINEFLAG", false);
     commit("SET_OFFLINEPOPUPSHOW", false);
     commit("SET_LOGINSHOW", false);
+
+    await dispatch("window/getOfflineWindow", null, { root: true });
+
     return new Promise((resolve, reject) => {
+      console.log("2");
       windowService.getPageStatus({ targetId: payload })
         .then(res => {
           if (res.data.code === 200) {
@@ -67,8 +71,9 @@ const actions = {
             commit("SET_OFFLINEFLAG", false);
             commit("SET_OFFLINEPOPUPSHOW", false);
             commit("SET_LOGINSHOW", false);
+            reject(res.data);
           }
-        });
+        }).catch(err => reject(err));
     });
   },
 };

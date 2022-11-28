@@ -5,12 +5,12 @@
     <view class="navBarBox">
       <view
         class="navBar"
-        :style="{ paddingTop: navMarginHeight + 'px', height: navHeight + 'px' }"
+        :style="{
+          paddingTop: navMarginHeight + 'px',
+          height: navHeight + 'px',
+        }"
       >
-        <view
-          class="icon"
-          @click="goHome"
-        >
+        <view class="icon" @click="goHome">
           <image
             class="home"
             :src="`${staticImgs}/shxmp/init/custom_nav_home_btn.png`"
@@ -19,10 +19,7 @@
       </view>
     </view>
     <!-- 全屏播放组件 -->
-    <fullScreenVideo
-      :video-detail="videoDetail"
-      :is-slide="false"
-    />
+    <fullScreenVideo :item="videoDetail" :is-slide="false" />
   </view>
 </template>
 
