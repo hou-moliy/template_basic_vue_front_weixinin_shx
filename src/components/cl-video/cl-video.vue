@@ -16,11 +16,7 @@
       @ended="playEnd"
     >
       <slot />
-      <view
-        class="stop-play"
-        :style="{ height: height }"
-        @click="clickVideo"
-      >
+      <view class="stop-play" :style="{ height: height }" @click="clickVideo">
         <image
           v-show="!isPlayNow"
           :src="`${staticImgs}/shxmp/init/video-stop-play.png`"
@@ -132,9 +128,6 @@ export default {
     this.trueSrc = this.src;
     this.videoCtx.pause();
     this.videoCtx.play();
-    if (!uni.getStorageSync("userPlayVideo")) {
-      uni.setStorageSync("userPlayVideo", true);
-    }
   },
   methods: {
     // 拖动滑块

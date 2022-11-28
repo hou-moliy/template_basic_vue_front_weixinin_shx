@@ -8,19 +8,10 @@
           class="eb-ad-roll-item"
           @click="navigateToAny(item)"
         >
-          <view
-            class="img-box-row"
-            :style="extraStyle"
-          >
-            <img
-              :style="[extraStyle]"
-              :src="item.url"
-            >
+          <view class="img-box-row" :style="[extraStyle]">
+            <img :style="[extraStyle]" :src="item.url" />
           </view>
-          <view
-            v-if="item.title"
-            class="topic-title-row"
-          >
+          <view v-if="item.title" class="topic-title-row">
             {{ item.title }}
           </view>
         </view>
@@ -53,7 +44,6 @@ export default {
   },
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
-    console.log(this.extraStyle, "kkkk");
   },
   mounted () {
     this.getAdLIst();

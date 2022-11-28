@@ -60,7 +60,9 @@ export default {
   methods: {
     // 滑动到底部
     onScrollBottom () {
-      this.$refs.EbConfig.onScrollBottom();
+      if (this.$refs.EbConfig) {
+        this.$refs.EbConfig.onScrollBottom();
+      }
     },
     handleFresh () {
       this.$refs.EbConfig.handleFresh();

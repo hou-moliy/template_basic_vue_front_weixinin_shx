@@ -2,18 +2,10 @@
   <!-- 视频彩铃组件 -->
   <view
     class="video-item-wrap"
-    :data-url="
-      '/pages/cxVideo/cxVideoPlay?id=' +
-      item.ringId +
-      '&playStatus=1' +
-      '&moduleId=' +
-      moduleId
-    "
     :data-topic="'moreVideo'"
-    @click="goToPlayVideo($event, videoList, item)"
+    @click="goToPlayVideo(item)"
   >
     <view class="video-item-info" :style="{ 'border-radius': `${radius}rpx` }">
-      <!-- <image mode="" class="play-btn" :src="`${staticImgs}/lnmp/ln-find/find-play-btn.png`"></image> -->
       <image
         class="video-item-poster"
         :style="{ 'border-radius': `${radius}rpx` }"
@@ -130,11 +122,8 @@ export default {
       this.$emit("giveLikes", { ringId, target, opType });
     },
     // 详情页播放视频
-    goToPlayVideo (e, videoList, item) {
-      this.$store.commit("spcl/M_changeVideoList", videoList);
-      uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${item.ringId}`,
-      });
+    goToPlayVideo (item) {
+      this.$emit("goToPlayVideo", item);
     },
   },
 };

@@ -113,7 +113,7 @@
             v-else
             class="setting-btn"
             :style="{ background: innerColor }"
-            @click.stop="purchaseVideo(item)"
+            @click.stop="$emit('purchaseVideo', item)"
           >
             设置
           </view>
@@ -176,14 +176,6 @@ export default {
     shareVideo () {
       if (uni.getStorageSync("Authorization")) {
         this.$emit("shareVideo", this.item);
-      } else {
-        this.$emit("openLoginPopup");
-      }
-    },
-    // 设置视频彩铃
-    purchaseVideo (item) {
-      if (!uni.getStorageSync("Authorization")) {
-        this.$emit("purchaseVideo", item);
       } else {
         this.$emit("openLoginPopup");
       }

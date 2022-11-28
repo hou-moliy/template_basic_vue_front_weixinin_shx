@@ -231,11 +231,8 @@ export default {
       this.$emit("purchaseVideo", e);
     },
     // 跳转视频彩铃播放页面
-    goToPlayVideo ({ ringId }) {
-      this.$store.commit("spcl/M_changeVideoList", this.wfList);
-      uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${ringId}`,
-      });
+    goToPlayVideo (item) {
+      this.$emit("goToPlayVideo", { item, list: this.wfList });
     },
   },
 };

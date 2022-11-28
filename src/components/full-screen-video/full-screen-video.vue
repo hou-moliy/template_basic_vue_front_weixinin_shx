@@ -149,15 +149,18 @@
     <view
       v-if="isFirstPlay && step === 3"
       class="slide-image"
-      @click="isFirstPlay = false"
+      @click.stop="closeSwiperTips"
     >
       <image :src="`${staticImgs}/shxmp/init/slide_indicator.png`" />
     </view>
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
   </view>
 </template>
 <script>
 import clVideo from "@/components/cl-video/cl-video.vue";
 import { formatCount } from "@/utils/tools.js";
+import { mapGetters } from "vuex";
 export default {
   components: {
     clVideo,
@@ -182,11 +185,12 @@ export default {
         share: true,
         preview: true,
       }, // 是否展示设置按钮，默认展示
-      isFirstPlay: false, // 是否第一次
-      step: 1, // 新手引导步骤
       isNewIphone: false,
       videoDetail: null,
     };
+  },
+  computed: {
+    ...mapGetters(["isFirstPlay", "step"]),
   },
   created () {
     this.initStyle();
@@ -201,18 +205,16 @@ export default {
         // 播放器展示高度、宽度
         this.videoHeight = `${res.windowHeight}px`;
         this.videoWidth = `${res.windowWidth}px`;
-        // 是否展示引导弹窗
-        this.isFirstPlay = !uni.getStorageSync("userPlayVideo");
       });
     },
     // 新手引导下一步
     nextStep () {
       this.$analysis.dispatch("spcl_dgcl_jx");
-      if (this.step === 1) {
-        this.step = 2;
-      } else if (this.step === 2) {
-        this.step = 3;
-        this.isFirstPlay = true;
+      if (this.$store.state.spcl.step === 1) {
+        this.$store.commit("spcl/SET_STEP", 2);
+      } else if (this.$store.state.spcl.step === 2) {
+        this.$store.commit("spcl/SET_STEP", 3);
+        this.$store.commit("spcl/SET_FIRST_PLAY", true);
       } else {
         console.log("step:way 故障", this.step);
       }
@@ -220,8 +222,13 @@ export default {
     // 新手引导跳过引导
     jumpGuide () {
       this.$analysis.dispatch("spcl_dgcl_tg");
-      this.step = 3;
-      this.isFirstPlay = true;
+      this.$store.commit("spcl/SET_STEP", 3);
+      this.$store.commit("spcl/SET_FIRST_PLAY", true);
+    },
+    // 关闭滑动提示
+    closeSwiperTips () {
+      console.log("关闭弹窗");
+      this.$store.commit("spcl/SET_FIRST_PLAY", false);
     },
     // 获取系统信息
     getSystemData () {
@@ -235,26 +242,29 @@ export default {
     },
     // 预览
     previewVideo (ringId) {
-      if (uni.getStorageSync("Authorization")) {
-        // 进入预览页面
-        uni.navigateTo({
-          url: `/pagesSpcl/clVideo/clVideoPreview?videoId=${ringId}`,
-        });
-      } else {
+      if (!uni.getStorageSync("Authorization")) {
         // 提示登录
+        return this.$showLoginPop(this);
       }
+      // 进入预览页面
+      uni.navigateTo({
+        url: `/pagesSpcl/clVideo/clVideoPreview?videoId=${ringId}`,
+      });
     },
     // 设置视频彩铃
     setSpcl (items) {
-      if (uni.getStorageSync("Authorization")) {
-        //  打开视频彩铃设置弹窗
-      } else {
+      if (!uni.getStorageSync("Authorization")) {
         // 提示登录
+        return this.$showLoginPop(this);
       }
+      //  打开视频彩铃设置弹窗
     },
     // 点赞 OR 取消点赞
     changeLikeStatus (opType) {
-      // 提示登录
+      if (!uni.getStorageSync("Authorization")) {
+        // 提示登录
+        return this.$showLoginPop(this);
+      }
       const data = {
         ringId: this.videoDetail.ringId,
         target: "dz",
@@ -331,20 +341,20 @@ export default {
     },
     // 分享到微信或者朋友圈
     shareEvent (ringId) {
-      if (uni.getStorageSync("Authorization")) {
-        const data = {
-          ringId,
-          target: "fx",
-        };
-        this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
-          const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
-          uni.navigateTo({
-            url,
-          });
-        });
-      } else {
+      if (!uni.getStorageSync("Authorization")) {
         // 提示登录
+        return this.$showLoginPop(this);
       }
+      const data = {
+        ringId,
+        target: "fx",
+      };
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
+        const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
+        uni.navigateTo({
+          url,
+        });
+      });
     },
   },
 };

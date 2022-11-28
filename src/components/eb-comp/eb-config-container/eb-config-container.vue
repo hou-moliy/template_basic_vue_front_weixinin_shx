@@ -45,7 +45,7 @@
           @openLoginPopup="openLoginPopup"
         />
       </template>
-      <!-- 风景 -->
+      <!-- 横向滑动视频彩铃组件 -->
       <template
         v-if="
           pageConfig.pageModule === 'eb-spcl-transverse' &&
@@ -58,6 +58,7 @@
             :page-load-status="pageLoadStatus"
             :activity-id="activityId"
             @openLoginPopup="openLoginPopup"
+            @goToPlayVideo="goToPlayVideo"
           />
         </view>
       </template>
@@ -79,6 +80,8 @@
               compBottom && pageConfigIndex == pageConfigList.length
             "
             @openLoginPopup="openLoginPopup"
+            @purchaseVideo="purchaseVideo"
+            @goToPlayVideo="goToPlayVideo"
           />
         </view>
       </template>
@@ -187,7 +190,8 @@
           :page-config="pageConfig"
           :activity-id="activityId"
           :page-load-status="pageLoadStatus"
-          @openLoginPopup="openLoginPopup"
+          @purchaseVideo="purchaseVideo"
+          @goToPlayVideo="goToPlayVideo"
         />
       </template>
       <!-- 视频彩铃列表 -->
@@ -200,7 +204,8 @@
           :page-config="pageConfig"
           :activity-id="activityId"
           :page-load-status="pageLoadStatus"
-          @openLoginPopup="openLoginPopup"
+          @purchaseVideo="purchaseVideo"
+          @goToPlayVideo="goToPlayVideo"
         />
       </template>
       <!-- 视频彩铃推荐列表 -->
@@ -215,6 +220,7 @@
           :activity-id="activityId"
           :page-load-status="pageLoadStatus"
           @openLoginPopup="openLoginPopup"
+          @goToPlayVideo="goToPlayVideo"
         />
       </template>
       <!-- 浮动类广告位 -->
@@ -264,19 +270,12 @@ export default {
     return {};
   },
   created () {
-    console.log("设置");
   },
   mounted () {
   },
   methods: {
     // 滚动到底部监听
     onScrollBottom () {
-      if (this.$refs.EbLiveWaterFalls) {
-        this.$refs.EbLiveWaterFalls[0].onScrollBottom();
-      }
-      if (this.$refs.EbMiguWaterfalls) {
-        this.$refs.EbMiguWaterfalls[0].onScrollBottom();
-      }
       if (this.$refs.EbSpclWaterFalls) {
         this.$refs.EbSpclWaterFalls[0].onScrollBottom();
       }
@@ -298,8 +297,21 @@ export default {
     buryIconListId (id) {
       //  this.$analysis.dispatch(this.pageName+"_icon", id)
     },
+    // 设置视频彩铃
     purchaseVideo (e) {
-      console.log("设为视频彩铃");
+      // 设置视频彩铃
+      if (uni.getStorageSync("Authorization")) {
+        console.log(e, "设为视频彩铃");
+      } else {
+        this.openLoginPopup();
+      }
+    },
+    // 跳转视频彩铃播放页面
+    goToPlayVideo ({ item, list }) {
+      this.$store.commit("spcl/M_changeVideoList", list);
+      uni.navigateTo({
+        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${item.ringId}`,
+      });
     },
   },
 };

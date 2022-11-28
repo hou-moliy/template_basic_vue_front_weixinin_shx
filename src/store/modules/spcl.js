@@ -11,9 +11,20 @@ const state = {
   moreVideoList: [],
   videoListFromCxVideoType: [],
   myLikeVideoList: [],
+  isFirstPlay: uni.getStorageSync("isFirstPlay"), // 是否第一次,控制引导弹窗的展示
+  step: 1, // 新手引导步骤
 };
 
 const mutations = {
+  // 设置是否展示引导弹窗
+  SET_FIRST_PLAY (state, isFirstPlay) {
+    state.isFirstPlay = isFirstPlay;
+    uni.setStorageSync("isFirstPlay", isFirstPlay);
+  },
+  // 设置新手引导步骤
+  SET_STEP (state, step) {
+    state.step = step;
+  },
   // 设置用户的视频彩铃数据
   SET_USER_SPCL_DATA (state, userSpclData) {
     state.userSpclData = userSpclData;
