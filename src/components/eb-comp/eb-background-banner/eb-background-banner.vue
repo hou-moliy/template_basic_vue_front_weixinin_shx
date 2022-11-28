@@ -16,10 +16,7 @@
             style="border-radius: 20rpx"
             @click="navigateToH5(item)"
           >
-            <image
-              class="ad-banner-image"
-              :src="item.url"
-            />
+            <image class="ad-banner-image" :src="item.url" />
             <!-- 只有当是头部组件时才展示 -->
             <image
               v-if="compTop && item.headerBgUrl"
@@ -28,10 +25,7 @@
             />
           </swiper-item>
         </swiper>
-        <view
-          v-if="totalSwiper"
-          class="indicator"
-        >
+        <view v-if="totalSwiper" class="indicator">
           {{ currentSwiper + "/" + totalSwiper }}
         </view>
       </view>
@@ -41,7 +35,7 @@
 
 <script>
 import AdService from "@/api/ad/index.js";
-import { navigateToAny } from "@/utils/navigateToAny.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
@@ -76,32 +70,20 @@ export default {
   methods: {
     getBannerByPageName () {
       const { pageName, moduleId } = this.pageConfig;
-      // 获取bannner
+      // 获取banner
       AdService.getAdList({
         target: pageName,
         moduleId,
       }).then(res => {
         this.cxVideoBanner = res.data.data;
         this.totalSwiper = res.data.data.length;
-        // this.$emit('changeBanner', this.cxVideoBanner[0])
       });
     },
-
     changeBanner (event) {
       this.currentSwiper = event.detail.current + 1;
-      // this.$emit('changeBanner', this.cxVideoBanner[event.detail.current])
     },
-
-    async navigateToH5 (event) {
-      await this.$store.dispatch("offlinePopup/getCustomorderList", `swiper_${event.id}`);
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
-      navigateToAny(event);
+    navigateToH5 (event) {
+      navigateToAnyCheck(event, `swiper_${event.id}`);
     },
   },
 };
@@ -110,18 +92,14 @@ export default {
 <style lang="scss" scoped>
 .ad-banner-container {
   width: 100%;
-  // height: 381rpx;
-  // background: linear-gradient(#ff6f50, #ff6f50, white);
 }
 
 .ad-banner-swiper-top {
-  // width: 92%;
   height: 580rpx;
   position: relative;
 }
 
 .ad-banner-swiper {
-  // width: 92%;
   height: 350rpx;
   position: relative;
 }
@@ -159,7 +137,6 @@ export default {
   position: absolute;
   bottom: 30rpx;
   left: 50%;
-  // box-shadow: 1px 9px 16px 0px rgba(6, 0, 1, 0.12);
   transform: translateX(-50%);
 }
 

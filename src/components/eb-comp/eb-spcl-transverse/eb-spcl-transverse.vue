@@ -1,17 +1,7 @@
 <template>
-  <view
-    v-if="wfList.length"
-    class="scenery-wrap"
-  >
-    <scroll-view
-      :scroll-x="true"
-      class="items-box"
-    >
-      <view
-        v-for="(item, index) in wfList"
-        :key="index"
-        class="item-wrap"
-      >
+  <view v-if="wfList.length" class="scenery-wrap">
+    <scroll-view :scroll-x="true" class="items-box">
+      <view v-for="(item, index) in wfList" :key="index" class="item-wrap">
         <video-item
           :item="item"
           :radius="24"
@@ -21,6 +11,7 @@
           @click.native="programaAnalysis(params, item.ringId)"
           @giveLikes="giveLikes"
           @shareVideo="shareVideo"
+          @goToPlayVideo="goToPlayVideo"
         />
       </view>
     </scroll-view>
@@ -150,6 +141,10 @@ export default {
           this.$tips(res.message);
         }
       });
+    },
+    // 跳转视频彩铃播放页面
+    goToPlayVideo (item) {
+      this.$emit("goToPlayVideo", { item, list: this.wfList });
     },
   },
 };

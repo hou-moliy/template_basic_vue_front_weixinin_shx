@@ -47,5 +47,13 @@ module.exports = {
     "no-console": "off",
     "no-debugger": "off",
     camelcase: ["error", { properties: "never", ignoreDestructuring: true }], // 使用驼峰命名，不检查属性名称，不检查解构标识符
+    "vue/html-indent": ["error", 2, {
+      attribute: 1,
+      baseIndent: 1,
+      closeBracket: 0,
+      alignAttributesVertically: false,
+      ignores: ["VAttribute"],
+    }],
+    "vue/max-attributes-per-line": "off",
   },
 };

@@ -39,6 +39,10 @@ export default {
       type: String,
       default: "",
     },
+    pageLoadStatus: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
@@ -52,11 +56,16 @@ export default {
       this.asyncLoad = true;
     }, this.asyncTiming);
   },
-  mounted () {
-  },
+  mounted () { },
   methods: {
-    onScollBottom () {
-      this.$refs.EbConfig.onScollBottom();
+    // 滑动到底部
+    onScrollBottom () {
+      if (this.$refs.EbConfig) {
+        this.$refs.EbConfig.onScrollBottom();
+      }
+    },
+    handleFresh () {
+      this.$refs.EbConfig.handleFresh();
     },
   },
 };

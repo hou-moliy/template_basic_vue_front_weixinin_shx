@@ -19,7 +19,6 @@ export default {
   data () {
     return {
       extraStyle: {
-        height: "900rpx",
       },
     };
   },

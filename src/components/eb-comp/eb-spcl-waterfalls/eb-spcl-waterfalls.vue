@@ -1,21 +1,9 @@
 <template>
-  <view
-    class="more-news"
-    :style="[extraStyle]"
-  >
+  <view class="more-news" :style="[extraStyle]">
     <!-- 标题 -->
-    <view
-      v-if="pageConfig.tagIcon"
-      class="title-wrap"
-    >
-      <image
-        :src="pageConfig.tagIcon"
-        class="tag-icon"
-      />
-      <text
-        v-if=" pageConfig.title "
-        class="title"
-      >
+    <view v-if="pageConfig.tagIcon" class="title-wrap">
+      <image :src="pageConfig.tagIcon" class="tag-icon" />
+      <text v-if="pageConfig.title" class="title">
         {{ pageConfig.title }}
       </text>
     </view>
@@ -27,37 +15,25 @@
     >
       <!-- 左侧 -->
       <view class="waterfall-column waterfall-column-left">
-        <view
-          v-for="(item, index) in wfList"
-          :key="index"
-        >
-          <view
-            v-if="index % 2 === 0"
-            class="more-new-item-column"
-          >
+        <view v-for="(item, index) in wfList" :key="index">
+          <view v-if="index % 2 === 0" class="more-new-item-column">
             <!-- 运营位 -->
-            <view
-              v-if="item.imgType === 2"
-              class="recommend-wrap"
-            >
+            <view v-if="item.imgType === 2" class="recommend-wrap">
               <operate-item
                 :item="item"
-                @click.native="programaAnalysis(params,item.imgId)"
+                @click.native="programaAnalysis(params, item.imgId)"
                 @openLoginPopup="openLoginPopup"
               />
             </view>
             <!-- 元素 -->
-            <view
-              v-else
-              class="video-box-new"
-            >
+            <view v-else class="video-box-new">
               <spclItem
                 :item="item"
                 :is-login="isLogin"
-                :last-flag="index==wfList.length-1"
+                :last-flag="index == wfList.length - 1"
                 :inner-color="pageConfig.innerColor"
                 :spcl-style="pageConfig.spclStyle"
-                @click.native="programaAnalysis(params,item.imgId)"
+                @click.native="programaAnalysis(params, item.imgId)"
                 @shareVideo="shareCountChange"
                 @giveLikes="likeCountChange"
                 @purchaseVideo="purchaseVideo"
@@ -70,34 +46,25 @@
       </view>
       <!-- 右侧 -->
       <view class="waterfall-column">
-        <view
-          v-for="(item, index) in wfList"
-          :key="index"
-        >
-          <view
-            v-if="index % 2 !== 0"
-            class="more-new-item-column"
-          >
+        <view v-for="(item, index) in wfList" :key="index">
+          <view v-if="index % 2 !== 0" class="more-new-item-column">
             <!-- 运营位 -->
             <view v-if="item.imgType === 2">
               <operate-item
                 :item="item"
-                @click.native="programaAnalysis(params,item.imgId)"
+                @click.native="programaAnalysis(params, item.imgId)"
                 @openLoginPopup="openLoginPopup"
               />
             </view>
             <!-- 元素 -->
-            <view
-              v-else
-              class="video-box-new"
-            >
+            <view v-else class="video-box-new">
               <spclItem
                 :item="item"
                 :is-login="isLogin"
                 :inner-color="pageConfig.innerColor"
-                :last-flag="index==wfList.length-1"
+                :last-flag="index == wfList.length - 1"
                 :spcl-style="pageConfig.spclStyle"
-                @click.native="programaAnalysis(params,item.imgId)"
+                @click.native="programaAnalysis(params, item.imgId)"
                 @shareVideo="shareCountChange"
                 @giveLikes="likeCountChange"
                 @purchaseVideo="purchaseVideo"
@@ -172,15 +139,18 @@ export default {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
     if (!this.compBottom) { this.wfParams.pageSize = 10; }; // 非配置化页面的最后一个就固定展示10条数据
     this.getWfList();
+    uni.$on("purchaseVideo", data => {
+      console.log(data, "设置视频彩铃");
+    });
   },
   methods: {
     programaAnalysis,
     // 强制刷新
     handleFresh () {
-      this.$forceUpdate();
+      this.getWfList();
     },
     // 滚动触底
-    onScollBottom () {
+    onScrollBottom () {
       if (!this.compBottom) return; // 非配置化页面的最后一个就没有上拉加载更多功能
       const curCount = this.wfList.length;
       if (curCount >= this.total) {
@@ -258,13 +228,11 @@ export default {
     },
     // 设置视频彩铃
     purchaseVideo (e) {
-
+      this.$emit("purchaseVideo", e);
     },
     // 跳转视频彩铃播放页面
-    goToPlayVideo ({ ringId }) {
-      uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVdieoPlay?videoId=${ringId}&shareType=1`,
-      });
+    goToPlayVideo (item) {
+      this.$emit("goToPlayVideo", { item, list: this.wfList });
     },
   },
 };
@@ -273,7 +241,7 @@ export default {
 <style lang="scss" scoped>
 .more-news {
   width: 100%;
-  padding: 0rpx 30rpx;
+  padding: 0rpx 30rpx 30rpx;
   box-sizing: border-box;
   border-radius: 40rpx 40rpx 0rpx 0rpx;
 

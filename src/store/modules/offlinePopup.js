@@ -36,17 +36,23 @@ const mutations = {
 
 const actions = {
   // 查询是否下线
-  getCustomorderList ({ commit, dispatch }, payload) {
+  async getCustomorderList ({ commit, dispatch }, payload) {
     // 初始化弹窗数据
     commit("SET_OFFLINEFLAG", false);
     commit("SET_OFFLINEPOPUPSHOW", false);
     commit("SET_LOGINSHOW", false);
-    return (
+
+    await dispatch("window/getOfflineWindow", null, { root: true });
+
+    return new Promise((resolve, reject) => {
+      console.log("2");
       windowService.getPageStatus({ targetId: payload })
         .then(res => {
           if (res.data.code === 200) {
             res.data.data.forEach(item => {
-              if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
+              if (item.limited === false) { // 未配置相关策略
+                return reject(item.message);
+              } else if ((item.strategyType === 3 && item.limited === true) && !uni.getStorageSync("Authorization")) { // 未登录用户优先展示登录弹窗
                 commit("SET_LOGINSHOW", true);
                 commit("SET_OFFLINEFLAG", false);
                 commit("SET_OFFLINEPOPUPSHOW", false);
@@ -60,13 +66,15 @@ const actions = {
                 commit("SET_DIALOGCANCELLABLE", item.data.dialogCancellable);
               }
             });
+            resolve();
           } else {
             commit("SET_OFFLINEFLAG", false);
             commit("SET_OFFLINEPOPUPSHOW", false);
             commit("SET_LOGINSHOW", false);
+            reject(res.data);
           }
-        })
-    );
+        }).catch(err => reject(err));
+    });
   },
 };
 

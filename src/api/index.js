@@ -1,14 +1,11 @@
 import axios from "axios";
 import qs from "qs";
+import loginService from "@/api/my/my.js";
 axios.defaults.baseURL = "";
 axios.create().defaults.timeout = 5000; // 请求超时
 let loading;
 let isloading = false;
-const Headers = {
-  "x-requested-width": "XMLHttpRequest",
-  Authorization: uni.getStorageSync("Authorization"),
-  "Content-Type": "application/json; charset=utf-8",
-};
+
 // http request 拦截器
 axios.interceptors.request.use(config => {
   if (isloading) {
@@ -17,10 +14,9 @@ axios.interceptors.request.use(config => {
     });
     loading = true;
   }
-  // config.headers["x-requested-width"] = "XMLHttpRequest";
-  // config.headers.Authorization = uni.getStorageSync("Authorization");
-  // config.headers["Content-Type"] = "application/json; charset=utf-8";
-  config.headers = Headers;
+  config.headers["x-requested-width"] = "XMLHttpRequest";
+  config.headers.Authorization = uni.getStorageSync("Authorization");
+  config.headers["Content-Type"] = "application/json; charset=utf-8";
   if (!config.data) return config;
   if (config.data.isUpload) {
     config.headers["Content-Type"] = "multipart/form-data";
@@ -48,6 +44,17 @@ axios.interceptors.response.use(response => {
     console.log("#####拦截器###有401页面##########");
     console.log(response);
     console.log("####拦截器####有401页面##########");
+    loginService.refreshToken().then((resp) => {
+      if (resp.data.code === 200) {
+        uni.setStorageSync("Authorization", `${resp.data.data.tokenHead} ${resp.data.data.token}`);
+      } else {
+        uni.removeStorageSync("Authorization");
+        uni.removeStorageSync("userInfo");
+        uni.removeStorageSync("phone");
+        uni.removeStorageSync("userSpclData");
+        uni.removeStorageSync("isAuth");
+      }
+    });
   }
   return response;
 }, error => {

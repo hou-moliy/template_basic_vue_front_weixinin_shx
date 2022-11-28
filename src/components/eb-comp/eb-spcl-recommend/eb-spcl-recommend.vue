@@ -1,44 +1,27 @@
 <template>
-  <view
-    v-if="!dataList.length == 0"
-    class="spcl-recommend"
-  >
-    <view
-      v-if="pageConfig.tagIcon"
-      class="more-topic-top-img"
-    >
+  <view v-if="!dataList.length == 0" class="spcl-recommend">
+    <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
       <image :src="pageConfig.tagIcon" />
     </view>
-    <waterfall
-      :column-count="3"
-      column-width="auto"
-      class="waterfall-box"
-    >
+    <waterfall :column-count="3" column-width="auto" class="waterfall-box">
       <view
         v-if="dataList != ''"
         class="waterfall-column waterfall-column-left"
       >
-        <view
-          v-for="(item, index) in dataList"
-          :key="index"
-        >
+        <view v-for="(item, index) in dataList" :key="index">
           <template v-if="index % 2 === 0">
             <!-- 元素 -->
             <view class="video-box-new more-new-item-column">
               <view
                 :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
                 :data-topic="'moreVideo'"
-                @click="$emit('goToPlayVideo', $event, dataList)"
+                @click="goToPlayVideo(item)"
               >
                 <view class="img-box-more">
                   <image
                     class="new-img"
                     :src="
-                      item.coverUrl
-                        ? item.coverUrl
-                        : item.openVCoverUrl
-                          ? item.openVCoverUrl
-                          : item.openHCoverUrl
+                      item.coverUrl || item.openVCoverUrl || item.openHCoverUrl
                     "
                     mode="aspectFill"
                   />
@@ -54,26 +37,19 @@
         </view>
       </view>
       <view class="waterfall-column">
-        <view
-          v-for="(item, index) in dataList"
-          :key="index"
-        >
+        <view v-for="(item, index) in dataList" :key="index">
           <template v-if="index % 2 !== 0">
             <view class="video-box-new more-new-item-column">
               <view
                 :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
                 :data-topic="'moreVideo'"
-                @click="$emit('goToPlayVideo', $event, dataList)"
+                @click="goToPlayVideo(item)"
               >
                 <view class="img-box-more">
                   <image
                     class="new-img"
                     :src="
-                      item.coverUrl
-                        ? item.coverUrl
-                        : item.openVCoverUrl
-                          ? item.openVCoverUrl
-                          : item.openHCoverUrl
+                      item.coverUrl || item.openVCoverUrl || item.openHCoverUrl
                     "
                     mode="aspectFill"
                   />
@@ -90,19 +66,14 @@
       </view>
     </waterfall>
     <view class="see-more-box">
-      <view
-        class="see-more"
-        @click="navigateToH5(pageConfig)"
-      >
-        查看更多
-      </view>
+      <view class="see-more" @click="navigateToH5(pageConfig)">查看更多</view>
     </view>
   </view>
 </template>
 
 <script>
 import SpclService from "@/api/spcl/index.js";
-import { navigateToAny } from "@/utils/tools.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
@@ -140,10 +111,10 @@ export default {
           }
           if (
             uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
+            uni.getStorageSync("userSpclData")[0] &&
+            uni.getStorageSync("userSpclData")[0].vrbtResponse
           ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
             for (let i = 0; i < tempList.length; i++) {
               const isBuy = isBuyList.filter(
                 (item) => tempList[i].ringId === item.ringId,
@@ -159,23 +130,11 @@ export default {
     },
     async navigateToH5 (event) {
       this.$emit("watchMore", event.moduleId);
-      await this.$store.dispatch(
-        "getCustomorderList",
-        `runAd_${event.moduleId}`,
-      );
-      console.log(
-        this.$store.state.offlinePopup,
-        "this.$store.state.offlinePopup",
-      );
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
       this.$analysis.dispatch("dj_ckgd", event.id);
-      navigateToAny(event);
+      navigateToAnyCheck(event, `runAd_${event.moduleId}`);
+    },
+    goToPlayVideo (item) {
+      this.$emit("goToPlayVideo", { item, list: this.dataList });
     },
   },
 };
@@ -185,16 +144,16 @@ export default {
 .spcl-recommend {
   margin-bottom: 30rpx;
   padding-top: 40rpx;
+  background-color: #292727;
   .more-topic-top-img {
     display: flex;
     text-align: center;
     margin-bottom: 40rpx;
     justify-content: center;
-    height: 60rpx;
-
+    height: 90rpx;
     image {
-      width: 100%;
-      height: 48rpx;
+      width: 60%;
+      height: 100%;
     }
   }
 

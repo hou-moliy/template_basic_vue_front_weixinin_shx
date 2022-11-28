@@ -1,8 +1,5 @@
 <template>
-  <view
-    v-if="!dataList.length ==0"
-    class="spcl-swiper-box"
-  >
+  <view v-if="!dataList.length == 0" class="spcl-swiper-box">
     <swiper
       class="spcl-swiper"
       previous-margin="136rpx"
@@ -18,16 +15,22 @@
       <swiper-item
         v-for="(item, index) in dataList"
         :key="index"
-        :class="{'swiper-item': currentIndex == index,'swiper-item-side': currentIndex != index}"
+        :class="{
+          'swiper-item': currentIndex == index,
+          'swiper-item-side': currentIndex != index,
+        }"
       >
         <view
           class="equites-item"
-          :data-url="'/pages/cxVideo/cxVideoPlay?id=' + item.ringId"
-          :class="currentIndex === index?'swiper-item-content': 'swiper-item-content-side'"
+          :class="
+            currentIndex === index
+              ? 'swiper-item-content'
+              : 'swiper-item-content-side'
+          "
           :animation="index == currentIndex ? animationData : animationData2"
-          @click="$emit('goToPlayVideo',$event, dataList)"
+          @click="goToPlayVideo(item)"
         >
-          <image :src="item.openHCoverUrl||item.openVCoverUrl" />
+          <image :src="item.openHCoverUrl || item.openVCoverUrl" />
           <view class="morel-new-title">
             <view class="morel-new-titleText">
               {{ item.ringName }}
@@ -37,17 +40,14 @@
       </swiper-item>
     </swiper>
     <view class="oper-btn-box">
-      <view
-        v-if="dataList[currentIndex].isBuyVideo"
-        class="oper-btn is-buy"
-      >
+      <view v-if="dataList[currentIndex].isBuyVideo" class="oper-btn is-buy">
         已设置
       </view>
       <view
         v-else
         class="oper-btn"
-        :style="{background: `${pageConfig.innerColor}`}"
-        @click="$emit('purchaseVideo',dataList[currentIndex])"
+        :style="{ background: `${pageConfig.innerColor}` }"
+        @click="$emit('purchaseVideo', dataList[currentIndex])"
       >
         {{ pageConfig.title }}
       </view>
@@ -84,10 +84,9 @@ export default {
 
   },
   created () {
-
+    this.getSpclList();
   },
   mounted () {
-    this.getSpclList();
   },
   methods: {
     refreshData () {
@@ -112,10 +111,10 @@ export default {
           }
           if (
             uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
+            uni.getStorageSync("userSpclData")[0] &&
+            uni.getStorageSync("userSpclData")[0].vrbtResponse
           ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
             for (let i = 0; i < tempList.length; i++) {
               const isBuy = isBuyList.filter(
                 (item) => tempList[i].ringId === item.ringId,
@@ -152,6 +151,9 @@ export default {
         .scale(1.13)
         .step();
       this.animationData = animation.export();
+    },
+    goToPlayVideo (item) {
+      this.$emit("goToPlayVideo", { item, list: this.dataList });
     },
   },
 };

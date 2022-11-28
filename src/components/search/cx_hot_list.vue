@@ -248,7 +248,7 @@ export default {
       const tempArr = [];
       tempArr.push(item);
       // this.$analysis.dispatch("fxspcl_ss_rsbd_id", `${item.id}`);
-      this.$store.commit("spcl/getVideoList", tempArr);
+      this.$store.commit("spcl/M_changeVideoList", tempArr);
       this.$emit("clickKey");
       uni.navigateTo({
         url: e.currentTarget.dataset.url,

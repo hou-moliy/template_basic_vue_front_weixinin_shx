@@ -1,6 +1,31 @@
 import SsoService from "@/api/sso";
-
-const navigateToAny = async function (item, callback) {
+import store from "../store";
+// 跳转-需要统一验证、登录、升级弹窗的
+const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
+  uni.showLoading({
+    title: "",
+    mask: true,
+  });
+  await store.dispatch("offlinePopup/getCustomorderList", targetId).then(() => {
+    // 配置了策略
+    if (store.state.offlinePopup.loginShow) {
+      return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+    }
+    if (store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
+      return;
+    }
+    navigateToAny(item, callback);
+  }).catch(() => {
+    // 未配置策略
+    if (!uni.getStorageSync("Authorization")) {
+      return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+    }
+    navigateToAny(item, callback);
+  });
+  uni.hideLoading();
+};
+// 跳转-不需要统一验证、登录、升级弹窗的
+const navigateToAny = (item, callback) => {
   uni.showLoading({
     title: "",
     mask: true,
@@ -29,7 +54,6 @@ const navigateToAny = async function (item, callback) {
     uni.hideLoading();
   }
 };
-
 //  处理外部跳转
 const handleExternalLink = async (item, callback) => {
   let tempEventUrl = item.eventUrl;
@@ -143,4 +167,5 @@ const freeLoginFun = (eventUrl) => {
 
 module.exports = {
   navigateToAny,
+  navigateToAnyCheck,
 };

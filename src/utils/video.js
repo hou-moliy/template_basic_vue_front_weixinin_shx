@@ -1,7 +1,8 @@
 import store from "../store";
+// 判断是否已设为视彩
 const videoInfoUpdate = function (list) {
   const tempList = JSON.parse(JSON.stringify(list));
-  const userData = store.state.spcl.userData;
+  const userData = store.state.spcl.userSpclData;
   if (
     uni.getStorageSync("Authorization") && userData && userData.vrbtResponse) {
     const isBuyList = userData.vrbtResponse;

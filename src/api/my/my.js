@@ -32,6 +32,10 @@ const freeLoginAuth = params => axios.get(baseUrlTyrz + "/threelogin/hcyauth", p
 const lyhGetUserInfo = params => axios.get(baseUrl + "/lyh/getUserInfo", params);
 // 获取短信验证码
 const getAuthCodeLn = params => axios.get(baseUrl + "/sso/getAuthCodeLn", params);
+// 微信绑定
+const bindWx = params => axios.post(weixinUrl + "/wechat/bind", params);
+// 微信手机号登录
+const wxuserPhone = params => axios.get(`${weixinUrl}/wx/user/${appId}/phone/v2`, params);
 
 export default {
   emailLogin,
@@ -52,5 +56,7 @@ export default {
   freeLoginAuth,
   lyhGetUserInfo,
   getAuthCodeLn,
+  bindWx,
+  wxuserPhone,
 
 };

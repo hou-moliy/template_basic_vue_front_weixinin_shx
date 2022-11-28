@@ -1,76 +1,68 @@
 <template>
-  <!-- <view
-    class="float"
-  > -->
   <image
     class="floatImage"
-    :src="`${staticImgs}/lnmp/lottery_float.png`"
-    :style="[position.topLeft]"
-    @click="flaotClick"
+    :src="pageConfig.url"
+    :style="{ position: [extraStyle].fixed ? 'fixed' : 'absolute' }"
+    :class="[extraStyle.position]"
+    @click="floatClick"
   />
-  <!-- </view> -->
 </template>
 
 <script>
+import { copyAttr } from "@/utils/gCopy.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   props: {
-
+    pageConfig: {
+      type: Object,
+      default: () => { },
+    },
   },
-
   data () {
     return {
       staticImgs: this.$staticImgs,
-      position: {
-        botLeft: {
-          left: "20rpx",
-          bottom: "30rpx",
-        },
-        botRight: {
-          right: "20rpx",
-          bottom: "30rpx",
-        },
-        topLeft: {
-          left: "20rpx",
-          top: "285rpx",
-        },
-        topRight: {
-          right: "20rpx",
-          top: "285rpx",
-        },
+      extraStyle: {
+        fixed: false, // true表示固定位置
+        position: "topLeft",
       },
     };
   },
-  onShow () {
-
+  created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
   methods: {
-    // 返回任务
-    backTotask () {
-      this.$emit("flaotClick");
+    floatClick () {
+      navigateToAnyCheck(this.pageConfig);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-// .float {
-  // position: fixed;
-  // // top: 285rpx;
-  // bottom: 30rpx;
-  // right: 20rpx;
-  // overflow: hidden;
-  // z-index: 999;
-  .floatImage {
-    position: fixed;
-  // top: 285rpx;
-  bottom: 30rpx;
-  right: 20rpx;
+.floatImage {
   overflow: hidden;
   z-index: 999;
-    width: 103rpx;
-    height: 204rpx;
-    display: inline-block;
-    vertical-align: top;
-  }
-// }
+  width: 103rpx;
+  height: 204rpx;
+  display: inline-block;
+  vertical-align: top;
+  background-color: black;
+}
+// 固定定位
+.botLeft {
+  left: 20rpx;
+  bottom: 30rpx;
+}
+.botRight {
+  right: 20rpx;
+  bottom: 30rpx;
+}
+.topLeft {
+  left: 20rpx;
+  top: 285rpx;
+}
+.topRight {
+  right: 20rpx;
+  top: 285rpx;
+}
 </style>

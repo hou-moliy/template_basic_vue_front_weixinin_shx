@@ -1,7 +1,7 @@
 <template>
   <view>
     <ebConfigContainerAsync
-      v-if="activityId&&pageConfig"
+      v-if="activityId && pageConfig"
       :page-config-list="pageConfig"
       :activity-id="activityId"
     />
@@ -15,7 +15,7 @@
 
 <script>
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
-import TemplateServce from "../../api/template/index";
+import TemplateService from "../../api/template/index";
 export default {
   name: "TemplateConfig",
   components: {
@@ -33,11 +33,14 @@ export default {
     this.activityId = options.activityId;
     this.templateId = options.templateId;
     this.pageName = options.pageName;
+    uni.setNavigationBarTitle({
+      title: this.pageName,
+    });
     this.getPageConfig();
   },
   methods: {
     getPageConfig () {
-      TemplateServce.getPageConfigByPageName({ pageName: `${this.templateId}_${this.activityId}` }).then(res => {
+      TemplateService.getPageConfigByPageName({ pageName: `${this.templateId}_${this.activityId}` }).then(res => {
         if (res.data.code === 200) {
           this.pageConfig = res.data.data;
         }
