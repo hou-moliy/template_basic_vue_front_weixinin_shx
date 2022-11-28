@@ -1,8 +1,8 @@
 <template>
   <image
     class="floatImage"
-    :src="pageConfig.url"
-    :style="{ position: [extraStyle].fixed ? 'fixed' : 'absolute' }"
+    :src="pageConfig.tagIcon"
+    :style="{ position: [extraStyle.fixed] ? 'fixed' : 'absolute' }"
     :class="[extraStyle.position]"
     @click="floatClick"
   />
@@ -23,7 +23,7 @@ export default {
       staticImgs: this.$staticImgs,
       extraStyle: {
         fixed: false, // true表示固定位置
-        position: "topLeft",
+        position: "left-bot",
       },
     };
   },
@@ -46,22 +46,21 @@ export default {
   height: 204rpx;
   display: inline-block;
   vertical-align: top;
-  background-color: black;
 }
 // 固定定位
-.botLeft {
+.left-bot {
   left: 20rpx;
   bottom: 30rpx;
 }
-.botRight {
+.right-bot {
   right: 20rpx;
   bottom: 30rpx;
 }
-.topLeft {
+.left-top {
   left: 20rpx;
   top: 285rpx;
 }
-.topRight {
+.right-top {
   right: 20rpx;
   top: 285rpx;
 }

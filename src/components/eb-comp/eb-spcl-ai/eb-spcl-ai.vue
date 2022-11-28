@@ -1,34 +1,21 @@
 <!--test.vue-->
 <template>
-  <view
-    v-if="dataList[0].portalAd[0].url"
-    class="spcl-ai"
-  >
-    <view
-      v-if="pageConfig.tagIcon"
-      class="more-topic-top-img"
-    >
+  <view v-if="dataList[0].portalAd[0].url" class="spcl-ai">
+    <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
       <image :src="pageConfig.tagIcon" />
     </view>
     <view class="ad-banner">
       <view class="ad-banner-box">
-        <image
-          class="ad-banner-image"
-          :src="dataList[0].portalAd[0].url"
-        />
+        <image class="ad-banner-image" :src="dataList[0].portalAd[0].url" />
         <view
           v-if="!aiOpenStatus"
           class="oper-btn"
-          :style="{background: `${pageConfig.innerColor}`}"
+          :style="{ background: `${pageConfig.innerColor}` }"
           @click="openAiFun"
         >
           立即开启
         </view>
-        <view
-          v-else
-          class="oper-btn oper-btn-grey"
-          @click="openAiFun"
-        >
+        <view v-else class="oper-btn oper-btn-grey" @click="openAiFun">
           已开启
         </view>
       </view>
@@ -117,7 +104,6 @@ export default {
         this.$emit("openLoginPopup");
         return;
       }
-
       // ai换铃业务开关接口
       if (!this.spclStatus) { // 是否开通视频彩铃业务
         this.$analysis.dispatch("dj_kq");

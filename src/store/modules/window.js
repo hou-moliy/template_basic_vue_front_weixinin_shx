@@ -1,12 +1,12 @@
 import windowService from "@/api/window/index";
 const state = {
-  windowList: [],
+  windowAllObj: uni.getStorageSync("windowAllObj") || {},
 };
 
 const mutations = {
-  SET_WINDOWLIST ({ state }, windowList) {
-    state.windowList = windowList;
-    uni.setStorageSync("windowList", windowList);
+  SET_WINDOW_ALL_OBJ (state, windowAllObj) {
+    state.windowAllObj = windowAllObj;
+    uni.setStorageSync("windowAllObj", windowAllObj);
   },
 };
 
@@ -20,7 +20,7 @@ const actions = {
           const windowAllObj = {};
           for (const window of windowList) {
             windowAllObj[window.windowCode] = window;
-            uni.setStorageSync("windowAllObj", windowAllObj);
+            commit("SET_WINDOW_ALL_OBJ", windowAllObj);
           }
         }
       });

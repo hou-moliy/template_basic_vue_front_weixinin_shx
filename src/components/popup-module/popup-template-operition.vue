@@ -1,59 +1,45 @@
 <template>
-  <view
-    v-if="show"
-    class="EB-popup"
-    @touchmove.stop.prevent="() => {}"
-  >
+  <view v-if="show" class="EB-popup" @touchmove.stop.prevent="() => {}">
     <view class="mask" />
-    <view
-      v-if="popupInfo.windowScene ==2001"
-      class="popup-box"
-    >
+    <view v-if="popupInfo.windowScene == 2001" class="popup-box">
       <!-- 头图 -->
-      <view
-        v-if="popupInfo.headImg"
-        class="popup-img"
-      >
-        <img
-          :src="popupInfo.headImg"
-          alt=""
-          mode="widthFix"
-        >
+      <view v-if="popupInfo.headImg" class="popup-img">
+        <img :src="popupInfo.headImg" alt="" mode="widthFix" />
       </view>
       <view class="popup-padding-box">
         <!-- 标题 -->
-        <view
-          v-if="popupInfo.windowTitle"
-          class="popup-title"
-        >
+        <view v-if="popupInfo.windowTitle" class="popup-title">
           {{ popupInfo.windowTitle }}
         </view>
         <!-- 内容 -->
-        <scroll-view
-          scroll-y="true"
-          class="popup-content"
-        >
+        <scroll-view scroll-y="true" class="popup-content">
           <rich-text :nodes="popupDes" />
         </scroll-view>
         <!-- 按钮 -->
         <view
           class="popup_button"
-          :class="[popupInfo.buttons.length>1?'popup-button-multiple-box':'popup-button-single-box']"
+          :class="[
+            popupInfo.buttons.length > 1
+              ? 'popup-button-multiple-box'
+              : 'popup-button-single-box',
+          ]"
         >
-          <!-- <view class=""> -->
-          <block
-            v-for="(item,index) in popupInfo.buttons"
-            :key="item.id"
-          >
+          <block v-for="(item, index) in popupInfo.buttons" :key="item.id">
             <view
-              :class="[popupInfo.buttons.length>1?'popup-button-multiple':'popup-button-single',item.buttonStyle.indexOf('border-color')>-1?'border-show':'border-hidden']"
+              :class="[
+                popupInfo.buttons.length > 1
+                  ? 'popup-button-multiple'
+                  : 'popup-button-single',
+                item.buttonStyle.indexOf('border-color') > -1
+                  ? 'border-show'
+                  : 'border-hidden',
+              ]"
               :style="item.buttonStyle"
-              @click="buttonClick(item,index)"
+              @click="buttonClick(item, index)"
             >
               {{ item.buttonName }}
             </view>
           </block>
-          <!-- </view> -->
           <slot name="popup-button_add" />
         </view>
         <!-- 关闭按钮 -->
@@ -65,19 +51,13 @@
           <text class="closeIcon icon-guanbi iconfont" />
         </view>
         <!-- 协议 -->
-        <view
-          v-if="popupInfo.windowProtocol"
-          class="popup-agreement"
-        >
+        <view v-if="popupInfo.windowProtocol" class="popup-agreement">
           <view
             class="popup-agreement-check"
-            :class="agreementCheckFlag?'popup-agreement-checked':''"
+            :class="agreementCheckFlag ? 'popup-agreement-checked' : ''"
             @click="check"
           >
-            <text
-              v-if="agreementCheckFlag"
-              class="iconfont icon-xuanzhong"
-            />
+            <text v-if="agreementCheckFlag" class="iconfont icon-xuanzhong" />
           </view>
           <view class="popup-agreement-content">
             阅读并同意
@@ -91,10 +71,7 @@
         </view>
         <!-- 文字注释 -->
 
-        <scroll-view
-          scroll-y="true"
-          class="moreDes"
-        >
+        <scroll-view scroll-y="true" class="moreDes">
           <view v-html="popupInfo.moreDesc" />
         </scroll-view>
       </view>
@@ -106,16 +83,10 @@
       mode="bottom"
       :mask-click="false"
     >
-      <view
-        v-if="popupInfo.windowTitle"
-        class="popup-title"
-      >
+      <view v-if="popupInfo.windowTitle" class="popup-title">
         {{ popupInfo.windowTitle }}
       </view>
-      <scroll-view
-        scroll-y="true"
-        class="popup-padding-scroll"
-      >
+      <scroll-view scroll-y="true" class="popup-padding-scroll">
         <view class="popup-padding-box">
           <view class="business-info">
             <view class="business-img">
@@ -130,61 +101,37 @@
               </view>
             </view>
           </view>
-          <scroll-view
-            scroll-y="true"
-            class="popup-content"
-          >
+          <scroll-view scroll-y="true" class="popup-content">
             <view class="popup-content-box">
-              <image
-                :src="popupDes"
-                mode="widthFix"
-              />
+              <image :src="popupDes" mode="widthFix" />
             </view>
           </scroll-view>
           <!-- 发送验证码 -->
           <view class="sms-module">
-            <view class="user-phone">
-              手机号码：{{ phoneNumber }}
-            </view>
-            <view
-              v-if="phoneNumber"
-              class="sms-box"
-            >
+            <view class="user-phone">手机号码：{{ phoneNumber }}</view>
+            <view v-if="phoneNumber" class="sms-box">
               <input
                 v-model="smsCode"
                 class="m-input sms-code-input"
                 type="text"
                 clearable
                 placeholder="请输入验证码"
-              >
-              <view
-                v-if="sendSmsTimes > 0"
-                class="sms-code-btn sms-code"
-              >
+              />
+              <view v-if="sendSmsTimes > 0" class="sms-code-btn sms-code">
                 {{ sendSmsTimes }}s重新获取
               </view>
-              <view
-                v-else
-                class="sms-code-btn"
-                @click="$emit('sendSmsCode')"
-              >
+              <view v-else class="sms-code-btn" @click="$emit('sendSmsCode')">
                 获取验证码
               </view>
             </view>
           </view>
-          <view
-            v-if="popupInfo.windowProtocol"
-            class="popup-agreement"
-          >
+          <view v-if="popupInfo.windowProtocol" class="popup-agreement">
             <view
               class="popup-agreement-check"
-              :class="agreementCheckFlag?'popup-agreement-checked':''"
+              :class="agreementCheckFlag ? 'popup-agreement-checked' : ''"
               @click="check"
             >
-              <text
-                v-if="agreementCheckFlag"
-                class="iconfont icon-xuanzhong"
-              />
+              <text v-if="agreementCheckFlag" class="iconfont icon-xuanzhong" />
             </view>
             <view class="popup-agreement-content">
               阅读并同意
@@ -197,14 +144,11 @@
             </view>
           </view>
           <view class="popup_button popup-button-single-box">
-            <block
-              v-for="(item,index) in popupInfo.buttons"
-              :key="item.id"
-            >
+            <block v-for="(item, index) in popupInfo.buttons" :key="item.id">
               <view
                 :class="['popup-button-single']"
                 :style="item.buttonStyle"
-                @click="buttonClick(item,index)"
+                @click="buttonClick(item, index)"
               >
                 {{ item.buttonName }}
               </view>

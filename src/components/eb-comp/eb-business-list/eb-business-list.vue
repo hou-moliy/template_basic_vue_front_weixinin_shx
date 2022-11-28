@@ -1,29 +1,17 @@
 <template>
-  <view
-    class="bsList"
-    @click="bannerClickEvent(pageConfig)"
-  >
+  <view class="bsList" @click="bannerClickEvent(pageConfig)">
     <view>
       <image
         class="bsList-image"
         :src="pageConfig.tagIcon"
-        :style="pageConfig.extraStyle"
+        :style="[extraStyle]"
       />
     </view>
-    <view
-      v-if="pageConfig.title || pageConfig.tip"
-      class="bsList-content"
-    >
-      <view
-        v-if="pageConfig.title"
-        class="bsList-title"
-      >
+    <view v-if="pageConfig.title || pageConfig.tip" class="bsList-content">
+      <view v-if="pageConfig.title" class="bsList-title">
         {{ pageConfig.title }}
       </view>
-      <view
-        v-if="pageConfig.tip"
-        class="bsList-time"
-      >
+      <view v-if="pageConfig.tip" class="bsList-time">
         {{ pageConfig.tip }}
       </view>
     </view>
@@ -31,42 +19,30 @@
 </template>
 
 <script>
-import { navigateToAny } from "@/utils/tools.js";
+import { copyAttr } from "@/utils/gCopy.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => {
-        return {};
-      },
+      default: () => { }
+      ,
     },
   },
   data () {
     return {
       staticImgs: this.$staticImgs,
+      extraStyle: {
+        height: "480rpx",
+      },
     };
   },
-  onLoad () { },
-  onShow () { },
+  created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+  },
   methods: {
-    async bannerClickEvent (item) {
-      console.log(item);
-      // 埋点
-      // programaAnalysis(this.params, item.id)
-      await this.$store.dispatch(
-        "getCustomorderList",
-        `runAd_${item.moduleId}`,
-      );
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
-      this.$analysis.dispatch("dj_yywid", item.id);
-      navigateToAny(item);
-      this.$emit("bannerClickEvent", item);
+    bannerClickEvent (item) {
+      navigateToAnyCheck(item, `runAd_${item.moduleId}`);
     },
   },
 };

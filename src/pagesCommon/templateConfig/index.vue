@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       pageName: "",
-      activityId: "S2022112447b73",
+      activityId: "",
       templateId: "",
       pageConfig: null,
     };
@@ -39,6 +39,7 @@ export default {
     this.getPageConfig();
   },
   methods: {
+    // 获取页面配置信息
     getPageConfig () {
       TemplateService.getPageConfigByPageName({ pageName: `${this.templateId}_${this.activityId}` }).then(res => {
         if (res.data.code === 200) {

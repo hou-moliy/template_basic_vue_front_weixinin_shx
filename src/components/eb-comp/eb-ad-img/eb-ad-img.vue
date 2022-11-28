@@ -61,7 +61,6 @@ export default {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
-      console.log(params, "params");
       AdService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
           this.dataList = res.data.data;

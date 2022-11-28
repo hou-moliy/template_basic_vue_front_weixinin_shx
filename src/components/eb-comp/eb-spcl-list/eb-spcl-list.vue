@@ -125,7 +125,7 @@ export default {
   mounted () {
   },
   methods: {
-    refreshData () {
+    handleFresh () {
       console.log("刷新拉~~~~~~");
       this.getSpclList();
     },
@@ -136,7 +136,6 @@ export default {
       };
       SpclService.getVideoByActivityId(params).then(res => {
         if (res.data.code === 200) {
-          // this.dataList = res.data.data;
           const tempList = res.data.data;
           if (
             uni.getStorageSync("Authorization") &&

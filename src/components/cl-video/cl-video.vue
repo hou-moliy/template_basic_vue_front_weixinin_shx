@@ -128,6 +128,9 @@ export default {
     this.trueSrc = this.src;
     this.videoCtx.pause();
     this.videoCtx.play();
+    if (uni.getStorageSync("isFirstPlay") === "") { // 第一次播放
+      this.$store.commit("spcl/SET_FIRST_PLAY", true);
+    }
   },
   methods: {
     // 拖动滑块

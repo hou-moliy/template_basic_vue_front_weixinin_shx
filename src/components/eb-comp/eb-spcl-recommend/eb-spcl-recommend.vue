@@ -94,7 +94,6 @@ export default {
   watch: {},
   created () { },
   mounted () {
-    console.log("+++", this.pageConfig);
     this.getSpclList();
   },
   methods: {
