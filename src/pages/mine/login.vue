@@ -399,7 +399,6 @@ export default {
         this.$toast("微信授权失败");
         this.loginFlag = true;
       }
-      console.log(res, "获取openid");
     },
     // 成功登录
     successLogin (res) {
@@ -426,7 +425,7 @@ export default {
       // 查询用户是否开启ai换铃
       // this.checkPortalUser()
       // 返回上一级
-      // uni.navigateBack({ delta: 1 });
+      uni.navigateBack({ delta: 1 });
       uni.setStorageSync("loadClData", true);
     },
 
