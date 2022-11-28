@@ -1,16 +1,8 @@
 <template>
   <view class="swiper-tab">
-    <view
-      class="tab-container"
-      :style="{ background: tabBackground }"
-    >
+    <view class="tab-container" :style="{ background: tabBackground }">
       <!-- 头部标题区域 -->
-      <view
-        class="title"
-        style="margin-top: 100rpx"
-      >
-        彩铃
-      </view>
+      <view class="title" style="margin-top: 100rpx">彩铃</view>
       <!-- 头部Tab区域 -->
       <view :class="['tab', `tab-${scrollNavStation}`]">
         <scroll-view
@@ -35,7 +27,7 @@
               :key="index"
               :class="['tab-item', pageName == item.pageName ? 'on' : '']"
               :data-current="index + 1"
-              @click.stop="swichNavDebounce($event, item.pageUrl)"
+              @click.stop="switchNavDebounce($event, item.pageUrl)"
             >
               <view>
                 {{ item.name }}
@@ -47,7 +39,7 @@
                         : '',
                   }"
                   class="tab-item-hr"
-                >
+                />
               </view>
             </view>
           </view>
@@ -76,48 +68,14 @@
         }"
         @change="swiperChange"
       >
-        <swiper-item
-          v-for="swipeItem in tabList"
-          :key="swipeItem.id"
-        >
+        <swiper-item v-for="swipeItem in tabList" :key="swipeItem.id">
           <scroll-view
             scroll-y="true"
             :style="{ height: `${windowHeight}px` }"
-            @scrolltolower="scrolltolower"
+            @scrolltolower="scrollToLower"
             @scroll="swiperContainerScroll"
           >
-            <!-- 对应页面模块的注释，重要
-            0001 banner模块
-            0002 icon模块
-            0003 最新直播
-            0004 热门推荐
-            0005 精选海报
-            0006 辽宁特惠
-            0007 风景 // 视频彩铃组件
-            0008 音频专题
-            0009 你会使用5G助手么
-            0010 订阅
-            0011 直播-直播瀑布流
-            0012 搜索
-            0013 视频彩铃-all
-            0014 音频彩铃-all
-            0015 咪咕视频-视频瀑布流
-            0016 咪咕图片-咪咕-咪咕视频
-            0017 咪咕图片-咪咕圈圈
-            0018 小视频-今日推荐
-            0019 小视频-精选权益
-            0020 小视频-全部视频
-            0021 广告位轮播
-            0022 热门专题
-            0023 咪咕视频左右滑动
-            0029 IOP 猜您喜欢
-            0030 发现页 内嵌web-view 可配置h5
-            0031 新热门专题、可跳转新专题模块
-            0032 赛事预约 -->
-            <!-- <eb-config-container-async
-              ref="EbConfig"
-              :page-config-list="swipeItem.pageConfig"
-            /> -->
+            <!-- 配置化组件容器 -->
             <ebConfigContainerAsync
               key=""
               ref="EbConfig"
@@ -128,21 +86,25 @@
         </swiper-item>
       </swiper>
     </view>
-    <!-- 自定义Tabbar -->
-    <custom-tabbar
-      :tab-bar="tabBar"
-      :mid-button="true"
+    <!-- 自定义TabBar -->
+    <custom-tabbar :tab-bar="tabBar" :mid-button="true" />
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
+    <!-- 下线通知 -->
+    <offline-popup
+      v-if="Boolean($store.state.offlinePopup.offlinePopupShow)"
+      ref="offlinePopup"
     />
   </view>
 </template>
 
 <script>
-import FindService from "@/api/find/tabAndbanner";
+import TemplateService from "@/api/template/index";
 import Util from "@/utils/tools.js";
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
 
 export default {
-  name: "Index",
+  name: "ClIndex",
   components: { ebConfigContainerAsync },
   data () {
     return {
@@ -150,7 +112,7 @@ export default {
       tabList: [], // 头部Tab
       tabBackground: "transparent",
       scrollNavStation: "left", // 导航栏滑动的位置，left左端 right右端 center中间
-      swichNavInfo: {}, // 当前的Tab对象
+      switchNavInfo: {}, // 当前的Tab对象
       pageName: "", // 当前的Tab栏name
       swiperTab: 0, // swiper滑动的Tab
       currentTab: 0, //
@@ -216,6 +178,7 @@ export default {
   },
   onShow () {
     this.getTabList();
+    this.handleFresh();
   },
   onShareAppMessage (res) {
     if (res.from === "button") {
@@ -246,6 +209,11 @@ export default {
     }
   },
   methods: {
+    handleFresh () {
+      if (this.$refs.EbConfig) {
+        this.$refs.EbConfig[this.swiperTab].handleFresh();
+      }
+    },
     // 跨页面通信监听
     dispatchPageEvent () {
       uni.$on("changeTabByMore", data => {
@@ -253,6 +221,10 @@ export default {
       });
       uni.$on("changeTabByMore", data => {
         this.changeTabByMore(data);
+      });
+      uni.$on("openLoginPopup", data => {
+        console.log(data);
+        this.$showLoginPop(this);
       });
     },
     // 初始化页面样式宽高等
@@ -272,12 +244,12 @@ export default {
         },
       });
     },
-    swichNavDebounce (e) {
-      this.swichNavInfo = e;
-      Util.debounce(this.swichNav, 200, true)();
+    switchNavDebounce (e) {
+      this.switchNavInfo = e;
+      Util.debounce(this.switchNav, 200, true)();
     },
-    swichNav () {
-      const { current } = this.swichNavInfo.currentTarget.dataset;
+    switchNav () {
+      const { current } = this.switchNavInfo.currentTarget.dataset;
       this.swiperTab = current - 1;
       this.currentTab = current;
     },
@@ -292,7 +264,7 @@ export default {
     },
     // 获取tabList
     async getTabList () {
-      await FindService.getTab({ tabTarget: "main" }).then(res => {
+      await TemplateService.getTabAndPageConfig({ tabTarget: "main" }).then(res => {
         if (res.data.code === 200) {
           this.tabList = res.data.data;
         }
@@ -402,12 +374,12 @@ export default {
         });
     },
     // 滚动到底部监听
-    scrolltolower () {
+    scrollToLower () {
       console.log(this.swiperTab, "ccc");
       this.$nextTick(() => {
         if (this.$refs.EbConfig) {
           console.log(this.$refs.EbConfig[this.swiperTab], "kkkk");
-          this.$refs.EbConfig[this.swiperTab].onScollBottom();
+          this.$refs.EbConfig[this.swiperTab].onScrollBottom();
         }
       });
     },

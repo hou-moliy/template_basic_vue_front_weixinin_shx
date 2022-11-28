@@ -1,5 +1,5 @@
 <template>
-  <view class="full-page">
+  <view v-if="videoHeight" class="full-page">
     <!-- 视频彩铃内容 -->
     <view class="video-box">
       <cl-video
@@ -15,28 +15,16 @@
         :video-id="videoDetail.ringId"
         :object-fit="videoDetail.objectFit"
       >
-        <view
-          v-if="actions.set"
-          class="view-left"
-        >
+        <view v-if="actions.set" class="view-left">
           <view class="left-view">
             <view class="left-text">
               {{ videoDetail.ringName }}
             </view>
-            <view
-              v-if="videoDetail.isBuyVideo"
-              class="setted-video"
-            >
+            <view v-if="videoDetail.isBuyVideo" class="setted-video">
               已设置
             </view>
-            <view
-              v-else
-              class="set-box"
-            >
-              <view
-                class="inner-box"
-                @click="setSpcl(videoDetail)"
-              >
+            <view v-else class="set-box">
+              <view class="inner-box" @click="setSpcl(videoDetail)">
                 <view class="set-boxImg">
                   <image
                     :src="`${staticImgs}/shxmp/init/set_spcl_btn_inner.png`"
@@ -48,26 +36,19 @@
                 <view class="spcl_btn3" />
                 <view class="spcl_btn4" />
               </view>
-              <view class="set-text">
-                设为彩铃
-              </view>
+              <view class="set-text">设为彩铃</view>
             </view>
           </view>
         </view>
         <view class="view-right">
-          <view
-            v-if="actions.preview"
-            class="right-icon"
-          >
+          <view v-if="actions.preview" class="right-icon">
             <image
               v-show="step !== 2"
               :src="`${staticImgs}/shxmp/init/video-preview.png`"
               class="preview-img img"
               @click="previewVideo(videoDetail.ringId)"
             />
-            <view class="right-text">
-              呼叫预览
-            </view>
+            <view class="right-text">呼叫预览</view>
           </view>
           <!-- 取消点赞 -->
           <view
@@ -78,12 +59,10 @@
               :src="`${staticImgs}/shxmp/init/video-dzed.png`"
               :data-videoId="videoDetail.ringId"
               class="other-img img"
-              @click="changeLikeStatus( 0)"
+              @click="changeLikeStatus(0)"
             />
             <view class="right-text">
-              {{
-                formatCount(videoDetail.extraInfo.likeCount)
-              }}
+              {{ formatCount(videoDetail.extraInfo.likeCount) }}
             </view>
           </view>
           <!-- 点赞 -->
@@ -97,24 +76,17 @@
               @click="changeLikeStatus(1)"
             />
             <view class="right-text">
-              {{
-                formatCount(videoDetail.extraInfo.likeCount)
-              }}
+              {{ formatCount(videoDetail.extraInfo.likeCount) }}
             </view>
           </view>
-          <view
-            v-if="actions.share"
-            class="right-icon"
-          >
+          <view v-if="actions.share" class="right-icon">
             <image
               :src="`${staticImgs}/shxmp/init/video-share.png`"
               class="other-img img"
               @click="shareEvent(videoDetail.ringId)"
             />
             <view class="right-text">
-              {{
-                formatCount(videoDetail.extraInfo.shareCount)
-              }}
+              {{ formatCount(videoDetail.extraInfo.shareCount) }}
             </view>
           </view>
         </view>
@@ -126,23 +98,11 @@
         class="cover_image"
         mode="aspectFit"
       />
-      <view
-        v-if="isNewIphone"
-        class="blank-space"
-      />
+      <view v-if="isNewIphone" class="blank-space" />
     </view>
     <!-- 新手引导步骤一 -->
-    <view
-      v-if="isFirstPlay && step === 1"
-      class="tip-one"
-      @click="nextStep"
-    >
-      <view
-        class="tip-text"
-        @click.stop="jumpGuide"
-      >
-        跳过引导
-      </view>
+    <view v-if="isFirstPlay && step === 1" class="tip-one" @click="nextStep">
+      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
       <image
         :src="`${staticImgs}/shxmp/init/spcl_tip_one.png`"
         class="tip-bubble"
@@ -164,23 +124,12 @@
           <view class="spcl_btn3" />
           <view class="spcl_btn4" />
         </view>
-        <view class="set-text">
-          设为彩铃
-        </view>
+        <view class="set-text">设为彩铃</view>
       </view>
     </view>
     <!-- 新手引导步骤二 -->
-    <view
-      v-if="isFirstPlay && step === 2"
-      class="tip-two"
-      @click="nextStep"
-    >
-      <view
-        class="tip-text"
-        @click.stop="jumpGuide"
-      >
-        跳过引导
-      </view>
+    <view v-if="isFirstPlay && step === 2" class="tip-two" @click="nextStep">
+      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
       <image
         :src="`${staticImgs}/shxmp/init/spcl_tip_two.png`"
         class="tip-bubble"
@@ -198,25 +147,28 @@
     </view>
     <!-- 滑动提示 -->
     <view
-      v-if=" isFirstPlay && step === 3"
+      v-if="isFirstPlay && step === 3"
       class="slide-image"
-      @click="isFirstPlay = false"
+      @click.stop="closeSwiperTips"
     >
       <image :src="`${staticImgs}/shxmp/init/slide_indicator.png`" />
     </view>
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
   </view>
 </template>
 <script>
 import clVideo from "@/components/cl-video/cl-video.vue";
 import { formatCount } from "@/utils/tools.js";
+import { mapGetters } from "vuex";
 export default {
   components: {
     clVideo,
   },
   props: {
-    index: {
-      type: Number,
-      default: 0,
+    item: {
+      type: Object,
+      default: () => { },
     },
   },
   data () {
@@ -233,41 +185,36 @@ export default {
         share: true,
         preview: true,
       }, // 是否展示设置按钮，默认展示
-      isFirstPlay: false, // 是否第一次
-      step: 1, // 新手引导步骤
       isNewIphone: false,
       videoDetail: null,
     };
   },
-  created () {
-    this.videoDetail = this.$store.state.spcl.videoList[this.index];
+  computed: {
+    ...mapGetters(["isFirstPlay", "step"]),
   },
-  mounted () {
+  created () {
     this.initStyle();
+    this.videoDetail = this.item;
   },
   methods: {
     formatCount,
     // 初始化样式
     initStyle () {
-      this.$nextTick(() => {
-        this.getSystemData().then((res) => {
-          this.isNewIphone = res.safeArea.top === 44;
-          // 播放器展示高度、宽度
-          this.videoHeight = `${res.windowHeight}px`;
-          this.videoWidth = `${res.windowWidth}px`;
-          // 是否展示引导弹窗
-          this.isFirstPlay = !uni.getStorageSync("userPlayVideo");
-        });
+      this.getSystemData().then((res) => {
+        this.isNewIphone = res.safeArea.top === 44;
+        // 播放器展示高度、宽度
+        this.videoHeight = `${res.windowHeight}px`;
+        this.videoWidth = `${res.windowWidth}px`;
       });
     },
     // 新手引导下一步
     nextStep () {
       this.$analysis.dispatch("spcl_dgcl_jx");
-      if (this.step === 1) {
-        this.step = 2;
-      } else if (this.step === 2) {
-        this.step = 3;
-        this.isFirstPlay = true;
+      if (this.$store.state.spcl.step === 1) {
+        this.$store.commit("spcl/SET_STEP", 2);
+      } else if (this.$store.state.spcl.step === 2) {
+        this.$store.commit("spcl/SET_STEP", 3);
+        this.$store.commit("spcl/SET_FIRST_PLAY", true);
       } else {
         console.log("step:way 故障", this.step);
       }
@@ -275,8 +222,13 @@ export default {
     // 新手引导跳过引导
     jumpGuide () {
       this.$analysis.dispatch("spcl_dgcl_tg");
-      this.step = 3;
-      this.isFirstPlay = true;
+      this.$store.commit("spcl/SET_STEP", 3);
+      this.$store.commit("spcl/SET_FIRST_PLAY", true);
+    },
+    // 关闭滑动提示
+    closeSwiperTips () {
+      console.log("关闭弹窗");
+      this.$store.commit("spcl/SET_FIRST_PLAY", false);
     },
     // 获取系统信息
     getSystemData () {
@@ -290,26 +242,29 @@ export default {
     },
     // 预览
     previewVideo (ringId) {
-      if (uni.getStorageSync("Authorization")) {
-        // 进入预览页面
-        uni.navigateTo({
-          url: `/pagesSpcl/clVideo/clVideoPreview?videoId=${ringId}`,
-        });
-      } else {
+      if (!uni.getStorageSync("Authorization")) {
         // 提示登录
+        return this.$showLoginPop(this);
       }
+      // 进入预览页面
+      uni.navigateTo({
+        url: `/pagesSpcl/clVideo/clVideoPreview?videoId=${ringId}`,
+      });
     },
     // 设置视频彩铃
     setSpcl (items) {
-      if (uni.getStorageSync("Authorization")) {
-        //  打开视频彩铃设置弹窗
-      } else {
+      if (!uni.getStorageSync("Authorization")) {
         // 提示登录
+        return this.$showLoginPop(this);
       }
+      //  打开视频彩铃设置弹窗
     },
     // 点赞 OR 取消点赞
     changeLikeStatus (opType) {
-      // 提示登录
+      if (!uni.getStorageSync("Authorization")) {
+        // 提示登录
+        return this.$showLoginPop(this);
+      }
       const data = {
         ringId: this.videoDetail.ringId,
         target: "dz",
@@ -386,20 +341,20 @@ export default {
     },
     // 分享到微信或者朋友圈
     shareEvent (ringId) {
-      if (uni.getStorageSync("Authorization")) {
-        const data = {
-          ringId,
-          target: "fx",
-        };
-        this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
-          const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
-          uni.navigateTo({
-            url,
-          });
-        });
-      } else {
+      if (!uni.getStorageSync("Authorization")) {
         // 提示登录
+        return this.$showLoginPop(this);
       }
+      const data = {
+        ringId,
+        target: "fx",
+      };
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
+        const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
+        uni.navigateTo({
+          url,
+        });
+      });
     },
   },
 };

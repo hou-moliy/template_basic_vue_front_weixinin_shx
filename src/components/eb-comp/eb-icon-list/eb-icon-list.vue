@@ -2,7 +2,7 @@
   <view>
     <view
       class="eb-icon"
-      :class="{'start':iconList.length ===1,'around':iconList.length>5}"
+      :class="{ start: iconList.length === 1, around: iconList.length > 5 }"
     >
       <view
         v-for="(item, index) in iconList"
@@ -12,7 +12,9 @@
       >
         <image :src="item.url" />
         <!-- icon限制n位文字 -->
-        <view><text>{{ item.title ? item.title.slice(0, wordLimit) : "" }}</text></view>
+        <view>
+          <text>{{ item.title ? item.title.slice(0, wordLimit) : "" }}</text>
+        </view>
       </view>
     </view>
   </view>
@@ -20,8 +22,7 @@
 
 <script>
 import AdService from "@/api/ad";
-
-import { navigateToAny } from "@/utils/navigateToAny.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   name: "EbIconList",
 
@@ -63,16 +64,7 @@ export default {
     },
     async navigateByEvent (event) {
       this.$emit("buryIconListId", event.id);
-      await this.$store.dispatch("getCustomorderList", `icon_${event.id}`);
-      console.log(this.$store.state.offlinePopup.loginShow);
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
-      navigateToAny(event);
+      navigateToAnyCheck(event, `icon_${event.id}`);
     },
   },
 };

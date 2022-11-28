@@ -1,18 +1,18 @@
 import windowService from "@/api/window/index";
 const state = {
-  windowList: [],
+  windowAllObj: uni.getStorageSync("windowAllObj") || {},
 };
 
 const mutations = {
-  SET_WINDOWLIST ({ state }, windowList) {
-    state.windowList = windowList;
-    uni.setStorageSync("windowList", windowList);
+  SET_WINDOW_ALL_OBJ (state, windowAllObj) {
+    state.windowAllObj = windowAllObj;
+    uni.setStorageSync("windowAllObj", windowAllObj);
   },
 };
 
 const actions = {
   // 获取公共配置的提示性弹窗，如登录、设置等
-  getCommonWinow ({ commit, state }) {
+  getCommonWindow ({ commit, state }) {
     if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
       windowService.getWindowAll({ windowScene: "common" }).then(res => {
         if (res.data.code === 200) {
@@ -20,14 +20,15 @@ const actions = {
           const windowAllObj = {};
           for (const window of windowList) {
             windowAllObj[window.windowCode] = window;
-            uni.setStorageSync("windowAllObj", windowAllObj);
+            commit("SET_WINDOW_ALL_OBJ", windowAllObj);
           }
         }
       });
     }
   },
   // 获取下线弹窗
-  getOfflineWinow ({ commit, dispatch }, state) {
+  getOfflineWindow ({ commit, dispatch }, state) {
+    console.log("1");
     if (!uni.getStorageSync("pageDownDialog")) { // 存弹窗内容信息，避免重复请求
       windowService.getWindowAll({ windowCode: "pageDownDialog" })
         .then((res) => {
