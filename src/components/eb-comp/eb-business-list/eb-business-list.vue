@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     bannerClickEvent (item) {
+      // 请统一使用eventUrl字段作为跳转路径
       navigateToAnyCheck(item, `runAd_${item.moduleId}`);
     },
   },

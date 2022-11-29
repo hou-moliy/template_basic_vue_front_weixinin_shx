@@ -116,6 +116,7 @@ export default {
             this.handleOpenAi();
           } else {
             this.$toast("成功开通视频彩铃业务");
+            this.show = false;
           }
         } else {
           this.$toast("开通失败请重试");
@@ -127,6 +128,7 @@ export default {
       SpclService.openAi({ type: 2 }).then(res => {
         if (res.data.code == 200) {
           this.$toast("成功开通视频彩铃业务");
+          this.show = false;
         }
       });
     },

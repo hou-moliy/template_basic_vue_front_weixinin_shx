@@ -169,7 +169,6 @@ export default {
 }
 .spcl-box {
   padding-top: 40rpx;
-  background-color: pink;
 
   .waterfall-box {
     display: flex;

@@ -1,16 +1,7 @@
 <template>
-  <view
-    v-if="!portalAd.length == 0"
-    class="ad-structure"
-  >
-    <view
-      v-if="pageConfig.tagIcon"
-      class="more-topic-top-img"
-    >
-      <image
-        :src="pageConfig.tagIcon"
-        mode="widthFix"
-      />
+  <view v-if="!portalAd.length == 0" class="ad-structure">
+    <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
+      <image :src="pageConfig.tagIcon" mode="widthFix" />
     </view>
     <view class="ad-more-data-box">
       <view
@@ -18,40 +9,35 @@
         :key="inIndex"
         class="ad-structure-type"
       >
+        <!-- 一行一个 -->
         <view v-if="inItem.style == 1">
           <view
             v-for="(contenItem, contentIndex) in inItem.portalAd"
             :key="contentIndex"
+            :style="[contenItem.extraStyle]"
           >
-            <view v-if="contentIndex < 1">
+            <view v-if="contentIndex < 1" :style="[contenItem.extraStyle]">
               <view
                 class="ad-structure-1-1"
+                :style="[contenItem.extraStyle]"
                 @click.stop="bannerClickEvent(contenItem)"
               >
-                <view class="ad-structure-1-1-item">
+                <view
+                  class="ad-structure-1-1-item"
+                  :style="[contenItem.extraStyle]"
+                >
                   <img
                     class="item-image"
                     :src="contenItem.url"
                     alt=""
-                  >
-                  <img
-                    v-if="isShowBtn === 1"
-                    class="item-btn"
-                    :src="`${staticImgs}/lnmp/ln-find/find-play-btn.png`"
-                    alt=""
-                  >
+                    :style="[contenItem.extraStyle]"
+                  />
                 </view>
                 <view class="ad-structure-1-1-title">
-                  <view
-                    v-if="contenItem.categoryTitle"
-                    class="title"
-                  >
+                  <view v-if="contenItem.categoryTitle" class="title">
                     {{ contenItem.categoryTitle }}
                   </view>
-                  <view
-                    v-if="contenItem.categoryDesc"
-                    class="desc"
-                  >
+                  <view v-if="contenItem.categoryDesc" class="desc">
                     {{ contenItem.categoryDesc }}
                   </view>
                 </view>
@@ -59,60 +45,58 @@
             </view>
           </view>
         </view>
+        <!-- 一行两个 -->
         <view v-else-if="inItem.style == 2">
           <view class="ad-structure-1-2">
             <view
               v-for="(contenItem, contentIndex) in inItem.portalAd"
               :key="contentIndex"
+              :style="[contenItem.extraStyle]"
             >
-              <view v-if="contentIndex < 2">
+              <view v-if="contentIndex < 2" :style="[contenItem.extraStyle]">
                 <view
                   class="ad-structure-1-2-item"
+                  :style="[contenItem.extraStyle]"
                   @click.stop="bannerClickEvent(contenItem)"
                 >
-                  <view class="ad-structure-1-2-item-img-box">
+                  <view
+                    class="ad-structure-1-2-item-img-box"
+                    :style="[contenItem.extraStyle]"
+                  >
                     <img
                       class="imgs"
                       :src="contenItem.url"
-                    >
-                    <img
-                      v-if="isShowBtn === 1"
-                      class="item-btn"
-                      :src="`${staticImgs}/lnmp/ln-find/find-play-btn.png`"
-                      alt=""
-                    >
+                      :style="[contenItem.extraStyle]"
+                    />
                   </view>
                 </view>
               </view>
             </view>
           </view>
         </view>
-        <view
-          v-else-if="inItem.style == 3"
-          style="width: 100%"
-        >
+        <!-- 一行三个 -->
+        <view v-else-if="inItem.style == 3" style="width: 100%">
           <view class="ad-structure-1-3">
             <view
               v-for="(contenItem, contentIndex) in inItem.portalAd"
               :key="contentIndex"
+              :style="[contenItem.extraStyle]"
             >
-              <view v-if="contentIndex < 3">
+              <view v-if="contentIndex < 3" :style="[contenItem.extraStyle]">
                 <view
                   class="ad-structure-1-3-item"
                   :class="{ 'is-margin': contentIndex % 3 === 1 }"
-                  :style="{ backgroundImage: `url(${contenItem.url})` }"
+                  :style="{
+                    backgroundImage: `url(${contenItem.url})`,
+                    borderRadius: [contenItem.extraStyle.borderRadius],
+                    height: [contenItem.extraStyle.height],
+                  }"
                   @click.stop="bannerClickEvent(contenItem)"
                 >
-                  <view
-                    v-if="contenItem.categoryTitle"
-                    class="title"
-                  >
+                  <view v-if="contenItem.categoryTitle" class="title">
                     {{ contenItem.categoryTitle }}
                   </view>
-                  <view
-                    v-if="contenItem.categoryDesc"
-                    class="desc"
-                  >
+                  <view v-if="contenItem.categoryDesc" class="desc">
                     {{ contenItem.categoryDesc }}
                   </view>
                 </view>
@@ -120,45 +104,55 @@
             </view>
           </view>
         </view>
+        <!-- 左一右二 -->
         <view v-else-if="inItem.style == 4">
           <view
             class="ad-structure-4"
             @click.stop="bannerClickEvent(inItem.portalAd[0])"
           >
-            <view class="ad-structure-4-1-item">
+            <view
+              class="ad-structure-4-1-item"
+              :style="{ borderRadius: [extraStyle.borderRadius] }"
+            >
               <img
                 :src="inItem.portalAd[0].url"
                 alt=""
-              >
+                :style="{ borderRadius: [extraStyle.borderRadius] }"
+              />
             </view>
-            <view class="ad-structure-4-2-item">
+            <view
+              class="ad-structure-4-2-item"
+              :style="{ borderRadius: [extraStyle.borderRadius] }"
+            >
               <img
                 class="imgs i-1"
                 :src="inItem.portalAd[1].url"
                 alt=""
+                :style="{ borderRadius: [extraStyle.borderRadius] }"
                 @click.stop="bannerClickEvent(inItem.portalAd[1])"
-              >
+              />
               <img
                 class="imgs i-2"
                 :src="inItem.portalAd[2].url"
+                :style="{ borderRadius: [extraStyle.borderRadius] }"
                 alt=""
                 @click.stop="bannerClickEvent(inItem.portalAd[2])"
-              >
+              />
             </view>
           </view>
         </view>
-        <view
-          v-else-if="inItem.style == 5"
-          class="ad-banner-box-5"
-        >
+        <!-- 轮播图 -->
+        <view v-else-if="inItem.style == 5" class="ad-banner-box-5">
           <view
             v-if="inItem.portalAd.length === 1"
             class="ad-banner-box"
+            :style="[inItem.portalAd[0].extraStyle]"
             @click="bannerClickEvent(inItem.portalAd[0])"
           >
             <image
               class="ad-banner-image"
               :src="inItem.portalAd[0].url"
+              :style="[inItem.portalAd[0].extraStyle]"
             />
           </view>
           <swiper
@@ -173,12 +167,14 @@
             <swiper-item
               v-for="(item, index) in inItem.portalAd"
               :key="index"
+              :style="[item.extraStyle]"
               @click="bannerClickEvent(item)"
             >
-              <view class="ad-banner-box">
+              <view class="ad-banner-box" :style="[item.extraStyle]">
                 <image
                   class="ad-banner-image"
                   :src="item.url"
+                  :style="[item.extraStyle]"
                 />
               </view>
             </swiper-item>
@@ -190,16 +186,11 @@
 </template>
 
 <script>
-// 这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
-// 例如：import 《组件名称》 from '《组件路径》';
 import adService from "@/api/ad/index.js";
-import { programaAnalysis } from "@/utils/common.js";
-
-import { navigateToAny } from "@/utils/tools.js";
-
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
+import { copyAttr } from "@/utils/gCopy.js";
 export default {
   components: {},
-  // import引入的组件需要注入到对象中才能使用
   props: {
     pageConfig: {
       type: Object,
@@ -207,17 +198,22 @@ export default {
     },
   },
   data () {
-    // 这里存放数据
     return {
       staticImgs: this.$staticImgs,
       portalAd: [],
+      extraStyle: {
+        borderRadius: "50rpx",
+        height: "",
+      },
+
     };
   },
-  // 生命周期 - 挂载完成（可以访问DOM元素）
+  created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+  },
   mounted () {
     this.getAdLIst();
   },
-  // 方法集合
   methods: {
     getAdLIst () {
       const params = {
@@ -229,34 +225,36 @@ export default {
         .then(res => {
           if (res.data.code === 200) {
             this.portalAd = res.data.data;
+            this.handleAdExtraStyle();
           }
         })
         .catch(err => {
           console.log(err);
         });
     },
-    async bannerClickEvent (item) {
-      console.log(item);
-      // 埋点
-      programaAnalysis(this.pageConfig, item.id);
-      await this.$store.dispatch("getCustomorderList", `runAd_${item.id}`);
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
-      this.$analysis.dispatch("dj_yywid", item.id);
-      navigateToAny(item);
-      this.$emit("bannerClickEvent", item);
+    // 处理每个Ad的单项的ExtraStyle
+    handleAdExtraStyle () {
+      this.portalAd.forEach(item => {
+        item.portalAd.forEach(e => {
+          const extraStyle = JSON.parse(e.extraStyle);
+          if (extraStyle.height === "") {
+            extraStyle.height = "300";
+          }
+          e.extraStyle = {
+            height: extraStyle.height + "rpx",
+            borderRadius: this.extraStyle.borderRadius,
+          };
+        });
+      });
+    },
+    bannerClickEvent (item) {
+      navigateToAnyCheck(item, `runAd_${item.id}`);
     },
   },
 };
 </script>
 <style lang="scss" scoped>
 .ad-structure {
-  // width: 100vw;
   padding: 30rpx 0 0 0;
 
   .more-topic-top-img {
@@ -272,8 +270,6 @@ export default {
   }
 
   &-1-1 {
-    // width: 100%;
-    // margin-bottom: 30rpx;
     padding: 0 32rpx;
 
     &-item {

@@ -68,7 +68,7 @@
         }"
         @change="swiperChange"
       >
-        <swiper-item v-for="swipeItem in tabList" :key="swipeItem.id">
+        <swiper-item v-for="(swipeItem, index) in tabList" :key="swipeItem.id">
           <scroll-view
             scroll-y="true"
             :style="{ height: `${windowHeight}px` }"
@@ -77,6 +77,7 @@
           >
             <!-- 配置化组件容器 -->
             <ebConfigContainerAsync
+              v-if="index === swiperTab"
               key=""
               ref="EbConfig"
               :activity-id="swipeItem.activityId"
@@ -209,6 +210,7 @@ export default {
     }
   },
   methods: {
+    // 刷新组件信息
     handleFresh () {
       if (this.$refs.EbConfig) {
         this.$refs.EbConfig[this.swiperTab].handleFresh();
@@ -244,6 +246,7 @@ export default {
         },
       });
     },
+    // switch点击防抖
     switchNavDebounce (e) {
       this.switchNavInfo = e;
       Util.debounce(this.switchNav, 200, true)();
@@ -326,6 +329,7 @@ export default {
       this.swiperChangeInfo = e;
       Util.debounce(this.swiperNavDebounce, 200, true)();
     },
+    // swiper切换防抖
     swiperNavDebounce () {
       const e = this.swiperChangeInfo;
       const { current } = e.detail;
