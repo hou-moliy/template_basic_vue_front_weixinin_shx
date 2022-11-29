@@ -31,7 +31,7 @@ const freeLoginAuth = params => axios.get(baseUrlTyrz + "/threelogin/hcyauth", p
 // 辽友会会员信息查询
 const lyhGetUserInfo = params => axios.get(baseUrl + "/lyh/getUserInfo", params);
 // 获取短信验证码
-const getAuthCodeLn = params => axios.get(baseUrl + "/sso/getAuthCodeLn", params);
+const getAuthCodeLn = params => axios.get(baseUrl + "/sso/getAuthCode", params);
 // 微信绑定
 const bindWx = params => axios.post(weixinUrl + "/wechat/bind", params);
 // 微信手机号登录

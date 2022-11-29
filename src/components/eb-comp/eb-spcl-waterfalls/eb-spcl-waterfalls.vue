@@ -93,6 +93,7 @@ import operateItem from "./operateItem.vue";
 import spclItem from "./spclItem.vue";
 import SpclService from "@/api/spcl/index.js";
 import { copyAttr } from "@/utils/gCopy.js";
+import { videoInfoUpdate } from "@/utils/video";
 import {
   programaAnalysis,
 } from "@/utils/common.js";
@@ -147,6 +148,7 @@ export default {
     programaAnalysis,
     // 强制刷新
     handleFresh () {
+      console.log("刷新啦，eb-spcl-waterfalls");
       this.getWfList();
     },
     // 滚动触底
@@ -170,10 +172,11 @@ export default {
         data: res,
       }) => {
         if (res.code === 200) {
-          const { list, total } = res.data;
+          let { list, total } = res.data;
           if (!total && !list.length) return;
           this.total = total;
           const len = list.length;
+          list = videoInfoUpdate(list);
           if (flag) {
             this.wfList.splice(0, len, ...list);
           } else {

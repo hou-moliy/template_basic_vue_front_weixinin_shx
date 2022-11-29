@@ -31,12 +31,11 @@
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
     <!-- 视频彩铃订购弹窗 -->
-    <!-- businessInfo -->
     <popupTemplateOperition
       :popup-info="popupInfo"
       :show="show"
       @buttonClick="operitionBtnClick"
-      @closePopup="closePopup"
+      @closePopup="closeOperitionPopup"
     />
   </view>
 </template>
@@ -83,6 +82,7 @@ export default {
         this.$refs.EbConfig.onScrollBottom();
       }
     },
+    // 刷新
     handleFresh () {
       this.$refs.EbConfig.handleFresh();
     },
@@ -90,15 +90,41 @@ export default {
     openLoginPopup () {
       this.$showLoginPop(this);
     },
-    // 设置视频彩铃
+    // 点击设置视频彩铃按钮
     purchaseVideo (e) {
-      // 设置视频彩铃
       if (uni.getStorageSync("Authorization")) {
-        this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
-        this.show = true;
+        this.$store.dispatch("user/getUserSpclStatus").then(res => {
+          if (res == 1) { // 已开通视频彩铃
+            this.handleSetPcl(e);
+          } else { // 未开通
+            this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
+            this.show = true;
+          }
+        });
       } else {
         this.openLoginPopup();
       }
+    },
+    // 设置视频彩铃
+    handleSetPcl (item) {
+      SpclService.setSpcl({ ringId: item.ringId }).then(res => {
+        if (res.data.code === 200) {
+          if (res.data.data.code === 0) {
+            this.$toast("设置成功");
+            // 更新用户所有铃音数据
+            const vrbtResponse = this.$store.state.spcl.userSpclData.vrbtResponse;
+            this.$store.commit("spcl/SET_USER_SPCL_ALL", [...vrbtResponse, item]);
+            // 更新当前播放数据
+            const vrbtSettingRes = this.$store.state.spcl.userSpclData.vrbtSettingRes;
+            this.$store.commit("spcl/SET_USER_SPCL_SETTINGS", [...vrbtSettingRes, item.ringId]);
+            this.handleFresh();
+          } else {
+            this.$toast(res.data.data.msg);
+          }
+        } else {
+          this.$toast(res.data.message);
+        }
+      });
     },
     // 订购弹窗按钮点击
     operitionBtnClick (e) {
@@ -111,11 +137,12 @@ export default {
     // 开通视频彩铃
     handleOpenSpcl (e) {
       SpclService.openSpcl({ servType: "001" }).then(res => {
-        if (res.data.code == 200) {
+        if (res.data.code === 200) {
           if (e.protocolCheckFlag) { // 勾选了AI换铃
             this.handleOpenAi();
           } else {
             this.$toast("成功开通视频彩铃业务");
+            this.show = false;
           }
         } else {
           this.$toast("开通失败请重试");
@@ -125,13 +152,14 @@ export default {
     // 开通AI换铃
     handleOpenAi () {
       SpclService.openAi({ type: 2 }).then(res => {
-        if (res.data.code == 200) {
+        if (res.data.code === 200) {
           this.$toast("成功开通视频彩铃业务");
+          this.show = false;
         }
       });
     },
     // 订购弹窗关闭
-    closePopup () {
+    closeOperitionPopup () {
       this.show = false;
     },
   },
