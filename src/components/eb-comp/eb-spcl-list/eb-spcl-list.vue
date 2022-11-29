@@ -41,7 +41,7 @@
                   v-else
                   class="setting-btn"
                   :style="{ background: `${pageConfig.innerColor}` }"
-                  @click="goToPlayVideo(item)"
+                  @click="$emit('purchaseVideo', item)"
                 >
                   {{ pageConfig.title }}
                 </view>
@@ -83,7 +83,7 @@
                   v-else
                   class="setting-btn"
                   :style="{ background: `${pageConfig.innerColor}` }"
-                  @click="goToPlayVideo(item)"
+                  @click="$emit('purchaseVideo', item)"
                 >
                   {{ pageConfig.title }}
                 </view>
@@ -98,6 +98,7 @@
 
 <script>
 import SpclService from "@/api/spcl/index.js";
+import { videoInfoUpdate } from "@/utils/video";
 export default {
   props: {
     pageConfig: {
@@ -137,22 +138,7 @@ export default {
       SpclService.getVideoByActivityId(params).then(res => {
         if (res.data.code === 200) {
           const tempList = res.data.data;
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userData")[0] &&
-            uni.getStorageSync("userData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
-          this.dataList = tempList;
+          this.dataList = videoInfoUpdate(tempList);
         }
       });
     },

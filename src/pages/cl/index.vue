@@ -171,14 +171,12 @@ export default {
       },
     };
   },
-  created () {
-    this.getPageWidthHeight();
-  },
   onLoad () {
+    this.getPageWidthHeight();
     this.dispatchPageEvent();
   },
   onShow () {
-    this.getTabList();
+    this.initData();
     this.handleFresh();
   },
   onShareAppMessage (res) {
@@ -210,6 +208,13 @@ export default {
     }
   },
   methods: {
+    // 页面初始化数据
+    initData () {
+      this.getTabList();
+      this.$store.dispatch("user/getUserSpclStatus");
+      this.$store.dispatch("user/getUserAiStatus");
+      this.$store.dispatch("spcl/getUserAllVideoList");
+    },
     // 刷新组件信息
     handleFresh () {
       if (this.$refs.EbConfig) {
@@ -379,11 +384,10 @@ export default {
     },
     // 滚动到底部监听
     scrollToLower () {
-      console.log(this.swiperTab, "ccc");
       this.$nextTick(() => {
         if (this.$refs.EbConfig) {
-          console.log(this.$refs.EbConfig[this.swiperTab], "kkkk");
-          this.$refs.EbConfig[this.swiperTab].onScrollBottom();
+          //  this.$refs.EbConfig[this.swiperTab].onScrollBottom();
+          this.$refs.EbConfig[0].onScrollBottom();
         }
       });
     },

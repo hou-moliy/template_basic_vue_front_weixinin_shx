@@ -12,7 +12,10 @@ const getVideoByActivityId = (params) => axios.get(baseUrl + "/spcl/topic/getVid
 const getVideoByActivityIdPage = (params) => axios.get(baseUrl + "/spcl/topic/getVideoByActivityIdPage", params); // 根据活动id查询列表接口(分页)
 const openSpcl = (params) => axios.get(baseUrl + "/mock/spcl_open", params); // 视频彩铃业务开通
 const openAi = (params) => axios.get(baseUrl + "/mock/spcl_ai_aiFunction", params); // AI换铃业务开通
-const spclStatus = (params) => axios.get(baseUrl + "/mock/spcl_status", params); // 查询视频彩铃状态
+const spclStatus = (params) => axios.get(baseUrl + "/mock/spcl_status", params); // 查询视频彩铃开通状态
+const aiStatus = (params) => axios.get(baseUrl + "/mock/spcl_ai_status", params); // 查询AI换铃开通状态
+const setSpcl = (params) => axios.post(baseUrl + "/spcl/setUpSpcl", params); // 设置视频彩铃（不在个人铃音库）
+
 export default {
   getsplykInfo,
   getsplykCurrentInfo,
@@ -26,4 +29,6 @@ export default {
   openSpcl,
   openAi,
   spclStatus,
+  aiStatus,
+  setSpcl,
 };

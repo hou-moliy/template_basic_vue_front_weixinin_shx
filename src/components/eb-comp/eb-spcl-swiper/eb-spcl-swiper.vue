@@ -57,6 +57,7 @@
 
 <script>
 import SpclService from "@/api/spcl/index.js";
+import { videoInfoUpdate } from "@/utils/video";
 export default {
   props: {
     pageConfig: {
@@ -109,22 +110,7 @@ export default {
           if (tempList.length > 12) {
             tempList = tempList.slice(0, 12);
           }
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userSpclData")[0] &&
-            uni.getStorageSync("userSpclData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
-          this.dataList = tempList;
+          this.dataList = videoInfoUpdate(tempList);
         }
       });
     },

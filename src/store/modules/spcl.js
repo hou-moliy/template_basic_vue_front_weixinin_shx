@@ -1,6 +1,6 @@
 import videoService from "@/api/cx/video.js";
 import spclService from "@/api/spcl/index.js";
-import Vue from "vue";
+// import Vue from "vue";
 import videoTools from "@/utils/video.js";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据
@@ -39,6 +39,8 @@ const mutations = {
   SET_USER_SPCL_ALL (state, vrbtResponse) {
     state.userSpclData.vrbtResponse = vrbtResponse;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
+  },
+  UPDATE_USER_SPCL_ALL (state, ringItem) {
   },
   // 设置用户铃音的settingId, settingIdRes
   SET_USER_SPCL_SETTINGID (state, settingIdRes) {
@@ -111,12 +113,12 @@ const actions = {
   },
   // 获取用户所有铃音数据
   getUserAllVideoList ({ dispatch }) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       spclService.getsplykInfo().then(response => {
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
         } else {
-          Vue.prototype.$toast("数据请求失败，请退出重试～");
+          // Vue.prototype.$toast("数据请求失败，请退出重试～");
         }
       });
     });
