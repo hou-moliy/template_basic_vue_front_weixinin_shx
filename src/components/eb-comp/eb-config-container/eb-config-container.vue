@@ -310,7 +310,7 @@ export default {
     goToPlayVideo ({ item, list }) {
       this.$store.commit("spcl/M_changeVideoList", list);
       uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${item.ringId}`,
+        url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
       });
     },
   },

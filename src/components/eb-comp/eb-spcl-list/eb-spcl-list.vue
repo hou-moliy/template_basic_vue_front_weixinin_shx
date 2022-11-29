@@ -41,7 +41,7 @@
                   v-else
                   class="setting-btn"
                   :style="{ background: `${pageConfig.innerColor}` }"
-                  @click="$emit('purchaseVideo', item)"
+                  @click="goToPlayVideo(item)"
                 >
                   {{ pageConfig.title }}
                 </view>
@@ -83,7 +83,7 @@
                   v-else
                   class="setting-btn"
                   :style="{ background: `${pageConfig.innerColor}` }"
-                  @click="$emit('purchaseVideo', item)"
+                  @click="goToPlayVideo(item)"
                 >
                   {{ pageConfig.title }}
                 </view>

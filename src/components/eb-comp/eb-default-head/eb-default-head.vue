@@ -128,7 +128,7 @@ export default {
         font-weight: 600;
       }
 
-      img {
+      image {
         width: 37rpx;
         height: 49rpx;
         margin-left: 6rpx;

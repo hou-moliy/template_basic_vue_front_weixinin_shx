@@ -92,6 +92,9 @@ export default {
     },
     // 设置视频彩铃
     purchaseVideo (e) {
+      this.$store.dispatch("user/getUserSpclStatus").then(res => {
+
+      });
       // 设置视频彩铃
       if (uni.getStorageSync("Authorization")) {
         this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
