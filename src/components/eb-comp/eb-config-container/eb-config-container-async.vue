@@ -112,11 +112,9 @@ export default {
           if (res.data.data.code === 0) {
             this.$toast("设置成功");
             // 更新用户所有铃音数据
-            const vrbtResponse = this.$store.state.spcl.userSpclData.vrbtResponse;
-            this.$store.commit("spcl/SET_USER_SPCL_ALL", [...vrbtResponse, item]);
+            this.$store.commit("spcl/UPDATE_USER_SPCL_ALL", item);
             // 更新当前播放数据
-            const vrbtSettingRes = this.$store.state.spcl.userSpclData.vrbtSettingRes;
-            this.$store.commit("spcl/SET_USER_SPCL_SETTINGS", [...vrbtSettingRes, item.ringId]);
+            this.$store.commit("spcl/UPDATE_USER_SPCL_SETTINGS", item.ringId);
             this.handleFresh();
           } else {
             this.$toast(res.data.data.msg);

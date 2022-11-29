@@ -28,19 +28,39 @@ const mutations = {
   // 设置用户的视频彩铃数据
   SET_USER_SPCL_DATA (state, userSpclData) {
     state.userSpclData = userSpclData;
-    uni.setStorageSync("userSpclData", JSON.stringify([userSpclData]));
+    uni.setStorageSync("userSpclData", [userSpclData]);
   },
   // 设置用户当前播放的数据 vrbtSettingRes
   SET_USER_SPCL_SETTINGS (state, vrbtSettingRes) {
     state.userSpclData.vrbtSettingRes = vrbtSettingRes;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
   },
+  // 更新用户当前播放的数据 （新增或删除）
+  UPDATE_USER_SPCL_SETTINGS (state, ringId) {
+    const vrbtSettingRes = state.userSpclData.vrbtSettingRes;
+    const index = vrbtSettingRes.findIndex(e => e === ringId);
+    if (index !== -1) { // 删除
+      vrbtSettingRes.splice(index, 1);
+    } else { // 新增
+      vrbtSettingRes.push(ringId);
+    }
+    this.commit("spcl/SET_USER_SPCL_SETTINGS", vrbtSettingRes);
+  },
   // 设置用户所有铃音数据 vrbtResponse
   SET_USER_SPCL_ALL (state, vrbtResponse) {
     state.userSpclData.vrbtResponse = vrbtResponse;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
   },
+  // 更新用户所有铃音数据 （新增或删除），type===1 新增，0删除
   UPDATE_USER_SPCL_ALL (state, ringItem) {
+    const vrbtResponse = state.userSpclData.vrbtResponse;
+    const index = vrbtResponse.findIndex(e => e === ringItem.ringId);
+    if (index !== -1) { // 删除
+      vrbtResponse.splice(index, 1);
+    } else { // 新增
+      vrbtResponse.push(ringItem);
+    }
+    this.commit("spcl/SET_USER_SPCL_SETTINGS", vrbtResponse);
   },
   // 设置用户铃音的settingId, settingIdRes
   SET_USER_SPCL_SETTINGID (state, settingIdRes) {

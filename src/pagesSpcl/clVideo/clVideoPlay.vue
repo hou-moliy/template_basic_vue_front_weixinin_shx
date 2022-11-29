@@ -27,7 +27,7 @@
       class="swiper"
       :vertical="true"
       :current="index"
-      @change="changeCurrent"
+      :disable-touch="false"
     >
       <swiper-item
         v-for="item in videoList"
@@ -43,7 +43,7 @@
 <script>
 import videoService from "@/api/cx/video.js";
 import Util, { formatCount } from "@/utils/tools.js";
-
+import { videoInfoUpdate } from "@/utils/video";
 export default {
 
   data () {
@@ -350,28 +350,13 @@ export default {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
           // 分享和喜欢数据格式化
           // for (let i = 0; i < tempList.length; i++) {
-          // 	if (tempList[i].extraInfo) {
-          // 		tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
-          // 		tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
-          // 	}
+          //   if (tempList[i].extraInfo) {
+          //     tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
+          //     tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
+          //   }
           // }
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userSpclData")[0] &&
-            uni.getStorageSync("userSpclData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
           this.pageNum++;
-          this.videoList = tempList;
+          this.videoList = videoInfoUpdate(tempList);
           this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
       });
