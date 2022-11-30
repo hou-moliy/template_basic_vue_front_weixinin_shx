@@ -174,6 +174,7 @@ export default {
   onLoad () {
     this.getPageWidthHeight();
     this.dispatchPageEvent();
+    this.$store.dispatch("spcl/getUserAllVideoList");
   },
   onShow () {
     this.initData();
@@ -213,7 +214,6 @@ export default {
       this.getTabList();
       this.$store.dispatch("user/getUserSpclStatus");
       this.$store.dispatch("user/getUserAiStatus");
-      this.$store.dispatch("spcl/getUserAllVideoList");
     },
     // 刷新组件信息
     handleFresh () {
