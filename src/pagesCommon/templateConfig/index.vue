@@ -22,17 +22,26 @@
       :page-config-list="pageConfig"
       :activity-id="activityId"
     />
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
     <!-- 下线通知 -->
     <offline-popup
       v-if="Boolean($store.state.offlinePopup.offlinePopupShow)"
       ref="offlinePopup"
+    />
+    <!-- 视频彩铃订购相关弹窗 -->
+    <popupTemplateOperition
+      :popup-info="operitionInfo"
+      :show="Boolean($store.state.window.operitionShow)"
+      @buttonClick="operitionBtnClick"
+      @closePopup="$store.commit('window/SET_OPERITION_SHOW', fasle)"
     />
   </view>
 </template>
 
 <script>
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
-import TemplateService from "../../api/template/index";
+import TemplateService from "@/api/template/index";
 export default {
   name: "TemplateConfig",
   components: {
@@ -48,6 +57,8 @@ export default {
       shareObj: {
       }, // 页面分享内容
       phoneNum: uni.getStorageSync("phone"),
+      operitionInfo: {}, // 订购弹窗的内容
+      operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
     };
   },
   onLoad (options) {
@@ -56,6 +67,12 @@ export default {
     this.pageName = options.pageName;
     this.getPageConfig();
     this.getPageBaseInfo();
+  },
+  onShow () {
+    this.dispatchPageEvent();
+  },
+  onHide () {
+    this.offMonitor();
   },
   onShareAppMessage (res) {
     if (res.from === "button") {
@@ -76,6 +93,24 @@ export default {
     };
   },
   methods: {
+    // 跨页面通信监听
+    dispatchPageEvent () {
+      uni.$on("openLoginPopup", () => {
+        this.$showLoginPop(this);
+      });
+      // 展示订购、设置类弹窗，按钮点击回调
+      uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
+        this.operitionInfo = popupInfo;
+        this.$store.commit("window/SET_OPERITION_SHOW", true);
+        this.operitionBtnClick = (e) => btnClickCallBack(e);
+      });
+    },
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
+    },
     // 获取页面配置信息
     getPageConfig () {
       TemplateService.getPageConfigByPageName({ pageName: `${this.templateId}_${this.activityId}` }).then(res => {

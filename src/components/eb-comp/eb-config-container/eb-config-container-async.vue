@@ -28,24 +28,11 @@
       :activity-id="activityId"
       @purchaseVideo="purchaseVideo"
     />
-    <!-- 提示性弹窗 -->
-    <notifyPop ref="NotifyPop" />
-    <!-- 视频彩铃订购弹窗 -->
-    <popupTemplateOperition
-      :popup-info="popupInfo"
-      :show="show"
-      @buttonClick="operitionBtnClick"
-      @closePopup="closeOperitionPopup"
-    />
   </view>
 </template>
 <script>
-import popupTemplateOperition from "../../popup-module/popup-template-operition.vue";
 import SpclService from "../../../api/spcl/index";
 export default {
-  components: {
-    popupTemplateOperition,
-  },
   props: {
     pageConfigList: {
       type: Array,
@@ -65,8 +52,6 @@ export default {
       asyncIdx: 5,
       asyncLoad: false,
       asyncTiming: 2000,
-      show: false, // 订购弹窗的展示控制
-      popupInfo: {}, // 订购弹窗的内容
     };
   },
   created () {
@@ -74,7 +59,8 @@ export default {
       this.asyncLoad = true;
     }, this.asyncTiming);
   },
-  mounted () { },
+  mounted () {
+  },
   methods: {
     // 滑动到底部
     onScrollBottom () {
@@ -88,17 +74,21 @@ export default {
     },
     // 打开登录弹窗
     openLoginPopup () {
-      this.$showLoginPop(this);
+      uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
     },
     // 点击设置视频彩铃按钮
     purchaseVideo (e) {
       if (uni.getStorageSync("Authorization")) {
         this.$store.dispatch("user/getUserSpclStatus").then(res => {
           if (res == 1) { // 已开通视频彩铃
-            this.handleSetPcl(e);
+            const popupInfo = this.$store.state.window.windowAllObj.common_spcl_set;
+            popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${e.ringName}》`);
+            uni.$emit("operitionShow", {
+              popupInfo, btnClickCallBack: (item) => this.confirmOrderSpcl(item),
+            });
           } else { // 未开通
-            this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
-            this.show = true;
+            const popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
+            uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (item) => this.operitionBtnClick(item) });
           }
         });
       } else {
@@ -116,13 +106,27 @@ export default {
             // 更新当前播放数据
             this.$store.commit("spcl/UPDATE_USER_SPCL_SETTINGS", item.ringId);
             this.handleFresh();
+            this.$store.commit("window/SET_OPERITION_SHOW", false);
           } else {
             this.$toast(res.data.data.msg);
+            this.$store.commit("window/SET_OPERITION_SHOW", true);
           }
         } else {
           this.$toast(res.data.message);
+          this.$store.commit("window/SET_OPERITION_SHOW", true);
         }
       });
+    },
+    // 确定订购视频彩铃按钮点击
+    confirmOrderSpcl (item) {
+      console.log(item, "item.protocolCheckFlag");
+      if (item.protocolCheckFlag) { // 勾选了AI换铃
+        this.handleOpenAi().then(() => {
+          this.handleSetPcl(item);
+        }).catch(() => this.$toast("AI换铃开通,失败请重试"));
+      } else {
+        this.handleSetPcl(item);
+      }
     },
     // 订购弹窗按钮点击
     operitionBtnClick (e) {
@@ -137,28 +141,34 @@ export default {
       SpclService.openSpcl({ servType: "001" }).then(res => {
         if (res.data.code === 200) {
           if (e.protocolCheckFlag) { // 勾选了AI换铃
-            this.handleOpenAi();
+            this.handleOpenAi().then(() => {
+              this.$toast("成功开通视频彩铃业务");
+              this.$store.commit("window/SET_OPERITION_SHOW", false);
+            }).catch(() => {
+              this.$toast("AI换铃开通,失败请重试");
+              this.$store.commit("window/SET_OPERITION_SHOW", true);
+            });
           } else {
             this.$toast("成功开通视频彩铃业务");
-            this.show = false;
+            this.$store.commit("window/SET_OPERITION_SHOW", false);
           }
         } else {
           this.$toast("开通失败请重试");
+          this.$store.commit("window/SET_OPERITION_SHOW", true);
         }
       });
     },
     // 开通AI换铃
     handleOpenAi () {
-      SpclService.openAi({ type: 2 }).then(res => {
-        if (res.data.code === 200) {
-          this.$toast("成功开通视频彩铃业务");
-          this.show = false;
-        }
+      return new Promise((resolve, reject) => {
+        SpclService.openAi({ type: 2 }).then(res => {
+          if (res.data.code === 200) {
+            resolve(res.data);
+          } else {
+            reject(res.data);
+          }
+        });
       });
-    },
-    // 订购弹窗关闭
-    closeOperitionPopup () {
-      this.show = false;
     },
   },
 };

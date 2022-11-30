@@ -122,6 +122,7 @@ const actions = {
   },
   // 获取用户所有铃音数据
   getUserAllVideoList ({ dispatch }) {
+    if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
       spclService.getsplykInfo().then(response => {
         if (response.data.code === 200) {
@@ -134,6 +135,7 @@ const actions = {
   },
   // 获取用户当前播放的铃音数据
   getUserCurVideoList ({ commit }, response) {
+    if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
       spclService
         .getsplykCurrentInfo()

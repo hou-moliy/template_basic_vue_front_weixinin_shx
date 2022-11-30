@@ -11,7 +11,7 @@ const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
     if (store.state.offlinePopup.loginShow) {
       return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
     }
-    if (store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
+    if (store.state.offlinePopup.offlineFlag) { // 展示下线弹窗
       return;
     }
     navigateToAny(item, callback);
@@ -84,7 +84,7 @@ const handleExternalProgram = async (item, callback) => {
   tempEventUrl = await freeLoginFun(item.eventUrl);
   uni.hideLoading();
   wx.navigateToMiniProgram({
-    appId: item.outAppId || item.appId || item.appid,
+    appId: item.outAppId,
     path: tempEventUrl,
     extraData: {},
     envVersion: "release",
@@ -119,8 +119,8 @@ const handleFaXianPage = (item, callback) => {
 
 // 免登地址处理
 const freeLoginFun = (eventUrl) => {
-  // let tempUrl = eventUrl;
-  let tempUrl = "https://m.music.migu.cn/v4/mg?ch=014092P&token=ANDT$token{tyrz_token} ";
+  let tempUrl = eventUrl;
+  // let tempUrl = "https://m.music.migu.cn/v4/mg?ch=014092P&token=ANDT$token{tyrz_token} ";
   // https://g.migufun.com/yquayu/-$token{tyrz_token}
   return new Promise(function (resolve, reject) {
     let tokenStr = tempUrl.match(/\$token\{.*?\}/);

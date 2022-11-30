@@ -1,12 +1,18 @@
 import windowService from "@/api/window/index";
 const state = {
   windowAllObj: uni.getStorageSync("windowAllObj") || {},
+  operitionShow: false,
 };
 
 const mutations = {
+  // 储存公共的弹窗
   SET_WINDOW_ALL_OBJ (state, windowAllObj) {
     state.windowAllObj = windowAllObj;
     uni.setStorageSync("windowAllObj", windowAllObj);
+  },
+  // 关闭订购类弹窗
+  SET_OPERITION_SHOW (state, operitionShow) {
+    state.operitionShow = operitionShow;
   },
 };
 

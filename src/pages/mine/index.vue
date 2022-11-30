@@ -1,56 +1,47 @@
 <template>
-  <view class="content">
-    <view class="login-top" :style="{height:loginBoxHeight+'px'}">
+  <view
+    class="content"
+    :style="{
+      height: `${windowHeight}px`,
+    }"
+  >
+    <view class="login-top" :style="{ height: loginBoxHeight + 'px' }">
       <view
-      class="custom-tab"
-      :style="{ background:`url(${staticImgs}/shxmp/init/search-bg.png) center/cover no-repeat`,height:loginBoxHeight+'px'}"
+        class="custom-tab"
+        :style="{
+          background: `url(${staticImgs}/shxmp/init/search-bg.png) center/cover no-repeat`,
+          height: loginBoxHeight + 'px',
+        }"
       >
         <view
-        class="custom-tab-title"
-        :style="{ paddingTop: pointobj.top + 'px',lineHeight: pointobj.height+'px'}"
+          class="custom-tab-title"
+          :style="{
+            paddingTop: pointobj.top + 'px',
+            lineHeight: pointobj.height + 'px',
+          }"
         >
           我的
         </view>
         <!-- 头部 -->
 
-        <view
-        class="login-top-box"
-        @click="isLogin()"
-        >
+        <view class="login-top-box" @click="isLogin()">
           <view class="txbox">
-            <view
-            v-if="loginFlag && isAuth"
-            class="userinfo-avatar"
-            >
+            <view v-if="loginFlag && isAuth" class="userinfo-avatar">
               <image :src="userInfo.avatarUrl" />
             </view>
-            <image
-            v-else
-            :src="avatarUrl"
-            />
+            <image v-else :src="avatarUrl" />
           </view>
           <view class="tx-content">
-            <view
-            v-if="loginFlag && isAuth"
-            class="tx-content-nickname"
-            >
+            <view v-if="loginFlag && isAuth" class="tx-content-nickname">
               {{ userInfo.nickName }}
             </view>
             <button v-else-if="!loginFlag">
               {{ nickName }}
             </button>
-            <text
-            v-if="phoneNumber && isAuth"
-            class="tx-content-text"
-            >
-              <text class="tx-content-text">
-                ({{ phoneNumber }})
-              </text>
+            <text v-if="phoneNumber && isAuth" class="tx-content-text">
+              <text class="tx-content-text">({{ phoneNumber }})</text>
             </text>
-            <text
-            v-else-if="phoneNumber && !isAuth"
-            class="tx-content-text"
-            >
+            <text v-else-if="phoneNumber && !isAuth" class="tx-content-text">
               <text class="tx-content-text">
                 {{ phoneNumber }}
               </text>
@@ -59,119 +50,94 @@
         </view>
         <view class="cx-des">
           <view
-          class="login-bottom-box"
-          style="
-            margin-top: 25rpx;
-            display: flex;
-            align-items: center;
-            padding-bottom: 0rpx;
-          "
+            class="login-bottom-box"
+            style="
+              margin-top: 25rpx;
+              display: flex;
+              align-items: center;
+              padding-bottom: 0rpx;
+            "
           >
             <view style="width: 92%; display: flex; align-items: center">
               <image
-              class="sign"
-              :src="`${staticImgs}/shxmp/init/yp-icon.png`"
+                class="sign"
+                :src="`${staticImgs}/shxmp/init/yp-icon.png`"
               />
-              <text class="title">
-                我的彩铃：
-              </text>
+              <text class="title">我的彩铃：</text>
               <text
-              v-if="!loginFlag"
-              class="content"
-              @click="navigateToLogin()"
+                v-if="!loginFlag"
+                class="content"
+                @click="navigateToLogin()"
               >
                 登录后显示
               </text>
-              <text
-              v-else
-              class="content"
-              @click="navigateToEditForAll('cl')"
-              >
-                {{
-                  cxMusicContent
-                }}
+              <text v-else class="content" @click="navigateToEditForAll('cl')">
+                {{ cxMusicContent }}
               </text>
             </view>
             <view class="edit-box">
               <image
-              v-if="loginFlag && cxMusicStatus === 2"
-              class="edit"
-              :src="`${staticImgs}/lnmp/edit.png`"
-              @click="navigateToEditForAll('cl')"
+                v-if="loginFlag && cxMusicStatus === 2"
+                class="edit"
+                :src="`${staticImgs}/lnmp/edit.png`"
+                @click="navigateToEditForAll('cl')"
               />
             </view>
           </view>
 
           <view
-          class="login-bottom-box"
-          style="
-            margin-top: 26rpx;
-            display: flex;
-            align-items: center;
-          "
+            class="login-bottom-box"
+            style="margin-top: 26rpx; display: flex; align-items: center"
           >
             <view style="width: 92%; display: flex; align-items: center">
               <image
-              class="sign"
-              :src="`${staticImgs}/shxmp/init/sp-icon.png`"
+                class="sign"
+                :src="`${staticImgs}/shxmp/init/sp-icon.png`"
               />
-              <text class="title">
-                我的视彩：
-              </text>
+              <text class="title">我的视彩：</text>
               <text
-              v-if="!loginFlag"
-              class="content"
-              @click="navigateToLogin()"
+                v-if="!loginFlag"
+                class="content"
+                @click="navigateToLogin()"
               >
                 登录后显示
               </text>
-              <text
-              v-else
-              class="content"
-              @click="navigateToEditForAll('sp')"
-              >
-                {{
-                  cxVideoContent
-                }}
+              <text v-else class="content" @click="navigateToEditForAll('sp')">
+                {{ cxVideoContent }}
               </text>
             </view>
             <view class="edit-box">
               <image
-              v-if="loginFlag && cxVideoStatus === 2"
-              class="edit"
-              :src="`${staticImgs}/lnmp/edit.png`"
-              @click="navigateToEditForAll('sp')"
+                v-if="loginFlag && cxVideoStatus === 2"
+                class="edit"
+                :src="`${staticImgs}/lnmp/edit.png`"
+                @click="navigateToEditForAll('sp')"
               />
             </view>
           </view>
         </view>
       </view>
     </view>
-    <eb-icon-list :page-config="{pageName:'sell_default-mine'}" />
+    <eb-icon-list :page-config="{ pageName: 'sell_default-mine' }" />
     <!-- 更多功能 -->
     <view class="bottom-box">
-      <text class="more-tips">
-        更多功能
-      </text>
+      <text class="more-tips">更多功能</text>
       <view
-            v-for="(item, index) in functionList"
-            :key="index"
-            class="fl-cell"
-            @click="navigateToFunction(item)"
+        v-for="(item, index) in functionList"
+        :key="index"
+        class="fl-cell"
+        @click="navigateToFunction(item)"
       >
         <view class="fl-cell-left">
-          <image
-                :src="item.iconUrl"
-                 class="cell-icon-title"
-          />
+          <image :src="item.iconUrl" class="cell-icon-title" />
         </view>
         <view class="fl-cell-right">
           <view class="cell-desc">
             {{ item.iconTitle }}
           </view>
           <image
-           :src="`${staticImgs}/shxmp/init/more-icon.png`"
-                 class="cell-icon-end"
+            :src="`${staticImgs}/shxmp/init/more-icon.png`"
+            class="cell-icon-end"
           />
         </view>
       </view>
@@ -218,11 +184,14 @@ export default {
       //   isBuyList: [],
       functionList: [], // 更多功能列表
       userInfo: {},
+      windowsWidth: 0, // 可使用窗口宽度
+      windowHeight: 0, // 可使用窗口高度
     };
   },
   onLoad () {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = this.pointobj.top + 203;
+    this.getPageWidthHeight();
   },
   onShow () {
     if (uni.getStorageSync("Authorization")) {
@@ -245,6 +214,23 @@ export default {
     this.getMyMore();
   },
   methods: {
+    // 初始化页面样式宽高等
+    getPageWidthHeight () {
+      uni.getSystemInfo({
+        success: res => {
+          console.log("bar", res);
+          if (res.safeAreaInsets.bottom === 0) {
+            this.windowHeight = res.windowHeight;
+            // this.navHeight = res.safeArea.top;
+          } else {
+            this.windowHeight = res.safeArea.height;
+            // this.navHeight = res.safeArea.top / 2;
+          }
+          this.navHeight = res.safeArea.top;
+          this.windowsWidth = res.windowWidth;
+        },
+      });
+    },
     navigateToFunction (item) {
       // 判断用户是否登录 否 提示弹窗 是 调用navgatertoany
 
@@ -317,32 +303,32 @@ export default {
               // console.log('ringIdAllArray',ringIdAllArray)
               cxService.getClMusicList(JSON.stringify(uni.getStorageSync("userData")[0]
                 .crbtSettingRes)).then(res => {
-                if (res.data.code == 200) {
-                  this.isBuyList = res.data.data.filter(item => item.hidden != 1);
-                  // console.log('this.isBuyList', this.isBuyList)
-                }
-                if (this.isBuyList.length) {
-                  const n = Math.floor(Math.random() * this.isBuyList.length);
-                  const currentRingId = this.isBuyList[n].ringId;
-                  cxService.getCxMusicDetail({
-                    ringId: currentRingId,
-                  }).then(res => {
-                    if (res.data.code === 200) {
-                      this.cxMusicContent = res.data.data
-                        ? res.data.data
-                          .ringName
-                        : "";
-                      this.cxMusicStatus = 2;
-                    } else {
-                      this.cxMusicContent = "立即设置";
-                      this.cxMusicStatus = 1;
-                    }
-                  });
-                } else {
-                  this.cxMusicContent = "立即设置";
-                  this.cxMusicStatus = 1;
-                }
-              });
+                  if (res.data.code == 200) {
+                    this.isBuyList = res.data.data.filter(item => item.hidden != 1);
+                    // console.log('this.isBuyList', this.isBuyList)
+                  }
+                  if (this.isBuyList.length) {
+                    const n = Math.floor(Math.random() * this.isBuyList.length);
+                    const currentRingId = this.isBuyList[n].ringId;
+                    cxService.getCxMusicDetail({
+                      ringId: currentRingId,
+                    }).then(res => {
+                      if (res.data.code === 200) {
+                        this.cxMusicContent = res.data.data
+                          ? res.data.data
+                            .ringName
+                          : "";
+                        this.cxMusicStatus = 2;
+                      } else {
+                        this.cxMusicContent = "立即设置";
+                        this.cxMusicStatus = 1;
+                      }
+                    });
+                  } else {
+                    this.cxMusicContent = "立即设置";
+                    this.cxMusicStatus = 1;
+                  }
+                });
             } else {
               this.cxMusicContent = "立即设置";
               this.cxMusicStatus = 1;
@@ -411,8 +397,8 @@ export default {
 };
 </script>
 <style>
-page{
-  background-color: #F5F7F9;
+page {
+  background-color: #f5f7f9;
 }
 </style>
 <style lang="scss" scoped>
@@ -421,23 +407,24 @@ page{
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: scroll;
 }
-.login-top{
+.login-top {
   width: 100%;
   background-color: #fff;
 }
-.custom-tab{
-    // height: 446rpx;
+.custom-tab {
+  // height: 446rpx;
+  width: 100%;
+  .custom-tab-title {
+    font-weight: 700;
+    font-size: 36rpx;
+    color: #252a3e;
     width: 100%;
-    .custom-tab-title{
-      font-weight: 700;
-      font-size: 36rpx;
-      color: #252A3E;
-      width: 100%;
-      text-align: center;
-    }
+    text-align: center;
   }
-  .sign {
+}
+.sign {
   vertical-align: middle;
   width: 34rpx;
   height: 30rpx;
@@ -458,7 +445,7 @@ button::after {
   justify-content: center;
 }
 
-  .login-top-box {
+.login-top-box {
   padding-top: 37rpx;
   display: flex;
   align-items: center;
@@ -475,7 +462,7 @@ button::after {
       white-space: nowrap;
       font-weight: bold;
       font-size: 40rpx;
-      color: #252A3E;
+      color: #252a3e;
       font-family: PingFang SC, PingFang SC-Heavy;
       background: unset;
       vertical-align: middle;
@@ -485,10 +472,9 @@ button::after {
       font-size: 40rpx;
       font-family: PingFang SC, PingFang SC-Heavy;
       text-align: left;
-      color: #252A3E;
+      color: #252a3e;
       line-height: 59rpx;
     }
-
   }
 }
 
@@ -507,8 +493,7 @@ button::after {
   background: unset;
   vertical-align: middle;
   padding-left: 5rpx;
-  color: #252A3E;
-
+  color: #252a3e;
 }
 .txbox {
   width: 120rpx;
@@ -653,17 +638,17 @@ button::after {
   font-family: PingFang SC, PingFang SC-Medium;
   font-weight: 500;
   text-align: left;
-  color: #767B93;
+  color: #767b93;
   flex-shrink: 0;
 }
 
 .login-bottom-box .content {
   display: inline-block;
   font-size: 28rpx;
-  font-family:PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium;
   font-weight: 500;
   text-align: left;
-  color: #252A3E;
+  color: #252a3e;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -710,7 +695,6 @@ button::after {
         margin-left: 27rpx;
         vertical-align: middle;
       }
-
     }
 
     &-right {
@@ -719,7 +703,7 @@ button::after {
       justify-content: space-between;
       margin-right: 25rpx;
       flex: 1;
-      border-bottom:1px solid #E5E5E5 ;
+      border-bottom: 1px solid #e5e5e5;
 
       .cell-desc {
         margin-left: 20rpx;

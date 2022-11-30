@@ -208,7 +208,7 @@ export default {
   },
   watch: {
     popupInfo: {
-      handler: function () {
+      handler: function (newVal) {
         this.agreementCheckFlag = false;
         let tempPopupDes = "";
         this.smsCode = "";

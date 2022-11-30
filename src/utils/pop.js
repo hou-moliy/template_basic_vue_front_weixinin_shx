@@ -2,7 +2,8 @@
 import { navigateToAny } from "./navigateToAny";
 import store from "../store";
 // 提示性弹窗
-export const showNotifyPop = (_this, notifyInfo, confirmCallback = () => { }, cancelCallback = () => { }) => {
+export const showNotifyPop = async (_this, notifyInfo, confirmCallback = () => { }, cancelCallback = () => { }) => {
+  if (!notifyInfo) return;
   _this.$refs.NotifyPop.show(notifyInfo).then((btn) => {
     confirmCallback(btn);
   }).catch(() => {
