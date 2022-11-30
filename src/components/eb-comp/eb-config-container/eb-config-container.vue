@@ -169,6 +169,7 @@
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
           @openLoginPopup="openLoginPopup"
+          @changeAi="changeAi"
         />
       </template>
       <!--广告位图片  -->
@@ -292,7 +293,12 @@ export default {
     },
     // 子组件打开登录弹窗
     openLoginPopup () {
-      this.$emit("openLoginPopup");
+      uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+    },
+    // 子组件操作AI换铃
+    changeAi () {
+      // uni.$emit("changeAi", { msg: "展示Ai换铃弹窗" });
+      this.$emit("changeAi");
     },
     // banner埋点
     buryBannerId (id) {

@@ -8,6 +8,7 @@
         :activity-id="activityId"
         :page-config-list="pageConfigList.slice(0, asyncIdx)"
         @purchaseVideo="purchaseVideo"
+        @changeAi="changeAi"
       />
       <template v-if="asyncLoad">
         <eb-config-container
@@ -17,6 +18,7 @@
           :page-config-list="pageConfigList.slice(asyncIdx)"
           :activity-id="activityId"
           @purchaseVideo="purchaseVideo"
+          @changeAi="changeAi"
         />
       </template>
     </template>
@@ -27,6 +29,7 @@
       :page-config-list="pageConfigList"
       :activity-id="activityId"
       @purchaseVideo="purchaseVideo"
+      @changeAi="changeAi"
     />
   </view>
 </template>
@@ -77,12 +80,12 @@ export default {
       uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
     },
     // 点击设置视频彩铃按钮
-    purchaseVideo (e) {
+    purchaseVideo ({ ringName }) {
       if (uni.getStorageSync("Authorization")) {
         this.$store.dispatch("user/getUserSpclStatus").then(res => {
           if (res == 1) { // 已开通视频彩铃
-            const popupInfo = this.$store.state.window.windowAllObj.common_spcl_set;
-            popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${e.ringName}》`);
+            const popupInfo = { ...this.$store.state.window.windowAllObj.common_spcl_set };
+            popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringName}》`);
             uni.$emit("operitionShow", {
               popupInfo, btnClickCallBack: (item) => this.confirmOrderSpcl(item),
             });
@@ -119,7 +122,7 @@ export default {
     },
     // 确定订购视频彩铃按钮点击
     confirmOrderSpcl (item) {
-      console.log(item, "item.protocolCheckFlag");
+      this.$loading("设置中");
       if (item.protocolCheckFlag) { // 勾选了AI换铃
         this.handleOpenAi().then(() => {
           this.handleSetPcl(item);
@@ -158,16 +161,39 @@ export default {
         }
       });
     },
-    // 开通AI换铃
-    handleOpenAi () {
+    // 开通或关闭AI换铃
+    handleOpenAi (type = 2) { // type 2 开通, 1取消
       return new Promise((resolve, reject) => {
-        SpclService.openAi({ type: 2 }).then(res => {
+        SpclService.openAi({ type }).then(res => {
           if (res.data.code === 200) {
+            this.$store.dispatch("user/getUserAiStatus");
             resolve(res.data);
           } else {
             reject(res.data);
           }
         });
+      });
+    },
+    // Ai换铃状态切换
+    changeAi () {
+      this.$store.dispatch("user/getUserSpclStatus").then(spclStatus => {
+        if (spclStatus == 1) { // 已开通、展示开启或关闭ai换铃声提示
+          this.$store.dispatch("user/getUserAiStatus").then(isAIOpen => {
+            const type = isAIOpen == 1 ? 1 : 2; // type 1是取消,2是开启
+            const notifyInfo = type === 1 ? this.$store.state.window.windowAllObj.common_ai_cancel : this.$store.state.window.windowAllObj.common_ai_open;
+            uni.$emit("changeAi", {
+              notifyInfo,
+              confirmCallback: () => {
+                this.handleOpenAi(type).then(() => {
+                  type === 1 ? this.$toast("取消成功!") : this.$toast("开启成功!");
+                });
+              },
+            });
+          });
+        } else { // 未开通、展示开通弹窗
+          const popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
+          uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (item) => this.operitionBtnClick(item) });
+        }
       });
     },
   },

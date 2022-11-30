@@ -101,7 +101,7 @@
       :popup-info="operitionInfo"
       :show="Boolean($store.state.window.operitionShow)"
       @buttonClick="operitionBtnClick"
-      @closePopup="$store.commit('window/SET_OPERITION_SHOW', fasle)"
+      @closePopup="closePopup"
     />
   </view>
 </template>
@@ -241,7 +241,6 @@ export default {
         this.changeTabByMore(data);
       });
       uni.$on("openLoginPopup", data => {
-        console.log(data);
         this.$showLoginPop(this);
       });
       // 展示订购、设置类弹窗，按钮点击回调
@@ -250,12 +249,22 @@ export default {
         this.$store.commit("window/SET_OPERITION_SHOW", true);
         this.operitionBtnClick = (e) => btnClickCallBack(e);
       });
+      // 展示AI换铃弹窗
+      uni.$on("changeAi", ({ notifyInfo, confirmCallback }) => {
+        console.log("点击了AI换铃的状态");
+        this.$showNotifyPop(this, notifyInfo, confirmCallback);
+      });
     },
     // 移除监听
     offMonitor () {
       console.log("移除监听");
       uni.$off("openLoginPopup");
       uni.$off("operitionShow");
+      uni.$off("changeAi");
+    },
+    closePopup () {
+      this.operitionInfo = {};
+      this.$store.commit("window/SET_OPERITION_SHOW", false);
     },
     // 初始化页面样式宽高等
     getPageWidthHeight () {
@@ -413,11 +422,6 @@ export default {
           this.$refs.EbConfig[0].onScrollBottom();
         }
       });
-    },
-    // 子组件打开登录弹窗
-    openLoginPopup () {
-      console.log("登录弹窗");
-      // this.$refs.popup_login.open();
     },
   },
 };

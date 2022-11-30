@@ -212,10 +212,10 @@ export default {
         this.agreementCheckFlag = false;
         let tempPopupDes = "";
         this.smsCode = "";
-        if (this.popupInfo.windowScene == 2002) {
+        if (newVal.windowScene == 2002) {
           tempPopupDes = this.businessInfo.businessDesc;
         } else {
-          tempPopupDes = this.popupInfo.windowDesc;
+          tempPopupDes = newVal.windowDesc;
         }
         if (tempPopupDes) {
           this.popupDes = formatRichText(tempPopupDes);
@@ -379,6 +379,7 @@ export default {
     display: flex;
     box-sizing: border-box;
     align-items: center;
+    justify-content: center;
     // padding-bottom: 31rpx;
     margin-top: 34rpx;
 
@@ -400,7 +401,7 @@ export default {
     }
 
     .popup-agreement-content {
-      width: 100%;
+      // width: 100%;
       padding-left: 15rpx;
       box-sizing: border-box;
       // overflow: hidden;
