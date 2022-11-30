@@ -92,14 +92,6 @@
                 }}
               </text>
             </view>
-            <view class="edit-box">
-              <image
-              v-if="loginFlag && cxMusicStatus === 2"
-              class="edit"
-              :src="`${staticImgs}/lnmp/edit.png`"
-              @click="navigateToEditForAll('cl')"
-              />
-            </view>
           </view>
 
           <view
@@ -135,19 +127,22 @@
                 }}
               </text>
             </view>
-            <view class="edit-box">
-              <image
-              v-if="loginFlag && cxVideoStatus === 2"
-              class="edit"
-              :src="`${staticImgs}/lnmp/edit.png`"
-              @click="navigateToEditForAll('sp')"
-              />
-            </view>
           </view>
         </view>
       </view>
     </view>
-    <eb-icon-list :page-config="{pageName:'sell_default-mine'}" />
+    <!-- iconList -->
+    <view class="my-iconlist">
+      <text class="my-iconlist-title">
+        我的铃音库
+      </text>
+      <eb-icon-list
+        :page-config="{pageName:'sell_default-mine'}"
+         @openLoginPopup="openLoginPopup"
+         @open="open"
+      />
+      <!-- 更多功能 -->
+    </view>
     <!-- 更多功能 -->
     <view class="bottom-box">
       <text class="more-tips">
@@ -176,18 +171,66 @@
         </view>
       </view>
     </view>
+
     <!-- 自定义Tabbar -->
     <custom-tabbar :tab-bar="tabBar" :mid-button="true" />
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
+    <!--退出登录 -->
+    <uni-popup ref="popup_login_out" type="dialog">
+      <view class="login-out">
+        <view class="login-out-sure" @click="loginOut()">
+          退出登录
+        </view>
+        <view class="login-out-cancel" @click="cancel()">
+          取消
+        </view>
+      </view>
+    </uni-popup>
+    <!-- 确认退出 -->
+    <uni-popup ref="popup_login_confirm" type="dialog">
+      <view class="login-out-confirm">
+        <view class="login-out-confirm-qs">
+          确认退出吗？
+        </view>
+        <view class="login-out-confirm-button">
+          <view class="login-out-confirm-cancel" @click="confirmCancel()">
+            取消
+          </view>
+          <view class="login-out-confirm-sure" @click="confirmLoginOut()">
+            确认
+          </view>
+        </view>
+      </view>
+    </uni-popup>
+    <!-- 下线通知 -->
+    <offline-popup
+      v-if="Boolean($store.state.offlinePopup.offlinePopupShow)"
+      ref="offlinePopup"
+    />
+    <!-- 开通视彩弹窗 -->
+    <popupTemplateOperition
+      :popup-info="popupInfo"
+      :show="show"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closeOperitionPopup"
+    />
   </view>
 </template>
 
 <script>
 import videoService from "@/api/cx/video.js";
-
+import uniPopup from "@/components/uni-popup/uni-popup.vue";
+import popupTemplateOperition from "../../components/popup-module/popup-template-operition.vue";
+import Util from "@/utils/tools.js";
+import { navigateToAny } from "@/utils/navigateToAny.js";
+import SpclService from "@/api/spcl/index";
 export default {
   name: "Index",
+  components: {
+    uniPopup,
+    popupTemplateOperition,
+  },
   data () {
     return {
       tabBar: this.$store.getters.tabbarList,
@@ -199,32 +242,32 @@ export default {
       //   UserCyMsg: {},
       phoneNumber: "",
       loginFlag: false,
-      //   popTit: "温馨提示",
-      //   loginCont: "您还没有登录，请先完成登录",
-      //   login_confirm_content: "前往登录",
-      //   wangpanTit: "温馨提示",
-      //   wangpanCont: "即将打开“和彩云”小程序",
-      //   wangpan_confirm_content: "允许",
       isAuth: false,
       cxMusicStatus: 0, // 0未开通   1已开通 未设置 2 已开通 并设置
       cxMusicContent: "",
       cxVideoStatus: 0, // 0未开通   1已开通 未设置 2 已开通 并设置
       cxVideoContent: "",
       //   purchaseIndexIsShow: false,
-      //   btnType: "",
-      //   loginOutConfirmStatus: false,
+      btnType: "",
+      loginOutConfirmStatus: false,
       //   iconList: [],
       //   isMusicOpenChecked: false,
       //   isBuyList: [],
       functionList: [], // 更多功能列表
       userInfo: {},
+      windowHeight: 0, // 可使用窗口高度
+      popupInfo: {}, // 订购弹窗的内容
+      show: false, // 订购弹窗的展示控制
     };
   },
   onLoad () {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = this.pointobj.top + 203;
+    this.dispatchPageEvent();
+    // this.getPageHeight();
   },
   onShow () {
+    uni.hideTabBar();
     if (uni.getStorageSync("Authorization")) {
       this.loginFlag = true;
       this.isAuth = uni.getStorageSync("isAuth");
@@ -240,31 +283,178 @@ export default {
       this.phoneNumber = "";
     }
     // 更新用户信息
-    // this.updateUserInfo();
+    this.updateUserInfo();
     // 获取我的更多功能
     this.getMyMore();
   },
   methods: {
+    // 初始化页面高
+    getPageHeight () {
+      uni.getSystemInfo({
+        success: res => {
+          console.log("bar", res);
+          if (res.safeAreaInsets.bottom === 0) {
+            this.windowHeight = res.windowHeight;
+            // this.navHeight = res.safeArea.top;
+          } else {
+            this.windowHeight = res.safeArea.height;
+            // this.navHeight = res.safeArea.top / 2;
+          }
+          // this.navHeight = res.safeArea.top;
+          // this.windowsWidth = res.windowWidth;
+        },
+      });
+    },
     navigateToFunction (item) {
       // 判断用户是否登录 否 提示弹窗 是 调用navgatertoany
-
+      if (uni.getStorageSync("Authorization")) {
+        console.log(item);
+        navigateToAny(item);
+      } else {
+        this.$showLoginPop(this);
+      }
+    },
+    // 跳转至编辑页面
+    async navigateToEditForAll (e) {
+      // cxVideoStatus:0,//0未开通   1已开通 未设置 2 已开通 并设置
+      if (e === "sp") {
+        console.log("sp", this.cxVideoStatus);
+        switch (this.cxVideoStatus) {
+          case 0:
+            if (!uni.getStorageSync("Authorization")) {
+              this.$showLoginPop(this);
+            } else {
+              // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdsc");
+              // if (this.$store.state.offlinePopup.offlineFlag) {
+              //   return;
+              // }
+              // console.log("测试配置后");
+              // 弹出开通视频彩铃弹窗
+              this.show = true;
+              this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
+            }
+            break;
+          case 1:
+            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdsc");
+            // if (this.$store.state.offlinePopup.offlineFlag) {
+            //   return;
+            // }
+            uni.setStorageSync("userCyMsg", e);
+            uni.switchTab({
+              url: "/pages/cl/index",
+            });
+            break;
+          case 2:
+            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdsc");
+            // if (this.$store.state.offlinePopup.offlineFlag) {
+            //   return;
+            // }
+            uni.setStorageSync("userCyMsg", e);
+            uni.switchTab({
+              url: "/pages/cl/index",
+            });
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (this.cxMusicStatus) {
+          case 0:
+            const startTime = Util.formatTimeTwo(new Date(), "Y-M-D h:m:s");
+            uni.setStorageSync("orderClLogStartTime", startTime);
+            if (!uni.getStorageSync("Authorization")) {
+              this.$showLoginPop(this);
+            } else {
+              // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdcl");
+              // if (this.$store.state.offlinePopup.offlineFlag) {
+              //   return;
+              // }
+              // 弹出开通视频彩铃弹窗
+              this.btnType = "open";//
+              // this.$refs.video_open_status.open();
+            }
+            break;
+          case 1:
+            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdcl");
+            // if (this.$store.state.offlinePopup.offlineFlag) {
+            //   return;
+            // }
+            uni.setStorageSync("userCyMsg", e);
+            uni.switchTab({
+              url: "/pages/cl/index",
+            });
+            break;
+          case 2:
+            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdcl");
+            // if (this.$store.state.offlinePopup.offlineFlag) {
+            //   return;
+            // }
+            uni.setStorageSync("userCyMsg", e);
+            uni.switchTab({
+              url: "/pages/cl/index",
+            });
+            break;
+          default:
+            break;
+        }
+      }
+    },
+    // 点击订购弹窗
+    operitionBtnClick (e) {
+      if (e.btnInfo.type === 1) { // 关闭弹窗
+        this.closePopup();
+      } else if (e.btnInfo.type === 2) { // 订购
+        this.handleOpenSpcl(e);
+      }
+    },
+    // 开通视频彩铃
+    handleOpenSpcl (e) {
+      SpclService.openSpcl({ servType: "001" }).then(res => {
+        if (res.data.code === 200) {
+          if (e.protocolCheckFlag) { // 勾选了AI换铃
+            this.handleOpenAi();
+          } else {
+            this.$toast("成功开通视频彩铃业务");
+            this.show = false;
+            this.cxVideoContent = "立即设置";
+            this.cxVideoStatus = 1;
+            this.$store.commit("user/SET_SPCL_STATUS", 1);
+          }
+        } else {
+          this.$toast("开通失败请重试");
+        }
+      });
+    },
+    // 开通AI换铃
+    handleOpenAi () {
+      SpclService.openAi({ type: 2 }).then(res => {
+        if (res.data.code === 200) {
+          this.$toast("成功开通视频彩铃业务");
+          this.show = false;
+          this.cxVideoContent = "立即设置";
+          this.cxVideoStatus = 1;
+          this.$store.commit("user/SET_SPCL_STATUS", 1);
+        }
+      });
+    },
+    // 关闭开通弹窗
+    closeOperitionPopup () {
+      this.show = false;
     },
     updateUserInfo () {
       // 判断用户是否登录过
       if (uni.getStorageSync("Authorization")) {
         // 查询是否开通数据
         // 视频
-        videoService.getSpclStatus().then(res => {
-          // console.log(res.data.code)
+        this.$store.dispatch("user/getUserSpclStatus").then(res => {
           // 已开通，订购
-          if (res.data.code === 200 && (res.data.data.baseAbility || res.data.data.baseVip || res.data.data.spclMonthly)) {
+          if (res.code === 200 && res.data === "1") {
             // 查询是否有数据
-            if (uni.getStorageSync("userData")[0] && uni.getStorageSync("userData")[0]
+            if (uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[0]
               .vrbtResponse) {
-              // let isBuyVideoList = uni.getStorageSync('userData')[0].vrbtSettingRes;
-              const isBuyVideoListTemp = uni.getStorageSync("userData")[0].vrbtResponse.filter(
+              const isBuyVideoListTemp = uni.getStorageSync("userSpclData")[0].vrbtResponse.filter(
                 item => {
-                  return uni.getStorageSync("userData")[0].vrbtSettingRes
+                  return uni.getStorageSync("userSpclData")[0].vrbtSettingRes
                     .findIndex(v => (v == item.ringId && item.hidden != 1)) > -1;
                 });
               const isBuyVideoList = [];
@@ -296,66 +486,9 @@ export default {
               this.cxVideoContent = "立即设置";
               this.cxVideoStatus = 1;
             }
-          } else if (res.data.code === 200 && (res.data.data.baseAbility && res.data.data.baseVip && res.data.data.spclMonthly)) {
-            this.cxVideoContent = "立即开通";
-            this.cxVideoStatus = 0;
           } else {
             this.cxVideoContent = "立即开通";
             this.cxVideoStatus = 0;
-          }
-        });
-        // 彩铃
-        cxService.queryClStatus().then(res => {
-          this.isBuyList = [];
-          // cxMusicStatus:0,//0未开通   1已开通 未设置 2 已开通 并设置
-          // 已开通，订购
-          if (res.data.code === 200 && res.data.data === "1") {
-            // 查询是否有数据
-            if (uni.getStorageSync("userData")[0]) {
-              // console.log('uni',uni.getStorageSync('userData')[0].crbtSettingRes)
-              const ringIdAllArray = uni.getStorageSync("userData")[0].crbtSettingRes;
-              // console.log('ringIdAllArray',ringIdAllArray)
-              cxService.getClMusicList(JSON.stringify(uni.getStorageSync("userData")[0]
-                .crbtSettingRes)).then(res => {
-                if (res.data.code == 200) {
-                  this.isBuyList = res.data.data.filter(item => item.hidden != 1);
-                  // console.log('this.isBuyList', this.isBuyList)
-                }
-                if (this.isBuyList.length) {
-                  const n = Math.floor(Math.random() * this.isBuyList.length);
-                  const currentRingId = this.isBuyList[n].ringId;
-                  cxService.getCxMusicDetail({
-                    ringId: currentRingId,
-                  }).then(res => {
-                    if (res.data.code === 200) {
-                      this.cxMusicContent = res.data.data
-                        ? res.data.data
-                          .ringName
-                        : "";
-                      this.cxMusicStatus = 2;
-                    } else {
-                      this.cxMusicContent = "立即设置";
-                      this.cxMusicStatus = 1;
-                    }
-                  });
-                } else {
-                  this.cxMusicContent = "立即设置";
-                  this.cxMusicStatus = 1;
-                }
-              });
-            } else {
-              this.cxMusicContent = "立即设置";
-              this.cxMusicStatus = 1;
-            }
-          } else if (res.data.code === 200 && res.data.data === "0") {
-            this.cxMusicContent = "立即开通";
-            this.cxMusicStatus = 0;
-          } else if (res.data.code === -200) {
-            this.cxMusicContent = "立即开通";
-            this.cxMusicStatus = 0;
-          } else {
-            this.cxMusicContent = res.data.msg;
-            this.cxMusicStatus = 1;
           }
         });
       } else {
@@ -374,13 +507,14 @@ export default {
         }
       });
     },
+    // 是否登录
     isLogin () {
       if (this.loginFlag) {
         this.$refs.popup_login_out.open();
         uni.hideTabBar();
       } else {
         uni.navigateTo({
-          url: "/pagesD/my/login",
+          url: "/pages/mine/login",
           fail (res) {
             console.log("res", res);
           },
@@ -393,12 +527,50 @@ export default {
       this.$refs.popup_login_confirm.open();
       this.$refs.popup_login_out.open();
     },
-    navigateToLogin () {
-      this.$refs.popup_login.open();
+    cancel () {
+      this.$refs.popup_login_out.close();
+      uni.hideTabBar();
     },
-    // 跳转至编辑页面
-    async navigateToEditForAll (e) {
-
+    confirmCancel () {
+      this.$refs.popup_login_confirm.close();
+      this.$refs.popup_login_out.close();
+      uni.hideTabBar();
+    },
+    confirmLoginOut () {
+      // 登出数据重置
+      this.$refs.popup_login_confirm.close();
+      this.$refs.popup_login_out.close();
+      uni.removeStorageSync("Authorization");
+      uni.removeStorageSync("userInfo");
+      uni.removeStorageSync("phone");
+      uni.removeStorageSync("token");
+      uni.removeStorageSync("userSpclData");
+      uni.removeStorageSync("isAuth");
+      uni.removeStorageSync("openid");
+      uni.removeStorageSync("unionid");
+      this.$refs.popup_login_out.close();
+      const moreVideoListTemp = this.$store.state.spcl.moreVideoList;
+      moreVideoListTemp.map(item => {
+        item.isBuyVideo = false;
+        if (item.extraInfo.like) {
+          item.extraInfo.like = false;
+        }
+      });
+      this.$store.commit("spcl/getMoreVideoList", moreVideoListTemp);
+      this.$store.commit("spcl/M_changeVideoList", []);
+      this.$store.commit("spcl/getVideoLabelId", -1);
+      this.$store.commit("spcl/getVedioListTalNum", 0);
+      this.$store.commit("spcl/getMoreVideoList", []);
+      this.$store.commit("spcl/getMyLikeVideoList", []);
+      this.$store.commit("spcl/getVideoListFromCxVideoType", []);
+      this.$store.commit("spcl/getSearchList", []);
+      this.loginFlag = false;
+      this.phoneNumber = "";
+      uni.hideTabBar();
+    },
+    navigateToLogin () {
+      // 提示登录弹窗
+      this.$showLoginPop(this);
     },
     // 跨页面通信监听
     dispatchPageEvent () {
@@ -421,11 +593,35 @@ page{
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .content-box{
+    flex: 1;
+  }
 }
+
 .login-top{
   width: 100%;
   background-color: #fff;
 }
+.my-iconlist{
+  width: 688rpx;
+    background: #ffffff;
+    border-radius: 20rpx;
+    margin-top: 24rpx;
+    padding: 42rpx 0;
+}
+.my-iconlist-title{
+    height: 36rpx;
+    font-size: 36rpx;
+    font-family: PingFang SC, PingFang SC-Bold;
+    font-weight: 700;
+    text-align: left;
+    color: #000000;
+    line-height: 36rpx;
+    margin-left: 25rpx;
+    margin-bottom: 20rpx;
+    display: inline-block;
+}
+
 .custom-tab{
     // height: 446rpx;
     width: 100%;
@@ -680,8 +876,7 @@ button::after {
   padding: 42rpx 0;
 
   .more-tips {
-    // width: 142rpx;
-    height: 34rpx;
+    height: 36rpx;
     font-size: 36rpx;
     font-family: PingFang SC, PingFang SC-Bold;
     font-weight: 700;

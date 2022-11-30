@@ -28,7 +28,7 @@ const mutations = {
   // 设置用户的视频彩铃数据
   SET_USER_SPCL_DATA (state, userSpclData) {
     state.userSpclData = userSpclData;
-    uni.setStorageSync("userSpclData", JSON.stringify([userSpclData]));
+    uni.setStorageSync("userSpclData", [userSpclData]);
   },
   // 设置用户当前播放的数据 vrbtSettingRes
   SET_USER_SPCL_SETTINGS (state, vrbtSettingRes) {

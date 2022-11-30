@@ -1,6 +1,7 @@
 import SsoService from "@/api/sso";
 import store from "../store";
-// 跳转-需要统一验证、登录、升级弹窗的
+import { log } from "./QS-SharePoster/app";
+// 跳转-需要统一验证、登录、下线弹窗的
 const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
   uni.showLoading({
     title: "",
@@ -11,7 +12,7 @@ const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
     if (store.state.offlinePopup.loginShow) {
       return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
     }
-    if (store.state.offlinePopup.offlineFlag) { // 展示升级弹窗
+    if (store.state.offlinePopup.offlineFlag) { // 展示线下弹窗
       return;
     }
     navigateToAny(item, callback);
@@ -26,6 +27,7 @@ const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
 };
 // 跳转-不需要统一验证、登录、升级弹窗的
 const navigateToAny = (item, callback) => {
+  console.log("跳转");
   uni.showLoading({
     title: "",
     mask: true,
