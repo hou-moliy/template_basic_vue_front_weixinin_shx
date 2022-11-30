@@ -109,6 +109,20 @@
             "navigationBarTitleText": "视频分类",
             "enablePullDownRefresh": false
           }
+        },
+        {
+          "path": "myLike/index",
+          "style": {
+            "navigationBarTitleText": "我的喜欢",
+            "enablePullDownRefresh": false
+          }
+        },
+        {
+          "path": "recenPlay/index",
+          "style": {
+            "navigationBarTitleText": "最近播放",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },
