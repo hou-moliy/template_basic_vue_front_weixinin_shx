@@ -63,6 +63,10 @@ export default {
   },
   methods: {
     programaAnalysis,
+    // 强制刷新
+    handleFresh () {
+      this.getWfList();
+    },
     // 请求列表数据
     async getWfList () {
       this.moduleId = this.pageConfig.moduleId;

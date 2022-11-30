@@ -27,7 +27,7 @@
       class="swiper"
       :vertical="true"
       :current="index"
-      @change="changeCurrent"
+      :disable-touch="false"
     >
       <swiper-item
         v-for="item in videoList"
@@ -37,13 +37,66 @@
         <full-screen-video :item="item" />
       </swiper-item>
     </swiper>
+    <!-- 新手引导步骤一 -->
+    <view v-if="isFirstPlay && step === 1" class="tip-one" @click="nextStep">
+      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_tip_one.png`"
+        class="tip-bubble"
+      />
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_detail_next.png`"
+        class="tip-button"
+      />
+      <view class="set-box">
+        <view class="inner-box">
+          <view class="set-boxImg">
+            <image
+              :src="`${staticImgs}/shxmp/init/set_spcl_btn_inner.png`"
+              class="set-btn-inner"
+            />
+          </view>
+          <view class="spcl_btn1" />
+          <view class="spcl_btn2" />
+          <view class="spcl_btn3" />
+          <view class="spcl_btn4" />
+        </view>
+        <view class="set-text">设为彩铃</view>
+      </view>
+    </view>
+    <!-- 新手引导步骤二 -->
+    <view v-if="isFirstPlay && step === 2" class="tip-two" @click="nextStep">
+      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_tip_two.png`"
+        class="tip-bubble"
+      />
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_detail_next.png`"
+        class="tip-button"
+      />
+      <view class="right-icon">
+        <image
+          :src="`${staticImgs}/shxmp/init/video-preview-icon.png`"
+          class="preview-img img"
+        />
+      </view>
+    </view>
+    <!-- 滑动提示 -->
+    <view
+      v-if="isFirstPlay && step === 3"
+      class="slide-image"
+      @click="isFirstPlay = false"
+    >
+      <image :src="`${staticImgs}/shxmp/init/slide_indicator.png`" />
+    </view>
   </view>
 </template>
 
 <script>
 import videoService from "@/api/cx/video.js";
 import Util, { formatCount } from "@/utils/tools.js";
-
+import { videoInfoUpdate } from "@/utils/video";
 export default {
 
   data () {
@@ -63,7 +116,6 @@ export default {
       currentList: "",
       autoLoadData: false,
       userClLibraryData: [],
-      isFirstPlay: false,
       purchaseIndexIsShow: false,
       purchaseVideoMes: {},
       btnType: "",
@@ -90,6 +142,7 @@ export default {
       navHeight: 0, // 自定义导航栏高度
       shareStatus: false, // 是否由分享进入
       step: 0, // 新手引导步骤
+      isFirstPlay: false, // 控制引导弹窗的展示
       userLikeVideoList: [],
       playStatus: "", // 是否是组件 状态   0-非组件  1-组件
       moduleId: "", // page_config 的 moduleId
@@ -180,12 +233,14 @@ export default {
     }
 
     if (this.shareFlag) {
+      console.log(1);
       const flag = await this.getVideoDetail();
       that.shareFlag = false;
       if (flag) {
         that.init();
       }
     } else {
+      console.log(2);
       this.init();
     }
   },
@@ -234,6 +289,24 @@ export default {
   },
   methods: {
     formatCount,
+    // 新手引导下一步
+    nextStep () {
+      this.$analysis.dispatch("spcl_dgcl_jx");
+      if (this.step === 1) {
+        this.step = 2;
+      } else if (this.step === 2) {
+        this.step = 3;
+        this.isFirstPlay = true;
+      } else {
+        console.log("step:way 故障", this.step);
+      }
+    },
+    // 新手引导跳过引导
+    jumpGuide () {
+      this.$analysis.dispatch("spcl_dgcl_tg");
+      this.step = 3;
+      this.isFirstPlay = true;
+    },
     goBack () {
       uni.navigateBack();
     },
@@ -287,8 +360,10 @@ export default {
     },
     init () {
       console.log("onshow");
+
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
+      this.$store.commit("spcl/M_changeVideoList", this.$store.state.spcl.videoList);
       this.videoList = this.$store.state.spcl.videoList;
       this.index = this.videoList.findIndex(
         (item) => item.ringId === this.onLoadId,
@@ -346,28 +421,13 @@ export default {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
           // 分享和喜欢数据格式化
           // for (let i = 0; i < tempList.length; i++) {
-          // 	if (tempList[i].extraInfo) {
-          // 		tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
-          // 		tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
-          // 	}
+          //   if (tempList[i].extraInfo) {
+          //     tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
+          //     tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
+          //   }
           // }
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userSpclData")[0] &&
-            uni.getStorageSync("userSpclData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
           this.pageNum++;
-          this.videoList = tempList;
+          this.videoList = videoInfoUpdate(tempList);
           this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
       });
@@ -573,8 +633,406 @@ export default {
 }
 
 .page {
+  /* #ifndef APP-PLUS-NVUE */
   display: flex;
   flex-direction: column;
+  /* #endif */
   flex: 1;
+}
+
+.tip-one {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  background: #000000;
+  z-index: 888;
+
+  .tip-text {
+    opacity: 0.8;
+    font-size: 26rpx;
+    color: #ffffff;
+    line-height: 36rpx;
+    position: absolute;
+    right: 154rpx;
+    bottom: 747rpx;
+    height: 40rpx;
+    border-bottom: 2rpx solid rgba(255, 255, 255, 0.8);
+  }
+
+  .tip-bubble {
+    width: 544rpx;
+    height: 349rpx;
+    position: absolute;
+    right: 140rpx;
+    bottom: 370rpx;
+    z-index: 999;
+  }
+
+  .tip-button {
+    width: 191rpx;
+    height: 97rpx;
+    position: absolute;
+    right: 370rpx;
+    bottom: 360rpx;
+  }
+
+  .set-box {
+    position: absolute;
+    right: 30rpx;
+    bottom: 120rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 210rpx;
+  }
+}
+.tip-two {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  background: #000000;
+
+  .tip-text {
+    opacity: 0.8;
+    font-size: 26rpx;
+    color: #ffffff;
+    line-height: 36rpx;
+    position: absolute;
+    right: 116rpx;
+    bottom: 1170rpx;
+    height: 40rpx;
+    border-bottom: 2rpx solid rgba(255, 255, 255, 0.8);
+  }
+
+  .tip-bubble {
+    width: 600rpx;
+    height: 293rpx;
+    position: absolute;
+    right: 90rpx;
+    bottom: 850rpx;
+  }
+
+  .tip-button {
+    width: 191rpx;
+    height: 97rpx;
+    position: absolute;
+    right: 380rpx;
+    bottom: 800rpx;
+  }
+
+  .right-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 15rpx;
+    bottom: 739rpx;
+    image {
+      width: 134rpx;
+      height: 134rpx;
+    }
+  }
+}
+
+// 视频彩铃内容
+.video-box {
+  flex: 1;
+  width: 750rpx;
+  .video {
+    flex: 1;
+  }
+  .cover_image {
+    width: 100%;
+    height: 100vh;
+  }
+}
+
+.view-center {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.1;
+  z-index: 999;
+}
+
+.view-left {
+  position: absolute;
+  width: 100%;
+  bottom: 100rpx;
+  left: 0rpx;
+  font-size: 32rpx;
+  color: #ffffff;
+  /* #ifndef APP-PLUS */
+  white-space: pre-wrap;
+  text-overflow: ellipsis;
+  /* #endif */
+}
+
+.left-view {
+  box-sizing: border-box;
+  margin-bottom: 20upx;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 30rpx 0 30rpx;
+
+  .set-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 210rpx;
+    position: relative;
+  }
+}
+
+.left-text {
+  width: 480rpx;
+  font-size: 32rpx;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-weight: 500;
+  text-align: left;
+  color: #ffffff;
+  line-height: 48rpx;
+  text-shadow: 0rpx 2rpx 7rpx 0rpx rgba(4, 0, 0, 0.23);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-wrap: break-word;
+}
+
+.left-view-right {
+  width: 168rpx;
+  height: 58rpx;
+  border-radius: 29px;
+}
+
+.inner-box {
+  width: 162rpx;
+  height: 162rpx;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.set-btn-inner {
+  width: 90rpx;
+  height: 71rpx;
+  animation-name: camera;
+  animation-duration: 0.3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  /* Safari and Chrome: */
+  -webkit-animation-name: camera;
+  -webkit-animation-duration: 0.3s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+}
+
+@keyframes camera {
+  from {
+    transform: rotate(-8deg);
+  }
+  to {
+    transform: rotate(8deg);
+  }
+}
+
+@-webkit-keyframes camera {
+  from {
+    transform: rotate(-8deg);
+  }
+  to {
+    transform: rotate(8deg);
+  }
+}
+
+.set-text {
+  font-size: 28rpx;
+  font-family: PingFang SC, PingFang SC-Medium;
+  color: #ffffff;
+  line-height: 36rpx;
+}
+
+.setted-video {
+  width: 168rpx;
+  height: 58rpx;
+  background: #c6c5c8;
+  border-radius: 29rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  text-align: center;
+  color: #ffffff;
+  line-height: 58rpx;
+}
+
+.avater {
+  border-radius: 50upx;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 4rpx;
+}
+
+.view-right {
+  position: absolute;
+  bottom: 350rpx;
+  right: 30rpx;
+  /* #ifndef APP-PLUS-NVUE */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* #endif */
+
+  .right-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.right-text {
+  font-size: 28rpx;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-weight: 500;
+  text-align: center;
+  color: #ffffff;
+  line-height: 42rpx;
+  text-shadow: 0rpx 2rpx 5rpx 0rpx rgba(4, 0, 0, 0.23);
+  margin: 7rpx 0 46rpx 0;
+}
+
+.img {
+  height: 90rpx;
+  width: 90rpx;
+  opacity: 0.9;
+}
+
+.other-img {
+  width: 66rpx;
+  height: 66rpx;
+}
+
+.preview-img {
+  height: 90rpx;
+  width: 90rpx;
+}
+
+.mask-top {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  top: 0rpx;
+  left: 0rpx;
+  background: linear-gradient(top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+}
+
+.mask-bottom {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  bottom: 0rpx;
+  left: 0rpx;
+  background: linear-gradient(bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+}
+
+.blank-space {
+  width: 100vw;
+  height: 25rpx;
+  background-color: black;
+}
+
+// 视频彩铃设置动态按钮
+@keyframes active {
+  0% {
+    transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(0.6);
+    -webkit-transform: scale(0.6);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(0.7);
+    -webkit-transform: scale(0.7);
+    opacity: 0.6;
+  }
+  75% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.spcl_btn1,
+.spcl_btn2,
+.spcl_btn3,
+.spcl_btn4 {
+  position: absolute;
+  width: 200rpx;
+  height: 200rpx;
+  border: 4rpx solid #9e79ff;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  box-shadow: 0 0 0 6rpx #9e79ff; /* 阴影效果 */
+  transform: translate(-50%, -50%);
+}
+/* 第一个圆圈动画 */
+.spcl_btn1 {
+  animation: active 2s linear 0s infinite;
+}
+/* 第二个圆圈动画 */
+.spcl_btn2 {
+  animation: active 2s linear 0.5s infinite;
+}
+/* 第三个圆圈动画 */
+.spcl_btn3 {
+  animation: active 2s linear 1s infinite;
+}
+/* 第四个圆圈动画 */
+.spcl_btn4 {
+  animation: active 2s linear 1.5s infinite;
+}
+
+.set-boxImg {
+  width: 107rpx;
+  height: 107rpx;
+  background: linear-gradient(-60deg, #ff45d5 0%, #485eff 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slide-image {
+  position: absolute;
+  width: 265rpx;
+  height: 475rpx;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  image {
+    width: 265rpx;
+    height: 475rpx;
+  }
 }
 </style>

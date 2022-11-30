@@ -54,6 +54,7 @@
       >
         <view class="scenery-out-wrap">
           <eb-spcl-transverse
+            ref="EbSpclTransverse"
             :page-config="pageConfig"
             :page-load-status="pageLoadStatus"
             :activity-id="activityId"
@@ -237,8 +238,6 @@
         />
       </template>
     </view>
-    <!-- 提示性弹窗 -->
-    <notifyPop ref="NotifyPop" />
   </view>
 </template>
 
@@ -267,7 +266,9 @@ export default {
     },
   },
   data () {
-    return {};
+    return {
+
+    };
   },
   created () {
   },
@@ -280,14 +281,18 @@ export default {
         this.$refs.EbSpclWaterFalls[0].onScrollBottom();
       }
     },
+    // 刷新数据
     handleFresh () {
       if (this.$refs.EbSpclWaterFalls) {
         this.$refs.EbSpclWaterFalls[0].handleFresh();
       }
+      if (this.$refs.EbSpclTransverse) {
+        this.$refs.EbSpclTransverse[0].handleFresh();
+      }
     },
     // 子组件打开登录弹窗
     openLoginPopup () {
-      this.$showLoginPop(this);
+      this.$emit("openLoginPopup");
     },
     // banner埋点
     buryBannerId (id) {
@@ -299,18 +304,13 @@ export default {
     },
     // 设置视频彩铃
     purchaseVideo (e) {
-      // 设置视频彩铃
-      if (uni.getStorageSync("Authorization")) {
-        console.log(e, "设为视频彩铃");
-      } else {
-        this.openLoginPopup();
-      }
+      this.$emit("purchaseVideo", e);
     },
     // 跳转视频彩铃播放页面
     goToPlayVideo ({ item, list }) {
       this.$store.commit("spcl/M_changeVideoList", list);
       uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${item.ringId}`,
+        url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
       });
     },
   },

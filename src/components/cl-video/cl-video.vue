@@ -128,6 +128,9 @@ export default {
     this.trueSrc = this.src;
     this.videoCtx.pause();
     this.videoCtx.play();
+    if (!uni.getStorageSync("userPlayVideo")) {
+      uni.setStorageSync("userPlayVideo", true);
+    }
   },
   methods: {
     // 拖动滑块

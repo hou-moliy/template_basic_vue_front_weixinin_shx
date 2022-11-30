@@ -68,7 +68,7 @@
         }"
         @change="swiperChange"
       >
-        <swiper-item v-for="swipeItem in tabList" :key="swipeItem.id">
+        <swiper-item v-for="(swipeItem, index) in tabList" :key="swipeItem.id">
           <scroll-view
             scroll-y="true"
             :style="{ height: `${windowHeight}px` }"
@@ -77,6 +77,7 @@
           >
             <!-- 配置化组件容器 -->
             <ebConfigContainerAsync
+              v-if="index === swiperTab"
               key=""
               ref="EbConfig"
               :activity-id="swipeItem.activityId"
@@ -95,6 +96,13 @@
       v-if="Boolean($store.state.offlinePopup.offlinePopupShow)"
       ref="offlinePopup"
     />
+    <!-- 视频彩铃订购相关弹窗 -->
+    <popupTemplateOperition
+      :popup-info="operitionInfo"
+      :show="Boolean($store.state.window.operitionShow)"
+      @buttonClick="operitionBtnClick"
+      @closePopup="$store.commit('window/SET_OPERITION_SHOW', fasle)"
+    />
   </view>
 </template>
 
@@ -102,7 +110,6 @@
 import TemplateService from "@/api/template/index";
 import Util from "@/utils/tools.js";
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
-
 export default {
   name: "ClIndex",
   components: { ebConfigContainerAsync },
@@ -120,6 +127,8 @@ export default {
       windowsWidth: 0, // 可使用窗口宽度
       windowHeight: 0, // 可使用窗口高度
       navHeight: 0, // 手机状态栏的高度
+      operitionInfo: {}, // 订购弹窗的内容
+      operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
       // 埋点key
       buryKey: {
         recommend_page: {
@@ -170,15 +179,17 @@ export default {
       },
     };
   },
-  created () {
-    this.getPageWidthHeight();
-  },
   onLoad () {
-    this.dispatchPageEvent();
+    this.getPageWidthHeight();
+    this.$store.dispatch("spcl/getUserAllVideoList");
   },
   onShow () {
-    this.getTabList();
+    this.initData();
     this.handleFresh();
+    this.dispatchPageEvent();
+  },
+  onHide () {
+    this.offMonitor();
   },
   onShareAppMessage (res) {
     if (res.from === "button") {
@@ -209,6 +220,13 @@ export default {
     }
   },
   methods: {
+    // 页面初始化数据
+    initData () {
+      this.getTabList();
+      this.$store.dispatch("user/getUserSpclStatus");
+      this.$store.dispatch("user/getUserAiStatus");
+    },
+    // 刷新组件信息
     handleFresh () {
       if (this.$refs.EbConfig) {
         this.$refs.EbConfig[this.swiperTab].handleFresh();
@@ -226,6 +244,18 @@ export default {
         console.log(data);
         this.$showLoginPop(this);
       });
+      // 展示订购、设置类弹窗，按钮点击回调
+      uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
+        this.operitionInfo = popupInfo;
+        this.$store.commit("window/SET_OPERITION_SHOW", true);
+        this.operitionBtnClick = (e) => btnClickCallBack(e);
+      });
+    },
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
     },
     // 初始化页面样式宽高等
     getPageWidthHeight () {
@@ -244,6 +274,7 @@ export default {
         },
       });
     },
+    // switch点击防抖
     switchNavDebounce (e) {
       this.switchNavInfo = e;
       Util.debounce(this.switchNav, 200, true)();
@@ -326,6 +357,7 @@ export default {
       this.swiperChangeInfo = e;
       Util.debounce(this.swiperNavDebounce, 200, true)();
     },
+    // swiper切换防抖
     swiperNavDebounce () {
       const e = this.swiperChangeInfo;
       const { current } = e.detail;
@@ -375,11 +407,10 @@ export default {
     },
     // 滚动到底部监听
     scrollToLower () {
-      console.log(this.swiperTab, "ccc");
       this.$nextTick(() => {
         if (this.$refs.EbConfig) {
-          console.log(this.$refs.EbConfig[this.swiperTab], "kkkk");
-          this.$refs.EbConfig[this.swiperTab].onScrollBottom();
+          //  this.$refs.EbConfig[this.swiperTab].onScrollBottom();
+          this.$refs.EbConfig[0].onScrollBottom();
         }
       });
     },

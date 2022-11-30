@@ -1,41 +1,27 @@
 <template>
-  <view
-    class="block"
-    :style="{ padding: blockPadding }"
-  >
-    <view
-      class="block-box"
-      :style="{ margin, padding }"
-    >
+  <view class="block" :style="{ padding: blockPadding }">
+    <view class="block-box" :style="{ margin, padding }">
       <view class="block-box-title">
         <view>
-          <img
-            v-if="
-              pageConfig.tagIcon !== ''
-                &&
-                extraStyle.position === 'left'
-            "
+          <image
+            v-if="pageConfig.tagIcon !== '' && extraStyle.position === 'left'"
             class="eb-icon"
             :src="pageConfig.tagIcon"
-          >
+          />
         </view>
-        <span :style="{color: extraStyle.color}">{{ pageConfig.title }}</span>
+        <span :style="{ color: extraStyle.color }">{{ pageConfig.title }}</span>
         <view>
-          <img
-            v-if="
-              pageConfig.tagIcon !== ''
-                &&
-                extraStyle.position === 'right'
-            "
+          <image
+            v-if="pageConfig.tagIcon !== '' && extraStyle.position === 'right'"
             :src="pageConfig.tagIcon"
-          >
+          />
         </view>
       </view>
       <view
         v-if="pageConfig.showMoreFlag"
         class="block-box-button"
-        :style="{borderRadius: extraStyle.borderRadius}"
-        @click="navigateToAny"
+        :style="{ borderRadius: extraStyle.borderRadius }"
+        @click="jumpTo"
       >
         {{ pageConfig.moreTitle || "查看更多" }}
       </view>
@@ -46,16 +32,14 @@
 </template>
 
 <script>
-import { navigateToAny } from "@/utils/navigateToAny.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 import { copyAttr } from "@/utils/gCopy.js";
 export default {
   components: {},
   props: {
     pageConfig: {
       type: Object,
-      default: () => {
-        return {};
-      },
+      default: () => { },
     },
     // 外边距
     margin: {
@@ -84,48 +68,30 @@ export default {
     };
   },
   computed: {},
-  watch: {
-    params: {
-      handler (n, o) {
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
   mounted () {
   },
   methods: {
-    async navigateToAny () {
-      // await this.$store.dispatch(
-      //   "getCustomorderList",
-      //   `seeMore_rec_${this.pageConfig.moduleId}`,
-      // );
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
+    jumpTo () {
       if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
-        this.$parent.changeTabByMore(this.pageConfig.eventUrl);
+        navigateToAnyCheck(this.pageConfig, `seeMore_rec_${this.pageConfig.moduleId}`);
       } else {
         uni.setStorageSync("moreData", this.pageConfig);
-        const params = this.pageConfig;
+        const params = { ...this.pageConfig };
         // 请统一使用eventUrl字段作为跳转路径
-        if (this.pageConfig.eventUrl.indexOf("?") > -1) {
-          params.eventUrl = `${this.pageConfig.eventUrl}&moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
+        if (params.eventUrl.indexOf("?") > -1) {
+          params.eventUrl = `${params.eventUrl}&moduleId=${params.moduleId}&pageName=${params.title}&showDirection=V`;
         } else {
-          params.eventUrl = `${this.pageConfig.eventUrl}?moduleId=${this.pageConfig.moduleId}&pageName=${this.pageConfig.title}&showDirection=V`;
+          params.eventUrl = `${params.eventUrl}?moduleId=${params.moduleId}&pageName=${params.title}&showDirection=V`;
         }
-        console.log(params, "params");
-        navigateToAny(params);
+        console.log(params.eventUrl);
+        navigateToAnyCheck(params, `seeMore_rec_${params.moduleId}`);
       }
     },
+
   },
 };
 </script>
@@ -162,7 +128,7 @@ export default {
         font-weight: 600;
       }
 
-      img {
+      image {
         width: 37rpx;
         height: 49rpx;
         margin-left: 6rpx;

@@ -176,6 +176,8 @@ export default {
     };
   },
   onLoad (options) {
+    console.log(uni.getStorageSync("userSpclData"), "数据数据");
+
     if (options.navflag) {
       this.navFlag = options.navflag;
     }
@@ -190,6 +192,7 @@ export default {
     });
   },
   computed: {
+
     delActive () {
       return this.checkShow && this.delCls.length > 0;
     },
@@ -225,6 +228,7 @@ export default {
     getVideoListById (flag) {
       this.allVideoList = this.$store.state.spcl.userSpclData.vrbtResponse;
       this.currentVideoIdList = this.$store.state.spcl.userSpclData.vrbtSettingRes;
+
       // 获取当前播放的对象数组
       this.videoSettingList = this.allVideoList.filter(item => {
         return (
@@ -534,7 +538,7 @@ export default {
     seeDetail ({ ringId }) {
       this.$store.commit("spcl/M_changeVideoList", this.videoList);
       uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVdieoPlay?id=${ringId}`,
+        url: `/pagesSpcl/clVideo/clVideoPlay?id=${ringId}`,
       });
     },
   },

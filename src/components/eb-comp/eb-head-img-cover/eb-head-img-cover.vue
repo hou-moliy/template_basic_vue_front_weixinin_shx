@@ -1,8 +1,5 @@
 <template>
-  <view
-    class="top-img"
-    :style="[extraStyle]"
-  >
+  <view class="top-img" :style="[extraStyle]">
     <image :src="pageConfig.tagIcon" />
   </view>
 </template>
@@ -19,6 +16,7 @@ export default {
   data () {
     return {
       extraStyle: {
+        height: "480rpx",
       },
     };
   },

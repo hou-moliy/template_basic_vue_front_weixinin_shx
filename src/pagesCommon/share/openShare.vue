@@ -19,7 +19,60 @@
       </view>
     </view>
     <!-- 全屏播放组件 -->
-    <fullScreenVideo :item="videoDetail" :is-slide="false" />
+    <fullScreenVideo v-if="videoDetail" :item="videoDetail" :is-slide="false" />
+    <!-- 新手引导步骤一 -->
+    <view v-if="isFirstPlay && step === 1" class="tip-one" @click="nextStep">
+      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_tip_one.png`"
+        class="tip-bubble"
+      />
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_detail_next.png`"
+        class="tip-button"
+      />
+      <view class="set-box">
+        <view class="inner-box">
+          <view class="set-boxImg">
+            <image
+              :src="`${staticImgs}/shxmp/init/set_spcl_btn_inner.png`"
+              class="set-btn-inner"
+            />
+          </view>
+          <view class="spcl_btn1" />
+          <view class="spcl_btn2" />
+          <view class="spcl_btn3" />
+          <view class="spcl_btn4" />
+        </view>
+        <view class="set-text">设为彩铃</view>
+      </view>
+    </view>
+    <!-- 新手引导步骤二 -->
+    <view v-if="isFirstPlay && step === 2" class="tip-two" @click="nextStep">
+      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_tip_two.png`"
+        class="tip-bubble"
+      />
+      <image
+        :src="`${staticImgs}/shxmp/init/spcl_detail_next.png`"
+        class="tip-button"
+      />
+      <view class="right-icon">
+        <image
+          :src="`${staticImgs}/shxmp/init/video-preview-icon.png`"
+          class="preview-img img"
+        />
+      </view>
+    </view>
+    <!-- 滑动提示 -->
+    <view
+      v-if="isFirstPlay && step === 3"
+      class="slide-image"
+      @click="isFirstPlay = false"
+    >
+      <image :src="`${staticImgs}/shxmp/init/slide_indicator.png`" />
+    </view>
   </view>
 </template>
 
@@ -39,6 +92,8 @@ export default {
       userName: "您的好友",
       navMarginHeight: 0, // 自定义导航栏外边距
       navHeight: 0, // 自定义导航栏高度
+      step: 0, // 新手引导步骤
+      isFirstPlay: false, // 控制引导弹窗的展示
     };
   },
   onLoad (options) {
@@ -51,6 +106,13 @@ export default {
       });
     }
     this.initStyle();
+    // 分享进入的等同第一次的缓存逻辑
+    if (uni.getStorageSync("userPlayVideo")) {
+      this.isFirstPlay = false;
+    } else {
+      this.step = 1;
+      this.isFirstPlay = true;
+    }
   },
   async onShow () {
     // await this.$getAuthInfo();
@@ -71,6 +133,24 @@ export default {
   },
   methods: {
     formatCount,
+    // 新手引导下一步
+    nextStep () {
+      this.$analysis.dispatch("spcl_dgcl_jx");
+      if (this.step === 1) {
+        this.step = 2;
+      } else if (this.step === 2) {
+        this.step = 3;
+        this.isFirstPlay = true;
+      } else {
+        console.log("step:way 故障", this.step);
+      }
+    },
+    // 新手引导跳过引导
+    jumpGuide () {
+      this.$analysis.dispatch("spcl_dgcl_tg");
+      this.step = 3;
+      this.isFirstPlay = true;
+    },
     // 初始化样式
     initStyle () {
       this.$nextTick(() => {

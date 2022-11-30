@@ -1,6 +1,6 @@
 import videoService from "@/api/cx/video.js";
 import spclService from "@/api/spcl/index.js";
-import Vue from "vue";
+// import Vue from "vue";
 import videoTools from "@/utils/video.js";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据
@@ -11,34 +11,45 @@ const state = {
   moreVideoList: [],
   videoListFromCxVideoType: [],
   myLikeVideoList: [],
-  isFirstPlay: uni.getStorageSync("isFirstPlay"), // 是否第一次,控制引导弹窗的展示
-  step: 1, // 新手引导步骤
 };
 
 const mutations = {
-  // 设置是否展示引导弹窗
-  SET_FIRST_PLAY (state, isFirstPlay) {
-    state.isFirstPlay = isFirstPlay;
-    uni.setStorageSync("isFirstPlay", isFirstPlay);
-  },
-  // 设置新手引导步骤
-  SET_STEP (state, step) {
-    state.step = step;
-  },
   // 设置用户的视频彩铃数据
   SET_USER_SPCL_DATA (state, userSpclData) {
     state.userSpclData = userSpclData;
-    uni.setStorageSync("userSpclData", JSON.stringify([userSpclData]));
+    uni.setStorageSync("userSpclData", [userSpclData]);
   },
   // 设置用户当前播放的数据 vrbtSettingRes
   SET_USER_SPCL_SETTINGS (state, vrbtSettingRes) {
     state.userSpclData.vrbtSettingRes = vrbtSettingRes;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
   },
+  // 更新用户当前播放的数据 （新增或删除）
+  UPDATE_USER_SPCL_SETTINGS (state, ringId) {
+    const vrbtSettingRes = state.userSpclData.vrbtSettingRes;
+    const index = vrbtSettingRes.findIndex(e => e === ringId);
+    if (index !== -1) { // 删除
+      vrbtSettingRes.splice(index, 1);
+    } else { // 新增
+      vrbtSettingRes.push(ringId);
+    }
+    this.commit("spcl/SET_USER_SPCL_SETTINGS", vrbtSettingRes);
+  },
   // 设置用户所有铃音数据 vrbtResponse
   SET_USER_SPCL_ALL (state, vrbtResponse) {
     state.userSpclData.vrbtResponse = vrbtResponse;
     this.commit("spcl/SET_USER_SPCL_DATA", state.userSpclData);
+  },
+  // 更新用户所有铃音数据 （新增或删除），type===1 新增，0删除
+  UPDATE_USER_SPCL_ALL (state, ringItem) {
+    const vrbtResponse = state.userSpclData.vrbtResponse;
+    const index = vrbtResponse.findIndex(e => e === ringItem.ringId);
+    if (index !== -1) { // 删除
+      vrbtResponse.splice(index, 1);
+    } else { // 新增
+      vrbtResponse.push(ringItem);
+    }
+    this.commit("spcl/SET_USER_SPCL_SETTINGS", vrbtResponse);
   },
   // 设置用户铃音的settingId, settingIdRes
   SET_USER_SPCL_SETTINGID (state, settingIdRes) {
@@ -111,18 +122,20 @@ const actions = {
   },
   // 获取用户所有铃音数据
   getUserAllVideoList ({ dispatch }) {
-    return new Promise((resolve) => {
+    if (!uni.getStorageSync("Authorization")) return;
+    return new Promise((resolve, reject) => {
       spclService.getsplykInfo().then(response => {
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
         } else {
-          Vue.prototype.$toast("数据请求失败，请退出重试～");
+          // Vue.prototype.$toast("数据请求失败，请退出重试～");
         }
       });
     });
   },
   // 获取用户当前播放的铃音数据
   getUserCurVideoList ({ commit }, response) {
+    if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
       spclService
         .getsplykCurrentInfo()
