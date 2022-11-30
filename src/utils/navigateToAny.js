@@ -1,6 +1,6 @@
 import SsoService from "@/api/sso";
 import store from "../store";
-// 跳转-需要统一验证、登录、升级弹窗的
+// 跳转-需要统一验证、登录、下线弹窗的
 const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
   uni.showLoading({
     title: "",
@@ -26,6 +26,7 @@ const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
 };
 // 跳转-不需要统一验证、登录、升级弹窗的
 const navigateToAny = (item, callback) => {
+  console.log("跳转");
   uni.showLoading({
     title: "",
     mask: true,
