@@ -1,56 +1,49 @@
 <template>
-  <view class="content">
-    <view class="login-top" :style="{height:loginBoxHeight+'px'}">
+  <view
+    class="content"
+    :style="{
+      height: `${windowHeight}px`,
+    }"
+  >
+    <view class="login-top" :style="{ height: loginBoxHeight + 'px' }">
       <view
-      class="custom-tab"
-      :style="{ background:`url(${staticImgs}/shxmp/init/search-bg.png) center/cover no-repeat`,height:loginBoxHeight+'px'}"
+        class="custom-tab"
+        :style="{
+          background: `url(${staticImgs}/shxmp/init/search-bg.png) center/cover no-repeat`,
+          height: loginBoxHeight + 'px',
+        }"
       >
         <view
-        class="custom-tab-title"
-        :style="{ paddingTop: pointobj.top + 'px',lineHeight: pointobj.height+'px'}"
+          class="custom-tab-title"
+          :style="{
+            paddingTop: pointobj.top + 'px',
+            lineHeight: pointobj.height + 'px',
+          }"
         >
           我的
         </view>
         <!-- 头部 -->
 
-        <view
-        class="login-top-box"
-        @click="isLogin()"
-        >
+        <view class="login-top-box" @click="isLogin()">
           <view class="txbox">
-            <view
-            v-if="loginFlag && isAuth"
-            class="userinfo-avatar"
-            >
+            <view v-if="loginFlag && isAuth" class="userinfo-avatar">
               <image :src="userInfo.avatarUrl" />
             </view>
-            <image
-            v-else
-            :src="avatarUrl"
-            />
+            <image v-else :src="avatarUrl" />
           </view>
           <view class="tx-content">
-            <view
-            v-if="loginFlag && isAuth"
-            class="tx-content-nickname"
-            >
+            <view v-if="loginFlag && isAuth" class="tx-content-nickname">
               {{ userInfo.nickName }}
             </view>
             <button v-else-if="!loginFlag">
               {{ nickName }}
             </button>
-            <text
-            v-if="phoneNumber && isAuth"
-            class="tx-content-text"
-            >
+            <text v-if="phoneNumber && isAuth" class="tx-content-text">
               <text class="tx-content-text">
                 ({{ phoneNumber }})
               </text>
             </text>
-            <text
-            v-else-if="phoneNumber && !isAuth"
-            class="tx-content-text"
-            >
+            <text v-else-if="phoneNumber && !isAuth" class="tx-content-text">
               <text class="tx-content-text">
                 {{ phoneNumber }}
               </text>
@@ -59,72 +52,56 @@
         </view>
         <view class="cx-des">
           <view
-          class="login-bottom-box"
-          style="
-            margin-top: 25rpx;
-            display: flex;
-            align-items: center;
-            padding-bottom: 0rpx;
-          "
+            class="login-bottom-box"
+            style="
+              margin-top: 25rpx;
+              display: flex;
+              align-items: center;
+              padding-bottom: 0rpx;
+            "
           >
             <view style="width: 92%; display: flex; align-items: center">
               <image
-              class="sign"
-              :src="`${staticImgs}/shxmp/init/yp-icon.png`"
+                class="sign"
+                :src="`${staticImgs}/shxmp/init/yp-icon.png`"
               />
               <text class="title">
                 我的彩铃：
               </text>
               <text
-              v-if="!loginFlag"
-              class="content"
-              @click="navigateToLogin()"
+                v-if="!loginFlag"
+                class="content"
+                @click="navigateToLogin()"
               >
                 登录后显示
               </text>
-              <text
-              v-else
-              class="content"
-              @click="navigateToEditForAll('cl')"
-              >
-                {{
-                  cxMusicContent
-                }}
+              <text v-else class="content" @click="navigateToEditForAll('cl')">
+                {{ cxMusicContent }}
               </text>
             </view>
           </view>
 
           <view
-          class="login-bottom-box"
-          style="
-            margin-top: 26rpx;
-            display: flex;
-            align-items: center;
-          "
+            class="login-bottom-box"
+            style="margin-top: 26rpx; display: flex; align-items: center"
           >
             <view style="width: 92%; display: flex; align-items: center">
               <image
-              class="sign"
-              :src="`${staticImgs}/shxmp/init/sp-icon.png`"
+                class="sign"
+                :src="`${staticImgs}/shxmp/init/sp-icon.png`"
               />
               <text class="title">
                 我的视彩：
               </text>
               <text
-              v-if="!loginFlag"
-              class="content"
-              @click="navigateToLogin()"
+                v-if="!loginFlag"
+                class="content"
+                @click="navigateToLogin()"
               >
                 登录后显示
               </text>
-              <text
-              v-else
-              class="content"
-              @click="navigateToEditForAll('sp')"
-              >
-                {{
-                  cxVideoContent
-                }}
+              <text v-else class="content" @click="navigateToEditForAll('sp')">
+                {{ cxVideoContent }}
               </text>
             </view>
           </view>
@@ -149,24 +126,21 @@
         更多功能
       </text>
       <view
-            v-for="(item, index) in functionList"
-            :key="index"
-            class="fl-cell"
-            @click="navigateToFunction(item)"
+        v-for="(item, index) in functionList"
+        :key="index"
+        class="fl-cell"
+        @click="navigateToFunction(item)"
       >
         <view class="fl-cell-left">
-          <image
-                :src="item.iconUrl"
-                 class="cell-icon-title"
-          />
+          <image :src="item.iconUrl" class="cell-icon-title" />
         </view>
         <view class="fl-cell-right">
           <view class="cell-desc">
             {{ item.iconTitle }}
           </view>
           <image
-           :src="`${staticImgs}/shxmp/init/more-icon.png`"
-                 class="cell-icon-end"
+            :src="`${staticImgs}/shxmp/init/more-icon.png`"
+            class="cell-icon-end"
           />
         </view>
       </view>
@@ -583,8 +557,8 @@ export default {
 };
 </script>
 <style>
-page{
-  background-color: #F5F7F9;
+page {
+  background-color: #f5f7f9;
 }
 </style>
 <style lang="scss" scoped>
@@ -625,15 +599,9 @@ page{
 .custom-tab{
     // height: 446rpx;
     width: 100%;
-    .custom-tab-title{
-      font-weight: 700;
-      font-size: 36rpx;
-      color: #252A3E;
-      width: 100%;
-      text-align: center;
-    }
+    text-align: center;
   }
-  .sign {
+.sign {
   vertical-align: middle;
   width: 34rpx;
   height: 30rpx;
@@ -654,7 +622,7 @@ button::after {
   justify-content: center;
 }
 
-  .login-top-box {
+.login-top-box {
   padding-top: 37rpx;
   display: flex;
   align-items: center;
@@ -671,7 +639,7 @@ button::after {
       white-space: nowrap;
       font-weight: bold;
       font-size: 40rpx;
-      color: #252A3E;
+      color: #252a3e;
       font-family: PingFang SC, PingFang SC-Heavy;
       background: unset;
       vertical-align: middle;
@@ -681,10 +649,9 @@ button::after {
       font-size: 40rpx;
       font-family: PingFang SC, PingFang SC-Heavy;
       text-align: left;
-      color: #252A3E;
+      color: #252a3e;
       line-height: 59rpx;
     }
-
   }
 }
 
@@ -703,8 +670,7 @@ button::after {
   background: unset;
   vertical-align: middle;
   padding-left: 5rpx;
-  color: #252A3E;
-
+  color: #252a3e;
 }
 .txbox {
   width: 120rpx;
@@ -849,17 +815,17 @@ button::after {
   font-family: PingFang SC, PingFang SC-Medium;
   font-weight: 500;
   text-align: left;
-  color: #767B93;
+  color: #767b93;
   flex-shrink: 0;
 }
 
 .login-bottom-box .content {
   display: inline-block;
   font-size: 28rpx;
-  font-family:PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium;
   font-weight: 500;
   text-align: left;
-  color: #252A3E;
+  color: #252a3e;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -905,7 +871,6 @@ button::after {
         margin-left: 27rpx;
         vertical-align: middle;
       }
-
     }
 
     &-right {
@@ -914,7 +879,7 @@ button::after {
       justify-content: space-between;
       margin-right: 25rpx;
       flex: 1;
-      border-bottom:1px solid #E5E5E5 ;
+      border-bottom: 1px solid #e5e5e5;
 
       .cell-desc {
         margin-left: 20rpx;

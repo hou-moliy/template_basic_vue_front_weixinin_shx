@@ -100,59 +100,6 @@
       />
       <view v-if="isNewIphone" class="blank-space" />
     </view>
-    <!-- 新手引导步骤一 -->
-    <view v-if="isFirstPlay && step === 1" class="tip-one" @click="nextStep">
-      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
-      <image
-        :src="`${staticImgs}/shxmp/init/spcl_tip_one.png`"
-        class="tip-bubble"
-      />
-      <image
-        :src="`${staticImgs}/shxmp/init/spcl_detail_next.png`"
-        class="tip-button"
-      />
-      <view class="set-box">
-        <view class="inner-box">
-          <view class="set-boxImg">
-            <image
-              :src="`${staticImgs}/shxmp/init/set_spcl_btn_inner.png`"
-              class="set-btn-inner"
-            />
-          </view>
-          <view class="spcl_btn1" />
-          <view class="spcl_btn2" />
-          <view class="spcl_btn3" />
-          <view class="spcl_btn4" />
-        </view>
-        <view class="set-text">设为彩铃</view>
-      </view>
-    </view>
-    <!-- 新手引导步骤二 -->
-    <view v-if="isFirstPlay && step === 2" class="tip-two" @click="nextStep">
-      <view class="tip-text" @click.stop="jumpGuide">跳过引导</view>
-      <image
-        :src="`${staticImgs}/shxmp/init/spcl_tip_two.png`"
-        class="tip-bubble"
-      />
-      <image
-        :src="`${staticImgs}/shxmp/init/spcl_detail_next.png`"
-        class="tip-button"
-      />
-      <view class="right-icon">
-        <image
-          :src="`${staticImgs}/shxmp/init/video-preview-icon.png`"
-          class="preview-img img"
-        />
-      </view>
-    </view>
-    <!-- 滑动提示 -->
-    <view
-      v-if="isFirstPlay && step === 3"
-      class="slide-image"
-      @click.stop="closeSwiperTips"
-    >
-      <image :src="`${staticImgs}/shxmp/init/slide_indicator.png`" />
-    </view>
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
   </view>
@@ -160,7 +107,6 @@
 <script>
 import clVideo from "@/components/cl-video/cl-video.vue";
 import { formatCount } from "@/utils/tools.js";
-import { mapGetters } from "vuex";
 export default {
   components: {
     clVideo,
@@ -189,9 +135,6 @@ export default {
       videoDetail: null,
     };
   },
-  computed: {
-    ...mapGetters(["isFirstPlay", "step"]),
-  },
   created () {
     this.initStyle();
     this.videoDetail = this.item;
@@ -206,29 +149,6 @@ export default {
         this.videoHeight = `${res.windowHeight}px`;
         this.videoWidth = `${res.windowWidth}px`;
       });
-    },
-    // 新手引导下一步
-    nextStep () {
-      this.$analysis.dispatch("spcl_dgcl_jx");
-      if (this.$store.state.spcl.step === 1) {
-        this.$store.commit("spcl/SET_STEP", 2);
-      } else if (this.$store.state.spcl.step === 2) {
-        this.$store.commit("spcl/SET_STEP", 3);
-        this.$store.commit("spcl/SET_FIRST_PLAY", true);
-      } else {
-        console.log("step:way 故障", this.step);
-      }
-    },
-    // 新手引导跳过引导
-    jumpGuide () {
-      this.$analysis.dispatch("spcl_dgcl_tg");
-      this.$store.commit("spcl/SET_STEP", 3);
-      this.$store.commit("spcl/SET_FIRST_PLAY", true);
-    },
-    // 关闭滑动提示
-    closeSwiperTips () {
-      console.log("关闭弹窗");
-      this.$store.commit("spcl/SET_FIRST_PLAY", false);
     },
     // 获取系统信息
     getSystemData () {
@@ -688,104 +608,6 @@ export default {
   image {
     width: 265rpx;
     height: 475rpx;
-  }
-}
-.tip-one {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-  background: #000000;
-  z-index: 888;
-
-  .tip-text {
-    opacity: 0.8;
-    font-size: 26rpx;
-    color: #ffffff;
-    line-height: 36rpx;
-    position: absolute;
-    right: 154rpx;
-    bottom: 747rpx;
-    height: 40rpx;
-    border-bottom: 2rpx solid rgba(255, 255, 255, 0.8);
-  }
-
-  .tip-bubble {
-    width: 544rpx;
-    height: 349rpx;
-    position: absolute;
-    right: 140rpx;
-    bottom: 370rpx;
-    z-index: 999;
-  }
-
-  .tip-button {
-    width: 191rpx;
-    height: 97rpx;
-    position: absolute;
-    right: 370rpx;
-    bottom: 360rpx;
-  }
-
-  .set-box {
-    position: absolute;
-    right: 30rpx;
-    bottom: 120rpx;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 210rpx;
-  }
-}
-
-.tip-two {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-  background: #000000;
-
-  .tip-text {
-    opacity: 0.8;
-    font-size: 26rpx;
-    color: #ffffff;
-    line-height: 36rpx;
-    position: absolute;
-    right: 116rpx;
-    bottom: 1170rpx;
-    height: 40rpx;
-    border-bottom: 2rpx solid rgba(255, 255, 255, 0.8);
-  }
-
-  .tip-bubble {
-    width: 600rpx;
-    height: 293rpx;
-    position: absolute;
-    right: 90rpx;
-    bottom: 850rpx;
-  }
-
-  .tip-button {
-    width: 191rpx;
-    height: 97rpx;
-    position: absolute;
-    right: 380rpx;
-    bottom: 800rpx;
-  }
-
-  .right-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: 15rpx;
-    bottom: 739rpx;
-    image {
-      width: 134rpx;
-      height: 134rpx;
-    }
   }
 }
 </style>

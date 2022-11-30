@@ -4,12 +4,13 @@ import App from "./App";
 import analysis from "./utils/analysis.js";
 import globalData from "./globalData.js";
 import notifyPop from "./components/popup-template-notify/popup-template-notify.vue";
-
+import popupTemplateOperition from "@/components/popup-module/popup-template-operition.vue";
 import { showNotifyPop, showLoginPop } from "../src/utils/pop";
 // 引入阿里矢量图标
 import "font/font-css.css";
 import { showToast, showLoading } from "@/utils/common.js";
 Vue.component("NotifyPop", notifyPop);
+Vue.component("PopupTemplateOperition", popupTemplateOperition);
 Vue.prototype.globalData = globalData;
 Vue.prototype.$staticImgs = globalData.staticImgs;
 Vue.prototype.$analysis = analysis;

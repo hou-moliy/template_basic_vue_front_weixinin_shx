@@ -96,6 +96,13 @@
       v-if="Boolean($store.state.offlinePopup.offlinePopupShow)"
       ref="offlinePopup"
     />
+    <!-- 视频彩铃订购相关弹窗 -->
+    <popupTemplateOperition
+      :popup-info="operitionInfo"
+      :show="Boolean($store.state.window.operitionShow)"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closePopup"
+    />
   </view>
 </template>
 
@@ -103,7 +110,6 @@
 import TemplateService from "@/api/template/index";
 import Util from "@/utils/tools.js";
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
-
 export default {
   name: "ClIndex",
   components: { ebConfigContainerAsync },
@@ -121,6 +127,8 @@ export default {
       windowsWidth: 0, // 可使用窗口宽度
       windowHeight: 0, // 可使用窗口高度
       navHeight: 0, // 手机状态栏的高度
+      operitionInfo: {}, // 订购弹窗的内容
+      operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
       // 埋点key
       buryKey: {
         recommend_page: {
@@ -173,11 +181,15 @@ export default {
   },
   onLoad () {
     this.getPageWidthHeight();
-    this.dispatchPageEvent();
+    this.$store.dispatch("spcl/getUserAllVideoList");
   },
   onShow () {
     this.initData();
     this.handleFresh();
+    this.dispatchPageEvent();
+  },
+  onHide () {
+    this.offMonitor();
   },
   onShareAppMessage (res) {
     if (res.from === "button") {
@@ -213,7 +225,6 @@ export default {
       this.getTabList();
       this.$store.dispatch("user/getUserSpclStatus");
       this.$store.dispatch("user/getUserAiStatus");
-      this.$store.dispatch("spcl/getUserAllVideoList");
     },
     // 刷新组件信息
     handleFresh () {
@@ -230,9 +241,30 @@ export default {
         this.changeTabByMore(data);
       });
       uni.$on("openLoginPopup", data => {
-        console.log(data);
         this.$showLoginPop(this);
       });
+      // 展示订购、设置类弹窗，按钮点击回调
+      uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
+        this.operitionInfo = popupInfo;
+        this.$store.commit("window/SET_OPERITION_SHOW", true);
+        this.operitionBtnClick = (e) => btnClickCallBack(e);
+      });
+      // 展示AI换铃弹窗
+      uni.$on("changeAi", ({ notifyInfo, confirmCallback }) => {
+        console.log("点击了AI换铃的状态");
+        this.$showNotifyPop(this, notifyInfo, confirmCallback);
+      });
+    },
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
+      uni.$off("changeAi");
+    },
+    closePopup () {
+      this.operitionInfo = {};
+      this.$store.commit("window/SET_OPERITION_SHOW", false);
     },
     // 初始化页面样式宽高等
     getPageWidthHeight () {
@@ -390,11 +422,6 @@ export default {
           this.$refs.EbConfig[0].onScrollBottom();
         }
       });
-    },
-    // 子组件打开登录弹窗
-    openLoginPopup () {
-      console.log("登录弹窗");
-      // this.$refs.popup_login.open();
     },
   },
 };
