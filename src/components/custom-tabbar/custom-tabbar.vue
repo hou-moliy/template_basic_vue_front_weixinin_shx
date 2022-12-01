@@ -1,31 +1,23 @@
 <template>
-  <view>
+  <cover-view class="tab-bar" :style="{ height: tabBarHeight + 'px' }">
+    <!-- <cover-view class="tab-bar-border" /> -->
     <cover-view
-      class="tab-bar"
-      :style="{ height: tabBarHeight + 'px' }"
+      v-for="(item, index) in tabBar.list"
+      :key="index"
+      class="tab-bar-item"
+      @click="tbs_SwitchTab(item, index)"
     >
-      <!-- <cover-view class="tab-bar-border" /> -->
+      <cover-image class="cover-image" :src="elIconPath(index)" />
       <cover-view
-        v-for="(item, index) in tabBar.list"
-        :key="index"
-        class="tab-bar-item"
-        @click="tbs_SwitchTab(item, index)"
+        class="cover-view"
+        :style="{
+          color: elColor(index),
+        }"
       >
-        <cover-image
-          class="cover-image"
-          :src="elIconPath(index)"
-        />
-        <cover-view
-          class="cover-view"
-          :style="{
-            color: elColor(index),
-          }"
-        >
-          {{ item.text }}
-        </cover-view>
+        {{ item.text }}
       </cover-view>
     </cover-view>
-  </view>
+  </cover-view>
 </template>
 
 <script>
@@ -99,6 +91,7 @@ export default {
     const ret = {};
     ret.tabBarHeight = this.tabBarHeight;
     ret.pagesHeight = this.pagesHeight;
+    console.log(ret);
     this.$emit("tabBarCreateEvent", ret);
     // eslint-disable-next-line no-undef
     const pages = getCurrentPages();
