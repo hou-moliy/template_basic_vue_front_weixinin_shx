@@ -185,6 +185,9 @@ export default {
     position: absolute;
     bottom: 20rpx;
     left: 21rpx;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
