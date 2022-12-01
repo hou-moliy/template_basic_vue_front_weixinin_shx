@@ -10,53 +10,36 @@
 
     <!-- 介绍 -->
     <view class="introduce">
-      <view class="introduce-title">
-        AI换铃计划
-      </view>
+      <view class="introduce-title">AI换铃计划</view>
       <view class="introduce-content">
         AI换铃是陕西移动为视频彩铃会员研发的一款智能换铃黑科技，根据用户喜好定时更换高质量的视频彩铃，让每一秒通话等待与众不同！
       </view>
       <view class="introduce-subcontent">
-        您可自定义选择视频彩铃的主题，彩铃管家会为您在主题周期更换您选择的主题最近播放量最高的免费视频彩铃。<br>
-        <text class="introduce-tips">
-          注意：
-        </text>开启AI换铃计划后，新的视频彩铃将会自动设置为“当前播放”，您之前的彩铃将会放置到“闲置彩铃”里。
+        您可自定义选择视频彩铃的主题，彩铃管家会为您在主题周期更换您选择的主题最近播放量最高的免费视频彩铃。
+        <br />
+        <text class="introduce-tips">注意：</text>
+        开启AI换铃计划后，新的视频彩铃将会自动设置为“当前播放”，您之前的彩铃将会放置到“闲置彩铃”里。
       </view>
       <view
         class="introduce-button"
-        :style="{background:aiStatus?'#e9e9e9':''}"
+        :style="{ background: aiStatus ? '#e9e9e9' : '' }"
         @click="aiOpenChange"
       >
-        <view
-          v-if="!aiStatus"
-          class="introduce-button-open"
-        >
-          一键开启
-        </view>
-        <view
-          v-else
-          class="introduce-button-opened"
-        >
-          已开启
-        </view>
+        <view v-if="!aiStatus" class="introduce-button-open">一键开启</view>
+        <view v-else class="introduce-button-opened">已开启</view>
       </view>
     </view>
     <!-- 主题 -->
-    <view class="theme-name">
-      选择您喜欢的视频彩铃主题
-    </view>
+    <view class="theme-name">选择您喜欢的视频彩铃主题</view>
 
     <view class="theme-part">
       <view
-        v-for="(item,index) in aiTopicArray"
+        v-for="(item, index) in aiTopicArray"
         :key="index"
         class="theme-part-content"
       >
         <view class="theme-part-content-tile">
-          <image
-            class="theme-part-content-tile-icon"
-            :src="item.iconUrl"
-          />
+          <image class="theme-part-content-tile-icon" :src="item.iconUrl" />
         </view>
 
         <view class="theme-part-right">
@@ -64,28 +47,37 @@
             {{ item.topicName }}
           </view>
           <view class="switch-relative">
-            <switch
-              :checked="item.isOpen"
-              color="#9E79FF"
-            />
+            <switch :checked="item.isOpen" color="#9E79FF" />
             <view
               class="switch-absolute"
-              @click="themeStatusChange(item,index)"
+              @click="themeStatusChange(item, index)"
             />
           </view>
         </view>
       </view>
     </view>
-    <view style="height:20rpx" />
+    <view style="height: 20rpx" />
+    <!-- 开通视彩弹窗 -->
+    <popupTemplateOperition
+      :popup-info="popupInfo"
+      :show="show"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closeOperitionPopup"
+    />
+    <notifyPop ref="NotifyPop" />
+    <ebConfigContainerAsync
+      v-if="activityId && pageConfig"
+      :page-config-list="pageConfig"
+      :activity-id="activityId"
+    />
   </view>
 </template>
 
 <script>
-// import aiPopup from "@/pagesB/components/aiPopup.vue";
+
 import aiService from "@/api/ai/index.js";
-import spclService from "@/api/cx/video.js";
-// import uniPopup from "@/components/uni-popup/uni-popup.vue";
-// import purchaseIndex from "@/components/purchase-popup/index.vue";
+import SpclService from "@/api/spcl/index.js";
+import TemplateService from "@/api/template/index";
 export default {
   name: "AiPage",
   data () {
@@ -95,26 +87,37 @@ export default {
       aiTopicArray: [],
       spclStatus: false,
       switchStatus: false,
-      // simplePopupFlag: false,
-      // simpleContent: '',
-      // buttonType: '',
-      // topicId: -1,
-      // topicIndex: -1,
-      // btnType: '',
+      show: false,
+      popupInfo: {},
+      pageConfig: {},
+      activityId: "S20221201fbbdf",
+      templateId: "sell",
+
     };
+  },
+  onLoad () {
+    this.getPageConfig();
   },
   onShow () {
     this.init();
   },
   methods: {
+    // 获取页面配置信息
+    getPageConfig () {
+      TemplateService.getPageConfigByPageName({ pageName: `${this.templateId}_${this.activityId}` }).then(res => {
+        if (res.data.code === 200) {
+          this.pageConfig = res.data.data;
+        }
+      });
+    },
     // 初始化
     init () {
-      // 查询用户是否开通ai换铃
-      this.checkPortalUser();
       // 获取主题信息
       this.getAiTopic();
       // 查询用户是否开通视频彩铃
       this.getSpclStatus();
+      // 查询用户是否开通ai换铃
+      this.checkPortalUser();
     },
     // 获取主题信息
     getAiTopic () {
@@ -129,56 +132,40 @@ export default {
       this.$store.dispatch("user/getUserAiStatus");
       this.aiStatus = uni.getStorageSync("aiStatus");
     },
-    // 查询用户是否开通视频彩铃 //接口修改
+    // 查询用户是否开通视频彩铃
     getSpclStatus () {
-      spclService.getSpclAiStatus().then(res => {
-        if (res.data.code === 200 && res.data.data === "1") {
-          this.spclStatus = true;
-        } else if ((res.data.code === 200 && res.data.data === "0") || res.data.code === -200) {
-          this.spclStatus = false;
-        } else {
-          this.spclStatus = true;
-        }
-      });
+      this.$store.dispatch("user/getUserSpclStatus");
+      this.spclStatus = uni.getStorageSync("spclStatus");
+    },
+    // 开通AI换铃
+    async handleOpenAi (flag = 2) { // flag 2 开启 1取消
+      const res = await SpclService.openAi({ type: flag });
+      if (res.data.code === 200) {
+        const mes = flag === 2 ? "开启成功" : "取消成功";
+        this.$toast(mes);
+        this.aiStatus = flag === 2 ? 1 : 0;
+        this.$store.commit("user/SET_AI_STATUS", this.aiStatus);
+        this.getAiTopic();
+      } else {
+        this.$toast(res.data.message);
+      }
     },
     // ai换铃
     aiOpenChange () {
-      /*
       // ai换铃业务开关接口
       if (!this.spclStatus) { // 是否开通视频彩铃业务
-        this.buttonType = "open";
-        this.simplePopupFlag = true;
-        this.simpleContent = "AI智能换铃体验计划是辽宁移动对本省视频彩铃用户提供的专属特权服务，请您开通视频彩铃后体验!";
+        this.show = true;
+        this.popupInfo = uni.getStorageSync("windowAllObj").common_spcl_open;
       } else {
         if (!this.aiStatus) { // 未开启ai功能
-          aiService.aiFunction({
-            type: 2,
-          }).then(res => {
-            if (res.data.code == 200) {
-              this.$analysis.dispatch("aihl_kq");
-              this.aiStatus = true;
-              uni.showToast({
-                title: "开启成功",
-                icon: "none",
-                duration: 1500,
-              });
-              uni.setStorageSync("aiStatus", true);
-              this.getAiTopic();
-            } else {
-              uni.showToast({
-                title: "操作失败，请稍后再试",
-                icon: "none",
-                duration: 1500,
-              });
-            }
-          });
+          // 开通ai换铃方法
+          this.handleOpenAi();
         } else { // 已开启ai功能
-          this.simpleContent = "您确定要关闭Ai换铃功能吗？关闭后将无法享受Ai换铃特权哦～";
-          this.simplePopupFlag = true;
-          this.buttonType = "confirm";
+          // 弹出提示类弹窗
+          const notifyInfo = uni.getStorageSync("windowAllObj").common_ai_cancel;
+          this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi(1));
         }
       }
-
     },
     // 切换主题
     themeStatusChange (item, index) {
@@ -233,6 +220,43 @@ export default {
       }
       */
     },
+    // 确认开通视频彩铃
+    operitionBtnClick (e) {
+      if (e.btnInfo.type === 1) { // 关闭弹窗
+        this.closePopup();
+      } else if (e.btnInfo.type === 2) { // 订购
+        this.handleOpenSpcl(e);
+      }
+    },
+    // 开通视频彩铃
+    handleOpenSpcl (e) {
+      SpclService.openSpcl({ servType: "001" }).then(res => {
+        if (res.data.code === 200) {
+          if (e.protocolCheckFlag) { // 勾选了AI换铃
+            this.defaultthandleOpenAi();
+          } else {
+            this.$toast("成功开通视频彩铃业务");
+            this.show = false;
+            this.$store.commit("user/SET_SPCL_STATUS", 1);
+          }
+        } else {
+          this.$toast("开通失败请重试");
+        }
+      });
+    },
+    defaultthandleOpenAi () {
+      SpclService.openAi({ type: 2 }).then(res => {
+        if (res.data.code === 200) {
+          this.$toast("成功开通视频彩铃业务");
+          this.show = false;
+          this.$store.commit("user/SET_SPCL_STATUS", 1);
+        }
+      });
+    },
+    // 取消开通视频彩铃
+    closeOperitionPopup () {
+      this.show(false);
+    },
   },
 };
 </script>
@@ -278,13 +302,13 @@ export default {
     font-family: PingFang SC, PingFang SC-Medium;
     font-weight: 400;
     text-align: left;
-    color: #252A3E;
-    margin-top: 23rpx ;
+    color: #252a3e;
+    margin-top: 23rpx;
     padding: 32rpx 38rpx 40rpx 26rpx;
     line-height: 46rpx;
-    background-color: #F8F6FF;
+    background-color: #f8f6ff;
   }
-  .introduce-subcontent{
+  .introduce-subcontent {
     font-size: 24rpx;
     font-family: PingFang SC, PingFang SC-Medium;
     font-weight: 400;
@@ -292,7 +316,7 @@ export default {
     color: #666666;
     margin: 26rpx 0 40rpx 0;
     line-height: 46rpx;
-    .introduce-tips{
+    .introduce-tips {
       color: #9276f1;
     }
   }
@@ -302,14 +326,14 @@ export default {
     height: 88rpx;
     border-radius: 44rpx;
     margin: 0 auto;
-    background: linear-gradient(90deg, #9E79FF 0%, #FF83D9 100%);
+    background: linear-gradient(90deg, #9e79ff 0%, #ff83d9 100%);
     display: flex;
     flex-direction: column;
     // justify-content: space-around;
     justify-content: center;
     padding: 6rpx 0rpx;
     box-sizing: border-box;
-    box-shadow: -4rpx 13rpx 44rpx -18rpx #B37BF5;
+    box-shadow: -4rpx 13rpx 44rpx -18rpx #b37bf5;
 
     .introduce-button-open {
       font-size: 30rpx;
@@ -338,7 +362,6 @@ export default {
       padding-top: 8rpx;
     }
   }
-
 }
 .theme-name {
   margin: 340rpx 0 40rpx 33rpx;
@@ -384,15 +407,15 @@ export default {
         color: #333333;
       }
     }
-    .theme-part-right{
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #E5E5E5;
-    padding-bottom: 31rpx;
-    font-size: 30rpx;
-    color: #222222;
+    .theme-part-right {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e5e5;
+      padding-bottom: 31rpx;
+      font-size: 30rpx;
+      color: #222222;
     }
   }
   .switch-relative {
@@ -422,7 +445,7 @@ export default {
     line-height: 40rpx;
   }
 }
-.theme-part view:last-child .theme-part-right{
-  border-bottom: 0px
+.theme-part view:last-child .theme-part-right {
+  border-bottom: 0px;
 }
 </style>

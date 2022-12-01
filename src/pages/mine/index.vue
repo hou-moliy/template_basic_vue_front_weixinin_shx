@@ -1,10 +1,5 @@
 <template>
-  <view
-    class="content"
-    :style="{
-      height: `${windowHeight}px`,
-    }"
-  >
+  <view class="content">
     <view class="login-top" :style="{ height: loginBoxHeight + 'px' }">
       <view
         class="custom-tab"
@@ -214,6 +209,7 @@ export default {
       functionList: [], // 更多功能列表
       userInfo: {},
       windowHeight: 0, // 可使用窗口高度
+      // windowHeight: 0, // 可使用窗口高度
       popupInfo: {}, // 订购弹窗的内容
       show: false, // 订购弹窗的展示控制
     };
