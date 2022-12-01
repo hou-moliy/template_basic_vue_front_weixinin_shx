@@ -78,7 +78,7 @@
             :activity-id="activityId"
             :page-load-status="pageLoadStatus"
             :comp-bottom="
-              compBottom && pageConfigIndex == pageConfigList.length
+              compBottom && pageConfigIndex + 1 == pageConfigList.length
             "
             @openLoginPopup="openLoginPopup"
             @purchaseVideo="purchaseVideo"

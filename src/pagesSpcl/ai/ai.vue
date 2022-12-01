@@ -67,6 +67,7 @@
     <notifyPop ref="NotifyPop" />
     <ebConfigContainerAsync
       v-if="activityId && pageConfig"
+      ref="EbConfigContainerAsync"
       :page-config-list="pageConfig"
       :activity-id="activityId"
     />
@@ -78,8 +79,11 @@
 import aiService from "@/api/ai/index.js";
 import SpclService from "@/api/spcl/index.js";
 import TemplateService from "@/api/template/index";
+import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
+
 export default {
   name: "AiPage",
+  components: { ebConfigContainerAsync },
   data () {
     return {
       staticImgs: this.$staticImgs,
@@ -100,6 +104,14 @@ export default {
   },
   onShow () {
     this.init();
+  },
+  // 下拉到底部
+  onReachBottom () {
+    // 请求列表
+    console.log("下拉到底部");
+    if (this.$refs.EbConfigContainerAsync) {
+      this.$refs.EbConfigContainerAsync.onScrollBottom();
+    }
   },
   methods: {
     // 获取页面配置信息
