@@ -130,6 +130,7 @@
         </view>
       </view>
     </view>
+    <view :style="{ height: '82px', width: '100%' }" />
 
     <!-- 自定义Tabbar -->
     <custom-tabbar :tab-bar="tabBar" :mid-button="true" />
@@ -208,8 +209,6 @@ export default {
       //   isBuyList: [],
       functionList: [], // 更多功能列表
       userInfo: {},
-      windowHeight: 0, // 可使用窗口高度
-      // windowHeight: 0, // 可使用窗口高度
       popupInfo: {}, // 订购弹窗的内容
       show: false, // 订购弹窗的展示控制
     };
@@ -218,7 +217,7 @@ export default {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = this.pointobj.top + 203;
     this.dispatchPageEvent();
-    // this.getPageHeight();
+    this.getPageHeight();
   },
   onHide () {
     this.offMonitor();
@@ -245,30 +244,6 @@ export default {
     this.getMyMore();
   },
   methods: {
-    // 移除监听
-    offMonitor () {
-      console.log("移除监听");
-      uni.$off("openLoginPopup");
-      uni.$off("operitionShow");
-      uni.$off("changeAi");
-    },
-    // 初始化页面高
-    getPageHeight () {
-      uni.getSystemInfo({
-        success: res => {
-          console.log("bar", res);
-          if (res.safeAreaInsets.bottom === 0) {
-            this.windowHeight = res.windowHeight;
-            // this.navHeight = res.safeArea.top;
-          } else {
-            this.windowHeight = res.safeArea.height;
-            // this.navHeight = res.safeArea.top / 2;
-          }
-          // this.navHeight = res.safeArea.top;
-          // this.windowsWidth = res.windowWidth;
-        },
-      });
-    },
     navigateToFunction (item) {
       // 判断用户是否登录 否 提示弹窗 是 调用navgatertoany
       if (uni.getStorageSync("Authorization")) {

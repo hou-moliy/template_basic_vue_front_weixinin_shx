@@ -57,13 +57,13 @@ const navigateToAny = (item, callback) => {
 };
 //  处理外部跳转
 const handleExternalLink = async (item, callback) => {
-  let tempEventUrl = item.eventUrl;
-  tempEventUrl = await freeLoginFun(item.eventUrl);
+  const tempEventUrl = item.eventUrl;
+  // tempEventUrl = await freeLoginFun(item.eventUrl);
   console.log(tempEventUrl, "tempEventUrl");
-  uni.setStorageSync("ckH5Data", tempEventUrl);
+  uni.setStorageSync("H5Data", tempEventUrl);
   uni.hideLoading();
   uni.navigateTo({
-    url: "/pagesCommon/webView/ckWebview",
+    url: "/pagesCommon/webview/webview",
   });
 };
 
