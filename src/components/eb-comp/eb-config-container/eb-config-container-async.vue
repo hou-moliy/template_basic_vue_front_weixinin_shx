@@ -34,7 +34,8 @@
   </view>
 </template>
 <script>
-import SpclService from "../../../api/spcl/index";
+import SpclService from "@/api/spcl/index";
+import { handlePurchaseVideo } from "@/utils/video.js";
 export default {
   props: {
     pageConfigList: {
@@ -80,24 +81,9 @@ export default {
       uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
     },
     // 点击设置视频彩铃按钮
-    purchaseVideo ({ ringName }) {
-      if (uni.getStorageSync("Authorization")) {
-        this.$store.dispatch("user/getUserSpclStatus").then(res => {
-          console.log((res, "resresres"));
-          if (res == 1) { // 已开通视频彩铃
-            const popupInfo = { ...this.$store.state.window.windowAllObj.common_spcl_set };
-            popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringName}》`);
-            uni.$emit("operitionShow", {
-              popupInfo, btnClickCallBack: (item) => this.confirmOrderSpcl(item),
-            });
-          } else { // 未开通
-            const popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
-            uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (item) => this.operitionBtnClick(item) });
-          }
-        });
-      } else {
-        this.openLoginPopup();
-      }
+    purchaseVideo (item) {
+      // 处理视频彩铃设置
+      handlePurchaseVideo(item, this.handleFresh);
     },
     // 设置视频彩铃
     handleSetPcl (item) {
