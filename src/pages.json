@@ -60,6 +60,13 @@
             "navigationBarTitleText": "呼叫预览页面",
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "webview/webview",
+          "style": {
+            "navigationBarTitleText": "",
+            "enablePullDownRefresh": false
+          }
         }
       ]
     },

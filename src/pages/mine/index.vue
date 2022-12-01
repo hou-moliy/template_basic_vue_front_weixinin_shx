@@ -130,6 +130,7 @@
         </view>
       </view>
     </view>
+    <view :style="{ height: '82px', width: '100%' }" />
 
     <!-- 自定义Tabbar -->
     <custom-tabbar :tab-bar="tabBar" :mid-button="true" />
@@ -218,7 +219,7 @@ export default {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = this.pointobj.top + 203;
     this.dispatchPageEvent();
-    // this.getPageHeight();
+    this.getPageHeight();
   },
   onHide () {
     this.offMonitor();

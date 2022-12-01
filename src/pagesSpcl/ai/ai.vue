@@ -7,54 +7,62 @@
         :src="`${staticImgs}/shxmp/init/ai_bg.png`"
       />
     </view>
-
     <!-- 介绍 -->
-    <view class="introduce">
-      <view class="introduce-title">AI换铃计划</view>
-      <view class="introduce-content">
-        AI换铃是陕西移动为视频彩铃会员研发的一款智能换铃黑科技，根据用户喜好定时更换高质量的视频彩铃，让每一秒通话等待与众不同！
-      </view>
-      <view class="introduce-subcontent">
-        您可自定义选择视频彩铃的主题，彩铃管家会为您在主题周期更换您选择的主题最近播放量最高的免费视频彩铃。
-        <br />
-        <text class="introduce-tips">注意：</text>
-        开启AI换铃计划后，新的视频彩铃将会自动设置为“当前播放”，您之前的彩铃将会放置到“闲置彩铃”里。
-      </view>
-      <view
-        class="introduce-button"
-        :style="{ background: aiStatus ? '#e9e9e9' : '' }"
-        @click="aiOpenChange"
-      >
-        <view v-if="!aiStatus" class="introduce-button-open">一键开启</view>
-        <view v-else class="introduce-button-opened">已开启</view>
-      </view>
-    </view>
-    <!-- 主题 -->
-    <view class="theme-name">选择您喜欢的视频彩铃主题</view>
-
-    <view class="theme-part">
-      <view
-        v-for="(item, index) in aiTopicArray"
-        :key="index"
-        class="theme-part-content"
-      >
-        <view class="theme-part-content-tile">
-          <image class="theme-part-content-tile-icon" :src="item.iconUrl" />
+    <view class="introduce-box">
+      <view class="introduce">
+        <view class="introduce-title">AI换铃计划</view>
+        <view class="introduce-content">
+          AI换铃是陕西移动为视频彩铃会员研发的一款智能换铃黑科技，根据用户喜好定时更换高质量的视频彩铃，让每一秒通话等待与众不同！
         </view>
-
-        <view class="theme-part-right">
-          <view class="theme-part-content-tile-name">
-            {{ item.topicName }}
-          </view>
-          <view class="switch-relative">
-            <switch :checked="item.isOpen" color="#9E79FF" />
-            <view
-              class="switch-absolute"
-              @click="themeStatusChange(item, index)"
-            />
-          </view>
+        <view class="introduce-subcontent">
+          您可自定义选择视频彩铃的主题，彩铃管家会为您在主题周期更换您选择的主题最近播放量最高的免费视频彩铃。
+          <br />
+          <text class="introduce-tips">注意：</text>
+          开启AI换铃计划后，新的视频彩铃将会自动设置为“当前播放”，您之前的彩铃将会放置到“闲置彩铃”里。
+        </view>
+        <view
+          class="introduce-button"
+          :style="{ background: aiStatus ? '#e9e9e9' : '' }"
+          @click="aiOpenChange"
+        >
+          <view v-if="!aiStatus" class="introduce-button-open">一键开启</view>
+          <view v-else class="introduce-button-opened">已开启</view>
         </view>
       </view>
+      <!-- 主题 -->
+      <view class="theme-name">选择您喜欢的视频彩铃主题</view>
+
+      <view class="theme-part">
+        <view
+          v-for="(item, index) in aiTopicArray"
+          :key="index"
+          class="theme-part-content"
+        >
+          <view class="theme-part-content-tile">
+            <image class="theme-part-content-tile-icon" :src="item.iconUrl" />
+          </view>
+
+          <view class="theme-part-right">
+            <view class="theme-part-content-tile-name">
+              {{ item.topicName }}
+            </view>
+            <view class="switch-relative">
+              <switch :checked="item.isOpen" color="#9E79FF" />
+              <view
+                class="switch-absolute"
+                @click="themeStatusChange(item, index)"
+              />
+            </view>
+          </view>
+        </view>
+      </view>
+      <view style="height: 20rpx" />
+      <ebConfigContainerAsync
+        v-if="activityId && pageConfig"
+        ref="EbConfigContainerAsync"
+        :page-config-list="pageConfig"
+        :activity-id="activityId"
+      />
     </view>
     <view style="height: 20rpx" />
     <!-- 开通视彩弹窗 -->
@@ -65,12 +73,6 @@
       @closePopup="closeOperitionPopup"
     />
     <notifyPop ref="NotifyPop" />
-    <ebConfigContainerAsync
-      v-if="activityId && pageConfig"
-      ref="EbConfigContainerAsync"
-      :page-config-list="pageConfig"
-      :activity-id="activityId"
-    />
   </view>
 </template>
 
@@ -274,6 +276,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.introduce-box {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 365rpx;
+  width: 100%;
+}
 .header-ai {
   .header-ai-image {
     display: inline-block;
@@ -283,12 +292,8 @@ export default {
   }
 }
 .introduce {
-  position: absolute;
   top: 368rpx;
-  left: 50%;
-  transform: translate(-50%, 0rpx);
   width: 686rpx;
-  height: 702rpx;
   margin: 0 auto;
   border-radius: 20rpx;
   box-shadow: 0px 0px 22rpx 2rpx rgba(32, 32, 32, 0.11);
@@ -296,6 +301,7 @@ export default {
   padding-left: 38rpx;
   padding-right: 38rpx;
   box-sizing: border-box;
+  padding-bottom: 70rpx;
 
   .introduce-title {
     height: 100rpx;
@@ -376,12 +382,14 @@ export default {
   }
 }
 .theme-name {
-  margin: 340rpx 0 40rpx 33rpx;
+  margin: 60rpx 0 40rpx 0rpx;
   font-size: 36rpx;
   font-family: PingFang SC, PingFang SC-Bold;
   font-weight: 700;
   text-align: left;
   color: #333333;
+  padding: 0rpx 40rpx;
+  box-sizing: border-box;
 }
 .theme-part {
   width: 686rpx;
