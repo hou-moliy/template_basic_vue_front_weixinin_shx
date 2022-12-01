@@ -7,6 +7,14 @@
         {{ pageConfig.title }}
       </text>
     </view>
+    <!-- 加载中 -->
+    <uni-load-more
+      v-if="!wfList.length"
+      class="loadingicon"
+      icon-size="20"
+      icon-type="circle"
+      status="loading"
+    />
     <waterfall
       v-if="wfList.length"
       :column-count="3"
@@ -127,10 +135,10 @@ export default {
       wfList: [],
       wfParams: {
         pageNum: 1,
-        pageSize: 2,
+        pageSize: 10,
       },
       total: 0, // 瀑布流总数据
-      isLoadStatus: "more",
+      isLoadStatus: "loading",
       extraStyle: { // 默认样式
         backgroundColor: "transparent",
       },
@@ -160,6 +168,7 @@ export default {
         console.log("没数据了");
         return;
       }
+      this.isLoadStatus = "loading";
       this.wfParams.pageNum++;
       this.getWfList(false);
     },

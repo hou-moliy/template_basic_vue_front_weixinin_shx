@@ -90,7 +90,7 @@ export default {
   mounted () {
   },
   methods: {
-    refreshData () {
+    handleFresh () {
       console.log("刷新拉~~~");
       this.getSpclList();
     },

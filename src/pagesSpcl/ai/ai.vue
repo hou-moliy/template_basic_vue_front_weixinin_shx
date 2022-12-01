@@ -7,7 +7,6 @@
         :src="`${staticImgs}/shxmp/init/ai_bg.png`"
       />
     </view>
-
     <!-- 介绍 -->
     <view class="introduce-box">
       <view class="introduce">
@@ -58,18 +57,34 @@
         </view>
       </view>
       <view style="height: 20rpx" />
+      <ebConfigContainerAsync
+        v-if="activityId && pageConfig"
+        ref="EbConfigContainerAsync"
+        :page-config-list="pageConfig"
+        :activity-id="activityId"
+      />
     </view>
+    <view style="height: 20rpx" />
+    <!-- 开通视彩弹窗 -->
+    <popupTemplateOperition
+      :popup-info="popupInfo"
+      :show="show"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closeOperitionPopup"
+    />
+    <notifyPop ref="NotifyPop" />
   </view>
 </template>
 
 <script>
-// import aiPopup from "@/pagesB/components/aiPopup.vue";
+import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
 import aiService from "@/api/ai/index.js";
-import spclService from "@/api/cx/video.js";
-// import uniPopup from "@/components/uni-popup/uni-popup.vue";
-// import purchaseIndex from "@/components/purchase-popup/index.vue";
+import SpclService from "@/api/spcl/index.js";
+import TemplateService from "@/api/template/index";
+
 export default {
   name: "AiPage",
+  components: { ebConfigContainerAsync },
   data () {
     return {
       staticImgs: this.$staticImgs,
@@ -77,26 +92,46 @@ export default {
       aiTopicArray: [],
       spclStatus: false,
       switchStatus: false,
-      // simplePopupFlag: false,
-      // simpleContent: '',
-      // buttonType: '',
-      // topicId: -1,
-      // topicIndex: -1,
-      // btnType: '',
+      show: false,
+      popupInfo: {},
+      pageConfig: {},
+      activityId: "S20221201fbbdf",
+      templateId: "sell",
     };
+  },
+  onLoad () {
+    this.getPageConfig();
   },
   onShow () {
     this.init();
   },
+  // 下拉到底部
+  onReachBottom () {
+    // 请求列表
+    console.log("下拉到底部");
+    if (this.$refs.EbConfigContainerAsync) {
+      this.$refs.EbConfigContainerAsync.onScrollBottom();
+    }
+  },
   methods: {
+    // 获取页面配置信息
+    getPageConfig () {
+      TemplateService.getPageConfigByPageName({
+        pageName: `${this.templateId}_${this.activityId}`,
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.pageConfig = res.data.data;
+        }
+      });
+    },
     // 初始化
     init () {
-      // 查询用户是否开通ai换铃
-      this.checkPortalUser();
       // 获取主题信息
       this.getAiTopic();
       // 查询用户是否开通视频彩铃
       this.getSpclStatus();
+      // 查询用户是否开通ai换铃
+      this.checkPortalUser();
     },
     // 获取主题信息
     getAiTopic () {
@@ -111,109 +146,125 @@ export default {
       this.$store.dispatch("user/getUserAiStatus");
       this.aiStatus = uni.getStorageSync("aiStatus");
     },
-    // 查询用户是否开通视频彩铃 //接口修改
+    // 查询用户是否开通视频彩铃
     getSpclStatus () {
-      spclService.getSpclAiStatus().then(res => {
-        if (res.data.code === 200 && res.data.data === "1") {
-          this.spclStatus = true;
-        } else if ((res.data.code === 200 && res.data.data === "0") || res.data.code === -200) {
-          this.spclStatus = false;
-        } else {
-          this.spclStatus = true;
-        }
-      });
+      this.$store.dispatch("user/getUserSpclStatus");
+      this.spclStatus = uni.getStorageSync("spclStatus");
+    },
+    // 开通AI换铃
+    async handleOpenAi (flag = 2) {
+      // flag 2 开启 1取消
+      const res = await SpclService.openAi({ type: flag });
+      if (res.data.code === 200) {
+        const mes = flag === 2 ? "开启成功" : "取消成功";
+        this.$toast(mes);
+        this.aiStatus = flag === 2 ? 1 : 0;
+        this.$store.commit("user/SET_AI_STATUS", this.aiStatus);
+        this.getAiTopic();
+      } else {
+        this.$toast(res.data.message);
+      }
     },
     // ai换铃
     aiOpenChange () {
-      /*
       // ai换铃业务开关接口
-      if (!this.spclStatus) { // 是否开通视频彩铃业务
-        this.buttonType = "open";
-        this.simplePopupFlag = true;
-        this.simpleContent = "AI智能换铃体验计划是辽宁移动对本省视频彩铃用户提供的专属特权服务，请您开通视频彩铃后体验!";
+      if (!this.spclStatus) {
+        // 是否开通视频彩铃业务
+        this.show = true;
+        this.popupInfo = uni.getStorageSync("windowAllObj").common_spcl_open;
       } else {
-        if (!this.aiStatus) { // 未开启ai功能
-          aiService.aiFunction({
-            type: 2,
-          }).then(res => {
-            if (res.data.code == 200) {
-              this.$analysis.dispatch("aihl_kq");
-              this.aiStatus = true;
-              uni.showToast({
-                title: "开启成功",
-                icon: "none",
-                duration: 1500,
-              });
-              uni.setStorageSync("aiStatus", true);
-              this.getAiTopic();
-            } else {
-              uni.showToast({
-                title: "操作失败，请稍后再试",
-                icon: "none",
-                duration: 1500,
-              });
-            }
-          });
-        } else { // 已开启ai功能
-          this.simpleContent = "您确定要关闭Ai换铃功能吗？关闭后将无法享受Ai换铃特权哦～";
-          this.simplePopupFlag = true;
-          this.buttonType = "confirm";
+        if (!this.aiStatus) {
+          // 未开启ai功能
+          // 开通ai换铃方法
+          this.handleOpenAi();
+        } else {
+          // 已开启ai功能
+          // 弹出提示类弹窗
+          const notifyInfo =
+            uni.getStorageSync("windowAllObj").common_ai_cancel;
+          this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi(1));
         }
       }
-
     },
     // 切换主题
     themeStatusChange (item, index) {
-      /*
       this.topicId = item.topicId;
       this.topicIndex = index;
-      if (!this.spclStatus) { // 是否开通视频彩铃业务
-        this.buttonType = "open";
-        this.simplePopupFlag = true;
-        this.simpleContent = "AI智能换铃体验计划是辽宁移动对本省视频彩铃用户提供的专属特权服务，请您开通视频彩铃后体验!";
-      } else if (!this.aiStatus) { // 判定是否开启AI
-        uni.showToast({
-          title: "请先开启AI换铃功能再进行设置",
-          icon: "none",
-          duration: 1500,
-        });
+      if (!this.spclStatus) {
+        // 是否开通视频彩铃业务
+        this.show = true;
+        this.popupInfo = uni.getStorageSync("windowAllObj").common_spcl_open;
+      } else if (!this.aiStatus) {
+        // 判定是否开启AI
+        this.$toast("请先开启AI换铃功能再进行设置");
       } else {
         if (item.isOpen) {
-          console.log(88, this.topicId, this.topicIndex);
-          // this.switchStatus = !this.switchStatus
-          aiService.updateUserTopic({
-            type: 1,
-            topicId: this.topicId,
-          }).then(res => {
-            if (res.data.code == 200) {
-              uni.showToast({
-                title: "关闭成功",
-                icon: "none",
-                duration: 1500,
-              });
-              this.aiTopicArray[this.topicIndex].isOpen = false;
-              this.simplePopupFlag = false;
-            }
-          });
+          aiService
+            .updateUserTopic({
+              type: 1,
+              topicId: this.topicId,
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                this.$toast("关闭成功");
+                this.aiTopicArray[this.topicIndex].isOpen = false;
+              }
+            });
         } else {
-          aiService.updateUserTopic({
-            type: 2,
-            topicId: item.topicId,
-          }).then(res => {
-            if (res.data.code == 200) {
-              this.$analysis.dispatch("aihl_zt_id", item.topicId);
-              uni.showToast({
-                title: "开启成功",
-                icon: "none",
-                duration: 1500,
-              });
-              this.aiTopicArray[index].isOpen = true;
-              this.simplePopupFlag = false;
-            }
-          });
+          aiService
+            .updateUserTopic({
+              type: 2,
+              topicId: item.topicId,
+            })
+            .then(res => {
+              if (res.data.code == 200) {
+                // this.$analysis.dispatch("aihl_zt_id", item.topicId);
+                this.$toast("开启成功");
+                this.aiTopicArray[index].isOpen = true;
+              }
+            });
         }
       }
-      */
+    },
+    // 确认开通视频彩铃
+    operitionBtnClick (e) {
+      if (e.btnInfo.type === 1) {
+        // 关闭弹窗
+        this.closePopup();
+      } else if (e.btnInfo.type === 2) {
+        // 订购
+        this.handleOpenSpcl(e);
+      }
+    },
+    // 开通视频彩铃
+    handleOpenSpcl (e) {
+      SpclService.openSpcl({ servType: "001" }).then(res => {
+        if (res.data.code === 200) {
+          if (e.protocolCheckFlag) {
+            // 勾选了AI换铃
+            this.defaultthandleOpenAi();
+          } else {
+            this.$toast("成功开通视频彩铃业务");
+            this.show = false;
+            this.$store.commit("user/SET_SPCL_STATUS", 1);
+          }
+        } else {
+          this.$toast("开通失败请重试");
+        }
+      });
+    },
+    defaultthandleOpenAi () {
+      SpclService.openAi({ type: 2 }).then(res => {
+        if (res.data.code === 200) {
+          this.$toast("成功开通视频彩铃业务");
+          this.show = false;
+          this.$store.commit("user/SET_SPCL_STATUS", 1);
+        }
+      });
+    },
+    // 取消开通视频彩铃
+    closeOperitionPopup () {
+      this.show(false);
     },
   },
 };
@@ -225,6 +276,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   top: 365rpx;
+  width: 100%;
 }
 .header-ai {
   .header-ai-image {
@@ -331,6 +383,8 @@ export default {
   font-weight: 700;
   text-align: left;
   color: #333333;
+  padding: 0rpx 40rpx;
+  box-sizing: border-box;
 }
 .theme-part {
   width: 686rpx;

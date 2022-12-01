@@ -22,7 +22,7 @@ const actions = {
       SpclService.spclStatus().then(res => {
         if (res.data.code === 200) {
           commit("SET_SPCL_STATUS", res.data.data);
-          resolve(res.data);
+          resolve(res.data.data);
         }
       });
     });

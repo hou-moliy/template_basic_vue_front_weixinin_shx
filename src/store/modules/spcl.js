@@ -49,7 +49,7 @@ const mutations = {
     } else { // 新增
       vrbtResponse.push(ringItem);
     }
-    this.commit("spcl/SET_USER_SPCL_SETTINGS", vrbtResponse);
+    this.commit("spcl/SET_USER_SPCL_ALL", vrbtResponse);
   },
   // 设置用户铃音的settingId, settingIdRes
   SET_USER_SPCL_SETTINGID (state, settingIdRes) {

@@ -78,7 +78,7 @@
             :activity-id="activityId"
             :page-load-status="pageLoadStatus"
             :comp-bottom="
-              compBottom && pageConfigIndex == pageConfigList.length
+              compBottom && pageConfigIndex + 1 == pageConfigList.length
             "
             @openLoginPopup="openLoginPopup"
             @purchaseVideo="purchaseVideo"
@@ -189,6 +189,7 @@
         "
       >
         <eb-spcl-swiper
+          ref="EbSpclSwiper"
           :page-config="pageConfig"
           :activity-id="activityId"
           :page-load-status="pageLoadStatus"
@@ -203,6 +204,7 @@
         "
       >
         <eb-spcl-list
+          ref="EbSpclList"
           :page-config="pageConfig"
           :activity-id="activityId"
           :page-load-status="pageLoadStatus"
@@ -289,6 +291,12 @@ export default {
       }
       if (this.$refs.EbSpclTransverse) {
         this.$refs.EbSpclTransverse[0].handleFresh();
+      }
+      if (this.$refs.EbSpclList) {
+        this.$refs.EbSpclList[0].handleFresh();
+      }
+      if (this.$refs.EbSpclSwiper) {
+        this.$refs.EbSpclSwiper[0].handleFresh();
       }
     },
     // 子组件打开登录弹窗

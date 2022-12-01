@@ -19,6 +19,7 @@
     <!-- 配置化组件 -->
     <ebConfigContainerAsync
       v-if="activityId && pageConfig"
+      ref="EbConfigContainerAsync"
       :page-config-list="pageConfig"
       :activity-id="activityId"
     />
@@ -52,7 +53,7 @@ export default {
       pageName: "",
       activityId: "",
       templateId: "",
-      pageConfig: {}, // 页面配置组件信息
+      pageConfig: null, // 页面配置组件信息
       pageBaseInfo: {}, // 页面配置的背景图颜色、分享标题等
       shareObj: {
       }, // 页面分享内容
@@ -73,6 +74,14 @@ export default {
   },
   onHide () {
     this.offMonitor();
+  },
+  // 下拉到底部
+  onReachBottom () {
+    // 请求列表
+    console.log("下拉到底部");
+    if (this.$refs.EbConfigContainerAsync) {
+      this.$refs.EbConfigContainerAsync.onScrollBottom();
+    }
   },
   onShareAppMessage (res) {
     if (res.from === "button") {
@@ -104,12 +113,18 @@ export default {
         this.$store.commit("window/SET_OPERITION_SHOW", true);
         this.operitionBtnClick = (e) => btnClickCallBack(e);
       });
+      // 展示AI换铃弹窗
+      uni.$on("changeAi", ({ notifyInfo, confirmCallback }) => {
+        console.log("点击了AI换铃的状态");
+        this.$showNotifyPop(this, notifyInfo, confirmCallback);
+      });
     },
     // 移除监听
     offMonitor () {
       console.log("移除监听");
       uni.$off("openLoginPopup");
       uni.$off("operitionShow");
+      uni.$off("changeAi");
     },
     // 获取页面配置信息
     getPageConfig () {

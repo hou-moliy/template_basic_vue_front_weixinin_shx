@@ -1,5 +1,5 @@
 <template>
-  <view class="video-play-page">
+  <view v-if="src" class="video-play-page">
     <video
       :id="`video_${src}`"
       :ref="`video_${src}`"
@@ -8,10 +8,11 @@
       :loop="true"
       :enable-progress-gesture="true"
       object-fit="cover"
-      :autoplay="true"
+      :autoplay="play"
       :show-fullscreen-btn="false"
       :show-play-btn="false"
       class="video"
+      :controls="controls"
       @timeupdate="timeupdate"
       @ended="playEnd"
     >
@@ -126,8 +127,18 @@ export default {
     this.videoCtx = uni.createVideoContext(`video_${this.src}`, this);
     this.autoPlayFlag = true;
     this.trueSrc = this.src;
-    this.videoCtx.pause();
-    this.videoCtx.play();
+    // this.videoCtx.pause();
+    // setTimeout(() => {
+    //   this.videoCtx.play();
+    // }, 150);
+    if (this.videoCtx.paused || this.videoCtx.ended) {
+      setTimeout(() => {
+        this.videoCtx.play();
+      }, 200);
+    } else {
+      this.videoCtx.pause();
+    }
+
     if (!uni.getStorageSync("userPlayVideo")) {
       uni.setStorageSync("userPlayVideo", true);
     }

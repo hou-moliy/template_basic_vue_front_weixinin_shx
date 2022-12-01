@@ -1,9 +1,6 @@
 <template>
   <view>
-    <view
-      class="eb-icon"
-      :class="{ start: iconList.length === 1, around: iconList.length > 5 }"
-    >
+    <view class="eb-icon start">
       <view
         v-for="(item, index) in iconList"
         :key="index"

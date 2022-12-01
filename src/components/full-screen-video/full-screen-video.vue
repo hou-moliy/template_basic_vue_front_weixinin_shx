@@ -10,6 +10,7 @@
         :height="videoHeight"
         :width="videoWidth"
         :play="true"
+        :controls="true"
         :g-duration="videoDetail.duration"
         :initial-time="videoDetail.initialTime"
         :video-id="videoDetail.ringId"
@@ -102,11 +103,19 @@
     </view>
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
+    <!-- 视频彩铃订购相关弹窗 -->
+    <popupTemplateOperition
+      :popup-info="operitionInfo"
+      :show="Boolean($store.state.window.operitionShow)"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closePopup"
+    />
   </view>
 </template>
 <script>
 import clVideo from "@/components/cl-video/cl-video.vue";
 import { formatCount } from "@/utils/tools.js";
+import { handlePurchaseVideo } from "@/utils/video.js";
 export default {
   components: {
     clVideo,
@@ -133,14 +142,41 @@ export default {
       }, // 是否展示设置按钮，默认展示
       isNewIphone: false,
       videoDetail: null,
+      operitionInfo: {}, // 订购弹窗的内容
+      operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
     };
   },
   created () {
     this.initStyle();
     this.videoDetail = this.item;
   },
+  mounted () {
+    this.dispatchPageEvent();
+  },
+  beforeDestroy () {
+    this.offMonitor();
+  },
   methods: {
     formatCount,
+    // 跨页面通信监听
+    dispatchPageEvent () {
+      console.log("开启监听");
+      // 展示订购、设置类弹窗，按钮点击回调
+      uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
+        this.operitionInfo = popupInfo;
+        this.$store.commit("window/SET_OPERITION_SHOW", true);
+        this.operitionBtnClick = (e) => btnClickCallBack(e);
+      });
+    },
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("operitionShow");
+    },
+    closePopup () {
+      this.operitionInfo = {};
+      this.$store.commit("window/SET_OPERITION_SHOW", false);
+    },
     // 初始化样式
     initStyle () {
       this.getSystemData().then((res) => {
@@ -172,12 +208,16 @@ export default {
       });
     },
     // 设置视频彩铃
-    setSpcl (items) {
+    setSpcl (item) {
       if (!uni.getStorageSync("Authorization")) {
         // 提示登录
         return this.$showLoginPop(this);
       }
       //  打开视频彩铃设置弹窗
+      handlePurchaseVideo(item, this.setSpclFresh);
+    },
+    setSpclFresh () {
+      this.videoDetail.isBuyVideo = true;
     },
     // 点赞 OR 取消点赞
     changeLikeStatus (opType) {
