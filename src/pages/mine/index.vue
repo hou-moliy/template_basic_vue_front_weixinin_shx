@@ -217,7 +217,6 @@ export default {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = this.pointobj.top + 203;
     this.dispatchPageEvent();
-    this.getPageHeight();
   },
   onHide () {
     this.offMonitor();
@@ -244,6 +243,13 @@ export default {
     this.getMyMore();
   },
   methods: {
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
+      uni.$off("changeAi");
+    },
     navigateToFunction (item) {
       // 判断用户是否登录 否 提示弹窗 是 调用navgatertoany
       if (uni.getStorageSync("Authorization")) {

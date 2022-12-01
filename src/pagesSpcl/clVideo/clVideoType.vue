@@ -29,19 +29,12 @@
       class="more-news-column"
       :class="{ 'news-style': pageName !== 'more' }"
     >
-      <waterfall
-        :column-count="3"
-        :column-width="auto"
-        class="waterfall-box"
-      >
+      <waterfall :column-count="3" :column-width="auto" class="waterfall-box">
         <view
           v-if="specialNews != ''"
           class="waterfall-column waterfall-column-left"
         >
-          <view
-            v-for="(item, index) in specialNews"
-            :key="index"
-          >
+          <view v-for="(item, index) in specialNews" :key="index">
             <template v-if="index % 2 === 0">
               <!-- 广告 -->
               <view
@@ -54,24 +47,21 @@
                     item.coverUrl
                       ? item.coverUrl
                       : item.openVCoverUrl
-                        ? item.openVCoverUrl
-                        : item.openHCoverUrl
+                      ? item.openVCoverUrl
+                      : item.openHCoverUrl
                   "
                   class="ad-img"
                 />
               </view>
               <!-- 元素 -->
-              <view
-                v-else
-                class="video-box-new more-new-item-column"
-              >
+              <view v-else class="video-box-new more-new-item-column">
                 <view
                   :data-url="
                     '/pagesSpcl/clVideo/clVideoPlay?id=' +
-                      item.ringId +
-                      `&playStatus=${playStatus}` +
-                      '&moduleId=' +
-                      currentTab
+                    item.ringId +
+                    `&playStatus=${playStatus}` +
+                    '&moduleId=' +
+                    currentTab
                   "
                   @click="goToPlayVideo($event, specialNews)"
                 >
@@ -89,8 +79,8 @@
                         item.coverUrl
                           ? item.coverUrl
                           : item.openVCoverUrl
-                            ? item.openVCoverUrl
-                            : item.openHCoverUrl
+                          ? item.openVCoverUrl
+                          : item.openHCoverUrl
                       "
                     />
                   </view>
@@ -138,17 +128,10 @@
                       <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
                     </view>
                   </view>
-                  <view
-                    v-if="item.isBuyVideo"
-                    class="setting-btn-isBuy"
-                  >
+                  <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
                     已设置
                   </view>
-                  <view
-                    v-else
-                    class="setting-btn"
-                    @click="purchaseVideo(item)"
-                  >
+                  <view v-else class="setting-btn" @click="purchaseVideo(item)">
                     设置
                   </view>
                 </view>
@@ -157,10 +140,7 @@
           </view>
         </view>
         <view class="waterfall-column">
-          <view
-            v-for="(item, index) in specialNews"
-            :key="index"
-          >
+          <view v-for="(item, index) in specialNews" :key="index">
             <template v-if="index % 2 !== 0">
               <!-- 广告 -->
               <view
@@ -173,23 +153,20 @@
                     item.coverUrl
                       ? item.coverUrl
                       : item.openVCoverUrl
-                        ? item.openVCoverUrl
-                        : item.openHCoverUrl
+                      ? item.openVCoverUrl
+                      : item.openHCoverUrl
                   "
                   class="ad-img"
                 />
               </view>
-              <view
-                v-else
-                class="video-box-new more-new-item-column"
-              >
+              <view v-else class="video-box-new more-new-item-column">
                 <view
                   :data-url="
                     '/pagesSpcl/clVideo/clVideoPlay?id=' +
-                      item.ringId +
-                      `&playStatus=${playStatus}` +
-                      '&moduleId=' +
-                      currentTab
+                    item.ringId +
+                    `&playStatus=${playStatus}` +
+                    '&moduleId=' +
+                    currentTab
                   "
                   @click="goToPlayVideo($event, specialNews)"
                 >
@@ -207,8 +184,8 @@
                         item.coverUrl
                           ? item.coverUrl
                           : item.openVCoverUrl
-                            ? item.openVCoverUrl
-                            : item.openHCoverUrl
+                          ? item.openVCoverUrl
+                          : item.openHCoverUrl
                       "
                     />
                   </view>
@@ -256,17 +233,10 @@
                       <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
                     </view>
                   </view>
-                  <view
-                    v-if="item.isBuyVideo"
-                    class="setting-btn-isBuy"
-                  >
+                  <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
                     已设置
                   </view>
-                  <view
-                    v-else
-                    class="setting-btn"
-                    @click="purchaseVideo(item)"
-                  >
+                  <view v-else class="setting-btn" @click="purchaseVideo(item)">
                     设置
                   </view>
                 </view>
@@ -290,10 +260,10 @@
         <view
           :data-url="
             '/pagesSpcl/clVideo/clVideoPlay?id=' +
-              item.ringId +
-              `&playStatus=${playStatus}` +
-              '&moduleId=' +
-              currentTab
+            item.ringId +
+            `&playStatus=${playStatus}` +
+            '&moduleId=' +
+            currentTab
           "
           @click="goToPlayVideo($event, specialNews)"
         >
@@ -311,8 +281,8 @@
                 item.coverUrl
                   ? item.coverUrl
                   : item.openVCoverUrl
-                    ? item.openVCoverUrl
-                    : item.openHCoverUrl
+                  ? item.openVCoverUrl
+                  : item.openHCoverUrl
               "
             />
           </view>
@@ -360,17 +330,8 @@
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
             </view>
           </view>
-          <view
-            v-if="item.isBuyVideo"
-            class="setting-btn-isBuy"
-          >
-            已设置
-          </view>
-          <view
-            v-else
-            class="setting-btn"
-            @click="purchaseVideo(item)"
-          >
+          <view v-if="item.isBuyVideo" class="setting-btn-isBuy">已设置</view>
+          <view v-else class="setting-btn" @click="purchaseVideo(item)">
             设为视频彩铃
           </view>
         </view>
@@ -383,15 +344,24 @@
       :status="isLoadStatus"
       :content-text="contentText"
     />
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
+    <!-- 视频彩铃订购相关弹窗 -->
+    <popupTemplateOperition
+      :popup-info="operitionInfo"
+      :show="Boolean($store.state.window.operitionShow)"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closePopup"
+    />
   </view>
 </template>
 
 <script>
 import videoService from "@/api/cx/video.js";
 import Util, { formatCount } from "@/utils/tools.js";
-import videoTools from "@/utils/video.js";
 import inviteService from "@/api/activity/invite.js";
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue";
+import { handlePurchaseVideo, videoInfoUpdate } from "@/utils/video.js";
 
 export default {
   components: {
@@ -436,6 +406,8 @@ export default {
         contentrefresh: "加载中",
         contentnomore: "没有更多了",
       },
+      operitionInfo: {}, // 订购弹窗的内容
+      operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
     };
   },
   onLoad (option) {
@@ -470,6 +442,7 @@ export default {
     this.shareObj = option;
   },
   onShow () {
+    this.dispatchPageEvent();
     this.isLoadStatus = "loading";
     this.selectLabel = [];
     this.$store.commit(
@@ -504,6 +477,7 @@ export default {
     }
   },
   onHide () {
+    this.offMonitor();
     uni.setStorageSync("videoTypeIndex", this.index);
   },
   // 下拉到底部
@@ -523,11 +497,54 @@ export default {
   },
   methods: {
     formatCount,
+    // 跨页面通信监听
+    dispatchPageEvent () {
+      uni.$on("openLoginPopup", data => {
+        this.$showLoginPop(this);
+      });
+      // 展示订购、设置类弹窗，按钮点击回调
+      uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
+        this.operitionInfo = popupInfo;
+        this.$store.commit("window/SET_OPERITION_SHOW", true);
+        this.operitionBtnClick = (e) => btnClickCallBack(e);
+      });
+    },
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
+    },
+    closePopup () {
+      this.operitionInfo = {};
+      this.$store.commit("window/SET_OPERITION_SHOW", false);
+    },
+    // 设置视彩
+    purchaseVideo (item) {
+      if (!uni.getStorageSync("Authorization")) {
+        // 提示登录
+        this.$showLoginPop(this);
+      } else {
+        // 处理视频彩铃设置
+        handlePurchaseVideo(item, this.ispurchaseVideo(item));
+      }
+    },
+    // 设置成功
+    ispurchaseVideo (item) {
+      // 修改按钮为已设置
+      // item.isisBuyVideo=true
+
+      // const templist = this.$store.state.spcl.videoListFromCxVideoType;
+      const isSet = this.specialNews.filter((i) => {
+        return i.ringId === item.ringId;
+      });
+      isSet[0].isBuyVideo = true;
+    },
     // 分享
     shareVideo (e) {
       if (!uni.getStorageSync("Authorization")) {
         // 提示登录
-        // this.$refs.popup_login.open();
+        this.$showLoginPop(this);
       } else {
         const params = {
           ringId: e.currentTarget.dataset.videoid,
@@ -537,7 +554,7 @@ export default {
             : this.orderParams.notModulId,
           pageName: this.orderParams.playStatus,
         };
-        videoService.getSpclUserBehavior(params).then((res) => {});
+        videoService.getSpclUserBehavior(params).then((res) => { });
         // 生成海报
         uni.navigateTo({
           url:
@@ -561,7 +578,7 @@ export default {
       const ringId = e.currentTarget.dataset.videoid;
       if (!uni.getStorageSync("Authorization")) {
         // 提示登录
-        // this.$refs.popup_login.open();
+        this.$showLoginPop(this);
       } else {
         if (this.isClickLike) {
           return;
@@ -651,7 +668,7 @@ export default {
             this.pageNum =
               Math.ceil(
                 this.$store.state.spcl.videoListFromCxVideoType.length /
-                  this.pageSize,
+                this.pageSize,
               ) + 1;
             this.isLoadStatus =
               this.$store.state.spcl.videoListFromCxVideoType.length < this.totalNum
@@ -702,12 +719,12 @@ export default {
             res.data.data.records,
             this.specialNews,
           );
-          tempList = videoTools.videoInfoUpdate(tempList);
+          tempList = videoInfoUpdate(tempList);
           tempList = JSON.parse(JSON.stringify(tempList));
           this.specialNews = tempList;
           this.$store.commit("spcl/getVideoListFromCxVideoType", tempList);
           this.isLoadStatus =
-              this.specialNews.length < this.totalNum ? "more" : "noMore";
+            this.specialNews.length < this.totalNum ? "more" : "noMore";
           this.pageNum++;
         } else {
           this.isLoad = "over";
@@ -900,7 +917,7 @@ export default {
             .setting-btn {
               width: 114rpx;
               height: 48rpx;
-              background-color:#9E79FF ;
+              background-color: #9e79ff;
               border-radius: 24rpx;
               font-size: 24rpx;
               font-family: PingFang SC Medium, PingFang SC Medium-Medium;
@@ -943,11 +960,11 @@ export default {
             text-overflow: ellipsis;
             display: -webkit-box;
             /*! autoprefixer: off */
-            -webkit-box-orient:vertical;
+            -webkit-box-orient: vertical;
             /* autoprefixer: on */
-            word-break:break-all;
+            word-break: break-all;
             padding: 15rpx 12rpx 0 15rpx;
-              }
+          }
         }
       }
     }
@@ -1091,7 +1108,7 @@ export default {
     margin-bottom: 20rpx;
   }
 }
-::v-deep .uni-load-more{
+::v-deep .uni-load-more {
   background-color: #f5f7f9;
 }
 .btn-batch {
