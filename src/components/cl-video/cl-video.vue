@@ -127,7 +127,9 @@ export default {
     this.autoPlayFlag = true;
     this.trueSrc = this.src;
     this.videoCtx.pause();
-    this.videoCtx.play();
+    setTimeout(() => {
+      this.videoCtx.play();
+    }, 150);
     if (!uni.getStorageSync("userPlayVideo")) {
       uni.setStorageSync("userPlayVideo", true);
     }

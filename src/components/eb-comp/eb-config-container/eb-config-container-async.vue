@@ -83,6 +83,7 @@ export default {
     purchaseVideo ({ ringName }) {
       if (uni.getStorageSync("Authorization")) {
         this.$store.dispatch("user/getUserSpclStatus").then(res => {
+          console.log((res, "resresres"));
           if (res == 1) { // 已开通视频彩铃
             const popupInfo = { ...this.$store.state.window.windowAllObj.common_spcl_set };
             popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringName}》`);

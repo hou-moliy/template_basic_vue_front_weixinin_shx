@@ -224,6 +224,9 @@ export default {
     this.dispatchPageEvent();
     // this.getPageHeight();
   },
+  onHide () {
+    this.offMonitor();
+  },
   onShow () {
     uni.hideTabBar();
     if (uni.getStorageSync("Authorization")) {
@@ -246,6 +249,13 @@ export default {
     this.getMyMore();
   },
   methods: {
+    // 移除监听
+    offMonitor () {
+      console.log("移除监听");
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
+      uni.$off("changeAi");
+    },
     // 初始化页面高
     getPageHeight () {
       uni.getSystemInfo({

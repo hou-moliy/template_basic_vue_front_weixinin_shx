@@ -104,12 +104,18 @@ export default {
         this.$store.commit("window/SET_OPERITION_SHOW", true);
         this.operitionBtnClick = (e) => btnClickCallBack(e);
       });
+      // 展示AI换铃弹窗
+      uni.$on("changeAi", ({ notifyInfo, confirmCallback }) => {
+        console.log("点击了AI换铃的状态");
+        this.$showNotifyPop(this, notifyInfo, confirmCallback);
+      });
     },
     // 移除监听
     offMonitor () {
       console.log("移除监听");
       uni.$off("openLoginPopup");
       uni.$off("operitionShow");
+      uni.$off("changeAi");
     },
     // 获取页面配置信息
     getPageConfig () {

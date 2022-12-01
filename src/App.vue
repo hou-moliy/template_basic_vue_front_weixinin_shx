@@ -6,6 +6,7 @@ export default {
   name: "App",
   onLaunch: function () {
     this.$store.dispatch("window/getCommonWindow");
+    this.$store.dispatch("window/getOfflineWindow");
     console.log("App Launch");
   },
   onShow: function () {
