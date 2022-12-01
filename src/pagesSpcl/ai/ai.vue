@@ -9,74 +9,56 @@
     </view>
 
     <!-- 介绍 -->
-    <view class="introduce">
-      <view class="introduce-title">
-        AI换铃计划
-      </view>
-      <view class="introduce-content">
-        AI换铃是陕西移动为视频彩铃会员研发的一款智能换铃黑科技，根据用户喜好定时更换高质量的视频彩铃，让每一秒通话等待与众不同！
-      </view>
-      <view class="introduce-subcontent">
-        您可自定义选择视频彩铃的主题，彩铃管家会为您在主题周期更换您选择的主题最近播放量最高的免费视频彩铃。<br>
-        <text class="introduce-tips">
-          注意：
-        </text>开启AI换铃计划后，新的视频彩铃将会自动设置为“当前播放”，您之前的彩铃将会放置到“闲置彩铃”里。
-      </view>
-      <view
-        class="introduce-button"
-        :style="{background:aiStatus?'#e9e9e9':''}"
-        @click="aiOpenChange"
-      >
-        <view
-          v-if="!aiStatus"
-          class="introduce-button-open"
-        >
-          一键开启
+    <view class="introduce-box">
+      <view class="introduce">
+        <view class="introduce-title">AI换铃计划</view>
+        <view class="introduce-content">
+          AI换铃是陕西移动为视频彩铃会员研发的一款智能换铃黑科技，根据用户喜好定时更换高质量的视频彩铃，让每一秒通话等待与众不同！
+        </view>
+        <view class="introduce-subcontent">
+          您可自定义选择视频彩铃的主题，彩铃管家会为您在主题周期更换您选择的主题最近播放量最高的免费视频彩铃。
+          <br />
+          <text class="introduce-tips">注意：</text>
+          开启AI换铃计划后，新的视频彩铃将会自动设置为“当前播放”，您之前的彩铃将会放置到“闲置彩铃”里。
         </view>
         <view
-          v-else
-          class="introduce-button-opened"
+          class="introduce-button"
+          :style="{ background: aiStatus ? '#e9e9e9' : '' }"
+          @click="aiOpenChange"
         >
-          已开启
+          <view v-if="!aiStatus" class="introduce-button-open">一键开启</view>
+          <view v-else class="introduce-button-opened">已开启</view>
         </view>
       </view>
-    </view>
-    <!-- 主题 -->
-    <view class="theme-name">
-      选择您喜欢的视频彩铃主题
-    </view>
+      <!-- 主题 -->
+      <view class="theme-name">选择您喜欢的视频彩铃主题</view>
 
-    <view class="theme-part">
-      <view
-        v-for="(item,index) in aiTopicArray"
-        :key="index"
-        class="theme-part-content"
-      >
-        <view class="theme-part-content-tile">
-          <image
-            class="theme-part-content-tile-icon"
-            :src="item.iconUrl"
-          />
-        </view>
-
-        <view class="theme-part-right">
-          <view class="theme-part-content-tile-name">
-            {{ item.topicName }}
+      <view class="theme-part">
+        <view
+          v-for="(item, index) in aiTopicArray"
+          :key="index"
+          class="theme-part-content"
+        >
+          <view class="theme-part-content-tile">
+            <image class="theme-part-content-tile-icon" :src="item.iconUrl" />
           </view>
-          <view class="switch-relative">
-            <switch
-              :checked="item.isOpen"
-              color="#9E79FF"
-            />
-            <view
-              class="switch-absolute"
-              @click="themeStatusChange(item,index)"
-            />
+
+          <view class="theme-part-right">
+            <view class="theme-part-content-tile-name">
+              {{ item.topicName }}
+            </view>
+            <view class="switch-relative">
+              <switch :checked="item.isOpen" color="#9E79FF" />
+              <view
+                class="switch-absolute"
+                @click="themeStatusChange(item, index)"
+              />
+            </view>
           </view>
         </view>
       </view>
+      <view style="height: 20rpx" />
     </view>
-    <view style="height:20rpx" />
   </view>
 </template>
 
@@ -238,6 +220,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.introduce-box {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 365rpx;
+}
 .header-ai {
   .header-ai-image {
     display: inline-block;
@@ -247,12 +235,8 @@ export default {
   }
 }
 .introduce {
-  position: absolute;
   top: 368rpx;
-  left: 50%;
-  transform: translate(-50%, 0rpx);
   width: 686rpx;
-  height: 702rpx;
   margin: 0 auto;
   border-radius: 20rpx;
   box-shadow: 0px 0px 22rpx 2rpx rgba(32, 32, 32, 0.11);
@@ -260,6 +244,7 @@ export default {
   padding-left: 38rpx;
   padding-right: 38rpx;
   box-sizing: border-box;
+  padding-bottom: 70rpx;
 
   .introduce-title {
     height: 100rpx;
@@ -278,13 +263,13 @@ export default {
     font-family: PingFang SC, PingFang SC-Medium;
     font-weight: 400;
     text-align: left;
-    color: #252A3E;
-    margin-top: 23rpx ;
+    color: #252a3e;
+    margin-top: 23rpx;
     padding: 32rpx 38rpx 40rpx 26rpx;
     line-height: 46rpx;
-    background-color: #F8F6FF;
+    background-color: #f8f6ff;
   }
-  .introduce-subcontent{
+  .introduce-subcontent {
     font-size: 24rpx;
     font-family: PingFang SC, PingFang SC-Medium;
     font-weight: 400;
@@ -292,7 +277,7 @@ export default {
     color: #666666;
     margin: 26rpx 0 40rpx 0;
     line-height: 46rpx;
-    .introduce-tips{
+    .introduce-tips {
       color: #9276f1;
     }
   }
@@ -302,14 +287,14 @@ export default {
     height: 88rpx;
     border-radius: 44rpx;
     margin: 0 auto;
-    background: linear-gradient(90deg, #9E79FF 0%, #FF83D9 100%);
+    background: linear-gradient(90deg, #9e79ff 0%, #ff83d9 100%);
     display: flex;
     flex-direction: column;
     // justify-content: space-around;
     justify-content: center;
     padding: 6rpx 0rpx;
     box-sizing: border-box;
-    box-shadow: -4rpx 13rpx 44rpx -18rpx #B37BF5;
+    box-shadow: -4rpx 13rpx 44rpx -18rpx #b37bf5;
 
     .introduce-button-open {
       font-size: 30rpx;
@@ -338,10 +323,9 @@ export default {
       padding-top: 8rpx;
     }
   }
-
 }
 .theme-name {
-  margin: 340rpx 0 40rpx 33rpx;
+  margin: 60rpx 0 40rpx 0rpx;
   font-size: 36rpx;
   font-family: PingFang SC, PingFang SC-Bold;
   font-weight: 700;
@@ -384,15 +368,15 @@ export default {
         color: #333333;
       }
     }
-    .theme-part-right{
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #E5E5E5;
-    padding-bottom: 31rpx;
-    font-size: 30rpx;
-    color: #222222;
+    .theme-part-right {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e5e5;
+      padding-bottom: 31rpx;
+      font-size: 30rpx;
+      color: #222222;
     }
   }
   .switch-relative {
@@ -422,7 +406,7 @@ export default {
     line-height: 40rpx;
   }
 }
-.theme-part view:last-child .theme-part-right{
-  border-bottom: 0px
+.theme-part view:last-child .theme-part-right {
+  border-bottom: 0px;
 }
 </style>
