@@ -34,7 +34,7 @@
       :popup-info="operitionInfo"
       :show="Boolean($store.state.window.operitionShow)"
       @buttonClick="operitionBtnClick"
-      @closePopup="$store.commit('window/SET_OPERITION_SHOW', fasle)"
+      @closePopup="$store.commit('window/SET_OPERITION_SHOW', false)"
     />
   </view>
 </template>

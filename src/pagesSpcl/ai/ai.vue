@@ -34,7 +34,7 @@
           一键开启
         </view>
         <view
-          v-else="aiStatus"
+          v-else
           class="introduce-button-opened"
         >
           已开启
@@ -126,18 +126,8 @@ export default {
     },
     // 查询用户是否开通ai换铃
     checkPortalUser () {
-      aiService.checkPortalUser().then(res => {
-        if (res.data.code == 200) {
-          console.log("res", res);
-          if (res.data.data && res.data.data.isAIOpen == 1) {
-            this.aiStatus = true;
-          } else {
-            this.aiStatus = false;
-          }
-        } else {
-          console.log("请求接口有误");
-        }
-      });
+      this.$store.dispatch("user/getUserAiStatus");
+      this.aiStatus = uni.getStorageSync("aiStatus");
     },
     // 查询用户是否开通视频彩铃 //接口修改
     getSpclStatus () {
@@ -188,7 +178,7 @@ export default {
           this.buttonType = "confirm";
         }
       }
-      */
+
     },
     // 切换主题
     themeStatusChange (item, index) {
