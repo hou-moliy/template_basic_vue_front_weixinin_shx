@@ -1,6 +1,6 @@
 <template>
-  <view class="block" :style="{ padding: blockPadding }">
-    <view class="block-box" :style="{ margin, padding }">
+  <view class="block">
+    <view class="block-box">
       <view class="block-box-title">
         <view>
           <image
@@ -40,21 +40,6 @@ export default {
     pageConfig: {
       type: Object,
       default: () => { },
-    },
-    // 外边距
-    margin: {
-      type: String,
-      default: "0",
-    },
-    // 内边距
-    padding: {
-      type: String,
-      default: "0",
-    },
-    // 内边距
-    blockPadding: {
-      type: String,
-      default: "0rpx 34rpx",
     },
   },
   data () {
@@ -101,7 +86,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0rpx 34rpx;
   box-sizing: border-box;
+  margin-bottom: 40rpx;
 
   &-box {
     width: 100%;

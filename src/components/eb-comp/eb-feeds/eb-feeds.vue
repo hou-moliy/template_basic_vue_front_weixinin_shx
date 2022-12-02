@@ -204,7 +204,6 @@ export default {
         borderRadius: "50rpx",
         height: "",
       },
-
     };
   },
   created () {
@@ -254,8 +253,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ad-structure {
-  padding: 30rpx 0 0 0;
-
+  margin-bottom: 40rpx;
   .more-topic-top-img {
     text-align: center;
     margin-bottom: 40rpx;
@@ -536,7 +534,7 @@ export default {
 
 // 样式调整
 .ad-structure-type + .ad-structure-type {
-  margin-top: 36rpx;
+  margin-top: 15rpx;
 }
 
 .ad-structure-type {

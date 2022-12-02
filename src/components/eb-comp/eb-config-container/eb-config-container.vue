@@ -94,7 +94,6 @@
         "
       >
         <eb-default-head
-          :margin="'50rpx 0 30rpx 0'"
           :page-config="pageConfig"
           @openLoginPopup="openLoginPopup"
         />

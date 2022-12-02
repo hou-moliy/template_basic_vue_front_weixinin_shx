@@ -37,12 +37,9 @@ export default {
       dataList: [],
     };
   },
-
   created () {
-    console.log(typeof this.$store.state.user.aiStatus);
     this.getAdBanner();
   },
-
   methods: {
     getAdBanner () {
       const params = {
@@ -70,7 +67,7 @@ export default {
 
 <style lang="scss" scoped>
 .spcl-ai {
-  padding: 40rpx 0;
+  margin-bottom: 40rpx;
 }
 .more-topic-top-img {
   text-align: center;

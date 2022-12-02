@@ -5,54 +5,57 @@
         <block>
           <view
             class="themeLists"
-            :style="{'background':pageConfig.innerColor}"
+            :style="{ background: pageConfig.innerColor }"
           >
             <view class="themeLists-title">
-              <block>
-                <image
-                  :src="pageConfig.tagIcon"
-                  mode="aspectFit"
-                />
+              <block v-if="pageConfig.tagIcon">
+                <image :src="pageConfig.tagIcon" mode="aspectFit" />
               </block>
             </view>
             <view class="ad-recommend">
-              <block
-                v-for="(inItem,inIndex) in portalAds"
-                :key="inIndex"
-              >
-                <block v-if="inItem.style==1">
+              <block v-for="(inItem, inIndex) in portalAds" :key="inIndex">
+                <!-- 一行一个 -->
+                <block v-if="inItem.style == 1">
                   <block
-                    v-for="(contenItem,contentIndex) in inItem.portalAd"
+                    v-for="(contenItem, contentIndex) in inItem.portalAd"
                     :key="contentIndex"
                   >
-                    <block v-if="contentIndex<1">
+                    <block v-if="contentIndex < 1">
                       <view
                         class="ad-recommend-1-1"
+                        :style="[contenItem.extraStyle]"
                         @click="bannerClickEvent(contenItem)"
                       >
                         <image
                           class="ad-recommend-1-1-item"
                           :src="contenItem.url"
+                          :style="[contenItem.extraStyle]"
                         />
                       </view>
                     </block>
                   </block>
                 </block>
-                <block v-else-if="inItem.style==2">
+                <!-- 一行两个 -->
+                <block v-else-if="inItem.style == 2">
                   <view class="ad-recommend-1-2 flex flex-wrap">
                     <block
-                      v-for="(contenItem,contentIndex) in inItem.portalAd"
+                      v-for="(contenItem, contentIndex) in inItem.portalAd"
                       :key="contentIndex"
                     >
-                      <block v-if="contentIndex<2">
+                      <block v-if="contentIndex < 2">
                         <view
                           class="ad-recommend-1-2-item bg-white"
+                          :style="[contenItem.extraStyle]"
                           @click="bannerClickEvent(contenItem)"
                         >
-                          <view class="ad-recommend-1-2-img-box">
+                          <view
+                            class="ad-recommend-1-2-img-box"
+                            :style="[contenItem.extraStyle]"
+                          >
                             <image
                               class="ad-recommend-1-2-img"
                               :src="contenItem.url"
+                              :style="[contenItem.extraStyle]"
                             />
                           </view>
                         </view>
@@ -60,29 +63,32 @@
                     </block>
                   </view>
                 </block>
-                <block v-else-if="inItem.style==3">
+                <!-- 一行三个 -->
+                <block v-else-if="inItem.style == 3">
                   <view class="ad-recommend-1-3">
                     <view
-                      v-for="(contenItem,contentIndex) in inItem.portalAd"
+                      v-for="(contenItem, contentIndex) in inItem.portalAd"
                       :key="contentIndex"
+                      :style="[contenItem.extraStyle]"
                     >
-                      <view v-if="contentIndex<3">
+                      <view
+                        v-if="contentIndex < 3"
+                        :style="[contenItem.extraStyle]"
+                      >
                         <view
                           class="ad-recommend-1-3-item"
-                          :class="{'is-margin':(contentIndex%3)===1}"
-                          :style="{backgroundImage:`url(${contenItem.url})`}"
+                          :class="{ 'is-margin': contentIndex % 3 === 1 }"
+                          :style="{
+                            backgroundImage: `url(${contenItem.url})`,
+                            borderRadius: [contenItem.extraStyle.borderRadius],
+                            height: [contenItem.extraStyle.height],
+                          }"
                           @click.stop="bannerClickEvent(contenItem)"
                         >
-                          <view
-                            v-if="contenItem.categoryTitle"
-                            class="title"
-                          >
+                          <view v-if="contenItem.categoryTitle" class="title">
                             {{ contenItem.categoryTitle }}
                           </view>
-                          <view
-                            v-if="contenItem.categoryDesc"
-                            class="desc"
-                          >
+                          <view v-if="contenItem.categoryDesc" class="desc">
                             {{ contenItem.categoryDesc }}
                           </view>
                         </view>
@@ -90,21 +96,26 @@
                     </view>
                   </view>
                 </block>
-                <block v-else-if="inItem.style==4">
+                <!-- 左一右二 -->
+                <block v-else-if="inItem.style == 4">
                   <view class="ad-recommend-1-4">
                     <view class="ad-recommend-1-4-item bg-white">
                       <block
-                        v-for="(contenItem,contentIndex) in inItem.portalAd"
+                        v-for="(contenItem, contentIndex) in inItem.portalAd"
                         :key="contentIndex"
                       >
-                        <block v-if="contentIndex==0">
+                        <block v-if="contentIndex == 0">
                           <view
                             class="ad-recommend-1-4-img-box"
+                            :style="{ borderRadius: [extraStyle.borderRadius] }"
                             @click="bannerClickEvent(contenItem)"
                           >
                             <image
                               class="ad-recommend-1-4-img"
                               :src="contenItem.url"
+                              :style="{
+                                borderRadius: [extraStyle.borderRadius],
+                              }"
                             />
                           </view>
                         </block>
@@ -112,26 +123,32 @@
 
                       <view class="ad-recommend-1-4-item-right">
                         <block
-                          v-for="(contenItem,contentIndex) in inItem.portalAd"
+                          v-for="(contenItem, contentIndex) in inItem.portalAd"
                           :key="contentIndex"
                         >
-                          <block v-if="contentIndex==1">
+                          <block v-if="contentIndex == 1">
                             <view
                               class="ad-recommend-1-4-item-right-img"
+                              :style="{
+                                borderRadius: [extraStyle.borderRadius],
+                              }"
                               @click="bannerClickEvent(contenItem)"
                             >
                               <image
                                 class="ad-recommend-1-4-img"
+                                :style="{
+                                  borderRadius: [extraStyle.borderRadius],
+                                }"
                                 :src="contenItem.url"
                               />
                             </view>
                           </block>
                         </block>
                         <block
-                          v-for="(contenItem,contentIndex) in inItem.portalAd"
+                          v-for="(contenItem, contentIndex) in inItem.portalAd"
                           :key="contentIndex"
                         >
-                          <block v-if="contentIndex==2">
+                          <block v-if="contentIndex == 2">
                             <view
                               class="ad-recommend-1-4-item-right-img"
                               @click="bannerClickEvent(contenItem)"
@@ -147,15 +164,21 @@
                     </view>
                   </view>
                 </block>
-                <block v-else-if="inItem.style==5">
-                  <view class="ad-recommend-1-5">
+                <!-- 轮播图 -->
+                <block v-else-if="inItem.style == 5">
+                  <view
+                    class="ad-recommend-1-5"
+                    :style="[inItem.portalAd[0].extraStyle]"
+                  >
                     <view
                       v-if="inItem.portalAd.length === 1"
                       class="ad-recommend-1-5-item"
+                      :style="[inItem.portalAd[0].extraStyle]"
                       @click="bannerClickEvent(inItem.portalAd[0])"
                     >
                       <image
                         class="ad-recommend-1-5-image"
+                        :style="[inItem.portalAd[0].extraStyle]"
                         :src="inItem.portalAd[0].url"
                       />
                     </view>
@@ -171,12 +194,17 @@
                       <swiper-item
                         v-for="(item, index) in inItem.portalAd"
                         :key="index"
+                        :style="[inItem.portalAd[0].extraStyle]"
                         @click="bannerClickEvent(item)"
                       >
-                        <view class="ad-recommend-1-5-image">
+                        <view
+                          class="ad-recommend-1-5-image"
+                          :style="[inItem.portalAd[0].extraStyle]"
+                        >
                           <image
                             class="ad-recommend-1-5-image"
                             :src="item.url"
+                            :style="[inItem.portalAd[0].extraStyle]"
                           />
                         </view>
                       </swiper-item>
@@ -194,13 +222,12 @@
 
 <script>
 import adService from "@/api/ad/index.js";
-import {
-  programaAnalysis,
-} from "@/utils/common.js";
+import { copyAttr } from "@/utils/gCopy.js";
+import { programaAnalysis } from "@/utils/common.js";
 
 import {
-  navigateToAny,
-} from "@/utils/tools.js";
+  navigateToAnyCheck,
+} from "@/utils/navigateToAny.js";
 export default {
   components: {},
   props: {
@@ -213,10 +240,14 @@ export default {
     return {
       staticImgs: this.$staticImgs,
       portalAds: [],
+      extraStyle: {
+        borderRadius: "50rpx",
+        height: "",
+      },
     };
   },
-  watch: {
-
+  created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
   mounted () {
     this.getAdLIst();
@@ -230,24 +261,32 @@ export default {
       adService.getAdvertisement(params).then(res => {
         if (res.data.code === 200) {
           this.portalAds = res.data.data;
+          this.handleAdExtraStyle();
         }
       }).catch(err => {
         console.log(err);
       });
     },
+    // 处理每个Ad的单项的ExtraStyle
+    handleAdExtraStyle () {
+      this.portalAds.forEach(item => {
+        item.portalAd.forEach(e => {
+          const extraStyle = JSON.parse(e.extraStyle);
+          if (extraStyle.height === "") {
+            extraStyle.height = "300";
+          }
+          e.extraStyle = {
+            height: extraStyle.height + "rpx",
+            borderRadius: this.extraStyle.borderRadius,
+          };
+        });
+      });
+    },
     async bannerClickEvent (item) {
       // 埋点
       programaAnalysis(this.pageConfig, item.id);
-      await this.$store.dispatch("getCustomorderList", `runAd_${item.id}`);
-      if (this.$store.state.offlinePopup.loginShow) {
-        this.$emit("openLoginPopup");
-        return;
-      }
-      if (this.$store.state.offlinePopup.offlineFlag) {
-        return;
-      }
       this.$analysis.dispatch("dj_yywid", item.id);
-      navigateToAny(item);
+      navigateToAnyCheck(item, `runAd_${item.id}`);
       this.$emit("bannerClickEvent", item);
     },
   },

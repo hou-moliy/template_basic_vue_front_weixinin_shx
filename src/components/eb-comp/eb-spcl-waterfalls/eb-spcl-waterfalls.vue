@@ -37,7 +37,6 @@
             <view v-else class="video-box-new">
               <spclItem
                 :item="item"
-                :is-login="isLogin"
                 :last-flag="index == wfList.length - 1"
                 :inner-color="pageConfig.innerColor"
                 :spcl-style="pageConfig.spclStyle"
@@ -68,7 +67,6 @@
             <view v-else class="video-box-new">
               <spclItem
                 :item="item"
-                :is-login="isLogin"
                 :inner-color="pageConfig.innerColor"
                 :last-flag="index == wfList.length - 1"
                 :spcl-style="pageConfig.spclStyle"
@@ -114,12 +112,6 @@ export default {
     pageConfig: {
       type: Object,
       default: () => { },
-    },
-    isLogin: {
-      type: Boolean,
-      default () {
-        return false;
-      },
     },
     activityId: {
       type: String,
@@ -268,6 +260,7 @@ export default {
   padding: 0rpx 30rpx 30rpx;
   box-sizing: border-box;
   border-radius: 40rpx 40rpx 0rpx 0rpx;
+  margin-bottom: 40rpx;
 
   .waterfall-box {
     display: flex;

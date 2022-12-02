@@ -1,4 +1,4 @@
-import SpclService from "../../api/spcl/index";
+import SpclService from "@/api/spcl/index";
 const state = {
   spclStatus: uni.getStorageSync("spclStatus") || 0, // 0 未开通,1已开通
   aiStatus: uni.getStorageSync("aiStatus") || 0, // 0 未开通,1已开通
@@ -23,6 +23,8 @@ const actions = {
         if (res.data.code === 200) {
           commit("SET_SPCL_STATUS", res.data.data);
           resolve(res.data.data);
+        } else {
+          reject(res.data);
         }
       });
     });
@@ -35,6 +37,8 @@ const actions = {
         if (res.data.code === 200) {
           commit("SET_AI_STATUS", res.data.data.isAIOpen);
           resolve(res.data.data.isAIOpen);
+        } else {
+          reject(res.data);
         }
       });
     });

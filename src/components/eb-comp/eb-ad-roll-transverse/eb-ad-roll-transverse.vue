@@ -49,7 +49,7 @@ export default {
     this.getAdLIst();
   },
   methods: {
-
+    navigateToAny,
     // 使用运营位接口 获取专题列表
     getAdLIst () {
       const params = {
@@ -62,16 +62,13 @@ export default {
         }
       });
     },
-    // navigateToAny
-    navigateToAny (item) {
-      navigateToAny(item);
-    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .eb-ad-roll {
+  margin-bottom: 40rpx;
   .eb-ad-roll-box {
     display: flex;
 

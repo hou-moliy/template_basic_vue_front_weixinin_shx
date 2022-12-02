@@ -154,12 +154,10 @@ export default {
   padding-top: 20rpx;
 }
 .spcl-box {
-  padding-top: 40rpx;
-
   .waterfall-box {
     display: flex;
     padding: 0 33rpx 0 32rpx;
-
+    box-sizing: border-box;
     .waterfall-column-left {
       margin-right: 18rpx;
     }

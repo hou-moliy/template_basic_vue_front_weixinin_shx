@@ -66,7 +66,13 @@
       </view>
     </waterfall>
     <view class="see-more-box">
-      <view class="see-more" @click="navigateToH5(pageConfig)">查看更多</view>
+      <view
+        class="see-more"
+        :style="{ background: pageConfig.innerColor }"
+        @click="navigateToH5(pageConfig)"
+      >
+        查看更多
+      </view>
     </view>
   </view>
 </template>
@@ -91,8 +97,6 @@ export default {
       dataList: [],
     };
   },
-  watch: {},
-  created () { },
   mounted () {
     this.getSpclList();
   },
@@ -141,9 +145,8 @@ export default {
 
 <style lang="scss" scoped>
 .spcl-recommend {
-  margin-bottom: 30rpx;
-  padding-top: 40rpx;
-  background-color: #292727;
+  margin-bottom: 40rpx;
+  background: pink;
   .more-topic-top-img {
     display: flex;
     text-align: center;
@@ -153,6 +156,7 @@ export default {
     image {
       width: 60%;
       height: 100%;
+      vertical-align: middle;
     }
   }
 
@@ -219,11 +223,10 @@ export default {
     .see-more {
       width: 352rpx;
       height: 64rpx;
-      border: 2rpx solid #ffffff;
       border-radius: 32rpx;
       font-size: 30rpx;
       font-weight: 500;
-      color: #fefefe;
+      color: #ffffff;
       line-height: 64rpx;
       text-align: center;
     }
