@@ -114,6 +114,14 @@ export default {
       this.$refs.EbConfigContainerAsync.onScrollBottom();
     }
   },
+  // 下拉到底部
+  onReachBottom () {
+    // 请求列表
+    console.log("下拉到底部");
+    if (this.$refs.EbConfigContainerAsync) {
+      this.$refs.EbConfigContainerAsync.onScrollBottom();
+    }
+  },
   methods: {
     // 刷新组件信息
     handleFresh () {
