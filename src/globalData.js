@@ -1,7 +1,7 @@
 const globalData = {
   appId: process.env.VUE_APP_ID,
   staticImgs: process.env.VUE_APP_STATIC_IMGS,
-  portalUrl: process.env.VUE_APP_BASE_API_PORTAL || "http://10.4.6.148:9501/portal-shx",
+  portalUrl: process.env.VUE_APP_BASE_API_PORTAL || "http://10.4.7.239:9501/portal-shx",
   activityUrl: process.env.VUE_APP_BASE_API_ACTIVITY,
   weixinUrl: process.env.VUE_APP_BASE_API_WEIXIN || "http://10.4.6.148:9502/weixin",
   metaConfig: process.env.VUE_APP_META_CONFIG || "https://uj.ln139.cn/metaConfig/api",

@@ -31,15 +31,9 @@
             >
               <view>
                 {{ item.name }}
-                <hr
-                  :style="{
-                    background:
-                      pageName == item.pageName
-                        ? 'linear-gradient(0deg,#ff6f50 0%, #ff008c 100%);'
-                        : '',
-                  }"
-                  class="tab-item-hr"
-                />
+                <view v-show="pageName == item.pageName" class="tab-item-img">
+                  <image :src="item.selectedIconUrl" />
+                </view>
               </view>
             </view>
           </view>
@@ -68,8 +62,9 @@
         }"
         @change="swiperChange"
       >
-        <swiper-item v-for="(swipeItem, index) in tabList" :key="swipeItem.id">
+        <swiper-item v-for="swipeItem in tabList" :key="swipeItem.id">
           <scroll-view
+            v-if="swipeItem.pageConfig"
             scroll-y="true"
             :style="{ height: `${windowHeight}px` }"
             @scrolltolower="scrollToLower"
@@ -77,7 +72,6 @@
           >
             <!-- 配置化组件容器 -->
             <ebConfigContainerAsync
-              v-if="index === swiperTab"
               key=""
               ref="EbConfig"
               :activity-id="swipeItem.activityId"
@@ -122,7 +116,7 @@ export default {
       switchNavInfo: {}, // 当前的Tab对象
       pageName: "", // 当前的Tab栏name
       swiperTab: 0, // swiper滑动的Tab
-      currentTab: 0, //
+      currentTab: 1, //
       isOutWindow: false,
       windowsWidth: 0, // 可使用窗口宽度
       windowHeight: 0, // 可使用窗口高度
@@ -230,13 +224,10 @@ export default {
     getPageWidthHeight () {
       uni.getSystemInfo({
         success: res => {
-          console.log("bar", res);
           if (res.safeAreaInsets.bottom === 0) {
             this.windowHeight = res.windowHeight;
-            // this.navHeight = res.safeArea.top;
           } else {
             this.windowHeight = res.safeArea.height;
-            // this.navHeight = res.safeArea.top / 2;
           }
           this.navHeight = res.safeArea.top;
           this.windowsWidth = res.windowWidth;
@@ -246,12 +237,15 @@ export default {
     // switch点击防抖
     switchNavDebounce (e) {
       this.switchNavInfo = e;
-      Util.debounce(this.switchNav, 200, true)();
+      Util.debounce(this.switchNav(e), 200, true)();
     },
+    // Tab点击
     switchNav () {
       const { current } = this.switchNavInfo.currentTarget.dataset;
       this.swiperTab = current - 1;
       this.currentTab = current;
+      this.pageName = this.tabList[this.swiperTab].pageName;
+      this.getPageConfig(this.pageName);
     },
     swiperContainerScroll (e) {
       if (e.detail.scrollTop > 30) {
@@ -262,27 +256,31 @@ export default {
         }
       }
     },
-    // 获取tabList
-    async getTabList () {
-      await TemplateService.getTabAndPageConfig({ tabTarget: "main" }).then(res => {
+    getTabList () {
+      TemplateService.getTabList({ tabTarget: "main" }).then(res => {
         if (res.data.code === 200) {
           this.tabList = res.data.data;
+          this.swiperTab = this.currentTab ? this.currentTab - 1 : 0;
+          this.tabList.forEach((e, index) => {
+            e.pageConfig = "";
+            e.activityId = e.pageName.split("_")[1];
+            if (index === 0 && e.pageName) {
+              this.pageName = e.pageName;
+              this.getPageConfig(e.pageName);
+            }
+          });
+          this.checkTabOverFlow();
         }
-        this.tabList.forEach(e => {
-          e.activityId = e.pageName.split("_")[1];
-        });
-        if (!this.pageName) {
-          this.pageName = this.tabList[0].pageName;
-          this.currentTab = this.tabList.filter(
-            item => item.pageName === this.pageName,
-          )[0].sort;
-        } else {
-          this.currentTab = this.tabList.filter(
-            item => item.pageName === this.pageName,
-          )[0].sort;
+      });
+    },
+    // 获取页面配置信息
+    getPageConfig (pageName) {
+      if (this.tabList[this.swiperTab].pageConfig) return;
+      TemplateService.getPageConfigByPageName({ pageName }).then(res => {
+        if (res.data.code === 200) {
+          this.tabList[this.swiperTab].pageConfig = [...res.data.data];
+          this.$forceUpdate();
         }
-        this.swiperTab = this.currentTab ? this.currentTab - 1 : 0;
-        this.checkTabOverFlow();
       });
     },
     // 判断tab是否超出屏幕
@@ -333,10 +331,8 @@ export default {
       this.swiperTab = current;
       this.currentTab = current + 1;
       this.pageName = this.tabList[current].pageName;
+      this.getPageConfig(this.pageName);
       this.changeTab(current);
-      if (current !== 4) {
-        uni.$emit("stopMusic");
-      }
     },
     // 点击查看更多按钮事件
     changeTabByMore (pageName) {
@@ -408,13 +404,12 @@ page {
   top: 0;
 
   .title {
-    text-align: center;
     font-size: 36rpx;
+    font-family: PingFang SC, PingFang SC-Bold;
     font-weight: 700;
     text-align: center;
-    color: #ffffff;
+    color: #252a3e;
     line-height: 36rpx;
-    margin-top: 100rpx;
   }
 }
 
@@ -437,11 +432,11 @@ page {
   padding-right: 80rpx;
 }
 .swiper-nav {
-  margin-top: 30rpx;
+  margin-top: 56rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1rpx solid rgba(255, 255, 255, 0.2);
+  // border-bottom: 1rpx solid rgba(255, 255, 255, 0.2);
   white-space: nowrap;
 }
 .swiper-nav-left {
@@ -503,25 +498,33 @@ page {
 .tab-item {
   margin-left: 30rpx;
   font-size: 32rpx;
+  font-family: PingFang SC, PingFang SC-Medium;
   font-weight: 500;
-  // color: #fff;
-  color: #333;
+  text-align: left;
+  color: #767b93;
+  line-height: 36rpx;
+
   &:first-child {
     margin-left: 0;
   }
 }
 
-.tab-item-hr {
-  width: 48rpx;
-  height: 12rpx;
-  border-radius: 24rpx;
+.tab-item-img {
   text-align: center;
-  border: 0px;
-  margin: 15rpx auto 0rpx auto;
+  margin-top: 5rpx;
+  z-index: 999;
+  image {
+    width: 37rpx;
+    height: 14rpx;
+  }
 }
 .on {
-  font-size: 36rpx;
-  color: #fff;
+  font-size: 40rpx;
+  font-family: PingFang SC, PingFang SC-Heavy;
+  font-weight: 800;
+  text-align: left;
+  color: #303549;
+  line-height: 36rpx;
 }
 .loadingicon {
   margin-bottom: 20rpx;
