@@ -1,12 +1,12 @@
 <template>
-  <view v-if="dataList[0].portalAd[0].url" class="ad-banner-view">
+  <view class="ad-banner-view">
     <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
       <image :src="pageConfig.tagIcon" :style="[extraStyle]" />
     </view>
     <block v-for="(inItem, inIndex) in dataList" :key="inIndex">
       <swiper v-if="inItem.style == 5" class="ad-banner">
         <swiper-item
-          v-for="(item, index) in dataList"
+          v-for="(item, index) in inItem.portalAd"
           :key="index"
           @click="navigateToH5(item)"
         >

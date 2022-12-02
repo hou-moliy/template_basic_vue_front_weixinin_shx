@@ -141,14 +141,14 @@ export default {
         preview: true,
       }, // 是否展示设置按钮，默认展示
       isNewIphone: false,
-      videoDetail: null,
+      videoDetail: null, // 当前展示的video对象
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
     };
   },
   created () {
-    this.initStyle();
     this.videoDetail = this.item;
+    this.initStyle();
   },
   mounted () {
     this.dispatchPageEvent();
@@ -232,47 +232,39 @@ export default {
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
         if (res.code === 200) {
-          // opType === 1 ? this.$toast("点赞成功") : this.$toast("取消点赞成功");
           if (opType === 1) {
             this.$toast("点赞成功");
-            // 更新我的喜欢数据
-            this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail.ringId);
             // 将当前数据改了
             this.videoDetail.extraInfo.like = true;
             this.videoDetail.extraInfo.likeCount += 1;
             // 更新仓库里的数据
-            const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
-            const list = this.$store.state.spcl.videoList;
-            list[index] = this.videoDetail;
-            this.$store.commit("spcl/M_changeVideoList", list);
-            // 更新更多精彩数据
-            this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
-            // 更新视彩分类视频列表
-            this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType");
-            // 更新搜索数据
-            this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList");
+            this.updateData();
           } else {
             this.$toast("取消点赞成功");
             // 修改当前数据 更新仓库
             this.videoDetail.extraInfo.like = false;
             this.videoDetail.extraInfo.likeCount -= 1;
-            const videoIndex = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
-            const list = this.$store.state.spcl.videoList;
-            list[videoIndex] = this.videoDetail;
-            this.$store.commit("spcl/M_changeVideoList", list);
-            // 更新我的喜欢数据
-            this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail.ringId);
-            // 更新更多精彩数据
-            this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
-            // 更新视彩分类视频列表
-            this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType");
-            // 更新搜索数据
-            this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList");
+            this.updateData();
           }
         } else {
           this.$toast(res.message);
         }
       });
+    },
+    // 数据更新
+    updateData () {
+      const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
+      const list = this.$store.state.spcl.videoList;
+      list[index] = this.videoDetail;
+      this.$store.commit("spcl/M_changeVideoList", list);
+      // 更新我的喜欢数据
+      this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail.ringId);
+      // 更新更多精彩数据
+      this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
+      // 更新视彩分类视频列表
+      this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType");
+      // 更新搜索数据
+      this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList");
     },
     // 更新vux关于like
     changeStoreLike (typeVideoList, storeMutations) {

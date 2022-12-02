@@ -180,6 +180,7 @@ const actions = {
         if (res.data.code === 200) {
           commit("SET_MY_LIKE_IDS", res.data.data);
         }
+        resolve();
       });
     });
   },
