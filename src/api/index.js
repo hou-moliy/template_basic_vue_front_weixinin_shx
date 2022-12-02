@@ -53,6 +53,9 @@ axios.interceptors.response.use(response => {
         uni.removeStorageSync("phone");
         uni.removeStorageSync("userSpclData");
         uni.removeStorageSync("isAuth");
+        uni.removeStorageSync("aiStatus");
+        uni.removeStorageSync("spclStatus");
+        uni.removeStorageSync("myLikeIds");
       }
     });
   }

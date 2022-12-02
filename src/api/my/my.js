@@ -16,7 +16,7 @@ const getMyTotal = params => axios.get(baseUrl + "/spcl/getMyTotal", params);
 const getGuide = params => axios.get(baseUrl + "/guide/", params);
 const getAuthInfo = params => axios.get(weixinUrl + "/wechat/authInfo", params);
 const getWxIds = params => axios.get(`${weixinUrl}/wx/user/${appId}/login`, params);
-const getLoginLn = params => axios.post(baseUrl + "/sso/loginLn", params);
+const getLoginLn = params => axios.post(baseUrl + "/sso/login", params);
 // 请求用户认证结果
 const qryUserAuthInfo2Login = params => axios.post(baseUrl + "/SIMAuth/qryUserAuthInfo2Login", params);
 // 发送模板消息

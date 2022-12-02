@@ -23,6 +23,8 @@ const actions = {
         if (res.data.code === 200) {
           commit("SET_SPCL_STATUS", res.data.data);
           resolve(res.data.data);
+        } else {
+          reject(res.data);
         }
       });
     });

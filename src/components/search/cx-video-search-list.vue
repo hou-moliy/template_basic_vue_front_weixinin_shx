@@ -2,11 +2,7 @@
   <view>
     <!-- 竖屏 -->
     <view class="more-news-column">
-      <waterfall
-        :column-count="3"
-        :column-width="auto"
-        class="waterfall-box"
-      >
+      <waterfall :column-count="3" :column-width="auto" class="waterfall-box">
         <view class="waterfall-column waterfall-column-left">
           <view
             v-for="(item, index) in selectList"
@@ -20,12 +16,12 @@
                 @click="goToPlayVideo($event, selectList)"
               >
                 <view class="img-box-more">
-                  <!-- <view class="poster-box">
+                  <view class="poster-box">
                     <image
                       class="poster-btn"
-                      :src="`${staticImgs}/lnmp/play.png`"
-                    ></image>
-                  </view> -->
+                      :src="`${staticImgs}/shxmp/init/video-play-icon.png`"
+                    />
+                  </view>
                   <image
                     mode="aspectFill"
                     class="new-img"
@@ -33,8 +29,8 @@
                       item.coverUrl
                         ? item.coverUrl
                         : item.openVCoverUrl
-                          ? item.openVCoverUrl
-                          : item.openHCoverUrl
+                        ? item.openVCoverUrl
+                        : item.openHCoverUrl
                     "
                   />
                 </view>
@@ -82,17 +78,10 @@
                     <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
                   </view>
                 </view>
-                <view
-                  v-if="item.isBuyVideo"
-                  class="setting-btn-isBuy"
-                >
+                <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
                   已设置
                 </view>
-                <view
-                  v-else
-                  class="setting-btn"
-                  @click="purchaseVideo(item)"
-                >
+                <view v-else class="setting-btn" @click="purchaseVideo(item)">
                   设置
                 </view>
               </view>
@@ -111,12 +100,12 @@
                 @click="goToPlayVideo($event, selectList)"
               >
                 <view class="img-box-more">
-                  <!-- <view class="poster-box">
+                  <view class="poster-box">
                     <image
                       class="poster-btn"
-                      :src="`${staticImgs}/lnmp/play.png`"
-                    ></image>
-                  </view> -->
+                      :src="`${staticImgs}/shxmp/init/video-play-icon.png`"
+                    />
+                  </view>
                   <image
                     mode="aspectFill"
                     class="new-img"
@@ -124,8 +113,8 @@
                       item.coverUrl
                         ? item.coverUrl
                         : item.openVCoverUrl
-                          ? item.openVCoverUrl
-                          : item.openHCoverUrl
+                        ? item.openVCoverUrl
+                        : item.openHCoverUrl
                     "
                   />
                 </view>
@@ -173,17 +162,10 @@
                     <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
                   </view>
                 </view>
-                <view
-                  v-if="item.isBuyVideo"
-                  class="setting-btn-isBuy"
-                >
+                <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
                   已设置
                 </view>
-                <view
-                  v-else
-                  class="setting-btn"
-                  @click="purchaseVideo(item)"
-                >
+                <view v-else class="setting-btn" @click="purchaseVideo(item)">
                   设置
                 </view>
               </view>
@@ -614,13 +596,9 @@ export default {
 }
 
 .more-news-column {
-  // padding-bottom: 50rpx;
-  // column-count: 2;
-  background: #f7f8fb;
-
   .waterfall-box {
     display: flex;
-    // padding: 15rpx;
+
     padding: 0rpx 33rpx 0 32rpx;
 
     .waterfall-column-left {
@@ -628,10 +606,6 @@ export default {
     }
 
     .waterfall-column {
-      // display: flex;
-      // flex: 1;
-      // flex-direction: column;
-
       .ad-box {
         box-sizing: border-box;
         width: 334rpx;
@@ -654,10 +628,9 @@ export default {
         margin-top: 18rpx;
       }
       .more-new-item-column {
-        // margin-bottom: 20rpx;
         width: 334rpx;
         -webkit-column-break-inside: avoid;
-        // padding-bottom: 20rpx;
+
         background: #ffffff;
         border-radius: 20rpx;
         margin-bottom: 18rpx;
@@ -732,7 +705,7 @@ export default {
           .setting-btn {
             width: 114rpx;
             height: 48rpx;
-            background: linear-gradient(to right, #ff6f50 0%, #ff008c 100%);
+            background: #9e79ff;
             border-radius: 24rpx;
             font-size: 24rpx;
             font-family: PingFang SC Medium, PingFang SC Medium-Medium;

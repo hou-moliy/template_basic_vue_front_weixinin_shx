@@ -137,14 +137,14 @@
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
     <!--退出登录 -->
-    <uni-popup ref="popup_login_out" type="dialog">
+    <uni-popup ref="popup_login_out" type="dialog" :mask-click="false">
       <view class="login-out">
         <view class="login-out-sure" @click="loginOut()">退出登录</view>
         <view class="login-out-cancel" @click="cancel()">取消</view>
       </view>
     </uni-popup>
     <!-- 确认退出 -->
-    <uni-popup ref="popup_login_confirm" type="dialog">
+    <uni-popup ref="popup_login_confirm" type="dialog" :mask-click="false">
       <view class="login-out-confirm">
         <view class="login-out-confirm-qs">确认退出吗？</view>
         <view class="login-out-confirm-button">
@@ -493,9 +493,12 @@ export default {
       uni.removeStorageSync("isAuth");
       uni.removeStorageSync("openid");
       uni.removeStorageSync("unionid");
+      uni.removeStorageSync("aiStatus");
+      uni.removeStorageSync("spclStatus");
+      uni.removeStorageSync("myLikeIds");
       this.$refs.popup_login_out.close();
       const moreVideoListTemp = this.$store.state.spcl.moreVideoList;
-      moreVideoListTemp.map(item => {
+      moreVideoListTemp.forEach(item => {
         item.isBuyVideo = false;
         if (item.extraInfo.like) {
           item.extraInfo.like = false;
@@ -690,7 +693,7 @@ button::after {
     font-size: 30rpx;
     height: 90rpx;
     line-height: 90rpx;
-    color: red;
+    color: #8b6cf0;
     border-radius: 45rpx;
     border-bottom: 1rpx solid #e5e5e5;
   }
@@ -754,7 +757,7 @@ button::after {
       font-size: 30rpx;
       font-family: PingFang SC Bold;
       font-weight: 700;
-      background: linear-gradient(#ff6f50, #ff008c);
+      background: #8b6cf0;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
