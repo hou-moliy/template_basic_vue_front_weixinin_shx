@@ -391,10 +391,6 @@ export default {
       init: true,
       shareObj: {},
       isIop: false,
-      // 接口只需要changeFlag一个参数  0 为不校验40+   1为校验是否满足40+
-      iopParams: {
-        changeFlag: 0,
-      },
       orderParams: {}, // 传输到 订购组件
       windowAllList: [], // 弹窗列表
       popupInfo: {}, // 弹窗内容

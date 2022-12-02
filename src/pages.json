@@ -25,7 +25,8 @@
       "path": "pages/mine/login",
       "style": {
         "navigationBarTitleText": "登录",
-        "enablePullDownRefresh": false
+        "enablePullDownRefresh": false,
+        "navigationStyle": "custom"
       }
     }
   ],

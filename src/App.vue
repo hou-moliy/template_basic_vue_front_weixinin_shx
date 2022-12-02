@@ -19,8 +19,8 @@ export default {
 </script>
 
 <style lang="scss">
-page {
-  height: 100%;
-}
+// page {
+//   height: 100%;
+// }
 /*每个页面公共css */
 </style>

@@ -1,11 +1,11 @@
 <template>
   <view class="content">
-    <view class="login-top" :style="{ height: loginBoxHeight + 'px' }">
+    <view class="login-top" :style="{ height: loginBoxHeight + 'rpx' }">
       <view
         class="custom-tab"
         :style="{
           background: `url(${staticImgs}/shxmp/init/search-bg.png) center/cover no-repeat`,
-          height: loginBoxHeight + 'px',
+          height: loginBoxHeight + 'rpx',
         }"
       >
         <view
@@ -215,7 +215,7 @@ export default {
   },
   onLoad () {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
-    this.loginBoxHeight = this.pointobj.top + 203;
+    this.loginBoxHeight = (this.pointobj.top + 203) * 2;
     this.dispatchPageEvent();
   },
   onHide () {

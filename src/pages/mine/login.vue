@@ -1,11 +1,27 @@
 <template>
-  <view class="login-page">
+  <view
+    class="login-page"
+    :style="{
+      background: `url(${staticImgs}/shxmp/init/search-bg.png)  no-repeat`,
+    }"
+  >
+    <view
+      class="custom-tab"
+      :style="{
+        paddingTop: pointobj.top + 'px',
+        lineHeight: pointobj.height + 'px',
+      }"
+    >
+      <image
+        :src="`${staticImgs}/shxmp/init/leftIcon.png`"
+        style="width: 34rpx; height: 44rpx"
+        @click="getback"
+      />
+      <view class="custom-tab-title">登录</view>
+    </view>
     <view class="top-box">
       <view class="text-header">
-        <image
-          class="logo"
-          :src="`${staticImgs}/shxmp/init/music.png`"
-        />
+        <image class="logo" :src="`${staticImgs}/shxmp/init/music.png`" />
       </view>
 
       <view class="input-group">
@@ -22,7 +38,7 @@
               maxlength="11"
               clearable
               placeholder="请输入手机号码"
-            >
+            />
             <image
               v-if="phonenumber"
               class="phone-icon-del"
@@ -42,48 +58,33 @@
               type="text"
               clearable
               placeholder="请输入验证码"
-            >
-            <button
-              v-if="times > 0"
-              class="sended-btn"
-              size="mini"
-            >
+            />
+            <button v-if="times > 0" class="sended-btn" size="mini">
               {{ times }}s
             </button>
-            <view
-              v-else
-              class="sms-code-btn"
-              size="mini"
-              @click="sendCode"
-            >
+            <view v-else class="sms-code-btn" size="mini" @click="sendCode">
               <p>获取验证码</p>
             </view>
           </view>
         </view>
 
         <view class="check-view">
-          <view
-            class="list-checkbox-box"
-            @click="check"
-          >
+          <view class="list-checkbox-box" @click="check">
             <view
               class="list-checkbox"
               :class="ischecked ? 'list-checked' : ''"
             >
-              <text
-                v-if="ischecked"
-                class="iconfont icon-xuanzhong"
-              />
+              <text v-if="ischecked" class="iconfont icon-xuanzhong" />
             </view>
           </view>
           <view class="check-view-conten-text">
             我已阅读并同意
             <view
               style="
-               color: #7f77f5;
-              text-decoration: underline;
-              display: inline-block;
-             "
+                color: #7f77f5;
+                text-decoration: underline;
+                display: inline-block;
+              "
               @click="navigateToPolicy"
             >
               《用户注册协议》
@@ -106,29 +107,21 @@
     <view class="bottom-box">
       <view class="wx-login-box">
         <view class="tips-line" />
-        <text class="tips-tips1">
-          其他方式登录
-        </text>
-        <view
-          class="tips-line"
-          style="margin-left: 15rpx"
-        />
+        <text class="tips-tips1">其他方式登录</text>
+        <view class="tips-line" style="margin-left: 15rpx" />
       </view>
       <!-- 微信登录 -->
-      <button
-        v-if="!ischecked"
-        class="wx-login"
-        @click="noIschecked"
-      >
+      <view v-if="!ischecked" class="wx-login" @click="noIschecked">
         <image
           class="wx-login-img"
           :src="`${staticImgs}/shxmp/init/weixin-icon.png`"
         />
-      </button>
+      </view>
       <button
         v-else
         open-type="getPhoneNumber"
         class="wx-login"
+        @click="clickWxLogin"
         @getphonenumber="wxLogin($event, 'wx')"
       >
         <image
@@ -136,22 +129,14 @@
           :src="`${staticImgs}/shxmp/init/weixin-icon.png`"
         />
       </button>
-      <text class="wx-text">
-        微信授权一键登录
-      </text>
+      <text class="wx-text">微信授权一键登录</text>
     </view>
     <!-- toast弹窗 -->
-    <view
-      v-show="maskTxtShow"
-      class="maskTxt"
-    >
+    <view v-show="maskTxtShow" class="maskTxt">
       {{ maskTxts }}
     </view>
     <!-- 遮罩 -->
-    <view
-      v-show="maskShow"
-      class="mask"
-    />
+    <view v-show="maskShow" class="mask" />
   </view>
 </template>
 
@@ -163,6 +148,7 @@ import {
   rsaEncryption,
   rsaDecryption,
 } from "@/utils/rsa.js";
+import { log } from "../../utils/QS-SharePoster/app";
 export default {
   name: "LoginPage",
   data () {
@@ -190,15 +176,20 @@ export default {
       isShowWx: false, // 是否显示微信方式登录
       isShowYjdl: false, // 是否显示一键登录方式登录
       clickFlag: false,
+      pointobj: {},
 
     };
   },
-
+  onLoad () {
+    this.pointobj = uni.getMenuButtonBoundingClientRect();
+  },
   onShow () {
     this.wxLoginGetCode();
   },
   methods: {
-
+    getback () {
+      uni.navigateBack({ delta: 1 });
+    },
     // 跳转用户注册协议
     navigateToPolicy () {
       // console.log(1111)
@@ -422,8 +413,6 @@ export default {
       this.bindWxUser();
       // 获取用户铃音库数据
       this.$store.dispatch("spcl/getUserAllVideoList");
-      // 查询用户是否开启ai换铃
-      // this.checkPortalUser()
       // 返回上一级
       uni.navigateBack({ delta: 1 });
       uni.setStorageSync("loadClData", true);
@@ -448,7 +437,6 @@ export default {
         this.$toast("请勾选协议后登录");
         return;
       }
-
       const param = {
         code: this.wxCode,
       };
@@ -461,7 +449,6 @@ export default {
         this.$toast("取消手机号授权，登录失败");
         return;
       }
-
       const res2 = await loginService.getWxIds(param);
       console.log(res2);
       if (res2.data.code === 200) {
@@ -530,275 +517,278 @@ export default {
 
 <style lang="scss" scoped>
 page {
-height: 100%;
+  height: 100%;
+}
+.custom-tab {
+  display: flex;
+  align-items: center;
+  padding: 44rpx 4% 0 4%;
+  .custom-tab-title {
+    flex: 1;
+    text-align: center;
+  }
+}
+uni-page-body,
+uni-page-refresh {
+  height: 100%;
+}
+// .login-page {
+//   display: flex;
+//   justify-content: space-between;
+//   flex-direction: column;
+//   min-height: 100%;
+// }
+.top-box {
+  width: 100%;
+
+  .input-group {
+    width: 83%;
+    margin: 124rpx auto 36rpx auto;
+
+    input {
+      width: 60%;
+      font-size: 28rpx;
+      height: 60upx;
+    }
+  }
 }
 
-  uni-page-body,
-  uni-page-refresh {
-    height: 100%;
-  }
+.bottom-box {
+  position: fixed;
+  bottom: 79rpx;
+  width: 100%;
+  text-align: center;
 
-  .top-box {
-    width: 100%;
-
-    .input-group {
-      width: 83%;
-      margin: 124rpx auto 36rpx auto;
-
-      input {
-        width: 60%;
-        font-size: 28rpx;
-        height: 60upx;
-      }
+  .wx-login-box {
+    .tips-line {
+      display: inline-block;
+      width: 108rpx;
+      height: 2rpx;
+      background: #d6d6d6;
+      // margin-left: 149rpx;
+      vertical-align: middle;
     }
 
-    .login-page {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: column;
-      min-height: 100%;
-    }
-  }
-
-  .bottom-box {
-    position: fixed;
-    bottom: 79rpx;
-    width: 100%;
-    text-align: center;
-
-    .wx-login-box {
-      .tips-line {
-        display: inline-block;
-        width: 108rpx;
-        height: 2rpx;
-        background: #d6d6d6;
-        // margin-left: 149rpx;
-        vertical-align: middle;
-      }
-
-      .tips-tips1 {
-        // vertical-align: middle;
-        margin-left: 15rpx;
-        display: inline-block;
-        height: 23rpx;
-        font-size: 28rpx;
-        font-family: PingFang SC Regular, PingFang SC Regular-Regular;
-        font-weight: 400;
-        text-align: center;
-        color: #c5c5c5;
-        line-height: 36rpx;
-        letter-spacing: 1rpx;
-      }
-    }
-
-    .wx-login {
-      margin-top: 40rpx;
-      margin-bottom: 20rpx;
-      width: 100%;
-
-      .wx-login-img {
-        width: 100rpx;
-        height: 100rpx;
-        vertical-align: middle;
-      }
-
-    }
-
-    .wx-text {
+    .tips-tips1 {
+      // vertical-align: middle;
+      margin-left: 15rpx;
+      display: inline-block;
+      height: 23rpx;
       font-size: 28rpx;
       font-family: PingFang SC Regular, PingFang SC Regular-Regular;
-      color: #2e3346;
-
-    }
-
-  }
-
-  button::after {
-    border: none;
-  }
-
-  .sms_login {
-    margin-top: 80rpx;
-
-    .login-btn {
-      width: 628rpx;
-      height: 98rpx;
-      border-radius: 49rpx;
-      font-size: 36rpx;
-      font-family: PingFang SC Medium, PingFang SC Medium-Medium;
-      font-weight: bold;
+      font-weight: 400;
       text-align: center;
-      color: #ffffff;
-      line-height: 98rpx;
-      background: #d2d2d2;
-
-      &.active {
-        background: linear-gradient(to right, #9e79ff 0%, #e180e5 65%);
-        box-shadow: 0rpx 9rpx 10rpx 0rpx rgba(255, 111, 80, 0.28);
-      }
+      color: #c5c5c5;
+      line-height: 36rpx;
+      letter-spacing: 1rpx;
     }
   }
 
-  .sms-code-input {
-    display: inline-block;
+  .wx-login {
+    margin-top: 40rpx;
+    margin-bottom: 20rpx;
+    width: 100%;
+    background-color: #fff;
+
+    .wx-login-img {
+      width: 100rpx;
+      height: 100rpx;
+      vertical-align: middle;
+    }
   }
 
-  .sended-btn {
-    position: absolute;
-    right: 0;
-    top: 16rpx;
-    display: inline-block;
-    width: 150rpx;
-    height: 53rpx;
-    background: #f2f2f2;
-    border-radius: 4rpx;
-    text-align: center;
-    line-height: 49rpx;
-    font-size: 30rpx;
+  .wx-text {
+    font-size: 28rpx;
+    font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+    color: #2e3346;
+  }
+}
+
+button::after {
+  border: none;
+}
+
+.sms_login {
+  margin-top: 80rpx;
+
+  .login-btn {
+    width: 628rpx;
+    height: 98rpx;
+    border-radius: 49rpx;
+    font-size: 36rpx;
     font-family: PingFang SC Medium, PingFang SC Medium-Medium;
-    font-weight: 500;
-    color: #666666;
-    border-radius: 26px;
-  }
-
-  .sms-code-btn {
-    position: absolute;
-    right: 0;
-    top: 14rpx;
-    display: inline-block;
-    width: 161rpx;
-    margin-left: 40rpx;
-    border-radius: 14rpx;
-    background: #6b61f5;
-    height: 54rpx;
-    font-size: 24rpx;
-    font-family: PingFangSC, PingFangSC-Regular;
-    font-weight: 400;
+    font-weight: bold;
     text-align: center;
-    line-height: 54rpx;
+    color: #ffffff;
+    line-height: 98rpx;
+    background: #d2d2d2;
 
-    p {
-      width: 100%;
-      color: #fff;
+    &.active {
+      background: linear-gradient(to right, #9e79ff 0%, #e180e5 65%);
+      box-shadow: 0rpx 9rpx 10rpx 0rpx rgba(255, 111, 80, 0.28);
     }
   }
+}
 
-  .m-input {
-    padding: 10upx;
+.sms-code-input {
+  display: inline-block;
+}
+
+.sended-btn {
+  position: absolute;
+  right: 0;
+  top: 16rpx;
+  display: inline-block;
+  width: 150rpx;
+  height: 53rpx;
+  background: #f2f2f2;
+  border-radius: 4rpx;
+  text-align: center;
+  line-height: 49rpx;
+  font-size: 30rpx;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-weight: 500;
+  color: #666666;
+  border-radius: 26px;
+}
+
+.sms-code-btn {
+  position: absolute;
+  right: 0;
+  top: 14rpx;
+  display: inline-block;
+  width: 161rpx;
+  margin-left: 40rpx;
+  border-radius: 14rpx;
+  background: #6b61f5;
+  height: 54rpx;
+  font-size: 24rpx;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 400;
+  text-align: center;
+  line-height: 54rpx;
+
+  p {
+    width: 100%;
+    color: #fff;
+  }
+}
+
+.m-input {
+  padding: 10upx;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.input-row {
+  margin-bottom: 10upx;
+  position: relative;
+  margin-top: 20rpx;
+  border-bottom: 2rpx solid rgba(198, 197, 200, 0.5);
+
+  .lock-icon {
     display: inline-block;
+    width: 35rpx;
+    height: 33rpx;
     vertical-align: middle;
   }
 
-  .input-row {
-    margin-bottom: 10upx;
-    position: relative;
-    margin-top: 20rpx;
-    border-bottom: 2rpx solid rgba(198, 197, 200, 0.5);
-
-    .lock-icon {
-      display: inline-block;
-      width: 35rpx;
-      height: 33rpx;
-      vertical-align: middle;
-    }
-
-    .phone-icon {
-      vertical-align: middle;
-      display: inline-block;
-      width: 35rpx;
-      height: 36rpx;
-    }
-
-    .phone-icon-del {
-      position: absolute;
-      width: 36rpx;
-      height: 36rpx;
-      top: 24rpx;
-      right: 7rpx;
-    }
-  }
-
-  .text-header {
-    padding-top: 114rpx;
-    // margin-left: 264rpx;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    .logo {
-      width: 179rpx;
-      height: 230rpx;
-      // margin-bottom: 40rpx;
-    }
-  }
-
-  .mask {
-    position: fixed;
-    background: rgba(0, 0, 0, 0.5);
-    // opacity: 0.5;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1001;
-  }
-
-  .maskTxt {
-    position: fixed;
-    background: black;
-    opacity: 0.7;
-    z-index: 1002;
-    color: white;
-    top: 45%;
-    left: 20%;
-    width: 60%;
-    height: 70rpx;
-    text-align: center;
-    line-height: 70rpx;
-    font-size: 28rpx;
-    border-radius: 70rpx;
-  }
-
-  .check-view {
-    display: flex;
-    margin: 43rpx auto 0rpx 0rpx;
-  }
-
-  .iconfont {
-    font-size: 30rpx;
-    color: #6b61f5;
-  }
-
-  .list-checkbox-box {
-    flex-shrink: 0;
-    padding-left: 0rpx;
-  }
-
-  .list-checkbox {
-    background-color: #fff;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 30rpx;
-    width: 30rpx;
-    height: 30rpx;
-    border: 1rpx solid #a6a6a6;
-    box-sizing: border-box;
-    margin-right: 10rpx;
-    margin-top: 2rpx;
-  }
-
-  .list-checked {
-    border: none;
-    width: 30rpx;
-    height: 30rpx;
-  }
-
-  .check-view-conten-text {
+  .phone-icon {
+    vertical-align: middle;
     display: inline-block;
-    font-size: 24rpx;
-    font-family: PingFang SC Medium, PingFang SC Medium-Medium;
-    font-weight: 500;
-    color: #333333;
+    width: 35rpx;
+    height: 36rpx;
   }
+
+  .phone-icon-del {
+    position: absolute;
+    width: 36rpx;
+    height: 36rpx;
+    top: 24rpx;
+    right: 7rpx;
+  }
+}
+
+.text-header {
+  padding-top: 155rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .logo {
+    width: 179rpx;
+    height: 230rpx;
+    // margin-bottom: 40rpx;
+  }
+}
+
+.mask {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.5);
+  // opacity: 0.5;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+}
+
+.maskTxt {
+  position: fixed;
+  background: black;
+  opacity: 0.7;
+  z-index: 1002;
+  color: white;
+  top: 45%;
+  left: 20%;
+  width: 60%;
+  height: 70rpx;
+  text-align: center;
+  line-height: 70rpx;
+  font-size: 28rpx;
+  border-radius: 70rpx;
+}
+
+.check-view {
+  display: flex;
+  margin: 43rpx auto 0rpx 0rpx;
+}
+
+.iconfont {
+  font-size: 30rpx;
+  color: #6b61f5;
+}
+
+.list-checkbox-box {
+  flex-shrink: 0;
+  padding-left: 0rpx;
+}
+
+.list-checkbox {
+  background-color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30rpx;
+  width: 30rpx;
+  height: 30rpx;
+  border: 1rpx solid #a6a6a6;
+  box-sizing: border-box;
+  margin-right: 10rpx;
+  margin-top: 2rpx;
+}
+
+.list-checked {
+  border: none;
+  width: 30rpx;
+  height: 30rpx;
+}
+
+.check-view-conten-text {
+  display: inline-block;
+  font-size: 24rpx;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-weight: 500;
+  color: #333333;
+}
 </style>
