@@ -57,8 +57,8 @@ const navigateToAny = (item, callback) => {
 };
 //  处理外部跳转
 const handleExternalLink = async (item, callback) => {
-  const tempEventUrl = item.eventUrl;
-  // tempEventUrl = await freeLoginFun(item.eventUrl);
+  let tempEventUrl = item.eventUrl;
+  tempEventUrl = await freeLoginFun(item.eventUrl);
   console.log(tempEventUrl, "tempEventUrl");
   uni.setStorageSync("H5Data", tempEventUrl);
   uni.hideLoading();
@@ -102,19 +102,20 @@ const handleFaXianPage = (item, callback) => {
   // 判断当前页面所在位置：
   // eslint-disable-next-line no-undef
   const currentPages = getCurrentPages();
+  console.log(currentPages);
   if (currentPages.length > 0) {
     const currentRouter = currentPages[currentPages.length - 1].route;
-    if (currentRouter.indexOf("liaoNingFind/views/index") > -1) {
+    if (currentRouter.indexOf("cl/index") > -1) {
       uni.hideLoading();
       uni.$emit("changeTabByMore", item.eventUrl);
       return;
     }
   }
-  // 判断下当前页面地址，是否为fxPageName
-  uni.setStorageSync("fxPageName", item.eventUrl);
+  // 判断下当前页面地址，是否为homePageName
+  uni.setStorageSync("homePageName", item.eventUrl);
   uni.hideLoading();
   uni.switchTab({
-    url: "/pages/liaoNingFind/views/index",
+    url: "/pages/cl/index",
   });
 };
 

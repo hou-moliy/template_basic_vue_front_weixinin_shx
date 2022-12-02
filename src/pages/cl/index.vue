@@ -129,63 +129,25 @@ export default {
       navHeight: 0, // 手机状态栏的高度
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
-      // 埋点key
-      buryKey: {
-        recommend_page: {
-          page: "fx_tj_pv",
-          banner: "fxtj_banner_id",
-          iconList: "fxtj_icon_id",
-        }, // 发现推荐埋点
-        stream_page: {
-          page: "fx_zb_pv",
-          banner: "fxzb_banner_id",
-          iconList: "fxzb_icon_id",
-        }, // 发现_直播_埋点
-        ln_spcl_index: {
-          page: "sp_pv",
-          banner: "spcl_banner_id",
-          iconList: "spcl_icon_id",
-        }, // 发现_视频_埋点
-        ln_cl_index: {
-          page: "yp_pv",
-          banner: "ypcl_banner_id",
-          iconList: "ypcl_icon_id",
-        }, // 发现_音频_埋点
-        mgvideo_page: {
-          page: "fx_mgsp_pv",
-          banner: "fxmgsp_banner_id",
-          iconList: "fxmgsp_icon_id",
-        }, // 发现_咪咕视频_埋点
-        mgimg_page: {
-          page: "fx_mgtp_pv",
-          banner: "fxmgtp_banner_id",
-          iconList: "fxmgtp_icon_id",
-        }, // 发现_咪咕图片_埋点
-        short_video_page: {
-          page: "fx_xsp_pv",
-          banner: "fxxsp_banner_id",
-          iconList: "fxxsp_icon_id",
-        }, // 小视频
-        mgame_page: {
-          page: "fx_mgame_pv",
-          banner: "fxmgame_banner_id",
-          iconList: "fxmgame_icon_id",
-        }, // 咪咕快游
-        web_page: {
-          page: "fx_web_pv",
-          banner: "fxweb_banner_id",
-          iconList: "fxweb_icon_id",
-        }, // web
-      },
     };
   },
-  onLoad () {
+  onLoad (options) {
     this.getPageWidthHeight();
     this.$store.dispatch("spcl/getUserAllVideoList");
+    if (options.tab && options.tab === 1) {
+      this.swiperTab = 1;
+    } else if (options.tab && options.tab === 0) {
+      this.swiperTab = 0;
+    }
+    this.pageName = options.pageName;
   },
   onShow () {
     this.initData();
     this.handleFresh();
+    if (uni.getStorageSync("homePageName")) {
+      this.pageName = uni.getStorageSync("homePageName");
+      uni.removeStorageSync("homePageName");
+    }
     this.dispatchPageEvent();
   },
   onHide () {
@@ -235,9 +197,6 @@ export default {
     },
     // 跨页面通信监听
     dispatchPageEvent () {
-      uni.$on("changeTabByMore", data => {
-        this.changeTabByMore(data);
-      });
       uni.$on("changeTabByMore", data => {
         this.changeTabByMore(data);
       });
