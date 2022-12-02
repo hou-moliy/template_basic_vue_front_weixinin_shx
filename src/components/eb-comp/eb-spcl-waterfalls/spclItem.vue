@@ -67,9 +67,10 @@
           </view>
         </view>
         <!-- 标题 -->
-        <view class="morel-new-title">
+        <view class="more-new-title">
           {{ item.ringName }}
         </view>
+        <view class="white-block" />
         <!-- 操作栏样式1 -->
         <view v-if="spclStyle === 1" class="icon-box">
           <view class="icon-box-in">
@@ -199,6 +200,14 @@ export default {
 <style lang="scss" scoped>
 .video-box {
   height: 100vh;
+  background: #ffffff;
+}
+// 白色边距
+.white-block {
+  width: 100%;
+  height: 27rpx;
+  background: #fff;
+  border-radius: 0rpx 0rpx 10rpx 10rpx;
 }
 // 竖屏
 .more-new-item-column {
@@ -244,25 +253,24 @@ export default {
     }
   }
 }
-.morel-new-title {
-  height: 96rpx;
+.more-new-title {
+  height: 77rpx;
   font-size: 28rpx;
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
-  font-weight: 500;
+  font-family: PingFang SC, PingFang SC-Medium;
+  font-weight: 700;
   text-align: left;
   color: #333333;
   line-height: 36rpx;
   overflow: hidden;
-  padding: 18rpx 15rpx 27rpx;
-  box-sizing: border-box;
-  // 控制两行展示
-  text-overflow: -o-ellipsis-lastline;
-  overflow: hidden;
+  white-space: normal;
+  -webkit-line-clamp: 2;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  /*! autoprefixer: off */
   -webkit-box-orient: vertical;
+  /* autoprefixer: on */
+  word-break: break-all;
+  padding: 15rpx 12rpx 0rpx 15rpx;
 }
 .icon-box {
   display: flex;

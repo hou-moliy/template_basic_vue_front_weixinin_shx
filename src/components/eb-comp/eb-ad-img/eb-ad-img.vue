@@ -1,7 +1,7 @@
 <template>
   <view v-if="dataList[0].portalAd[0].url" class="ad-banner-view">
     <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
-      <image :src="pageConfig.tagIcon" />
+      <image :src="pageConfig.tagIcon" :style="[extraStyle]" />
     </view>
     <block v-for="(inItem, inIndex) in dataList" :key="inIndex">
       <swiper v-if="inItem.style == 5" class="ad-banner">
@@ -11,7 +11,11 @@
           @click="navigateToH5(item)"
         >
           <view class="ad-banner-box">
-            <image class="ad-banner-image" :src="item.url" />
+            <image
+              class="ad-banner-image"
+              :src="item.url"
+              :style="[extraStyle]"
+            />
           </view>
         </swiper-item>
       </swiper>
@@ -23,7 +27,11 @@
           @click="navigateToH5(contenItem)"
         >
           <view class="ad-banner-box">
-            <image class="ad-banner-image" :src="contenItem.url" />
+            <image
+              class="ad-banner-image"
+              :src="contenItem.url"
+              :style="[extraStyle]"
+            />
           </view>
         </view>
       </block>
@@ -34,6 +42,7 @@
 <script>
 import AdService from "@/api/ad/index.js";
 import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
+import { copyAttr } from "@/utils/gCopy.js";
 export default {
   props: {
     pageConfig: {
@@ -48,10 +57,15 @@ export default {
       loginCont: "您还没有登录，请先完成登录",
       login_confirm_content: "前往登录",
       dataList: [],
+      extraStyle: {
+        height: "142rpx",
+      },
     };
   },
 
   created () {
+    this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+    console.log(this.extraStyle);
     this.getAdBanner();
   },
 
@@ -98,8 +112,9 @@ export default {
 }
 
 .ad-banner-image {
-  width: 686rpx;
-  height: 142rpx;
+  // width: 686rpx;
+  // height: 142rpx;
+  width: 100%;
   border-radius: 20rpx;
 }
 </style>

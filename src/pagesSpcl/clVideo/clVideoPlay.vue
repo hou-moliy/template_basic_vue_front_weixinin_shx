@@ -28,13 +28,14 @@
       :vertical="true"
       :current="index"
       :disable-touch="false"
+      @change="swiperChange"
     >
       <swiper-item
-        v-for="item in videoList"
+        v-for="(item, innerIndex) in videoList"
         :key="item.ringId"
         class="swiper-item"
       >
-        <full-screen-video :item="item" />
+        <full-screen-video v-if="index === innerIndex" :item="item" />
       </swiper-item>
     </swiper>
     <!-- 新手引导步骤一 -->
@@ -95,6 +96,7 @@
 
 <script>
 import videoService from "@/api/cx/video.js";
+import SpclService from "@/api/spcl/index.js";
 import Util, { formatCount } from "@/utils/tools.js";
 import { videoInfoUpdate } from "@/utils/video";
 export default {
@@ -105,21 +107,11 @@ export default {
       height: "",
       index: 0, // 当前展示的video的index
       playCount: 2, // 剩余多少视频加载视频列表
-      videoList: [],
+      videoList: [], // 展示的video数组
       pageNum: 1,
       pageSize: 6,
       id: "",
-      popTit: "温馨提示",
-      loginCont: "您还没有登录，请先完成登录",
-      panelShow: false,
-      pagesFlag: true,
-      currentList: "",
       autoLoadData: false,
-      userClLibraryData: [],
-      purchaseIndexIsShow: false,
-      purchaseVideoMes: {},
-      btnType: "",
-      isClickLike: false,
       labelId: -1,
       totalNum: 0,
       onLoadId: -1,
@@ -135,7 +127,7 @@ export default {
         share: true,
         preview: true,
       }, // 是否展示设置按钮，默认展示
-      shareObj: {},
+      shareObj: {}, // 分享参数
       shareFlag: false,
       shareId: "",
       navMarginHeight: 0, // 自定义导航栏外边距
@@ -226,7 +218,7 @@ export default {
     const that = this;
     // 获取点赞列表
     if (uni.getStorageSync("Authorization")) {
-      const res = await videoService.getUserLikesList({ behaviorType: "dz" });
+      const res = await SpclService.getBehaviorIdList({ behaviorType: "dz" });
       if (res.data.code === 200) {
         this.userLikeVideoList = res.data.data;
       }
@@ -289,6 +281,9 @@ export default {
   },
   methods: {
     formatCount,
+    swiperChange (event) {
+      this.index = event.detail.current;
+    },
     // 新手引导下一步
     nextStep () {
       this.$analysis.dispatch("spcl_dgcl_jx");

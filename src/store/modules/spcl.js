@@ -1,16 +1,17 @@
-import videoService from "@/api/cx/video.js";
-import spclService from "@/api/spcl/index.js";
+import VideoService from "@/api/cx/video.js";
+import SpclService from "@/api/spcl/index.js";
 // import Vue from "vue";
 import videoTools from "@/utils/video.js";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据
   searchList: [], // 搜索结果列表
-  videoList: [],
+  videoList: [], // 播放页面暂存列表
   VedioListTalNum: 0, // 更多视彩列表总数
   vedioLabelId: -1, // 更多精彩标签id
   moreVideoList: [],
   videoListFromCxVideoType: [],
   myLikeVideoList: [],
+  myLikeIds: uni.getStorageSync("myLikeIds") || [], // 我的喜欢id数组
 };
 
 const mutations = {
@@ -101,6 +102,22 @@ const mutations = {
     tempList = JSON.parse(JSON.stringify(tempList));
     state.myLikeVideoList = tempList;
   },
+  // 我的喜欢id数组
+  SET_MY_LIKE_IDS (state, likeIds) {
+    state.myLikeIds = likeIds;
+    uni.setStorageSync("myLikeIds", likeIds);
+  },
+  // 更新我的喜欢id数组
+  UPDATE_MY_LIKE_IDS (state, ringId) {
+    const myLikeIds = [...state.myLikeIds];
+    const index = myLikeIds.findIndex(e => e === ringId);
+    if (index !== -1) { // 删除
+      myLikeIds.splice(index, 1);
+    } else { // 新增
+      myLikeIds.push(ringId);
+    }
+    this.commit("spcl/SET_MY_LIKE_IDS", myLikeIds);
+  },
 };
 
 const actions = {
@@ -117,18 +134,19 @@ const actions = {
   handleSpclUserOperate ({ commit }, { ringId, target, opType, mainId, pageName }) {
     return new Promise((resolve) => {
       // 记录
-      videoService.getSpclUserBehavior({ ringId, target, opType, mainId, pageName }).then((res) => resolve(res.data));
+      VideoService.getSpclUserBehavior({ ringId, target, opType, mainId, pageName }).then((res) => resolve(res.data));
     });
   },
   // 获取用户所有铃音数据
   getUserAllVideoList ({ dispatch }) {
     if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
-      spclService.getsplykInfo().then(response => {
+      SpclService.getsplykInfo().then(response => {
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
         } else {
           // Vue.prototype.$toast("数据请求失败，请退出重试～");
+          reject(response.data.data);
         }
       });
     });
@@ -137,7 +155,7 @@ const actions = {
   getUserCurVideoList ({ commit }, response) {
     if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
-      spclService
+      SpclService
         .getsplykCurrentInfo()
         .then(res => {
           if (res.data.code === 200) {
@@ -152,6 +170,17 @@ const actions = {
         .catch((err) => {
           reject(err);
         });
+    });
+  },
+  // 获取用户我的喜欢中的铃音 ,id数组
+  getMyLikeVideoIdList ({ commit }) {
+    if (!uni.getStorageSync("Authorization")) return;
+    return new Promise((resolve, reject) => {
+      SpclService.getBehaviorIdList({ behaviorType: "dz" }).then(res => {
+        if (res.data.code === 200) {
+          commit("SET_MY_LIKE_IDS", res.data.data);
+        }
+      });
     });
   },
 };

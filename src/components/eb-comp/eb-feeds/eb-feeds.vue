@@ -46,7 +46,7 @@
           </view>
         </view>
         <!-- 一行两个 -->
-        <view v-else-if="inItem.style == 2">
+        <template v-else-if="inItem.style == 2">
           <view class="ad-structure-1-2">
             <view
               v-for="(contenItem, contentIndex) in inItem.portalAd"
@@ -73,7 +73,7 @@
               </view>
             </view>
           </view>
-        </view>
+        </template>
         <!-- 一行三个 -->
         <view v-else-if="inItem.style == 3" style="width: 100%">
           <view class="ad-structure-1-3">
@@ -85,7 +85,6 @@
               <view v-if="contentIndex < 3" :style="[contenItem.extraStyle]">
                 <view
                   class="ad-structure-1-3-item"
-                  :class="{ 'is-margin': contentIndex % 3 === 1 }"
                   :style="{
                     backgroundImage: `url(${contenItem.url})`,
                     borderRadius: [contenItem.extraStyle.borderRadius],
@@ -267,6 +266,7 @@ export default {
   }
   .ad-more-data-box {
     padding: 0 33rpx 0 32rpx;
+    box-sizing: border-box;
   }
 
   &-1-1 {
@@ -320,9 +320,9 @@ export default {
   }
 
   &-1-2 {
+    width: 100%;
     display: flex;
-    justify-content: center;
-    margin-left: 18rpx;
+    justify-content: space-between;
     margin-bottom: 20rpx;
 
     &:last-child {
@@ -338,14 +338,14 @@ export default {
     }
 
     &-item:nth-child(1) {
-      padding-right: 18rpx;
+      // padding-right: 18rpx;
     }
 
     &-item {
-      width: 340rpx;
+      width: 335rpx;
 
       &-img-box {
-        width: 340rpx;
+        width: 335rpx;
         height: 140rpx;
         border-radius: 20rpx;
         position: relative;
@@ -402,7 +402,7 @@ export default {
 
   &-1-3 {
     display: flex;
-    justify-content: left;
+    justify-content: space-between;
     width: 100%;
     // margin: 0 23rpx;
 
@@ -542,5 +542,6 @@ export default {
 .ad-structure-type {
   display: flex;
   justify-content: center;
+  box-sizing: border-box;
 }
 </style>

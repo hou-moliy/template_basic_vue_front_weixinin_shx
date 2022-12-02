@@ -106,9 +106,9 @@ export default {
     },
     handleTips ({ opType }) {
       if (opType === 1) {
-        this.$tips("点赞成功");
+        this.$toast("点赞成功");
       } else if (opType === 0) {
-        this.$tips("取消点赞成功");
+        this.$toast("取消点赞成功");
       }
       this.getWfList();
     },
@@ -142,7 +142,7 @@ export default {
         if (res.code === 200) {
           this.handleTips(params);
         } else {
-          this.$tips(res.message);
+          this.$toast(res.message);
         }
       });
     },
@@ -156,8 +156,9 @@ export default {
 
 <style lang="scss" scoped>
 .scenery-wrap {
-  width: 100%;
+  // width: 100%;
   background-color: #fff;
+  padding: 0 17px;
 }
 
 .items-box {

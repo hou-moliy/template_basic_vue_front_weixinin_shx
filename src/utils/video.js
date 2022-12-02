@@ -64,11 +64,12 @@ const handleSetPcl = (ringItem, setCallBack = () => { }) => {
       Vue.prototype.$toast(res.data.message);
       store.commit("window/SET_OPERITION_SHOW", true);
     }
+    uni.hideLoading();
   });
 };
 // 确定订购视频彩铃按钮点击
 const confirmOrderSpcl = ({ event, ringItem, setCallBack }) => {
-  Vue.prototype.$loading("设置中");
+  Vue.prototype.$loading("设置中", true, 0);
   if (event.protocolCheckFlag) { // 勾选了AI换铃
     handleOpenAi().then(() => {
       handleSetPcl(ringItem, setCallBack);

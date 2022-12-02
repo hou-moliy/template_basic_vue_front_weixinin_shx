@@ -7,6 +7,14 @@
         {{ pageConfig.title }}
       </text>
     </view>
+    <!-- 加载中 -->
+    <uni-load-more
+      v-if="!wfList.length"
+      class="loadingicon"
+      icon-size="20"
+      icon-type="circle"
+      status="loading"
+    />
     <waterfall
       v-if="wfList.length"
       :column-count="3"
@@ -127,10 +135,10 @@ export default {
       wfList: [],
       wfParams: {
         pageNum: 1,
-        pageSize: 2,
+        pageSize: 10,
       },
       total: 0, // 瀑布流总数据
-      isLoadStatus: "more",
+      isLoadStatus: "loading",
       extraStyle: { // 默认样式
         backgroundColor: "transparent",
       },
@@ -149,7 +157,13 @@ export default {
     // 强制刷新
     handleFresh () {
       console.log("刷新啦，eb-spcl-waterfalls");
-      this.getWfList();
+      const olaNum = this.wfParams.pageNum;
+      this.wfParams.pageSize = olaNum * this.wfParams.pageSize;
+      this.wfParams.pageNum = 1;
+      this.getWfList().then(() => {
+        this.wfParams.pageSize = 10;
+        this.wfParams.pageNum = olaNum;
+      });
     },
     // 滚动触底
     onScrollBottom () {
@@ -160,6 +174,7 @@ export default {
         console.log("没数据了");
         return;
       }
+      this.isLoadStatus = "loading";
       this.wfParams.pageNum++;
       this.getWfList(false);
     },
@@ -168,24 +183,28 @@ export default {
       const wfParams = this.wfParams;
       wfParams.ac = this.activityId;
       wfParams.level = this.pageConfig.sort;
-      SpclService.getVideoByActivityIdPage(wfParams).then(({
-        data: res,
-      }) => {
-        if (res.code === 200) {
-          let { list, total } = res.data;
-          if (!total && !list.length) return;
-          this.total = total;
-          const len = list.length;
-          list = videoInfoUpdate(list);
-          if (flag) {
-            this.wfList.splice(0, len, ...list);
-          } else {
+      return new Promise((resolve, reject) => {
+        SpclService.getVideoByActivityIdPage(wfParams).then(({
+          data: res,
+        }) => {
+          if (res.code === 200) {
+            let { list, total } = res.data;
+            if (!total && !list.length) return;
+            this.total = total;
             const oldLen = this.wfList.length;
-            this.wfList.splice(oldLen, 0, ...list);
+            list = videoInfoUpdate(list);
+            if (flag) {
+              this.wfList = [...list];
+            } else {
+              this.wfList.splice(oldLen, 0, ...list);
+            }
+            this.isLoadStatus =
+              this.wfList.length >= total ? "nomore" : "more";
+            resolve();
+          } else {
+            reject(res);
           }
-          this.isLoadStatus =
-            this.wfList.length >= total ? "nomore" : "more";
-        }
+        });
       });
     },
     openLoginPopup () {
@@ -223,6 +242,8 @@ export default {
             item.extraInfo.likeCount += 1;
           }
           item.extraInfo.like = !flag;
+          // 更新我的喜欢数据
+          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringId);
           this.$set(this.wfList, index, item);
         } else {
           this.$toast(res.message);

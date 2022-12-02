@@ -235,11 +235,8 @@ export default {
           // opType === 1 ? this.$toast("点赞成功") : this.$toast("取消点赞成功");
           if (opType === 1) {
             this.$toast("点赞成功");
-            // 更新我的喜欢列表
-            uni.$emit("changeMyLikeList", {
-              dz: true,
-              videoMsg: this.videoDetail,
-            });
+            // 更新我的喜欢数据
+            this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail.ringId);
             // 将当前数据改了
             this.videoDetail.extraInfo.like = true;
             this.videoDetail.extraInfo.likeCount += 1;
@@ -263,17 +260,8 @@ export default {
             const list = this.$store.state.spcl.videoList;
             list[videoIndex] = this.videoDetail;
             this.$store.commit("spcl/M_changeVideoList", list);
-            // 更新我的喜欢列表
-            const myLikeVideoListTemp = this.$store.state.spcl.myLikeVideoList;
-            const myLikeIndex = myLikeVideoListTemp.indexOf(this.videoDetail.ringId);
-            if (myLikeIndex >= 0) {
-              myLikeVideoListTemp[myLikeIndex] = "";
-              this.$store.commit("spcl/getMyLikeVideoList", myLikeVideoListTemp);
-              uni.$emit("changeMyLikeList", {
-                dz: false,
-                videoid: this.videoDetail.ringId,
-              });
-            };
+            // 更新我的喜欢数据
+            this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail.ringId);
             // 更新更多精彩数据
             this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
             // 更新视彩分类视频列表
