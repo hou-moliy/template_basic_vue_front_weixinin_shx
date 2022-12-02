@@ -200,6 +200,7 @@ export default {
 <style lang="scss" scoped>
 .video-box {
   height: 100vh;
+  background: #ffffff;
 }
 // 白色边距
 .white-block {

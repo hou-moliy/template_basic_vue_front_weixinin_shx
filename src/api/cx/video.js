@@ -23,7 +23,6 @@ const setUpSpcl = (params) => axios.post(baseUrl + "/spcl/setUpSpcl", params);//
 const getRecentlyList = (params) => axios.get(baseUrl + "/spcl/userDetailsWithPage", params);// 最近播放
 const deleteRecentlyList = (params) => axios.post(baseUrl + "/spcl/batchDelete", params);// 删除
 const getBehaviorList = (params) => axios.get(baseUrl + "/spcl/userDetailsWithPage", params);// 获取用户行为列表
-const getUserLikesList = (params) => axios.get(baseUrl + "/spcl/userOperateIdInfo", params);// 获取用户点赞列表
 const getVideosDetail = (params) => axios.post(baseUrl + "/spcl/videosDetail", params);// 获取视频详细信息
 const getSceneryListById = (params) => axios.get(baseUrl + "/spcl/label/getByLabelIdWithPage", params);// 获取发现首页风景组件的列表
 const getIopList = (params) => axios.get(baseUrl + "/labelAbility/querySpcl", params);// 获取发现首页风景组件的列表
@@ -49,7 +48,6 @@ export default {
   getRecentlyList,
   deleteRecentlyList,
   getBehaviorList,
-  getUserLikesList,
   getVideosDetail,
   getSceneryListById,
   getSpclAiStatus,

@@ -104,6 +104,7 @@ export default {
   },
   onShow () {
     this.init();
+    this.handleFresh();
   },
   // 下拉到底部
   onReachBottom () {
@@ -114,6 +115,12 @@ export default {
     }
   },
   methods: {
+    // 刷新组件信息
+    handleFresh () {
+      if (this.$refs.EbConfigContainerAsync) {
+        this.$refs.EbConfigContainerAsync.handleFresh();
+      }
+    },
     // 获取页面配置信息
     getPageConfig () {
       TemplateService.getPageConfigByPageName({

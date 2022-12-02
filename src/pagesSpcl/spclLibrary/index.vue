@@ -445,6 +445,8 @@ export default {
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
         if (res.code === 200) {
+          // 更新我的喜欢数据
+          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringId);
           this.handleUpdateLike(flag);
         } else {
           this.$toast(res.message);

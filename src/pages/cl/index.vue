@@ -225,6 +225,7 @@ export default {
       this.getTabList();
       this.$store.dispatch("user/getUserSpclStatus");
       this.$store.dispatch("user/getUserAiStatus");
+      this.$store.dispatch("spcl/getMyLikeVideoIdList");
     },
     // 刷新组件信息
     handleFresh () {

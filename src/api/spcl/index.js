@@ -15,7 +15,8 @@ const openAi = (params) => axios.get(baseUrl + "/mock/spcl_ai_aiFunction", param
 const spclStatus = (params) => axios.get(baseUrl + "/mock/spcl_status", params); // 查询视频彩铃开通状态
 const aiStatus = (params) => axios.get(baseUrl + "/mock/spcl_ai_status", params); // 查询AI换铃开通状态
 const setSpcl = (params) => axios.post(baseUrl + "/spcl/setUpSpcl", params); // 设置视频彩铃（不在个人铃音库）
-
+const getBehaviorIdList = (params) => axios.get(baseUrl + "/spcl/userOperateIdInfo", params);// 获取用户行为列表:dz,fx,sc,bf (id数组)
+const getBehaviorList = (params) => axios.get(baseUrl + "/spcl/userDetailsWithPage", params);// 获取用户行为列表:dz,fx,sc,bf (item数组)
 export default {
   getsplykInfo,
   getsplykCurrentInfo,
@@ -31,4 +32,6 @@ export default {
   spclStatus,
   aiStatus,
   setSpcl,
+  getBehaviorIdList,
+  getBehaviorList,
 };
