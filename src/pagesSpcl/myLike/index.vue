@@ -126,13 +126,17 @@ export default {
       isLoadStatus: "loading",
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
-      loadShow: false, // 是否展示load
+      loadShow: true, // 是否展示load
     };
+  },
+  onLoad () {
+    this.getWfList();
   },
   onShow () {
     this.dispatchPageEvent();
-    this.handleFresh();
-    this.$store.dispatch("spcl/getMyLikeVideoIdList");
+    this.$store.dispatch("spcl/getMyLikeVideoIdList").then(res => {
+      this.updateData();
+    });
   },
   onHide () {
     this.offMonitor();
@@ -151,17 +155,6 @@ export default {
   },
   methods: {
     programaAnalysis,
-    // 强制刷新
-    handleFresh () {
-      console.log("刷新啦");
-      const olaNum = this.wfParams.pageNum;
-      this.wfParams.pageSize = olaNum * this.wfParams.pageSize;
-      this.wfParams.pageNum = 1;
-      this.getWfList().then(() => {
-        this.wfParams.pageSize = 10;
-        this.wfParams.pageNum = olaNum;
-      });
-    },
     // 跨页面通信监听
     dispatchPageEvent () {
       uni.$on("openLoginPopup", data => {
@@ -188,37 +181,32 @@ export default {
     getWfList (flag = true) { // flag，true表示刷新或首次加载,false表示加载更多
       this.loadShow = true;
       const wfParams = this.wfParams;
-      return new Promise((resolve, reject) => {
-        SpclService.getBehaviorList(wfParams).then(({
-          data: res,
-        }) => {
-          if (res.code === 200) {
-            let { records, total } = res.data;
-            if (!total && !records.length) {
-              this.loadShow = false;
-            }
-            this.total = total;
-            const oldLen = this.wfList.length;
-            records = videoInfoUpdate(records);
-            if (flag) {
-              this.wfList = [...records];
-            } else {
-              this.wfList.splice(oldLen, 0, ...records);
-            }
-            this.isLoadStatus =
-              this.wfList.length >= total ? "nomore" : "more";
-            resolve();
-          } else {
-            reject(res);
+      SpclService.getBehaviorList(wfParams).then(({
+        data: res,
+      }) => {
+        if (res.code === 200) {
+          let { records, total } = res.data;
+          if (!total && !records.length) {
+            this.loadShow = false;
           }
-        });
+          this.total = total;
+          const oldLen = this.wfList.length;
+          records = videoInfoUpdate(records);
+          if (flag) {
+            this.wfList = [...records];
+          } else {
+            this.wfList.splice(oldLen, 0, ...records);
+          }
+          this.isLoadStatus =
+            this.wfList.length >= total ? "nomore" : "more";
+        }
       });
     },
     // 更新页面数据
     updateData () {
       const likeIds = this.$store.state.spcl.myLikeIds;
-      this.wfList = this.wfList.filter(wf => likeIds.find(id => id === wf.ringId));
-      this.loadShow = this.wfList.length;
+      const list = this.wfList.filter(wf => likeIds.find(id => id === wf.ringId));
+      this.wfList = [...list];
     },
     // 展示登录弹窗
     openLoginPopup () {

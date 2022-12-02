@@ -31,8 +31,8 @@
           @click="goToPlayVideo(item)"
         >
           <image :src="item.openHCoverUrl || item.openVCoverUrl" />
-          <view class="morel-new-title">
-            <view class="morel-new-titleText">
+          <view class="more-new-title">
+            <view class="more-new-titleText">
               {{ item.ringName }}
             </view>
           </view>
@@ -147,7 +147,8 @@ export default {
 
 <style scoped lang="scss">
 .spcl-swiper-box {
-  padding-bottom: 40rpx;
+  // padding-bottom: 40rpx;
+  margin-bottom: 40rpx;
 }
 
 .equites-item {
@@ -162,7 +163,7 @@ export default {
   }
 }
 
-.morel-new-title {
+.more-new-title {
   width: 100%;
   height: 116rpx;
   font-size: 32rpx;
@@ -177,10 +178,9 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   border-radius: 20rpx;
-  // padding: 15rpx 12rpx 20rpx 21rpx;
   position: absolute;
   bottom: 0rpx;
-  .morel-new-titleText {
+  .more-new-titleText {
     width: 344rpx;
     position: absolute;
     bottom: 20rpx;
@@ -194,7 +194,6 @@ export default {
 .spcl-swiper {
   width: 750rpx;
   height: 950rpx;
-  // padding: 20rpx 0 20rpx 0;
 }
 
 // 指示点样式

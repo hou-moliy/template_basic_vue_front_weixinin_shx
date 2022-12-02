@@ -1,12 +1,15 @@
 <template>
-  <view v-if="dataList[0].portalAd[0].url" class="ad-banner-view">
+  <view
+    v-if="dataList[0] && dataList[0].portalAd[0].url"
+    class="ad-banner-view"
+  >
     <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
       <image :src="pageConfig.tagIcon" :style="[extraStyle]" />
     </view>
     <block v-for="(inItem, inIndex) in dataList" :key="inIndex">
       <swiper v-if="inItem.style == 5" class="ad-banner">
         <swiper-item
-          v-for="(item, index) in dataList"
+          v-for="(item, index) in inItem.portalAd"
           :key="index"
           @click="navigateToH5(item)"
         >
@@ -93,7 +96,9 @@ export default {
 
 <style lang="scss" scoped>
 .ad-banner-view {
-  padding: 30rpx 0;
+  padding: 0rpx 34rpx;
+  box-sizing: border-box;
+  margin-bottom: 40rpx;
 }
 .more-topic-top-img {
   text-align: center;

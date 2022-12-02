@@ -135,12 +135,6 @@ export default {
       type: Object,
       default: () => { },
     },
-    isLogin: {
-      type: Boolean,
-      default () {
-        return false;
-      },
-    },
     lastFlag: {
       type: Boolean,
       default: false,

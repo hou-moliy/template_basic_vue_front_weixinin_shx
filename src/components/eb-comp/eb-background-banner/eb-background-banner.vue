@@ -4,7 +4,7 @@
       <view :class="compTop ? `ad-banner-swiper-top` : `ad-banner-swiper`">
         <swiper
           class="ad-swiper"
-          autoplay="true"
+          autoplay="false"
           interval="3000"
           duration="500"
           :circular="true"
@@ -16,7 +16,14 @@
             style="border-radius: 20rpx"
             @click="navigateToH5(item)"
           >
-            <image class="ad-banner-image" :src="item.url" />
+            <image
+              class="ad-banner-image"
+              :src="item.url"
+              :style="{
+                bottom: compTop && item.headerBgUrl ? '30rpx' : '0rpx',
+                height: compTop && item.headerBgUrl ? '280rpx' : '100%',
+              }"
+            />
             <!-- 只有当是头部组件时才展示 -->
             <image
               v-if="compTop && item.headerBgUrl"
@@ -142,7 +149,7 @@ export default {
 
 .ad-banner-bg-image {
   width: 100%;
-  height: 463rpx;
+  height: 420rpx;
   display: flex;
 }
 </style>
