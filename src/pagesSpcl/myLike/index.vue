@@ -253,6 +253,8 @@ export default {
     },
     // 跳转视频彩铃播放页面
     goToPlayVideo (item) {
+      uni.setStorageSync("isFromMyLike", true);
+      this.$store.commit("spcl/getVedioListTalNum", this.total);
       this.$store.commit("spcl/M_changeVideoList", this.wfList);
       uni.navigateTo({
         url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,

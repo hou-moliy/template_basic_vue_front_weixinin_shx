@@ -1,15 +1,17 @@
 <template>
-  <view class="eb-icon start">
-    <view
-      v-for="(item, index) in iconList"
-      :key="index"
-      class="eb-icon-item"
-      @click="navigateByEvent(item)"
-    >
-      <image :src="item.url" />
-      <!-- icon限制n位文字 -->
-      <view>
-        <text>{{ item.title ? item.title.slice(0, wordLimit) : "" }}</text>
+  <view>
+    <view class="eb-icon start">
+      <view
+        v-for="(item, index) in iconList"
+        :key="index"
+        class="eb-icon-item"
+        @click="navigateByEvent(item)"
+      >
+        <image :src="item.url" />
+        <!-- icon限制n位文字 -->
+        <view>
+          <text>{{ item.title ? item.title.slice(0, wordLimit) : "" }}</text>
+        </view>
       </view>
     </view>
   </view>

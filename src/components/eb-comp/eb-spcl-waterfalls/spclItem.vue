@@ -2,7 +2,7 @@
   <view :class="['image-item', !lastFlag ? 'margin-style' : '']">
     <view class="video-box-new more-new-item-column">
       <!-- 封面 -->
-      <view @click.stop="goToPlayVideo(item)">
+      <view :data-topic="'moreVideo'" @click.stop="goToPlayVideo(item, $event)">
         <!-- 封面 -->
         <view class="img-box-more">
           <view class="poster-box">
@@ -184,8 +184,8 @@ export default {
       }
     },
     // 跳转视频彩铃播放页面
-    goToPlayVideo (item) {
-      this.$emit("goToPlayVideo", item);
+    goToPlayVideo (item, e) {
+      this.$emit("goToPlayVideo", item, e.currentTarget.dataset.topic);
     },
   },
 };
@@ -195,6 +195,20 @@ export default {
 .video-box {
   height: 100vh;
   background: #ffffff;
+}
+// 白色边距
+.white-block {
+  width: 100%;
+  height: 27rpx;
+  background: #fff;
+  border-radius: 0rpx 0rpx 10rpx 10rpx;
+}
+// 白色边距
+.white-block {
+  width: 100%;
+  height: 27rpx;
+  background: #fff;
+  border-radius: 0rpx 0rpx 10rpx 10rpx;
 }
 // 白色边距
 .white-block {

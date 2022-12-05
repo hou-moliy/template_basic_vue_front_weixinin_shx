@@ -216,12 +216,12 @@ export default {
   onLoad () {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = (this.pointobj.top + 203) * 2;
-    this.dispatchPageEvent();
   },
   onHide () {
     this.offMonitor();
   },
   onShow () {
+    this.dispatchPageEvent();
     uni.hideTabBar();
     if (uni.getStorageSync("Authorization")) {
       this.loginFlag = true;
@@ -393,7 +393,7 @@ export default {
         // 视频
         this.$store.dispatch("user/getUserSpclStatus").then(res => {
           // 已开通，订购
-          if (res.code === 200 && res.data === "1") {
+          if (res) {
             // 查询是否有数据
             if (uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[0]
               .vrbtResponse) {
@@ -574,6 +574,11 @@ page {
   // height: 446rpx;
   width: 100%;
   text-align: center;
+  .custom-tab-title {
+    font-family: PingFang SC, PingFang SC-Bold;
+    font-size: 36rpx;
+    font-weight: 700;
+  }
 }
 .sign {
   vertical-align: middle;

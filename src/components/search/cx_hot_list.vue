@@ -360,6 +360,7 @@ export default {
 
       .cx_select_hot_item {
         display: flex;
+        align-items: center;
 
         .cx_select_hot_tip {
           height: 36rpx;

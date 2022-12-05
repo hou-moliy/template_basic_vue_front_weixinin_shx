@@ -320,8 +320,17 @@ export default {
       this.$emit("purchaseVideo", e);
     },
     // 跳转视频彩铃播放页面
-    goToPlayVideo ({ item, list }) {
+    goToPlayVideo ({ item, list, pageConfigTitle }) {
       this.$store.commit("spcl/M_changeVideoList", list);
+      if (pageConfigTitle == "moreVideo") {
+        uni.setStorageSync("isPlayFromIndex", false);
+        this.$store.commit(
+          "spcl/getVedioListTalNum",
+          uni.getStorageSync("vedioListTalNum"),
+        );
+      } else {
+        uni.setStorageSync("isPlayFromIndex", true);
+      }
       uni.navigateTo({
         url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
       });
