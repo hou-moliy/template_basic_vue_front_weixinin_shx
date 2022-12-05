@@ -9,9 +9,13 @@
           @click="navigateToAny(item)"
         >
           <view class="img-box-row" :style="[extraStyle]">
-            <img :style="[extraStyle]" :src="item.url" />
+            <image :style="[extraStyle]" :src="item.url" alt="" />
           </view>
-          <view v-if="item.title" class="topic-title-row">
+          <view
+            v-if="item.title"
+            class="topic-title-row"
+            :style="{ width: extraStyle.width }"
+          >
             {{ item.title }}
           </view>
         </view>
@@ -72,21 +76,21 @@ export default {
   .eb-ad-roll-box {
     display: flex;
 
+    image {
+      vertical-align: middle;
+    }
     .eb-ad-roll-item {
-      margin-right: 20rpx;
-
       .img-box-row {
         position: relative;
       }
 
       // 标题
       .topic-title-row {
-        width: 430rpx;
-        font-size: 28rpx;
-        font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+        font-size: 30rpx;
+        font-family: PingFang SC, PingFang SC-Medium;
         font-weight: 500;
         text-align: left;
-        color: #333333;
+        color: #222;
         line-height: 36rpx;
         margin-top: 20rpx;
         overflow: hidden;
@@ -98,11 +102,16 @@ export default {
 
     .eb-ad-roll-item:nth-of-type(1) {
       padding-left: 4%;
+      box-sizing: border-box;
     }
 
     .eb-ad-roll-item:last-child {
       padding-right: 4%;
+      box-sizing: border-box;
     }
   }
+}
+.eb-ad-roll-item + .eb-ad-roll-item {
+  margin-left: 22rpx;
 }
 </style>

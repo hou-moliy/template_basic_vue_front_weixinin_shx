@@ -2,7 +2,6 @@ import * as axios from "../index.js";
 import globalData from "../../globalData.js";
 
 const baseUrl = globalData.portalUrl;
-const baseUrlTyrz = globalData.portalTyrz;
 const weixinUrl = globalData.weixinUrl;
 const appId = globalData.appId;
 
@@ -16,7 +15,7 @@ const getMyTotal = params => axios.get(baseUrl + "/spcl/getMyTotal", params);
 const getGuide = params => axios.get(baseUrl + "/guide/", params);
 const getAuthInfo = params => axios.get(weixinUrl + "/wechat/authInfo", params);
 const getWxIds = params => axios.get(`${weixinUrl}/wx/user/${appId}/login`, params);
-const getLoginLn = params => axios.post(baseUrl + "/sso/loginLn", params);
+const getLoginLn = params => axios.post(baseUrl + "/sso/login", params);
 // 请求用户认证结果
 const qryUserAuthInfo2Login = params => axios.post(baseUrl + "/SIMAuth/qryUserAuthInfo2Login", params);
 // 发送模板消息
@@ -26,7 +25,7 @@ const getAgreementDetails = params => axios.get(baseUrl + "/window/agreement/det
 // 判断是否是非号段
 const judgeTargetPhone = params => axios.post(baseUrl + "/sso/isTargetPhone", params);
 // 统一认证token
-const freeLoginAuth = params => axios.get(baseUrlTyrz + "/threelogin/hcyauth", params);
+const freeLoginAuth = params => axios.get(baseUrl + "/threelogin/hcyauth", params);
 
 // 辽友会会员信息查询
 const lyhGetUserInfo = params => axios.get(baseUrl + "/lyh/getUserInfo", params);

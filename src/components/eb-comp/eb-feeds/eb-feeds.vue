@@ -26,7 +26,7 @@
                   class="ad-structure-1-1-item"
                   :style="[contenItem.extraStyle]"
                 >
-                  <img
+                  <image
                     class="item-image"
                     :src="contenItem.url"
                     alt=""
@@ -63,10 +63,11 @@
                     class="ad-structure-1-2-item-img-box"
                     :style="[contenItem.extraStyle]"
                   >
-                    <img
+                    <image
                       class="imgs"
                       :src="contenItem.url"
                       :style="[contenItem.extraStyle]"
+                      alt=""
                     />
                   </view>
                 </view>
@@ -113,7 +114,7 @@
               class="ad-structure-4-1-item"
               :style="{ borderRadius: [extraStyle.borderRadius] }"
             >
-              <img
+              <image
                 :src="inItem.portalAd[0].url"
                 alt=""
                 :style="{ borderRadius: [extraStyle.borderRadius] }"
@@ -123,14 +124,14 @@
               class="ad-structure-4-2-item"
               :style="{ borderRadius: [extraStyle.borderRadius] }"
             >
-              <img
+              <image
                 class="imgs i-1"
                 :src="inItem.portalAd[1].url"
                 alt=""
                 :style="{ borderRadius: [extraStyle.borderRadius] }"
                 @click.stop="bannerClickEvent(inItem.portalAd[1])"
               />
-              <img
+              <image
                 class="imgs i-2"
                 :src="inItem.portalAd[2].url"
                 :style="{ borderRadius: [extraStyle.borderRadius] }"
@@ -464,7 +465,7 @@ export default {
       width: 334rpx;
       height: 302rpx;
 
-      img {
+      image {
         width: 100%;
         height: 100%;
         border-radius: 20rpx;

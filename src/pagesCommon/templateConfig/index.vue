@@ -11,7 +11,6 @@
   >
     <!-- 分享栏 -->
     <view v-if="pageBaseInfo.getChanceDesc" class="main-share">
-      <!-- <image class="main-share-image" :src="pageBaseInfo.getChanceDesc" /> -->
       <button class="btn" open-type="share">
         <image :src="pageBaseInfo.getChanceDesc" alt="" />
       </button>
@@ -68,6 +67,8 @@ export default {
     this.pageName = options.pageName;
     this.getPageConfig();
     this.getPageBaseInfo();
+    // 获取我的喜欢
+    this.$store.dispatch("spcl/getMyLikeVideoIdList");
   },
   onShow () {
     this.dispatchPageEvent();

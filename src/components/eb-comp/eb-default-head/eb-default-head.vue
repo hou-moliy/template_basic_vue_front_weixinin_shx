@@ -23,7 +23,12 @@
         :style="{ borderRadius: extraStyle.borderRadius }"
         @click="jumpTo"
       >
-        {{ pageConfig.moreTitle || "查看更多" }}
+        <text>{{ pageConfig.moreTitle || "查看更多" }}</text>
+        <image
+          class="arrow-right"
+          :src="`${staticImgs}/shxmp/init/arrow-right.png`"
+          alt=""
+        />
       </view>
     </view>
     <!-- 组件 -->
@@ -110,9 +115,9 @@ export default {
       }
 
       span {
-        font-size: 40rpx;
+        font-size: 36rpx;
         color: #000000;
-        font-weight: 600;
+        font-weight: 700;
       }
 
       image {
@@ -135,12 +140,20 @@ export default {
       font-size: 24rpx;
       font-family: PingFang SC Medium, PingFang SC Medium-Medium;
       font-weight: 500;
-      height: 51rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: 48rpx;
       color: #666666;
-      line-height: 51rpx;
-      padding: 0 28rpx 0 28rpx;
-      border: 2rpx solid #999999;
+      padding: 0 25rpx;
+      box-sizing: border-box;
+      border: 1rpx solid #dcdcdc;
     }
   }
+}
+.arrow-right {
+  width: 13rpx;
+  height: 22rpx;
+  margin-left: 13rpx;
 }
 </style>

@@ -68,7 +68,6 @@ export default {
 <style lang="scss" scoped>
 .eb-icon {
   width: 100%;
-  // padding: 58rpx auto 45rpx auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

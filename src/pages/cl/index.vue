@@ -31,12 +31,11 @@
             >
               <view class="tab-item-img">
                 <view>{{ item.name }}</view>
-                <!-- <view class="tab-item-img"> -->
                 <image
                   v-show="pageName == item.pageName"
                   :src="item.selectedIconUrl"
+                  alt=""
                 />
-                <!-- </view> -->
               </view>
             </view>
           </view>

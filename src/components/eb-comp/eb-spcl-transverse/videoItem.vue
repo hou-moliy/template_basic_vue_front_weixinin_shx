@@ -12,6 +12,11 @@
         :src="item.coverUrl || item.openVCoverUrl || item.openHCoverUrl"
         mode=""
       />
+      <!-- 播放按钮 -->
+      <image
+        class="poster-btn"
+        :src="`${staticImgs}/shxmp/init/video-play-icon.png`"
+      />
       <!-- 操作按钮 -->
       <slot name="actionIcon">
         <view
@@ -27,7 +32,7 @@
               @click.stop="shareVideo(item.ringId, 'fx')"
             >
               <image
-                :src="`${staticImgs}/lnmp/ln-find/find-share.png`"
+                :src="`${staticImgs}/shxmp/init/share-icon.png`"
                 class="share-icon icon"
               />
               <text>{{ formatCount(item.extraInfo.shareCount) }}</text>
@@ -41,7 +46,7 @@
               @click.stop="giveLikes(item.ringId, 'dz', 1)"
             >
               <image
-                :src="`${staticImgs}/lnmp/ln-find/find-like.png`"
+                :src="`${staticImgs}/shxmp/init/dz-icon.png`"
                 class="like-icon icon"
               />
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
@@ -53,7 +58,7 @@
               @click.stop="giveLikes(item.ringId, 'dz', 0)"
             >
               <image
-                :src="`${staticImgs}/lnmp/ln-find/find-liked.png`"
+                :src="`${staticImgs}/shxmp/init/dzed-icon.png`"
                 class="like-icon icon"
               />
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
@@ -85,10 +90,6 @@ export default {
     iconList: {
       type: Array,
       default: () => ["like", "share"],
-    },
-    moduleId: {
-      type: String,
-      default: "",
     },
     radius: {
       type: Number,
@@ -136,13 +137,13 @@ export default {
     height: 480rpx;
     position: relative;
 
-    .play-btn {
+    .poster-btn {
       width: 77rpx;
       height: 77rpx;
       position: absolute;
-      top: 40%;
+      top: 48%;
       left: 50%;
-      transform: translate(-50%, -40%);
+      transform: translate(-50%, -48%);
       z-index: 2;
     }
   }
@@ -171,14 +172,11 @@ export default {
 }
 
 .dark {
-  // background: rgba(0,0,0,0.7);
   background: linear-gradient(to bottom, #00000000, #000000b0);
 }
 
 .light {
   background: linear-gradient(to bottom, #00000000, #000000b0);
-
-  // background: linear-gradient(0deg, rgba(0, 0, 0, 0.45), rgba(0,0,0,0.5));
 }
 
 .video-item-title {

@@ -48,16 +48,15 @@ const handleSetPcl = (ringItem, setCallBack = () => { }) => {
   SpclService.setSpcl({ ringId: ringItem.ringId }).then(res => {
     if (res.data.code === 200) {
       if (res.data.data.code === 0) {
-        Vue.prototype.$toast("设置成功");
+        Vue.prototype.$toast("耶，设置成功");
         // 更新用户所有铃音数据
         store.commit("spcl/UPDATE_USER_SPCL_ALL", ringItem);
         // 更新当前播放数据
         store.commit("spcl/UPDATE_USER_SPCL_SETTINGS", ringItem.ringId);
-        // this.handleFresh();
         setCallBack();
         store.commit("window/SET_OPERITION_SHOW", false);
       } else {
-        Vue.prototype.$toast(res.data.data.msg);
+        Vue.prototype.$toast("设置失败，请稍后重试");
         store.commit("window/SET_OPERITION_SHOW", true);
       }
     } else {

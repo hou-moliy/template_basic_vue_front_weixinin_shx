@@ -122,10 +122,9 @@ const handleFaXianPage = (item, callback) => {
 // 免登地址处理
 const freeLoginFun = (eventUrl) => {
   let tempUrl = eventUrl;
-  // let tempUrl = "https://m.music.migu.cn/v4/mg?ch=014092P&token=ANDT$token{tyrz_token} ";
-  // https://g.migufun.com/yquayu/-$token{tyrz_token}
+  // let tempUrl = "https://m.music.migu.cn/v4/mg?ch=014092P&tokentype=ANDT&login=SSO&token=${tyrz_token}";
   return new Promise(function (resolve, reject) {
-    let tokenStr = tempUrl.match(/\$token\{.*?\}/);
+    let tokenStr = tempUrl.match(/token=(\S*)/);
     if (tokenStr) {
       if (!uni.getStorageSync("Authorization")) {
         tempUrl = tempUrl.replace(/\$token\{.*?\}/g, "");
@@ -137,23 +136,17 @@ const freeLoginFun = (eventUrl) => {
       resolve(tempUrl);
       return;
     }
-    tokenStr = tokenStr.replace(/\$token\{/, "");
+    tokenStr = tokenStr.replace(/token=(\S*)\${/, "");
     tokenStr = tokenStr.replace(/\}/, "");
     const tokenArr = tokenStr.split("_");
     if (tokenArr[0] === "tyrz") {
       SsoService
-        .tyrzAuth({
-          channel: tokenArr[1],
-        })
+        .tyrzAuth()
         .then((res) => {
           if (res.data.code === 200) {
             tempUrl = tempUrl.replace(
-              /\$token\{.*?\}/g,
-              res.data.data.artifact,
-            );
-            tempUrl = tempUrl.replace(
-              /\$account\{.*?}/g,
-              res.data.data.account,
+              /\${tyrz_token}/g,
+              res.data.data,
             );
           }
           resolve(tempUrl);

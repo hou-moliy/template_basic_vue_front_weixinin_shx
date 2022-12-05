@@ -1,6 +1,5 @@
 <template>
   <cover-view class="tab-bar" :style="{ height: tabBarHeight + 'px' }">
-    <!-- <cover-view class="tab-bar-border" /> -->
     <cover-view
       v-for="(item, index) in tabBar.list"
       :key="index"

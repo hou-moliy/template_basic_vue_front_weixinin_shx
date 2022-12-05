@@ -13,7 +13,7 @@
             <!-- 只展示观看人数，样式2 -->
             <view v-if="spclStyle === 2" class="icon-box-two">
               <image
-                :src="`${staticImgs}/shxmp/init/share-icon.png`"
+                :src="`${staticImgs}/shxmp/init/favor-icon.png`"
                 class="favor-img"
               />
               <text class="favor-text">
@@ -86,7 +86,7 @@
             <view
               v-if="item.extraInfo.like"
               class="icon-item like-item"
-              @click.stop="giveLikes(item.ringId, true)"
+              @click.stop="giveLikes(item, true)"
             >
               <image
                 :src="`${staticImgs}/shxmp/init/dzed-icon.png`"
@@ -98,7 +98,7 @@
             <view
               v-else
               class="icon-item like-item"
-              @click.stop="giveLikes(item.ringId, false)"
+              @click.stop="giveLikes(item, false)"
             >
               <image
                 :src="`${staticImgs}/shxmp/init/dz-icon.png`"
@@ -176,9 +176,10 @@ export default {
       }
     },
     // 点赞或取消点赞
-    giveLikes (ringId, flag) {
+    giveLikes (ringItem, flag) {
       if (uni.getStorageSync("Authorization")) {
-        this.$emit("giveLikes", { ringId, flag });
+        ringItem.like = !flag;
+        this.$emit("giveLikes", { ringItem, flag });
       } else {
         this.$emit("openLoginPopup");
       }

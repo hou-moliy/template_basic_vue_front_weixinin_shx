@@ -241,6 +241,8 @@ export default {
     this.updateUserInfo();
     // 获取我的更多功能
     this.getMyMore();
+    // 获取我的喜欢
+    this.$store.dispatch("spcl/getMyLikeVideoIdList");
   },
   methods: {
     // 移除监听

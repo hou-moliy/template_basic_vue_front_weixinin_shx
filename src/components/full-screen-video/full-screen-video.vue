@@ -258,7 +258,7 @@ export default {
       list[index] = this.videoDetail;
       this.$store.commit("spcl/M_changeVideoList", list);
       // 更新我的喜欢数据
-      this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail.ringId);
+      this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail);
       // 更新更多精彩数据
       this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
       // 更新视彩分类视频列表

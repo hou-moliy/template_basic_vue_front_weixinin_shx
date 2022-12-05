@@ -1,13 +1,12 @@
-function Base64() {
-
+function Base64 () {
   // private property
-  var _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+  const _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
   // public method for encoding
   this.encode = function (input) {
-    var output = "";
-    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-    var i = 0;
+    let output = "";
+    let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    let i = 0;
     input = _utf8_encode(input);
     while (i < input.length) {
       chr1 = input.charCodeAt(i++);
@@ -27,14 +26,14 @@ function Base64() {
         _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
     }
     return output;
-  }
+  };
 
   // public method for decoding
   this.decode = function (input) {
-    var output = "";
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
+    let output = "";
+    let chr1, chr2, chr3;
+    let enc1, enc2, enc3, enc4;
+    let i = 0;
     input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
     while (i < input.length) {
       enc1 = _keyStr.indexOf(input.charAt(i++));
@@ -54,14 +53,14 @@ function Base64() {
     }
     output = _utf8_decode(output);
     return output;
-  }
+  };
 
   // private method for UTF-8 encoding
   var _utf8_encode = function (string) {
     string = string.replace(/\r\n/g, "\n");
-    var utftext = "";
-    for (var n = 0; n < string.length; n++) {
-      var c = string.charCodeAt(n);
+    let utftext = "";
+    for (let n = 0; n < string.length; n++) {
+      const c = string.charCodeAt(n);
       if (c < 128) {
         utftext += String.fromCharCode(c);
       } else if ((c > 127) && (c < 2048)) {
@@ -72,19 +71,18 @@ function Base64() {
         utftext += String.fromCharCode(((c >> 6) & 63) | 128);
         utftext += String.fromCharCode((c & 63) | 128);
       }
-
     }
     return utftext;
-  }
+  };
 
   // private method for UTF-8 decoding
   var _utf8_decode = function (utftext) {
-    var string = "";
-    var i = 0;
-    var c =  0;
-    var c1 =  0;
-    var c2 =  0;
-    var c3 =  0;
+    let string = "";
+    let i = 0;
+    let c = 0;
+    const c1 = 0;
+    let c2 = 0;
+    let c3 = 0;
     while (i < utftext.length) {
       c = utftext.charCodeAt(i);
       if (c < 128) {
@@ -102,31 +100,29 @@ function Base64() {
       }
     }
     return string;
-  }
+  };
 }
 
+const base = new Base64();
 
-var base = new Base64();
-
-function encode(str){
+function encode (str) {
   return base.encode(str);
 }
-function decode(str) {
+function decode (str) {
   return base.decode(str);
 }
-function safeEncode(str) {
+function safeEncode (str) {
   return encode(str).replace(/[\+=\/]/g, function (c) {
     switch (c) {
-      case '+': return '.';
-      case '=': return '-';
-      case '/': return '_';
+      case "+": return ".";
+      case "=": return "-";
+      case "/": return "_";
     }
-  })
+  });
 }
-
 
 export {
   encode,
   decode,
-  safeEncode
-}
+  safeEncode,
+};

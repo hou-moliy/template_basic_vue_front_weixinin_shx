@@ -228,7 +228,8 @@ export default {
       });
     },
     // 点赞或取消点赞
-    likeCountChange ({ ringId, flag }) { // false 新增点赞 ，true 取消点赞
+    likeCountChange ({ ringItem, flag }) { // false 新增点赞 ，true 取消点赞
+      const { ringId } = ringItem;
       const data = {
         ringId,
         target: "dz",
@@ -236,7 +237,7 @@ export default {
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
         if (res.code === 200) {
-          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringId);
+          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);
           this.updateData();
         } else {
           this.$toast(res.message);

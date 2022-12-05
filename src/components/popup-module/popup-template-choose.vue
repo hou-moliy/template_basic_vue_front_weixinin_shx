@@ -1,9 +1,5 @@
 <template>
-  <view
-    v-if="show"
-    class="EB-popup"
-    @touchmove.stop.prevent="() => {}"
-  >
+  <view v-if="show" class="EB-popup" @touchmove.stop.prevent="() => {}">
     <view class="mask" />
     <uni-drawer
       v-if="popupInfo.windowScene == 3001"
@@ -12,26 +8,14 @@
       mode="bottom"
       :mask-click="false"
     >
-      <view
-        v-if="popupInfo.windowTitle"
-        class="popup-title"
-      >
-        {{
-          popupInfo.windowTitle
-        }}
+      <view v-if="popupInfo.windowTitle" class="popup-title">
+        {{ popupInfo.windowTitle }}
       </view>
-      <scroll-view
-        scroll-y="true"
-        class="popup-padding-scroll"
-      >
+      <scroll-view scroll-y="true" class="popup-padding-scroll">
         <view class="popup-padding-box">
-          <scroll-view
-            scroll-y="true"
-            class="popup-content"
-          >
+          <scroll-view scroll-y="true" class="popup-content">
             <view class="popup-content-box">
               <view v-html="popupDes" />
-              <!-- <image :src="popupDes" mode="widthFix"></image> -->
             </view>
           </scroll-view>
           <view class="label-box">
@@ -40,19 +24,18 @@
               :key="index"
               @click="handlerSelect(item.labelName)"
             >
-              <view :class="[
+              <view
+                :class="[
                   'label-info',
                   { 'checked-item': selectLabel.includes(item.labelName) },
-                ]">
+                ]"
+              >
                 {{ item.labelName }}
               </view>
             </view>
           </view>
           <view class="popup_button popup-button-single-box">
-            <block
-              v-for="(item, index) in popupInfo.buttons"
-              :key="item.id"
-            >
+            <block v-for="(item, index) in popupInfo.buttons" :key="item.id">
               <view
                 :class="['popup-button-single']"
                 :style="item.buttonStyle"
