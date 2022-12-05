@@ -127,10 +127,6 @@ export default {
     this.videoCtx = uni.createVideoContext(`video_${this.src}`, this);
     this.autoPlayFlag = true;
     this.trueSrc = this.src;
-    // this.videoCtx.pause();
-    // setTimeout(() => {
-    //   this.videoCtx.play();
-    // }, 150);
     if (this.videoCtx.paused || this.videoCtx.ended) {
       setTimeout(() => {
         this.videoCtx.play();

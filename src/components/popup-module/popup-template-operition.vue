@@ -4,7 +4,7 @@
     <view v-if="popupInfo.windowScene == 2001" class="popup-box">
       <!-- 头图 -->
       <view v-if="popupInfo.headImg" class="popup-img">
-        <img :src="popupInfo.headImg" alt="" mode="widthFix" />
+        <image :src="popupInfo.headImg" alt="" mode="widthFix" />
       </view>
       <view class="popup-padding-box">
         <!-- 标题 -->
@@ -212,7 +212,7 @@ export default {
         this.agreementCheckFlag = false;
         let tempPopupDes = "";
         this.smsCode = "";
-        if (newVal.windowScene == 2002) {
+        if (newVal.windowScene === 2002) {
           tempPopupDes = this.businessInfo.businessDesc;
         } else {
           tempPopupDes = newVal.windowDesc;
@@ -243,7 +243,6 @@ export default {
     },
     toPolicy (item) {
       uni.setStorageSync("windowProtocolDetail", item.windowProtocolDetail);
-      // this.$emit("closePopup", item);
       uni.navigateTo({
         url: "/pagesCommon/policy/commonPolicy",
       });
@@ -311,7 +310,6 @@ export default {
   .popup-img {
     width: 100%;
     text-align: center;
-    // padding-top: 78rpx;
 
     image {
       width: 100%;

@@ -1,6 +1,5 @@
 import VideoService from "@/api/cx/video.js";
 import SpclService from "@/api/spcl/index.js";
-// import Vue from "vue";
 import videoTools from "@/utils/video.js";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据

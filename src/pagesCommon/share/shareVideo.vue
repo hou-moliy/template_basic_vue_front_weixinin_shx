@@ -89,7 +89,6 @@ export default {
     this.initData();
   },
   async onShow () {
-    // await this.$getAuthInfo();
     if (!this.pageFirstLoad) {
       this.initData();
     }
@@ -319,7 +318,7 @@ export default {
       const coverUrl = Util.forwardingURL(url);
       const shareUrl = `${this.globalData.staticImgs}/shxmp/init/share_icon.png`;
       const playUrl = `${this.globalData.staticImgs}/shxmp/init/play.png`;
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resolve([
           // 封面图
           this.handleCoverImg(
@@ -663,9 +662,6 @@ page {
 
     button::after {
       border: none;
-    }
-
-    .btn-cancel {
     }
 
     .btn-sure {

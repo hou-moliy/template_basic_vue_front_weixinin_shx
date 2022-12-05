@@ -1,47 +1,38 @@
 <template>
-  <view
-    v-if="show"
-    class="EB-popup"
-    @touchmove.stop.prevent="() => {}"
-  >
+  <view v-if="show" class="EB-popup" @touchmove.stop.prevent="() => {}">
     <view class="mask" />
     <view class="popup-box">
       <!-- 头图 -->
-      <view
-        v-if="popupInfo.headImg"
-        class="popup-img"
-      >
-        <img
-          :src="popupInfo.headImg"
-          alt=""
-          mode="widthFix"
-        >
+      <view v-if="popupInfo.headImg" class="popup-img">
+        <image :src="popupInfo.headImg" alt="" mode="widthFix" />
       </view>
       <view class="popup-padding-box">
-        <view
-          v-if="popupInfo.windowTitle"
-          class="popup-title"
-        >
+        <view v-if="popupInfo.windowTitle" class="popup-title">
           {{ popupInfo.windowTitle }}
         </view>
-        <scroll-view
-          scroll-y="true"
-          class="popup-content"
-        >
+        <scroll-view scroll-y="true" class="popup-content">
           <rich-text :nodes="popupDes" />
         </scroll-view>
         <view
           class="popup_button"
-          :class="[popupInfo.buttons.length>1?'popup-button-multiple-box':'popup-button-single-box']"
+          :class="[
+            popupInfo.buttons.length > 1
+              ? 'popup-button-multiple-box'
+              : 'popup-button-single-box',
+          ]"
         >
-          <block
-            v-for="(item,index) in popupInfo.buttons"
-            :key="item.id"
-          >
+          <block v-for="(item, index) in popupInfo.buttons" :key="item.id">
             <view
-              :class="[popupInfo.buttons.length>1?'popup-button-multiple':'popup-button-single',item.buttonStyle.indexOf('border-color')>-1?'border-show':'border-hidden']"
+              :class="[
+                popupInfo.buttons.length > 1
+                  ? 'popup-button-multiple'
+                  : 'popup-button-single',
+                item.buttonStyle.indexOf('border-color') > -1
+                  ? 'border-show'
+                  : 'border-hidden',
+              ]"
               :style="item.buttonStyle"
-              @click="buttonClick(item,index)"
+              @click="buttonClick(item, index)"
             >
               {{ item.buttonName }}
             </view>

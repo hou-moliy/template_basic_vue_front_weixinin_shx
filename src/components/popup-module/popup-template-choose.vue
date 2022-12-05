@@ -104,7 +104,7 @@ export default {
       handler: function () {
         this.agreementCheckFlag = false;
         let tempPopupDes = "";
-        if (this.popupInfo.windowScene == 3001) {
+        if (this.popupInfo.windowScene === 3001) {
           tempPopupDes = this.popupInfo.windowDesc;
         }
         if (tempPopupDes) {
@@ -136,7 +136,6 @@ export default {
     },
     toPolicy (item) {
       uni.setStorageSync("windowProtocolDetail", item.windowProtocolDetail);
-      // this.$emit("closePopup", item);
       uni.navigateTo({
         url: "/pagesCommon/policy/commonPolicy",
       });

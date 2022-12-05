@@ -101,9 +101,9 @@ export default {
     // Ai换铃状态切换
     changeAi () {
       this.$store.dispatch("user/getUserSpclStatus").then(spclStatus => {
-        if (spclStatus == 1) { // 已开通、展示开启或关闭ai换铃声提示
+        if (spclStatus === 1) { // 已开通、展示开启或关闭ai换铃声提示
           this.$store.dispatch("user/getUserAiStatus").then(isAIOpen => {
-            const type = isAIOpen == 1 ? 1 : 2; // type 1是取消,2是开启
+            const type = isAIOpen === 1 ? 1 : 2; // type 1是取消,2是开启
             const notifyInfo = type === 1 ? this.$store.state.window.windowAllObj.common_ai_cancel : this.$store.state.window.windowAllObj.common_ai_open;
             uni.$emit("changeAi", {
               notifyInfo,

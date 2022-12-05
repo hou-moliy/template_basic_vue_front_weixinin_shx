@@ -244,11 +244,11 @@ export default {
         );
       });
       // 勾选管理初始化
-      for (let i = 0; i < this.videoSettingList.length; i++) {
-        this.videoSettingList[i].checked = false;
+      for (const item of this.videoSettingList) {
+        item.checked = false;
       }
-      for (let i = 0; i < this.allVideoList.length; i++) {
-        this.allVideoList[i].checked = false;
+      for (const item of this.allVideoList) {
+        item.checked = false;
       }
       this.updateVideoList(flag);
     },

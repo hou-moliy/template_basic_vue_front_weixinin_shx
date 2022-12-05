@@ -7,7 +7,7 @@ function Base64 () {
     let output = "";
     let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
     let i = 0;
-    input = _utf8_encode(input);
+    input = utf8Encode(input);
     while (i < input.length) {
       chr1 = input.charCodeAt(i++);
       chr2 = input.charCodeAt(i++);
@@ -44,19 +44,19 @@ function Base64 () {
       chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
       chr3 = ((enc3 & 3) << 6) | enc4;
       output = output + String.fromCharCode(chr1);
-      if (enc3 != 64) {
+      if (enc3 !== 64) {
         output = output + String.fromCharCode(chr2);
       }
-      if (enc4 != 64) {
+      if (enc4 !== 64) {
         output = output + String.fromCharCode(chr3);
       }
     }
-    output = _utf8_decode(output);
+    output = utf8Decode(output);
     return output;
   };
 
   // private method for UTF-8 encoding
-  var _utf8_encode = function (string) {
+  const utf8Encode = function (string) {
     string = string.replace(/\r\n/g, "\n");
     let utftext = "";
     for (let n = 0; n < string.length; n++) {
@@ -76,11 +76,10 @@ function Base64 () {
   };
 
   // private method for UTF-8 decoding
-  var _utf8_decode = function (utftext) {
+  const utf8Decode = function (utftext) {
     let string = "";
     let i = 0;
     let c = 0;
-    const c1 = 0;
     let c2 = 0;
     let c3 = 0;
     while (i < utftext.length) {

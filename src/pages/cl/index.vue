@@ -129,6 +129,7 @@ export default {
   },
   onLoad (options) {
     this.getPageWidthHeight();
+    this.getTabList();
     this.$store.dispatch("spcl/getUserAllVideoList");
     if (options.tab && options.tab === 1) {
       this.swiperTab = 1;
@@ -150,37 +151,17 @@ export default {
     this.offMonitor();
   },
   onShareAppMessage (res) {
-    if (res.from === "button") {
-      console.log("发现分享", res);
-      // 来自页面内分享按钮
-      const { type, shareParams } = res.target.dataset;
-      console.log("type", type);
-      if (type === "image-share") {
-        return {
-          imageUrl: shareParams.shareUrl,
-          title: "您的好友分享给您一张海报，赶快点击看看吧～",
-          path: `/pagesC/liaoNingFind/views/imageShare/image-open-shared?imgUrl=${shareParams.imgUrl}&&shareImg=${shareParams.shareUrl}&&imgId=${shareParams.imgId}&&imgTitle=${shareParams.imgTitle}&pageName=${this.pageName}&currentTab=${this.currentTab}&share=1`,
-        };
-      } else if (type === "migu-share") {
-        return {
-          imageUrl: shareParams.shareUrl,
-          title: `您的好友邀请您观看${shareParams.title}视频，赶快点击看看吧～`,
-          path: `/pagesC/liaoNingFind/views/littleVideo/littleVideo?videoId=${shareParams.videoId}&type=${shareParams.type}&share=1&pageName=${this.pageName}&currentTab=${this.currentTab}`,
-        };
-      }
-    } else {
-      // 主页分享
-      return {
-        title:
-          "您的好友邀您使用辽宁移动5G助手小程序，好听、好看、好玩快来体验吧～",
-        path: `/pages/liaoNingFind/views/index?currentTab=${this.currentTab}&pageName=${this.pageName}&share=1`,
-      };
-    }
+    // 主页分享
+    return {
+      title:
+        "您的好友邀您使用陕西小程序，好听、好看、好玩快来体验吧～",
+      path: `/pages/cl/index?currentTab=${this.currentTab}&pageName=${this.pageName}&share=1`,
+    };
   },
   methods: {
     // 页面初始化数据
     initData () {
-      this.getTabList();
+      // this.getTabList();
       this.$store.dispatch("user/getUserSpclStatus");
       this.$store.dispatch("user/getUserAiStatus");
       this.$store.dispatch("spcl/getMyLikeVideoIdList");
@@ -376,7 +357,6 @@ export default {
     scrollToLower () {
       this.$nextTick(() => {
         if (this.$refs.EbConfig) {
-          //  this.$refs.EbConfig[this.swiperTab].onScrollBottom();
           this.$refs.EbConfig[0].onScrollBottom();
         }
       });
@@ -388,7 +368,6 @@ export default {
 page {
   width: 100%;
   min-height: 100%;
-  // display: flex;
 }
 .swiper-tab {
   flex: 1;
@@ -430,6 +409,7 @@ page {
   align-items: center;
   height: 80rpx;
   box-sizing: border-box;
+  margin-left: 10rpx;
 }
 .tab-left,
 .tab-center {
@@ -439,7 +419,6 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  // border-bottom: 1rpx solid rgba(255, 255, 255, 0.2);
   white-space: nowrap;
 }
 .swiper-nav-left {

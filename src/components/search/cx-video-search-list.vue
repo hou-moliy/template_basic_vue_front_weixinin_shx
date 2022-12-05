@@ -2,11 +2,7 @@
   <view>
     <!-- 竖屏 -->
     <view class="more-news-column">
-      <waterfall
-        :column-count="3"
-        :column-width="auto"
-        class="waterfall-box"
-      >
+      <waterfall :column-count="3" :column-width="auto" class="waterfall-box">
         <view class="waterfall-column waterfall-column-left">
           <view
             v-for="(item, index) in selectList"
@@ -33,8 +29,8 @@
                       item.coverUrl
                         ? item.coverUrl
                         : item.openVCoverUrl
-                          ? item.openVCoverUrl
-                          : item.openHCoverUrl
+                        ? item.openVCoverUrl
+                        : item.openHCoverUrl
                     "
                   />
                 </view>
@@ -82,17 +78,10 @@
                     <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
                   </view>
                 </view>
-                <view
-                  v-if="item.isBuyVideo"
-                  class="setting-btn-isBuy"
-                >
+                <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
                   已设置
                 </view>
-                <view
-                  v-else
-                  class="setting-btn"
-                  @click="purchaseVideo(item)"
-                >
+                <view v-else class="setting-btn" @click="purchaseVideo(item)">
                   设置
                 </view>
               </view>
@@ -124,8 +113,8 @@
                       item.coverUrl
                         ? item.coverUrl
                         : item.openVCoverUrl
-                          ? item.openVCoverUrl
-                          : item.openHCoverUrl
+                        ? item.openVCoverUrl
+                        : item.openHCoverUrl
                     "
                   />
                 </view>
@@ -173,17 +162,10 @@
                     <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
                   </view>
                 </view>
-                <view
-                  v-if="item.isBuyVideo"
-                  class="setting-btn-isBuy"
-                >
+                <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
                   已设置
                 </view>
-                <view
-                  v-else
-                  class="setting-btn"
-                  @click="purchaseVideo(item)"
-                >
+                <view v-else class="setting-btn" @click="purchaseVideo(item)">
                   设置
                 </view>
               </view>
