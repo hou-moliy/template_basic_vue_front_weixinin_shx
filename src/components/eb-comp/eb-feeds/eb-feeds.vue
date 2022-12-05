@@ -336,10 +336,6 @@ export default {
       margin-bottom: 0rpx;
     }
 
-    &-item:nth-child(1) {
-      // padding-right: 18rpx;
-    }
-
     &-item {
       width: 335rpx;
 

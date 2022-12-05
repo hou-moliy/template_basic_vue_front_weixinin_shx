@@ -1,6 +1,4 @@
 import globalData from "../globalData.js";
-import myAPI from "@/api/my/my.js";
-import blindBoxService from "@/api/activity/blindBox.js";
 import analysisService from "@/api/analysis/analysis.js";
 let timeout;
 let prev;
@@ -49,16 +47,14 @@ const $h = {
     arg2 = parseFloat(arg2);
     let t1 = 0;
     let t2 = 0;
-    let r1;
-    let r2;
     try {
       t1 = arg1.toString().split(".")[1].length;
     } catch (e) { }
     try {
       t2 = arg2.toString().split(".")[1].length;
     } catch (e) { }
-    r1 = Number(arg1.toString().replace(".", ""));
-    r2 = Number(arg2.toString().replace(".", ""));
+    const r1 = Number(arg1.toString().replace(".", ""));
+    const r2 = Number(arg2.toString().replace(".", ""));
     const resultDiv = this.Mul(r1 / r2, Math.pow(10, t2 - t1));
     return resultDiv;
   },
@@ -68,7 +64,7 @@ const $h = {
   // 返回值：arg1加上arg2的精确结果
   Add: function (arg1, arg2) {
     arg2 = parseFloat(arg2);
-    let r1, r2, m;
+    let r1, r2;
     try {
       r1 = arg1.toString().split(".")[1].length;
     } catch (e) {
@@ -79,7 +75,7 @@ const $h = {
     } catch (e) {
       r2 = 0;
     }
-    m = Math.pow(100, Math.max(r1, r2));
+    const m = Math.pow(100, Math.max(r1, r2));
     let resultAdd = (this.Mul(arg1, m) + this.Mul(arg2, m)) / m;
     resultAdd = parseFloat(resultAdd).toFixed(2);
     return resultAdd;
@@ -91,7 +87,7 @@ const $h = {
   Sub: function (arg1, arg2) {
     arg1 = parseFloat(arg1);
     arg2 = parseFloat(arg2);
-    let r1, r2, m, n;
+    let r1, r2;
     try {
       r1 = arg1.toString().split(".")[1].length;
     } catch (e) {
@@ -102,11 +98,11 @@ const $h = {
     } catch (e) {
       r2 = 0;
     }
-    m = Math.pow(10, Math.max(r1, r2));
+    const m = Math.pow(10, Math.max(r1, r2));
     // 动态控制精度长度
     r1 = r1 < 2 ? 2 : r1;
     r2 = r2 < 2 ? 2 : r2;
-    n = r1 >= r2 ? r1 : r2;
+    const n = r1 >= r2 ? r1 : r2;
     return ((this.Mul(arg1, m) - this.Mul(arg2, m)) / m).toFixed(n);
   },
   // 乘法函数，用来得到精确的乘法结果
@@ -145,8 +141,8 @@ const formatNumber = (n) => {
 const SplitArray = function (list, sp) {
   if (typeof list !== "object") return [];
   if (sp === undefined) sp = [];
-  for (let i = 0; i < list.length; i++) {
-    sp.push(list[i]);
+  for (const i of list) {
+    sp.push(i);
   }
   return sp;
 };
@@ -193,8 +189,7 @@ const forwardingURL = function (url, otherUrl) {
     },
   ];
   const format = url.match(/(\w+):\/\/([^/:]+)(:\d*)?/g)[0];
-  const index = proxyUrl.findIndex((item) => format == item.urlKey);
-  // console.log(index, 'index');
+  const index = proxyUrl.findIndex((item) => format === item.urlKey);
   if (index > -1) {
     const _url = otherUrl
       ? otherUrl + proxyUrl[index].path
@@ -212,9 +207,9 @@ const deepClone = (obj) => {
   const newObj = Array.isArray(obj) ? [] : {};
   if (obj && typeof obj === "object") {
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
         newObj[key] =
-          obj && typeof obj[key] === "object" ? deepClone(obj[key]) : obj[key];
+          obj !== null && typeof obj[key] === "object" ? deepClone(obj[key]) : obj[key];
       }
     }
   }
@@ -283,7 +278,6 @@ const throttle = function (fn, delay) {
 
   function exec () {
     fn.apply(context, args);
-    // prev = now;
     now = null;
     prev = undefined;
   }
@@ -300,8 +294,6 @@ const throttle = function (fn, delay) {
       exec();
     } else {
       console.log("2");
-      // now = null
-      // prev = null
       timer = setTimeout(function () {
         exec();
       }, delay);
@@ -328,97 +320,6 @@ const unitChange = (size) => {
   }
 };
 
-// 跳转判定
-const navigateToAny = async function (item, callback) {
-  uni.showLoading({
-    title: "",
-    mask: true,
-  });
-  try {
-    switch (item.eventType) {
-      case 1:
-        // 1-跳转外部url
-        handleExternalLink(item, callback);
-        break;
-      case 2:
-        // 2-跳转自身小程序内地址
-        handleInternalLink(item, callback);
-        break;
-      case 4:
-        // 4-跳转外部小程序
-        handleExternalProgram(item, callback);
-        break;
-      case 5:
-        handleFaXianPage(item, callback);
-        break;
-      default:
-        uni.hideLoading();
-    }
-  } catch (error) {
-    uni.hideLoading();
-  }
-};
-
-//  处理外部跳转
-const handleExternalLink = async (item, callback) => {
-  let tempEventUrl = item.eventUrl;
-  tempEventUrl = await freeLoginFun(item.eventUrl);
-  console.log(tempEventUrl, "tempEventUrl");
-  uni.setStorageSync("ckH5Data", tempEventUrl);
-  uni.hideLoading();
-  uni.navigateTo({
-    url: "/pagesCommon/webView/ckWebview",
-  });
-};
-// 处理小程序内部地址（非发现页面）
-const handleInternalLink = () => {
-  uni.hideLoading();
-  uni.navigateTo({
-    url: item.eventUrl,
-    fail: function () {
-      uni.switchTab({
-        url: item.eventUrl,
-      });
-    },
-  });
-};
-// 处理跳转外部小程序
-const handleExternalProgram = async (item, callback) => {
-  let tempEventUrl = item.eventUrl;
-  tempEventUrl = await freeLoginFun(item.eventUrl);
-  uni.hideLoading();
-  wx.navigateToMiniProgram({
-    appId: item.outAppId || item.appId || item.appid,
-    path: tempEventUrl,
-    extraData: {},
-    envVersion: "release",
-    success (res) {
-      if (callback) {
-        callback("success");
-      }
-    },
-  });
-};
-// 处理跳转小程序发现页面
-const handleFaXianPage = (item, callback) => {
-  // 判断当前页面所在位置：
-  const currentPages = getCurrentPages();
-  if (currentPages.length > 0) {
-    const currentRouter = currentPages[currentPages.length - 1].route;
-    if (currentRouter.indexOf("liaoNingFind/views/index") > -1) {
-      uni.hideLoading();
-      uni.$emit("changeTabByMore", item.eventUrl);
-      return;
-    }
-  }
-  // 判断下当前页面地址，是否为fxPageName
-  uni.setStorageSync("fxPageName", item.eventUrl);
-  uni.hideLoading();
-  uni.switchTab({
-    url: "/pages/liaoNingFind/views/index",
-  });
-};
-
 // 渠道记录
 const postRecord = (channelId, path) => {
   // 记录第三方进入小程序来源数据统计
@@ -428,7 +329,7 @@ const postRecord = (channelId, path) => {
       pathUrl: path,
     };
     analysisService.channelRecord(params).then((res) => {
-      if (res.data.code == 200 && !res.data.data) {
+      if (res.data.code === 200 && !res.data.data) {
         uni.setStorageSync("channelSource", params);
       }
     });
@@ -495,67 +396,7 @@ const randomHash = (hashLength) => {
   }
   return hs.join("");
 };
-// 免登地址处理
-const freeLoginFun = (eventUrl) => {
-  let tempUrl = eventUrl;
-  // let tempUrl ='https://m.music.migu.cn/v4/mg?ch=014092P&token=ANDT$token{tyrz_mgculture} '
-  // https://g.migufun.com/yquayu/-$token{tyrz_mgame}
-  return new Promise(function (resolve, reject) {
-    let tokenStr = tempUrl.match(/\$token\{.*?\}/);
-    if (tokenStr) {
-      if (!uni.getStorageSync("Authorization")) {
-        tempUrl = tempUrl.replace(/\$token\{.*?\}/g, "");
-        resolve(tempUrl);
-        return;
-      }
-      tokenStr = tokenStr[0];
-    } else {
-      resolve(tempUrl);
-      return;
-    }
-    tokenStr = tokenStr.replace(/\$token\{/, "");
-    tokenStr = tokenStr.replace(/\}/, "");
-    const tokenArr = tokenStr.split("_");
-    if (tokenArr[0] == "tyrz") {
-      myAPI
-        .freeLoginAuth({
-          channel: tokenArr[1],
-        })
-        .then((res) => {
-          if (res.data.code == 200) {
-            tempUrl = tempUrl.replace(
-              /\$token\{.*?\}/g,
-              res.data.data.artifact,
-            );
-            tempUrl = tempUrl.replace(
-              /\$account\{.*?}/g,
-              res.data.data.account,
-            );
-          }
-          resolve(tempUrl);
-        })
-        .catch((err) => {
-          resolve(tempUrl);
-        });
-    } else if (tokenArr[0] == "ktx") {
-      myAPI
-        .diyLogin({
-          platId: tokenArr[1],
-        })
-        .then((res) => {
-          if (res.data.code === 200) {
-            tempUrl = tempUrl.replace(/\$token\{.*?\}/g, res.data.data);
-          }
-          resolve(tempUrl);
-        })
-        .catch((err) => {
-          resolve(tempUrl);
-        });
-    } else {
-      resolve(tempUrl);
-    }
-  });
-};
+
 const formatRichText = (html) => {
   let newContent = html.replace(/<img[^>]*>/gi, function (match, capture) {
     match = match.replace(/style="[^"]+"/gi, "").replace(/style='[^']+'/gi, "");
@@ -563,7 +404,7 @@ const formatRichText = (html) => {
     match = match.replace(/height="[^"]+"/gi, "").replace(/height='[^']+'/gi, "");
     return match;
   });
-  newContent = newContent.replace(/\<img/gi, "<img style=\"max-width:100%;height:auto;\"");
+  newContent = newContent.replace(/\/<img/gi, "<img style=\"max-width:100%;height:auto;\"");
   return newContent;
 };
 module.exports = {
@@ -578,11 +419,10 @@ module.exports = {
   sumArray,
   debounce,
   throttle,
-  navigateToAny,
   unitChange,
   postRecord,
   phoneFilter,
   randomHash,
-  freeLoginFun,
   formatRichText,
+  endWith,
 };

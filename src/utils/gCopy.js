@@ -14,14 +14,10 @@ const attrConvertor = function (bean) {
   if (!bean) {
     return null;
   }
-  switch (defaultDict[bean.attrName]) {
-    case "rpx":
-      if (/^\d+$/.test(bean.attrValue)) {
-        return bean.attrValue + "rpx";
-      }
-      return bean.attrValue;
-    default:
-      return bean.attrValue;
+  if (defaultDict[bean.attrName] === "rpx" && /^\d+$/.test(bean.attrValue)) {
+    return bean.attrValue + "rpx";
+  } else {
+    return bean.attrValue;
   }
 };
 

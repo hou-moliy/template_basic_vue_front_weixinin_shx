@@ -35,12 +35,12 @@ import popup from "./popup.js";
  * @description 弹出层组件，为了解决遮罩弹层的问题
  * @tutorial https://ext.dcloud.net.cn/plugin?id=329
  * @property {String} type = [top|center|bottom] 弹出方式
- * 	@value top 顶部弹出
- * 	@value center 中间弹出
- * 	@value bottom 底部弹出
- * 	@value message 消息提示
- * 	@value dialog 对话框
- * 	@value share 底部分享示例
+ * @value top 顶部弹出
+ * @value center 中间弹出
+ * @value bottom 底部弹出
+ * @value message 消息提示
+ * @value dialog 对话框
+ * @value share 底部分享示例
  * @property {Boolean} animation = [ture|false] 是否开启动画
  * @property {Boolean} maskClick = [ture|false] 蒙版点击是否关闭弹窗
  * @event {Function} change 打开关闭弹窗触发，e={show: false}
@@ -50,6 +50,12 @@ export default {
   name: "UniPopup",
   components: {
     uniTransition,
+  },
+  mixins: [popup],
+  provide () {
+    return {
+      popup: this,
+    };
   },
   props: {
     // 开启动画
@@ -69,31 +75,7 @@ export default {
       default: true,
     },
   },
-  provide() {
-    return {
-      popup: this,
-    };
-  },
-  mixins: [popup],
-  watch: {
-    /**
-     * 监听type类型
-     */
-    type: {
-      handler: function (newVal) {
-        this[this.config[newVal]]();
-      },
-      immediate: true,
-    },
-    /**
-     * 监听遮罩是否可点击
-     * @param {Object} val
-     */
-    maskClick(val) {
-      this.mkclick = val;
-    },
-  },
-  data() {
+  data () {
     return {
       duration: 300,
       ani: [],
@@ -117,7 +99,25 @@ export default {
       popupstyle: "top",
     };
   },
-  created() {
+  watch: {
+    /**
+     * 监听type类型
+     */
+    type: {
+      handler: function (newVal) {
+        this[this.config[newVal]]();
+      },
+      immediate: true,
+    },
+    /**
+     * 监听遮罩是否可点击
+     * @param {Object} val
+     */
+    maskClick (val) {
+      this.mkclick = val;
+    },
+  },
+  created () {
     // console.log(8)
     this.mkclick = this.maskClick;
     if (this.animation) {
@@ -127,12 +127,12 @@ export default {
     }
   },
   methods: {
-    clear(e) {
+    clear (e) {
       // TODO nvue 取消冒泡
       // console.log(666)
       e.stopPropagation();
     },
-    open() {
+    open () {
       this.showPopup = true;
       this.$nextTick(() => {
         new Promise((resolve) => {
@@ -157,7 +157,7 @@ export default {
         });
       });
     },
-    close(type) {
+    close (type) {
       uni.showTabBar();
       this.showTrans = false;
       this.$nextTick(() => {
@@ -173,14 +173,14 @@ export default {
         }, 300);
       });
     },
-    onTap() {
+    onTap () {
       if (!this.mkclick) return;
       this.close();
     },
     /**
      * 顶部弹出样式处理
      */
-    top() {
+    top () {
       this.popupstyle = "top";
       this.ani = ["slide-top"];
       this.transClass = {
@@ -192,7 +192,7 @@ export default {
     /**
      * 底部弹出样式处理
      */
-    bottom() {
+    bottom () {
       this.popupstyle = "bottom";
       this.ani = ["slide-bottom"];
       this.transClass = {
@@ -205,7 +205,7 @@ export default {
     /**
      * 中间弹出样式处理
      */
-    center() {
+    center () {
       this.popupstyle = "center";
       this.ani = ["zoom-out", "fade"];
       this.transClass = {

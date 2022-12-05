@@ -304,7 +304,6 @@ export default {
     },
     // 子组件操作AI换铃
     changeAi () {
-      // uni.$emit("changeAi", { msg: "展示Ai换铃弹窗" });
       this.$emit("changeAi");
     },
     // banner埋点

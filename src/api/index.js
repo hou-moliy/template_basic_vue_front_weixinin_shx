@@ -135,12 +135,12 @@ export function get (url, data, loading, config) {
  * @param config config信息
  * @returns {Promise}
  */
-export function post (url, data = {}, loading, config = {}) {
+export function post (url, data, loading, config = {}) {
   isloading = loading;
   return new Promise((resolve, reject) => {
     axios.post(url, data, config)
       .then(response => {
-        if (response != undefined) {
+        if (response !== undefined) {
           resolve(response);
         }
       }, err => {
@@ -159,12 +159,12 @@ export function post (url, data = {}, loading, config = {}) {
  * @param config config信息
  * @returns {Promise}
  */
-export function del (url, config = {}, loading) {
+export function del (url, config, loading) {
   isloading = loading;
   return new Promise((resolve, reject) => {
     axios.delete(url, config)
       .then(response => {
-        if (response != undefined) {
+        if (response !== undefined) {
           resolve(response);
         }
       }, err => {
@@ -181,14 +181,14 @@ export function del (url, config = {}, loading) {
  * @param config config信息
  * @returns {Promise}
  */
-export function upload (url, data = {}, loading, config = {}) {
+export function upload (url, data, loading, config = {}) {
   isloading = loading;
   if (!data) data = {};
   data.isUpload = true;
   return new Promise((resolve, reject) => {
     axios.post(url, data, config)
       .then(response => {
-        if (response != undefined) {
+        if (response !== undefined) {
           resolve(response);
         }
       }, err => {
@@ -204,7 +204,7 @@ export function upload (url, data = {}, loading, config = {}) {
  * @param loading 是否有加载效果
  * @returns {Promise}
  */
-export function download (url, data = {}, loading) {
+export function download (url, data, loading) {
   this.get(url, data, loading, {
     responseType: "blob",
   }).then(res => {
@@ -232,7 +232,6 @@ export function download (url, data = {}, loading) {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a); // 下载完成移除元素
-      // window.location.href = url
       window.URL.revokeObjectURL(url); // 只要映射存在，Blob就不能进行垃圾回收，因此一旦不再需要引用，就必须小心撤销URL，释放掉blob对象。
     }
   });
@@ -246,7 +245,7 @@ export function download (url, data = {}, loading) {
  * @param config config信息
  * @returns {Promise}
  */
-export function patch (url, data = {}, loading, config = {}) {
+export function patch (url, data, loading, config = {}) {
   isloading = loading;
   return new Promise((resolve, reject) => {
     axios.patch(url, data, config)
@@ -266,7 +265,7 @@ export function patch (url, data = {}, loading, config = {}) {
  * @param config config信息
  * @returns {Promise}
  */
-export function put (url, data = {}, loading, config = {}) {
+export function put (url, data, loading, config = {}) {
   isloading = loading;
   return new Promise((resolve, reject) => {
     axios.put(url, data, config)

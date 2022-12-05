@@ -3,7 +3,6 @@ import globalData from "../../globalData.js";
 const baseUrl = globalData.portalUrl;
 const getSpclIcon = (params) => axios.get(baseUrl + "/spcl/icon", params);// 图标
 const getSpclBanner = (params) => axios.get(baseUrl + "/ad/", params);// banner
-// const spclHotKey = (params) => axios.get(baseUrl+'/spcl/search/hot', params);//搜索
 const spclHotKey = (params) => axios.get(baseUrl + "/spcl/top/hotSearchTop", params);// 搜索 视频 热搜榜单
 const spclSearch = (params) => axios.get(baseUrl + "/spcl/search/", params);// 搜索
 const getSpclTopicListIndex = (params) => axios.get(baseUrl + "/spcl/topic/top4", params);// 专题

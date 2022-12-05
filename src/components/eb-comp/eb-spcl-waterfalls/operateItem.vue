@@ -1,9 +1,6 @@
 <template>
   <view class="recommend-wrap">
-    <image
-      :src="item.url"
-      @click="jump(item)"
-    />
+    <image :src="item.url" @click="jump(item)" />
   </view>
 </template>
 

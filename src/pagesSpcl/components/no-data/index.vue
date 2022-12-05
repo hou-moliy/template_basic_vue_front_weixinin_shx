@@ -7,25 +7,11 @@
     />
 
     <block v-if="type === 'curt'">
-      <view class="no-record-tips1">
-        您当前未设置播放
-      </view>
-      <view class="no-record-tips2">
-        赶快去设置吧~
-      </view>
-      <view
-        class="go-to-see"
-        @click="toSet"
-      >
-        去设置
-      </view>
+      <view class="no-record-tips1">您当前未设置播放</view>
+      <view class="no-record-tips2">赶快去设置吧~</view>
+      <view class="go-to-see" @click="toSet">去设置</view>
     </block>
-    <view
-      v-else
-      class="no-record-tips3"
-    >
-      您当前无闲置铃音哦~
-    </view>
+    <view v-else class="no-record-tips3">您当前无闲置铃音哦~</view>
   </view>
 </template>
 <script>

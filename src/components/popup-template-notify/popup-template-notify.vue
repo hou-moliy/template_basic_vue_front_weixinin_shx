@@ -9,7 +9,7 @@
     <view class="popup-box">
       <!-- 头图 -->
       <view v-if="popupInfo.headImg" class="popup-img">
-        <img :src="popupInfo.headImg" alt="" mode="widthFix" />
+        <image :src="popupInfo.headImg" alt="" mode="widthFix" />
       </view>
       <view class="popup-padding-box">
         <view v-if="popupInfo.windowTitle" class="popup-title">

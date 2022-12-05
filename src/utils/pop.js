@@ -19,5 +19,5 @@ export const showLoginPop = async (_this, confirmCallback = () => { }, cancelCal
   }
   showNotifyPop(_this, notifyInfo, ({ btnInfo }) => {
     navigateToAny(btnInfo, confirmCallback);
-  }, cancelCallback = () => { });
+  });
 };

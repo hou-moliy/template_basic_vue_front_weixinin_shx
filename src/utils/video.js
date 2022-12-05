@@ -8,17 +8,15 @@ const videoInfoUpdate = function (list) {
   if (
     uni.getStorageSync("Authorization") && userSpclData && userSpclData.vrbtResponse) {
     const isBuyList = userSpclData.vrbtResponse;
-    for (let i = 0; i < tempList.length; i++) {
-      const isBuy = isBuyList.filter(
-        (item) => tempList[i].ringId === item.ringId,
-      );
+    for (const item of tempList) {
+      const isBuy = isBuyList.filter(buy => item.ringId === buy.ringId);
       if (isBuy[0]) {
-        tempList[i].isBuyVideo = true;
+        item.isBuyVideo = true;
       }
     }
   } else {
-    for (let i = 0; i < tempList.length; i++) {
-      tempList[i].isBuyVideo = false;
+    for (const item of tempList) {
+      item.isBuyVideo = false;
     }
   }
   return tempList;
@@ -28,9 +26,10 @@ const videoInfoUpdate = function (list) {
 const handlePurchaseVideo = (ringItem, setCallBack = () => { }) => {
   if (uni.getStorageSync("Authorization")) {
     store.dispatch("user/getUserSpclStatus").then(res => {
-      if (res == 1) { // 已开通视频彩铃
+      if (res === 1) { // 已开通视频彩铃
         const popupInfo = { ...store.state.window.windowAllObj.common_spcl_set };
         popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+        popupInfo.windowProtocol = store.state.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
         uni.$emit("operitionShow", {
           popupInfo, btnClickCallBack: (event) => confirmOrderSpcl({ event, ringItem, setCallBack }),
         });
@@ -80,7 +79,6 @@ const confirmOrderSpcl = ({ event, ringItem, setCallBack }) => {
 // 订购弹窗按钮点击
 const operitionBtnClick = ({ event, ringItem }) => {
   if (event.btnInfo.type === 1) { // 关闭弹窗
-    // closePopup();
   } else if (event.btnInfo.type === 2) { // 订购
     handleOpenSpcl({ event, ringItem });
   }
@@ -123,9 +121,9 @@ const handleOpenAi = (type = 2) => { // type 2 开通, 1取消
 // Ai换铃状态切换
 const changeAi = () => {
   store.dispatch("user/getUserSpclStatus").then(spclStatus => {
-    if (spclStatus == 1) { // 已开通、展示开启或关闭ai换铃声提示
+    if (spclStatus === 1) { // 已开通、展示开启或关闭ai换铃声提示
       store.dispatch("user/getUserAiStatus").then(isAIOpen => {
-        const type = isAIOpen == 1 ? 1 : 2; // type 1是取消,2是开启
+        const type = isAIOpen === 1 ? 1 : 2; // type 1是取消,2是开启
         const notifyInfo = type === 1 ? store.state.window.windowAllObj.common_ai_cancel : store.state.window.windowAllObj.common_ai_open;
         uni.$emit("changeAi", {
           notifyInfo,

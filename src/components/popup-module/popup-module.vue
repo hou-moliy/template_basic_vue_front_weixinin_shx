@@ -6,7 +6,7 @@
         {{ popupInfo.windowTitle }}
       </view>
       <view v-if="src" class="popup-img">
-        <img :src="src" alt="" />
+        <image :src="src" alt="" />
       </view>
       <scroll-view scroll-y="true" class="popup-content">
         <view class="" v-html="popupInfo.windowDesc" />
@@ -52,7 +52,7 @@ export default {
   props: {
     popupInfo: {
       type: Object,
-      default: {},
+      default: () => { },
     },
     src: {
       type: String,
@@ -177,11 +177,9 @@ export default {
   text-align: center;
   padding-top: 78rpx;
 
-  // height: 100%;
-  img {
+  image {
     width: 341rpx;
     height: 226rpx;
-    // border-radius: 20rpx 20rpx 0 0;
   }
 }
 

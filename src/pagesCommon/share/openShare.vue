@@ -115,7 +115,6 @@ export default {
     }
   },
   async onShow () {
-    // await this.$getAuthInfo();
     this.getVideoDetail();
   },
   onShareAppMessage () {

@@ -9,7 +9,7 @@
     </view>
     <!-- 加载中 -->
     <uni-load-more
-      v-if="!wfList.length"
+      v-if="loading"
       class="loadingicon"
       icon-size="20"
       icon-type="circle"
@@ -134,6 +134,7 @@ export default {
       extraStyle: { // 默认样式
         backgroundColor: "transparent",
       },
+      loading: true,
     };
   },
   created () {
@@ -181,7 +182,7 @@ export default {
         }) => {
           if (res.code === 200) {
             let { list, total } = res.data;
-            if (!total && !list.length) return;
+            if (!total && !list.length) { this.loading = false; return; };
             this.total = total;
             uni.setStorageSync("vedioListTalNum", this.total);
             const oldLen = this.wfList.length;
@@ -193,8 +194,10 @@ export default {
             }
             this.isLoadStatus =
               this.wfList.length >= total ? "nomore" : "more";
+            this.loading = false;
             resolve();
           } else {
+            this.loading = false;
             reject(res);
           }
         });
