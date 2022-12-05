@@ -148,7 +148,7 @@ export default {
     // 获取主题信息
     getAiTopic () {
       aiService.getAiTopic().then(res => {
-        if (res.data.code == 200 && res.data.data) {
+        if (res.data.code === 200 && res.data.data) {
           this.aiTopicArray = res.data.data;
         }
       });
@@ -186,12 +186,10 @@ export default {
         this.popupInfo = uni.getStorageSync("windowAllObj").common_spcl_open;
       } else {
         if (!this.aiStatus) {
-          // 未开启ai功能
-          // 开通ai换铃方法
+          // 未开启ai功能,开通ai换铃方法
           this.handleOpenAi();
         } else {
-          // 已开启ai功能
-          // 弹出提示类弹窗
+          // 已开启ai功能,弹出提示类弹窗
           const notifyInfo =
             uni.getStorageSync("windowAllObj").common_ai_cancel;
           this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi(1));
@@ -217,7 +215,7 @@ export default {
               topicId: this.topicId,
             })
             .then(res => {
-              if (res.data.code == 200) {
+              if (res.data.code === 200) {
                 this.$toast("关闭成功");
                 this.aiTopicArray[this.topicIndex].isOpen = false;
               }
@@ -229,8 +227,7 @@ export default {
               topicId: item.topicId,
             })
             .then(res => {
-              if (res.data.code == 200) {
-                // this.$analysis.dispatch("aihl_zt_id", item.topicId);
+              if (res.data.code === 200) {
                 this.$toast("开启成功");
                 this.aiTopicArray[index].isOpen = true;
               }

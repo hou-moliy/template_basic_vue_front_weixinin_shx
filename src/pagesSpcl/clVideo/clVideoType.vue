@@ -316,7 +316,6 @@
               />
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
             </view>
-            <!-- @click="likeSpecialNewsVideo($event,index)" :data-videoId="item.ringId" -->
             <view
               v-else
               class="icon-item like-item"
@@ -359,7 +358,6 @@
 <script>
 import videoService from "@/api/cx/video.js";
 import Util, { formatCount } from "@/utils/tools.js";
-import inviteService from "@/api/activity/invite.js";
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue";
 import { handlePurchaseVideo, videoInfoUpdate } from "@/utils/video.js";
 
@@ -465,7 +463,7 @@ export default {
             : "noMore";
         this.specialNews = this.$store.state.spcl.videoListFromCxVideoType;
       }
-      if (this.isLoadStatus != "noMore") {
+      if (this.isLoadStatus !== "noMore") {
         this.init = false;
         this.getSpclVideoList();
       }
@@ -528,9 +526,6 @@ export default {
     // 设置成功
     ispurchaseVideo (item) {
       // 修改按钮为已设置
-      // item.isisBuyVideo=true
-
-      // const templist = this.$store.state.spcl.videoListFromCxVideoType;
       const isSet = this.specialNews.filter((i) => {
         return i.ringId === item.ringId;
       });
@@ -650,7 +645,6 @@ export default {
         // console.log(res)
         if (res.data.code === 200) {
           this.lableList = res.data.data;
-          // this.$analysis.dispatch("spfl_id", this.lableList[0].labelId);
           this.currentTab = res.data.data[this.index].labelId;
           if (vedioTypeIndex) {
             this.showDirection = res.data.data[vedioTypeIndex].showDirection;
@@ -673,7 +667,7 @@ export default {
             this.specialNews = this.$store.state.spcl.videoListFromCxVideoType;
           }
           // 获取列表
-          if (this.isLoadStatus != "noMore") {
+          if (this.isLoadStatus !== "noMore") {
             this.init = false;
             this.getSpclVideoList();
           }
@@ -685,10 +679,9 @@ export default {
       if (this.isLoad === "loading") {
         return;
       }
-      if (this.currentTab == e.currentTarget.dataset.current) {
+      if (this.currentTab === e.currentTarget.dataset.current) {
         return false;
       } else {
-        // this.$analysis.dispatch("spfl_id", e.currentTarget.dataset.current);
         this.currentTab = e.currentTarget.dataset.current;
         this.showDirection = item.showDirection;
         this.specialNews = [];

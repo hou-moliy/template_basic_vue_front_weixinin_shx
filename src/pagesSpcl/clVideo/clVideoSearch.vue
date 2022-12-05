@@ -62,10 +62,10 @@ export default {
     this.pageStatusLoadForSelect = "onLoad";
   },
   onShow () {
-    if (this.pageStatusLoad == "onHide") {
+    if (this.pageStatusLoad === "onHide") {
       this.pageStatusLoadForSelect = "onShow";
     }
-    if (this.pageStatusLoad == "onHide" && !this.hotKeyGoToPlayKey) {
+    if (this.pageStatusLoad === "onHide" && !this.hotKeyGoToPlayKey) {
       this.pageStatusLoad = "onShow";
     }
     this.pointobj = uni.getMenuButtonBoundingClientRect();

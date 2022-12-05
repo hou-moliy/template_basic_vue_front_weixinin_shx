@@ -160,7 +160,6 @@
 
 <script>
 import cxService from "@/api/cx/cx.js";
-import loginService from "@/api/my/my.js";
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.loop = true;
 export default {
@@ -222,7 +221,6 @@ export default {
     clickKey (e, item) {
       const tempArr = [];
       tempArr.push(item);
-      // this.$analysis.dispatch("fxspcl_ss_rsbd_id", `${item.id}`);
       this.$store.commit("spcl/M_changeVideoList", tempArr);
       this.$emit("clickKey");
       uni.navigateTo({
@@ -237,53 +235,8 @@ export default {
       innerAudioContext.stop();
     },
     navigateToSetting (item) {
-      this.$emit("getMusicDetail", item);
-      // console.log('item',item)
-      const that = this;
-      if (uni.getStorageSync("Authorization")) {
-        cxService.queryClStatus().then((res) => {
-          if (res.data.code == 200 && res.data.data == 1) {
-            loginService.getToken().then((resp) => {
-              if (resp.data.code == 200 && resp.data.data.length > 0) {
-                this.CxMusicBanner = resp.data.data;
-                uni.setStorageSync("token", resp.data.data);
-                if (item.isBuyMusic) {
-                  uni.showToast({
-                    title: "该音频彩铃已在您的铃音库，无需重复订购",
-                    icon: "none",
-                    duration: 2000,
-                  });
-                } else {
-                  // 获取歌曲详情后跳转订购
-                  cxService
-                    .getCxMusicDetail({
-                      ringId: item.ringId,
-                    })
-                    .then((res) => {
-                      this.$store.commit("getMusicPage", this.pageName);
-                      uni.navigateTo({
-                        url: "/pagesCommon/webView/cxClOrder?",
-                      });
-                      this.currentMusic = -1;
-                      innerAudioContext.stop();
-                      uni.setStorageSync("musicDetail", res.data.data);
-                    });
-                }
-              }
-            });
-          } else {
-            that.$emit("open", true);
-          }
-        });
-      } else {
-        // console.log('login')
-        // that.$emit("login", true)
-        that.$emit("login", true);
-      }
     },
     playMusic (i, item) {
-      // console.log("play music")
-      // console.log(this.cxMusicList[i].ringId)
       if (item) {
         this.$analysis.dispatch("fxypcl_ss_rsbd_id", `${item.id}`);
       }
@@ -292,15 +245,13 @@ export default {
         target: "bf",
         opType: 1,
       });
-      if (this.currentMusic == i) {
+      if (this.currentMusic === i) {
         innerAudioContext.play();
         this.currentMusic = i;
         this.isPauseMusic = false;
       } else {
         innerAudioContext.stop();
         innerAudioContext.src = `${this.musicHeadUrl}${this.cxMusicList[i].auditionUrl}`;
-        // console.log(111,`${this.musicHeadUrl}${this.cxMusicList[i].auditionUrl}`)
-        // innerAudioContext.src = "https://t133.ebupt.com.cn/imgs/lnmp/caijuan.mp3";
         innerAudioContext.play();
         this.currentMusic = i;
         this.isPauseMusic = false;

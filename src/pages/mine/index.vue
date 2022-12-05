@@ -176,7 +176,6 @@
 import videoService from "@/api/cx/video.js";
 import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import popupTemplateOperition from "../../components/popup-module/popup-template-operition.vue";
-import Util from "@/utils/tools.js";
 import { navigateToAny } from "@/utils/navigateToAny.js";
 import SpclService from "@/api/spcl/index";
 export default {
@@ -307,8 +306,6 @@ export default {
       } else {
         switch (this.cxMusicStatus) {
           case 0:
-            const startTime = Util.formatTimeTwo(new Date(), "Y-M-D h:m:s");
-            uni.setStorageSync("orderClLogStartTime", startTime);
             if (!uni.getStorageSync("Authorization")) {
               this.$showLoginPop(this);
             } else {
@@ -391,8 +388,7 @@ export default {
     updateUserInfo () {
       // 判断用户是否登录过
       if (uni.getStorageSync("Authorization")) {
-        // 查询是否开通数据
-        // 视频
+        // 查询是否开通数据，视频
         this.$store.dispatch("user/getUserSpclStatus").then(res => {
           // 已开通，订购
           if (res) {
@@ -402,7 +398,7 @@ export default {
               const isBuyVideoListTemp = uni.getStorageSync("userSpclData")[0].vrbtResponse.filter(
                 item => {
                   return uni.getStorageSync("userSpclData")[0].vrbtSettingRes
-                    .findIndex(v => (v == item.ringId && item.hidden != 1)) > -1;
+                    .findIndex(v => (v === item.ringId && item.hidden !== 1)) > -1;
                 });
               const isBuyVideoList = [];
               isBuyVideoListTemp.forEach(v => {
@@ -676,16 +672,6 @@ button::after {
   border-radius: 50upx;
 }
 
-.yxlogo {
-  display: inline-block;
-  width: 22%;
-  height: 50rpx;
-  margin-left: 20rpx;
-  vertical-align: middle;
-  float: right;
-  margin-top: -14%;
-}
-
 .login-out {
   position: fixed;
   bottom: 90rpx;
@@ -766,6 +752,7 @@ button::after {
       font-weight: 700;
       background: #8b6cf0;
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
   }
@@ -891,7 +878,6 @@ button::after {
         display: inline-block;
         width: 15rpx;
         height: 27rpx;
-        float: right;
       }
     }
   }
