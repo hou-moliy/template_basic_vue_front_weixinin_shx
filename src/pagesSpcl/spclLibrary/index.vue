@@ -176,20 +176,14 @@ export default {
     };
   },
   onLoad (options) {
-    console.log(uni.getStorageSync("userSpclData"), "数据数据");
-
+    // 获取我的喜欢
+    this.$store.dispatch("spcl/getMyLikeVideoIdList");
     if (options.navflag) {
       this.navFlag = options.navflag;
     }
   },
   onShow () {
-    // 获取用户的所有铃音数据
-    this.$loading("加载中...", true, 0);
-    this.$store.dispatch("spcl/getUserAllVideoList").then(() => {
-      this.initData();
-      uni.hideLoading();
-      this.loading = false;
-    });
+    this.getUserAllVideoList();
   },
   computed: {
 
@@ -223,6 +217,18 @@ export default {
         this.$loading("加载中...");
         this.getVideoListById();
       }
+    },
+    // 获取用户的所有铃音数据
+    getUserAllVideoList () {
+      this.$loading("加载中...", true, 0);
+      this.$store.dispatch("spcl/getUserAllVideoList").then(() => {
+        this.initData();
+        uni.hideLoading();
+        this.loading = false;
+      }).catch(() => {
+        this.$toast("数据请求失败，请退出重试～");
+        this.loading = false;
+      });
     },
     // 获取当前应该展示的铃音（当前播放或闲置铃音）
     getVideoListById (flag) {
@@ -437,16 +443,16 @@ export default {
       }
     },
     // 点赞
-    likeEvent (ringId, flag) { // flag true 取消点赞， false新增点赞
+    likeEvent ({ ringItem, flag }) { // flag true 取消点赞， false新增点赞
       const data = {
-        ringId,
+        ringId: ringItem.ringId,
         target: "dz",
         opType: flag ? 0 : 1,
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
         if (res.code === 200) {
           // 更新我的喜欢数据
-          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringId);
+          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);
           this.handleUpdateLike(flag);
         } else {
           this.$toast(res.message);

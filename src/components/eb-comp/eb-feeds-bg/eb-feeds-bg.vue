@@ -151,11 +151,17 @@
                           <block v-if="contentIndex == 2">
                             <view
                               class="ad-recommend-1-4-item-right-img"
+                              :style="{
+                                borderRadius: [extraStyle.borderRadius],
+                              }"
                               @click="bannerClickEvent(contenItem)"
                             >
                               <image
                                 class="ad-recommend-1-4-img"
                                 :src="contenItem.url"
+                                :style="{
+                                  borderRadius: [extraStyle.borderRadius],
+                                }"
                               />
                             </view>
                           </block>

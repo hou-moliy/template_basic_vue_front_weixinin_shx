@@ -1,9 +1,6 @@
 <template name="clSharePanel">
   <view>
-    <view
-      v-show="panelShow"
-      class="cur-ring-f"
-    >
+    <view v-show="panelShow" class="cur-ring-f">
       <view class="panel-view">
         <!-- 分享 -->
         <view
@@ -13,46 +10,34 @@
         >
           <button>
             <image :src="`${staticImgs}/shxmp/init/sp-share.png`" />
-            <view class="panel-item-text">
-              分享铃音
-            </view>
+            <view class="panel-item-text">分享铃音</view>
           </button>
         </view>
         <!-- 喜欢 -->
         <view
           v-show="pagesFlag && currentObj.extraInfo.like"
           class="panel-item panel-sc"
-          @click="likeEvent(currentObj.ringId, true)"
+          @click="likeEvent(currentObj, true)"
         >
           <image :src="`${staticImgs}/shxmp/init/sp-liked.png`" />
-          <view class="panel-item-text">
-            已添加
-          </view>
+          <view class="panel-item-text">已添加</view>
         </view>
         <view
           v-show="pagesFlag && !currentObj.extraInfo.like"
           class="panel-item panel-sc"
-          @click="likeEvent(currentObj.ringId, false)"
+          @click="likeEvent(currentObj, false)"
         >
           <image :src="`${staticImgs}/shxmp/init/sp-liked.png`" />
-          <view class="panel-item-text">
-            添加到喜欢
-          </view>
+          <view class="panel-item-text">添加到喜欢</view>
         </view>
         <!-- 设置 -->
-        <view
-          v-show="pagesFlag"
-          class="panel-item panel-st"
-        >
+        <view v-show="pagesFlag" class="panel-item panel-st">
           <view v-if="currentObj.szValue === 0">
             <image
               :src="`${staticImgs}/shxmp/init/sp-settinged.png`"
               @click="qxSzEvent(currentObj)"
             />
-            <view
-              class="panel-item-text"
-              @click="qxSzEvent(currentObj)"
-            >
+            <view class="panel-item-text" @click="qxSzEvent(currentObj)">
               取消当前设置
             </view>
           </view>
@@ -61,28 +46,17 @@
               :src="`${staticImgs}/shxmp/init/sp-settinged.png`"
               @click="szEvent(currentObj)"
             />
-            <view
-              class="panel-item-text"
-              @click="szEvent(currentObj)"
-            >
+            <view class="panel-item-text" @click="szEvent(currentObj)">
               设为视频彩铃
             </view>
           </view>
         </view>
       </view>
       <!-- 关闭弹窗 -->
-      <view
-        class="close-btn"
-        @click="hiddenPanelBtn"
-      >
-        取消
-      </view>
+      <view class="close-btn" @click="hiddenPanelBtn">取消</view>
     </view>
     <!-- 底部遮罩 -->
-    <view
-      v-show="panelShow"
-      class="mask mask-foot"
-    />
+    <view v-show="panelShow" class="mask mask-foot" />
   </view>
 </template>
 
@@ -118,8 +92,9 @@ export default {
       this.$emit("shareEvent", ringId);
     },
     // 添加或取消我喜欢
-    likeEvent (ringId, flag) {
-      this.$emit("likeEvent", ringId, flag);
+    likeEvent (ringItem, flag) {
+      ringItem.like = !flag;
+      this.$emit("likeEvent", { ringItem, flag });
     },
     // 设为视频彩铃
     szEvent (ringItem) {

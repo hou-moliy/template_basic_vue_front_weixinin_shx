@@ -108,13 +108,13 @@ const mutations = {
     uni.setStorageSync("myLikeIds", likeIds);
   },
   // 更新我的喜欢id数组
-  UPDATE_MY_LIKE_IDS (state, ringId) {
+  UPDATE_MY_LIKE_IDS (state, ringItem) {
     const myLikeIds = [...state.myLikeIds];
-    const index = myLikeIds.findIndex(e => e === ringId);
-    if (index !== -1) { // 删除
+    const index = myLikeIds.findIndex(e => e === ringItem.ringId);
+    if (index !== -1 && !ringItem.like) { // 删除
       myLikeIds.splice(index, 1);
-    } else { // 新增
-      myLikeIds.push(ringId);
+    } else if (index === -1 && ringItem.like) { // 新增
+      myLikeIds.push(ringItem.ringId);
     }
     this.commit("spcl/SET_MY_LIKE_IDS", myLikeIds);
   },
@@ -145,7 +145,7 @@ const actions = {
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
         } else {
-          // Vue.prototype.$toast("数据请求失败，请退出重试～");
+          uni.hideLoading();
           reject(response.data.data);
         }
       });

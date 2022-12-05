@@ -2,7 +2,6 @@ import * as axios from "../index.js";
 import globalData from "../../globalData.js";
 
 const baseUrl = globalData.portalUrl;
-const baseUrlTyrz = globalData.portalTyrz;
 const weixinUrl = globalData.weixinUrl;
 const appId = globalData.appId;
 
@@ -26,7 +25,7 @@ const getAgreementDetails = params => axios.get(baseUrl + "/window/agreement/det
 // 判断是否是非号段
 const judgeTargetPhone = params => axios.post(baseUrl + "/sso/isTargetPhone", params);
 // 统一认证token
-const freeLoginAuth = params => axios.get(baseUrlTyrz + "/threelogin/hcyauth", params);
+const freeLoginAuth = params => axios.get(baseUrl + "/threelogin/hcyauth", params);
 
 // 辽友会会员信息查询
 const lyhGetUserInfo = params => axios.get(baseUrl + "/lyh/getUserInfo", params);

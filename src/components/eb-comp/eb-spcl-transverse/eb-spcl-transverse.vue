@@ -4,7 +4,7 @@
       <view v-for="(item, index) in wfList" :key="index" class="item-wrap">
         <video-item
           :item="item"
-          :radius="24"
+          :radius="20"
           :module-id="params.moduleId"
           :icons-class="['light']"
           :video-list="wfList"
@@ -87,10 +87,6 @@ export default {
       if (!uni.getStorageSync("Authorization")) {
         this.$emit("openLoginPopup");
       } else {
-        // this.$store.dispatch('getCustomorderList','a')
-        // if(Boolean(this.$store.state.offlinePopup.offlineFlag)){
-        // return
-        // }
         const params = {
           ringId,
           target,
@@ -119,10 +115,6 @@ export default {
         this.$emit("openLoginPopup");
         return;
       }
-      // this.$store.dispatch("getCustomorderList", "a");
-      // if (this.$store.state.offlinePopup.offlineFlag) {
-      //   return;
-      // }
       if (this.isClickLike) {
         return;
       }

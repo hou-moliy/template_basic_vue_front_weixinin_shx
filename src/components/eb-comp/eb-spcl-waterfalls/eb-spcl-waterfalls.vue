@@ -219,7 +219,8 @@ export default {
       });
     },
     // 点赞或取消点赞
-    likeCountChange ({ ringId, flag }) { // false 新增点赞 ，true 取消点赞
+    likeCountChange ({ ringItem, flag }) { // false 新增点赞 ，true 取消点赞
+      const { ringId } = ringItem;
       const index = this.wfList.findIndex(i => i.ringId === ringId);
       const item = this.wfList[index];
       const data = {
@@ -236,7 +237,7 @@ export default {
           }
           item.extraInfo.like = !flag;
           // 更新我的喜欢数据
-          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringId);
+          this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);
           this.$set(this.wfList, index, item);
         } else {
           this.$toast(res.message);

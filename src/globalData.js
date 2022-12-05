@@ -11,3 +11,5 @@ export default globalData;
 
 // http://10.4.6.148:9501/portal
 // http://10.4.6.148:9502/weixin
+// http://10.4.7.239:9501/portal-shx
+// https://rcs.telinovo.com/eApi/portal-shx

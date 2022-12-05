@@ -369,7 +369,7 @@ const handleExternalLink = async (item, callback) => {
   uni.navigateTo({
     url: "/pagesCommon/webView/ckWebview",
   });
-}
+};
 // 处理小程序内部地址（非发现页面）
 const handleInternalLink = () => {
   uni.hideLoading();
@@ -381,7 +381,7 @@ const handleInternalLink = () => {
       });
     },
   });
-}
+};
 // 处理跳转外部小程序
 const handleExternalProgram = async (item, callback) => {
   let tempEventUrl = item.eventUrl;
@@ -396,9 +396,9 @@ const handleExternalProgram = async (item, callback) => {
       if (callback) {
         callback("success");
       }
-    }
+    },
   });
-}
+};
 // 处理跳转小程序发现页面
 const handleFaXianPage = (item, callback) => {
   // 判断当前页面所在位置：
@@ -417,8 +417,7 @@ const handleFaXianPage = (item, callback) => {
   uni.switchTab({
     url: "/pages/liaoNingFind/views/index",
   });
-}
-
+};
 
 // 渠道记录
 const postRecord = (channelId, path) => {

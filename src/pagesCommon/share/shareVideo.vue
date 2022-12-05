@@ -5,71 +5,37 @@
       backgroundImage: 'url(' + `${staticImgs}/shxmp/init/share_bg.png` + ')',
     }"
   >
-    <view
-      v-if="poster.finalPath"
-      class="poster-box y-f"
-    >
-      <image
-        :src="poster.finalPath"
-        mode="widthFix"
-        class="posterImage"
-      />
+    <view v-if="poster.finalPath" class="poster-box y-f">
+      <image :src="poster.finalPath" mode="widthFix" class="posterImage" />
       <view class="btns">
         <view class="share-mode">
           <view class="share-mode-wx">
             <button open-type="share">
               <view class="share-mode-wx-img">
-                <img :src="`${staticImgs}/shxmp/init/share_wx.png`">
+                <image :src="`${staticImgs}/shxmp/init/share_wx.png`" />
               </view>
-              <view class="share-mode-wx-title">
-                分享给微信朋友
-              </view>
+              <view class="share-mode-wx-title">分享给微信朋友</view>
             </button>
           </view>
-          <view
-            class="share-mode-wx"
-            @click="sharePyq"
-          >
+          <view class="share-mode-wx" @click="sharePyq">
             <view class="share-mode-wx-img">
-              <img :src="`${staticImgs}/shxmp/init/share_pyq.png`">
+              <image :src="`${staticImgs}/shxmp/init/share_pyq.png`" alt="" />
             </view>
-            <view class="share-mode-wx-title">
-              保存分享朋友圈
-            </view>
+            <view class="share-mode-wx-title">保存分享朋友圈</view>
           </view>
         </view>
-        <view
-          class="close-btn"
-          @click="goBack"
-        >
-          <image :src="`${staticImgs}/shxmp/init/close.png`" />
+        <view class="close-btn" @click="goBack">
+          <image :src="`${staticImgs}/shxmp/init/close.png`" alt="" />
         </view>
       </view>
       <!-- 遮罩 -->
-      <view
-        v-show="maskShow"
-        class="mask"
-      />
+      <view v-show="maskShow" class="mask" />
       <!-- toast弹窗 -->
-      <view
-        v-show="maskTxtShow"
-        class="maskTxt"
-      >
-        <view class="txt-cont">
-          分享到朋友圈需要您的授权
-        </view>
+      <view v-show="maskTxtShow" class="maskTxt">
+        <view class="txt-cont">分享到朋友圈需要您的授权</view>
         <view class="btn-cont">
-          <button
-            class="btn-cancel"
-            @click="closeSetPop"
-          >
-            取消
-          </button>
-          <button
-            class="btn-sure"
-            open-type="openSetting"
-            @click="closeSetPop"
-          >
+          <button class="btn-cancel" @click="closeSetPop">取消</button>
+          <button class="btn-sure" open-type="openSetting" @click="closeSetPop">
             前往设置
           </button>
         </view>
@@ -617,7 +583,7 @@ page {
         display: flex;
         justify-content: center;
         align-items: center;
-        img {
+        image {
           width: 100rpx;
           height: 100rpx;
         }

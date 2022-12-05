@@ -146,7 +146,6 @@ export default {
 <style lang="scss" scoped>
 .spcl-recommend {
   margin-bottom: 40rpx;
-  background: pink;
   .more-topic-top-img {
     display: flex;
     text-align: center;
