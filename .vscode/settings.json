@@ -58,5 +58,9 @@
   "codemetrics.basics.ComplexityColorExtreme": "#ff0000",
   "codemetrics.basics.ComplexityColorHigh": "#e6a23c",
   "codemetrics.basics.ComplexityColorNormal": "#4bb14f",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-sonar-ebupt-net-9999-",
+    "projectKey": "xm-shx-portal-mp"
+  },
   // 代码检查结束
 }

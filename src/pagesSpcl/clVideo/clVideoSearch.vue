@@ -1,17 +1,25 @@
 <template>
-  <view :style="{background:`url(${staticImgs}/shxmp/init/search-bg.png)  no-repeat`,height:'100%'}">
+  <view
+    :style="{
+      height: '100%',
+    }"
+  >
+    <view class="head-img-box">
+      <image :src="staticImgs + `/shxmp/init/search-bg.png`" />
+    </view>
     <view
       class="custom-tab"
-      :style="{ paddingTop: pointobj.top + 'px',lineHeight: pointobj.height+'px'}"
+      :style="{
+        paddingTop: pointobj.top + 'px',
+        lineHeight: pointobj.height + 'px',
+      }"
     >
       <image
         :src="`${staticImgs}/shxmp/init/leftIcon.png`"
-        style="width:34rpx;height:44rpx"
+        style="width: 34rpx; height: 44rpx"
         @click="getback"
       />
-      <view class="custom-tab-title">
-        视频彩铃搜索
-      </view>
+      <view class="custom-tab-title">视频彩铃搜索</view>
     </view>
     <view>
       <cxSelect
@@ -89,12 +97,28 @@ export default {
 };
 </script>
 
+<style>
+page {
+  height: 100%;
+  background-color: #f5f7f9;
+}
+</style>
+
 <style lang="scss">
-.custom-tab{
+.head-img-box {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -100;
+  image {
+    width: 100%;
+  }
+}
+.custom-tab {
   display: flex;
   align-items: center;
   padding: 44rpx 4% 0 4%;
-  .custom-tab-title{
+  .custom-tab-title {
     flex: 1;
     text-align: center;
   }

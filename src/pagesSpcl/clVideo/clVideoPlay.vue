@@ -28,7 +28,7 @@
       :vertical="true"
       :current="index"
       :disable-touch="false"
-      @change="swiperChange"
+      @change="changeCurrent"
     >
       <swiper-item
         v-for="(item, innerIndex) in videoList"
@@ -109,7 +109,7 @@ export default {
       playCount: 2, // 剩余多少视频加载视频列表
       videoList: [], // 展示的video数组
       pageNum: 1,
-      pageSize: 6,
+      pageSize: 10,
       id: "",
       autoLoadData: false,
       labelId: -1,
@@ -269,10 +269,6 @@ export default {
     this.height = `${this.sysheight}px`;
     const width = uni.getSystemInfoSync().windowWidth;
     this.width = `${width}px`;
-    // this.videoList.length = 300;
-    // this.videoList.fill({
-    //   src: "",
-    // });
   },
   onUnload () {
     console.log("onUnload");
@@ -281,12 +277,9 @@ export default {
   },
   methods: {
     formatCount,
-    swiperChange (event) {
-      this.index = event.detail.current;
-    },
     // 新手引导下一步
     nextStep () {
-      this.$analysis.dispatch("spcl_dgcl_jx");
+      // this.$analysis.dispatch("spcl_dgcl_jx");
       if (this.step === 1) {
         this.step = 2;
       } else if (this.step === 2) {
@@ -298,7 +291,7 @@ export default {
     },
     // 新手引导跳过引导
     jumpGuide () {
-      this.$analysis.dispatch("spcl_dgcl_tg");
+      // this.$analysis.dispatch("spcl_dgcl_tg");
       this.step = 3;
       this.isFirstPlay = true;
     },
@@ -379,7 +372,10 @@ export default {
       }
       this.pageNum = Math.ceil(this.videoList.length / this.pageSize) + 1;
       this.totalNum = this.$store.state.spcl.VedioListTalNum;
-      this.labelId = this.$store.state.spcl.vedioLabelId;
+      this.activityId = uni.getStorageSync("activityId");
+      this.level = uni.getStorageSync("level");
+
+      // this.labelId = this.$store.state.spcl.vedioLabelId;
       // 来自于最近播放页面
       // console.log("this.index", this.index, "--8--", this.labelId);
       // if (this.playStatus) {
@@ -406,26 +402,22 @@ export default {
       }
       this.isRequest = true;
       const data = {
-        labelId: this.labelId,
         pageNum: this.pageNum,
         pageSize: this.pageSize,
+        ac: this.activityId,
+        level: this.level,
       };
-      videoService.getSpclLabelVideoList(data).then((res) => {
-        this.isRequest = false;
-        if (res.data.code === 200) {
-          const tempList = Util.SplitArray(res.data.data.records, this.videoList);
-          // 分享和喜欢数据格式化
-          // for (let i = 0; i < tempList.length; i++) {
-          //   if (tempList[i].extraInfo) {
-          //     tempList[i].extraInfo.likeCount = Util.formatCount(tempList[i].extraInfo.likeCount);
-          //     tempList[i].extraInfo.shareCount = Util.formatCount(tempList[i].extraInfo.shareCount);
-          //   }
-          // }
-          this.pageNum++;
-          this.videoList = videoInfoUpdate(tempList);
-          this.$store.commit("spcl/M_changeVideoList", this.videoList);
-        }
-      });
+      SpclService.getVideoByActivityIdPage(data)
+        .then((res) => {
+          this.isRequest = false;
+          // const { data,code } = res.data;
+          if (res.data.code === 200) {
+            const tempList = Util.SplitArray(res.data.data.list, this.videoList);
+            this.pageNum++;
+            this.videoList = videoInfoUpdate(tempList);
+            this.$store.commit("spcl/M_changeVideoList", this.videoList);
+          }
+        });
     },
     getMoreMyLikeVideoPlayList () {
       if (this.isRequest) {
@@ -434,7 +426,7 @@ export default {
       this.isRequest = true;
       const data = {
         behaviorType: "dz",
-        start: this.pageNum,
+        pageNum: this.pageNum,
         pageCount: this.pageSize,
       };
 
@@ -442,22 +434,7 @@ export default {
         this.isRequest = false;
         if (res.data.code === 200) {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userSpclData")[0] &&
-            uni.getStorageSync("userSpclData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
-          this.videoList = tempList;
+          this.videoList = videoInfoUpdate(tempList);
           this.pageNum++;
           this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
@@ -540,11 +517,12 @@ export default {
           this.getMoreMyLikeVideoPlayList();
         }
       } else if (!isPlayFromIndex) {
+        console.log("从更多页面来", this.videoList.length, this.index, this.totalNum);
         if (
           this.videoList.length - this.index <= this.loadMoreVideoCount &&
           this.videoList.length < this.totalNum
         ) {
-          // console.log('加载新数据')
+          console.log("加载新数据");
           this.getNewVedioList();
         }
       }

@@ -184,6 +184,7 @@ export default {
             let { list, total } = res.data;
             if (!total && !list.length) { this.loading = false; return; };
             this.total = total;
+            uni.setStorageSync("vedioListTalNum", this.total);
             const oldLen = this.wfList.length;
             list = videoInfoUpdate(list);
             if (flag) {
@@ -251,8 +252,10 @@ export default {
       this.$emit("purchaseVideo", e);
     },
     // 跳转视频彩铃播放页面
-    goToPlayVideo (item) {
-      this.$emit("goToPlayVideo", { item, list: this.wfList });
+    goToPlayVideo (item, topic) {
+      uni.setStorageSync("activityId", this.activityId);
+      uni.setStorageSync("level", this.pageConfig.sort);
+      this.$emit("goToPlayVideo", { item, list: this.wfList, pageConfigTitle: topic });
     },
   },
 };

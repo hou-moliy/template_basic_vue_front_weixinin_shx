@@ -121,7 +121,6 @@
         v-else
         open-type="getPhoneNumber"
         class="wx-login"
-        @click="clickWxLogin"
         @getphonenumber="wxLogin($event, 'wx')"
       >
         <image
@@ -131,6 +130,7 @@
       </button>
       <text class="wx-text">微信授权一键登录</text>
     </view>
+
     <!-- toast弹窗 -->
     <view v-show="maskTxtShow" class="maskTxt">
       {{ maskTxts }}
@@ -283,7 +283,7 @@ export default {
 
     // 手机验证码登录
     getUserProfile (e) {
-      this.$loading("请稍等...");
+      this.$loading("请稍等...", true, 0);
       if (!this.phonenumber) {
         return this.$toast("请输入手机号");
       }
@@ -334,7 +334,7 @@ export default {
         return this.$toast("请输入验证码");
       }
       await this.wxLoginGetCode();
-      this.$loading("请稍等...");
+      this.$loading("请稍等", true, 0);
       const param = {
         code: this.wxCode,
       };
@@ -392,7 +392,7 @@ export default {
       }
     },
     // 成功登录
-    successLogin (res) {
+    async successLogin (res) {
       this.loginFlag = true;
       if (res.data.code === 506) {
         uni.hideLoading();
@@ -411,11 +411,15 @@ export default {
       }
       // 绑定微信与手机号
       this.bindWxUser();
-      // 获取用户铃音库数据
-      this.$store.dispatch("spcl/getUserAllVideoList");
+      // 获取用户视彩开通状态再获取铃音数据
+      const spclStatusRes = await this.$store.dispatch("user/getUserSpclStatus");
+      if (spclStatusRes) {
+        // 获取用户铃音库数据
+        await this.$store.dispatch("spcl/getUserAllVideoList");
+      }
+      uni.hideLoading();
       // 返回上一级
       uni.navigateBack({ delta: 1 });
-      uni.setStorageSync("loadClData", true);
     },
 
     // 绑定微信与手机号
@@ -431,6 +435,7 @@ export default {
     },
     // 微信登录
     async wxLogin (e, eventId) {
+      this.$loading("请稍等...", true, 0);
       await this.wxLoginGetCode();
       console.log("e", e, eventId);
       if (!this.ischecked) {
@@ -467,17 +472,6 @@ export default {
             `Bearer ${res3.data.token}`);
           // this.$analysis.dispatch('dl_vx_dlcg')
           uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
-          uni.setStorageSync("loadClData", true);
-          uni.setStorageSync("userSpclData", [
-            {
-              crbtResponse: [],
-              vrbtResponse: [],
-              crbtSettingRes: [],
-              vrbtSettingRes: [],
-              seetingIdRes: "",
-              crbtContentId: "",
-            },
-          ]);
           // 渠道数据统计
           // if (uni.getStorageSync('channelSource')) {
           //   analysisService
@@ -489,8 +483,13 @@ export default {
           //     })
           // }
           this.bindWxUser();
-          // 获取用户铃音库数据
-          this.$store.dispatch("spcl/getUserAllVideoList");
+          // 获取用户视彩开通状态再获取铃音数据
+          const spclStatusRes = await this.$store.dispatch("user/getUserSpclStatus");
+          if (spclStatusRes) {
+            // 获取用户铃音库数据
+            await this.$store.dispatch("spcl/getUserAllVideoList");
+          }
+          uni.hideLoading();
           // 返回上一级
           uni.navigateBack({
             delta: 1,
@@ -515,10 +514,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style>
 page {
   height: 100%;
+  padding-bottom: 79rpx;
+  box-sizing: border-box;
 }
+</style>
+<style lang="scss" scoped>
 .custom-tab {
   display: flex;
   align-items: center;
@@ -532,12 +535,18 @@ uni-page-body,
 uni-page-refresh {
   height: 100%;
 }
-// .login-page {
-//   display: flex;
-//   justify-content: space-between;
-//   flex-direction: column;
-//   min-height: 100%;
-// }
+.login-page {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+.center-box {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
 .top-box {
   width: 100%;
 
@@ -554,8 +563,6 @@ uni-page-refresh {
 }
 
 .bottom-box {
-  position: fixed;
-  bottom: 79rpx;
   width: 100%;
   text-align: center;
 
@@ -565,30 +572,31 @@ uni-page-refresh {
       width: 108rpx;
       height: 2rpx;
       background: #d6d6d6;
-      // margin-left: 149rpx;
       vertical-align: middle;
     }
 
     .tips-tips1 {
-      // vertical-align: middle;
       margin-left: 15rpx;
       display: inline-block;
-      height: 23rpx;
       font-size: 28rpx;
       font-family: PingFang SC Regular, PingFang SC Regular-Regular;
       font-weight: 400;
       text-align: center;
-      color: #c5c5c5;
+      color: #999999;
       line-height: 36rpx;
       letter-spacing: 1rpx;
     }
   }
 
   .wx-login {
-    margin-top: 40rpx;
-    margin-bottom: 20rpx;
-    width: 100%;
+    width: 100rpx;
+    height: 100rpx;
+    margin: 0 auto;
+    margin-top: 48rpx;
+    margin-bottom: 27rpx;
     background-color: #fff;
+    padding-left: 0;
+    padding-right: 0;
 
     .wx-login-img {
       width: 100rpx;
@@ -625,7 +633,7 @@ button::after {
 
     &.active {
       background: linear-gradient(to right, #9e79ff 0%, #e180e5 65%);
-      box-shadow: 0rpx 9rpx 10rpx 0rpx rgba(255, 111, 80, 0.28);
+      box-shadow: 0rpx 9rpx 10rpx 0rpx rgba(179, 123, 245, 0.3);
     }
   }
 }
@@ -710,7 +718,6 @@ button::after {
 }
 
 .text-header {
-  padding-top: 155rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -9,15 +9,12 @@
         <text>热搜榜单</text>
       </view>
       <view class="cx_select_hot_box">
-        <view
-          v-if="hotListType == 'video'"
-          class="cx_select_hot_view"
-        >
+        <view v-if="hotListType == 'video'" class="cx_select_hot_view">
           <view
             v-for="(item, index) in hotSelectValue"
             :key="index"
             class="cx_select_hot_list"
-            :data-url="'/pagesSpcl/clVideo/clVdieoPlay?id=' + item.ringId"
+            :data-url="'/pagesSpcl/clVideo/clVideoPlay?id=' + item.ringId"
             @click="clickKey($event, item)"
           >
             <view class="cx_select_hot_item">
@@ -36,35 +33,24 @@
                 class="cx_select_hot_numIcon"
                 :src="`${staticImgs}/shxmp/init/thirdIcon.png`"
               />
-              <view
-                v-else
-                class="cx_select_hot_numText"
-              >
-                {{ index>=9?"":0 }}{{ index + 1 }}
+              <view v-else class="cx_select_hot_numText">
+                {{ index >= 9 ? "" : 0 }}{{ index + 1 }}
               </view>
-              <view
-                class="cx_select_hot_tip"
-              >
+              <view class="cx_select_hot_tip">
                 {{
                   item.ringName.length > 15
-                    ? item.ringName.slice(0, 18) + '...'
+                    ? item.ringName.slice(0, 18) + "..."
                     : item.ringName
                 }}
               </view>
-              <image
-                class="cx_select_hot_textIcon"
-                :src="item.icon"
-              />
+              <image class="cx_select_hot_textIcon" :src="item.icon" />
             </view>
           </view>
           <view
             v-if="hotSelectValue.length != total"
             class="cx_select_hot_item_more"
           >
-            <view
-              class="cx_select_hot_item_moreBox"
-              @click="getMoreHotList"
-            >
+            <view class="cx_select_hot_item_moreBox" @click="getMoreHotList">
               <text>展开更多</text>
               <image
                 class="cx_select_hot_item_moreIcon"
@@ -73,10 +59,7 @@
             </view>
           </view>
         </view>
-        <view
-          v-if="hotListType == 'music'"
-          class="cx_select_hot_view"
-        >
+        <view v-if="hotListType == 'music'" class="cx_select_hot_view">
           <view
             v-for="(item, index) in cxMusicList"
             :key="index"
@@ -99,13 +82,8 @@
                   class="cx_select_hot_numIcon"
                   :src="`${staticImgs}/lnmp/hotListImg/thirdIcon.png`"
                 />
-                <view
-                  v-else
-                  class="cx_select_hot_numText"
-                >
-                  {{
-                    index + 1
-                  }}
+                <view v-else class="cx_select_hot_numText">
+                  {{ index + 1 }}
                 </view>
               </view>
               <view class="ypcl_box">
@@ -166,10 +144,7 @@
             v-if="hotSelectValue.length != total"
             class="cx_select_hot_item_more"
           >
-            <view
-              class="cx_select_hot_item_moreBox"
-              @click="getMoreHotList"
-            >
+            <view class="cx_select_hot_item_moreBox" @click="getMoreHotList">
               <text>展开更多</text>
               <image
                 class="cx_select_hot_item_moreIcon"
@@ -375,7 +350,7 @@ export default {
     width: 686rpx;
     // height: 750rpx;
     padding-bottom: 50rpx;
-    background: linear-gradient(39deg,#f8f6ff 0%, #ffffff 100%);
+    background: linear-gradient(39deg, #f8f6ff 0%, #ffffff 100%);
     border-radius: 20rpx;
     // box-shadow: 0 0 18rpx 0 rgba(0, 0, 0, 0.08);
 
@@ -385,6 +360,7 @@ export default {
 
       .cx_select_hot_item {
         display: flex;
+        align-items: center;
 
         .cx_select_hot_tip {
           height: 36rpx;
@@ -457,7 +433,7 @@ export default {
 .ypcl_col_catagory_index {
   color: #666666;
   // font-family: PingFang SC Medium, PingFang SC Medium-Medium;
-  font-family: 'Helvetica Neue';
+  font-family: "Helvetica Neue";
   width: 100rpx;
   overflow: hidden;
   white-space: nowrap;

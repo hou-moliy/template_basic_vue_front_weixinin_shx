@@ -731,6 +731,12 @@ export default {
 };
 </script>
 
+<style>
+page {
+  background-color: #f5f7f9;
+}
+</style>
+
 <style lang="scss" scoped>
 .video-type-page scroll-view ::-webkit-scrollbar {
   width: 0;

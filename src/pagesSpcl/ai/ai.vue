@@ -22,11 +22,17 @@
         </view>
         <view
           class="introduce-button"
-          :style="{ background: aiStatus ? '#e9e9e9' : '' }"
+          :style="{ background: aiStatus ? '#c6c5c8' : '' }"
           @click="aiOpenChange"
         >
           <view v-if="!aiStatus" class="introduce-button-open">一键开启</view>
-          <view v-else class="introduce-button-opened">已开启</view>
+          <view
+            v-else
+            class="introduce-button-opened"
+            :style="{ color: aiStatus ? '#fff' : '' }"
+          >
+            已开启
+          </view>
         </view>
       </view>
       <!-- 主题 -->
@@ -64,7 +70,6 @@
         :activity-id="activityId"
       />
     </view>
-    <view style="height: 20rpx" />
     <!-- 开通视彩弹窗 -->
     <popupTemplateOperition
       :popup-info="popupInfo"
@@ -114,14 +119,6 @@ export default {
       this.$refs.EbConfigContainerAsync.onScrollBottom();
     }
   },
-  // 下拉到底部
-  onReachBottom () {
-    // 请求列表
-    console.log("下拉到底部");
-    if (this.$refs.EbConfigContainerAsync) {
-      this.$refs.EbConfigContainerAsync.onScrollBottom();
-    }
-  },
   methods: {
     // 刷新组件信息
     handleFresh () {
@@ -157,14 +154,14 @@ export default {
       });
     },
     // 查询用户是否开通ai换铃
-    checkPortalUser () {
-      this.$store.dispatch("user/getUserAiStatus");
-      this.aiStatus = uni.getStorageSync("aiStatus");
+    async checkPortalUser () {
+      const res = await this.$store.dispatch("user/getUserAiStatus");
+      this.aiStatus = res;
     },
     // 查询用户是否开通视频彩铃
-    getSpclStatus () {
-      this.$store.dispatch("user/getUserSpclStatus");
-      this.spclStatus = uni.getStorageSync("spclStatus");
+    async getSpclStatus () {
+      const res = await this.$store.dispatch("user/getUserSpclStatus");
+      this.spclStatus = res;
     },
     // 开通AI换铃
     async handleOpenAi (flag = 2) {
@@ -361,7 +358,7 @@ export default {
     justify-content: center;
     padding: 6rpx 0rpx;
     box-sizing: border-box;
-    box-shadow: -4rpx 13rpx 44rpx -18rpx #b37bf5;
+    // box-shadow: -4rpx 13rpx 44rpx -18rpx #b37bf5;
 
     .introduce-button-open {
       font-size: 30rpx;
