@@ -2,7 +2,7 @@
   <view class="swiper-tab">
     <view class="tab-container" :style="{ background: tabBackground }">
       <!-- 头部标题区域 -->
-      <view class="title" style="margin-top: 100rpx">彩铃</view>
+      <view class="title" style="margin: 100rpx auto 20rpx">彩铃</view>
       <!-- 头部Tab区域 -->
       <view :class="['tab', `tab-${scrollNavStation}`]">
         <scroll-view
@@ -29,11 +29,14 @@
               :data-current="index + 1"
               @click.stop="switchNavDebounce($event, item.pageUrl)"
             >
-              <view>
-                {{ item.name }}
-                <view v-show="pageName == item.pageName" class="tab-item-img">
-                  <image :src="item.selectedIconUrl" />
-                </view>
+              <view class="tab-item-img">
+                <view>{{ item.name }}</view>
+                <!-- <view class="tab-item-img"> -->
+                <image
+                  v-show="pageName == item.pageName"
+                  :src="item.selectedIconUrl"
+                />
+                <!-- </view> -->
               </view>
             </view>
           </view>
@@ -426,13 +429,14 @@ page {
   position: relative;
   display: flex;
   align-items: center;
+  height: 80rpx;
+  box-sizing: border-box;
 }
 .tab-left,
 .tab-center {
   padding-right: 80rpx;
 }
 .swiper-nav {
-  margin-top: 56rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -510,12 +514,14 @@ page {
 }
 
 .tab-item-img {
-  text-align: center;
-  margin-top: 5rpx;
-  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   image {
     width: 37rpx;
     height: 14rpx;
+    margin-top: 5rpx;
   }
 }
 .on {
