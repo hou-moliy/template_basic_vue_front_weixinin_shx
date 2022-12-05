@@ -217,6 +217,13 @@ export default {
   background: #fff;
   border-radius: 0rpx 0rpx 10rpx 10rpx;
 }
+// 白色边距
+.white-block {
+  width: 100%;
+  height: 27rpx;
+  background: #fff;
+  border-radius: 0rpx 0rpx 10rpx 10rpx;
+}
 // 竖屏
 .more-new-item-column {
   width: 334rpx;
