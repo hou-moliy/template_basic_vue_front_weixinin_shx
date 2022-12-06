@@ -51,14 +51,14 @@ export default {
         // 如果定义了pagePath属性，意味着使用系统自带tabbar方案，否则使用一个页面用几个组件模拟tabbar页面的方案
         // 这两个方案对处理tabbar item的激活与否方式不一样
         if (pagePath) {
-          if (pagePath == this.pageUrl || pagePath == "/" + this.pageUrl) {
+          if (pagePath === this.pageUrl || pagePath === "/" + this.pageUrl) {
             return this.tabBar.list[index].selectIconPath;
           } else {
             return this.tabBar.list[index].iconPath;
           }
         } else {
           // 普通方案中，索引等于v-model值时，即为激活项
-          return index == this.value ? this.list[index].selectIconPath : this.list[index].iconPath;
+          return index === this.value ? this.list[index].selectIconPath : this.list[index].iconPath;
         }
       };
     },
@@ -67,10 +67,10 @@ export default {
         // 判断方法同理于elIconPath
         const pagePath = this.tabBar.list[index].pagePath;
         if (pagePath) {
-          if (pagePath == this.pageUrl || pagePath == "/" + this.pageUrl) return this.tabBar.selectedColor;
+          if (pagePath === this.pageUrl || pagePath === "/" + this.pageUrl) return this.tabBar.selectedColor;
           else return this.tabBar.color;
         } else {
-          return index == this.value ? this.tabBar.selectedColor : this.tabBar.color;
+          return index === this.value ? this.tabBar.selectedColor : this.tabBar.color;
         }
       };
     },
@@ -124,6 +124,7 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
   height: 98px;
   box-shadow: -1.04px -3.86px 27px 4px rgba(0, 0, 0, 0.06);
+  z-index: 999;
 }
 
 .tab-bar-item {

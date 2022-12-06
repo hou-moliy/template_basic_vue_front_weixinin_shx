@@ -307,7 +307,7 @@ export default {
             bgObj.width * 1.739,
           ),
         ]);
-      });
+      }, reject => { });
     },
     // 设置视频彩铃海报的绘制元素
     setDrawSpArray ({ bgObj }) {
@@ -390,7 +390,7 @@ export default {
             bgObj.height * 0.952,
           ),
         ]);
-      });
+      }, reject => { });
     },
     // 处理封面图
     handleCoverImg (url, dx, dy, dWidth, dHeight) {

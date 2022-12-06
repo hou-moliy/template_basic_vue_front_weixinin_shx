@@ -1,5 +1,9 @@
 <template>
-  <view class="more-news" :style="[extraStyle]">
+  <view
+    class="more-news"
+    :style="[extraStyle]"
+    :class="{ 'no-margin': !compBottom }"
+  >
     <!-- 标题 -->
     <view v-if="pageConfig.tagIcon" class="title-wrap">
       <image :src="pageConfig.tagIcon" class="tag-icon" />
@@ -267,7 +271,6 @@ export default {
   padding: 0rpx 30rpx 30rpx;
   box-sizing: border-box;
   border-radius: 40rpx 40rpx 0rpx 0rpx;
-  margin-bottom: 40rpx;
 
   .waterfall-box {
     display: flex;
@@ -305,5 +308,8 @@ export default {
       color: #000000;
     }
   }
+}
+.no-margin {
+  margin-bottom: 40rpx;
 }
 </style>

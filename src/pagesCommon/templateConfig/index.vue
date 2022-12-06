@@ -51,7 +51,6 @@ export default {
     return {
       pageName: "",
       activityId: "",
-      templateId: "",
       pageConfig: null, // 页面配置组件信息
       pageBaseInfo: {}, // 页面配置的背景图颜色、分享标题等
       shareObj: {
@@ -63,9 +62,7 @@ export default {
   },
   onLoad (options) {
     this.activityId = options.activityId;
-    this.templateId = options.templateId;
     this.pageName = options.pageName;
-    this.getPageConfig();
     this.getPageBaseInfo();
     // 获取我的喜欢
     this.$store.dispatch("spcl/getMyLikeVideoIdList");
@@ -98,7 +95,7 @@ export default {
       title: this.shareObj.text
         ? this.shareObj.text
         : "您的好友邀您使用陕西小程序，好听、好看、好玩快来体验吧～",
-      path: `pagesCommon/templateConfig/index?activityId=${this.activityId}&templateId=${this.templateId}&pageName=${this.pageName}`,
+      path: `pagesCommon/templateConfig/index?activityId=${this.activityId}&pageName=${this.pageName}`,
       imageUrl: this.shareObj.image,
     };
   },
@@ -129,7 +126,7 @@ export default {
     },
     // 获取页面配置信息
     getPageConfig () {
-      TemplateService.getPageConfigByPageName({ pageName: `${this.templateId}_${this.activityId}` }).then(res => {
+      TemplateService.getPageConfigByPageName({ pageName: `${this.activityId}` }).then(res => {
         if (res.data.code === 200) {
           this.pageConfig = res.data.data;
         }
@@ -139,16 +136,32 @@ export default {
     getPageBaseInfo () {
       TemplateService.getPageConfigByActivityId({ id: this.activityId }).then(res => {
         if (res.data.code === 200) {
-          this.pageBaseInfo = res.data.data;
-          uni.setNavigationBarTitle({
-            title: this.pageBaseInfo.activityName,
-          });
-          this.shareObj = {
-            text: this.pageBaseInfo.wechatShareDesc,
-            image: this.pageBaseInfo.wechatShareImg,
-          };
+          if (res.data.data.releaseStatus === 1) { // 已发布
+            this.pageBaseInfo = res.data.data;
+            uni.setNavigationBarTitle({
+              title: this.pageBaseInfo.activityName,
+            });
+            this.shareObj = {
+              text: this.pageBaseInfo.wechatShareDesc,
+              image: this.pageBaseInfo.wechatShareImg,
+            };
+            this.getPageConfig();
+          } else {
+            this.handleErrorStatus(res.data.data);
+          }
         }
       });
+    },
+    // 处理不正确的状态
+    handleErrorStatus ({ releaseStatus, beforeStartTip, afterEndTip }) { // releaseStatus 0.未发布1.已发布2.下线
+      if (releaseStatus === 0) {
+        this.$toast(beforeStartTip || "暂未发布！");
+      } else if (releaseStatus === 2) {
+        this.$toast(afterEndTip || "已下线！");
+      }
+      setTimeout(() => {
+        uni.navigateBack();
+      }, 500);
     },
   },
 };
@@ -158,7 +171,7 @@ export default {
 .topic-page {
   min-height: 100vh;
   height: auto;
-  padding-bottom: 100rpx;
+  // padding-bottom: 100rpx;
   background-position-y: 9%;
 
   .top-img {
