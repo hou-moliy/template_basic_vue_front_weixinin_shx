@@ -46,34 +46,6 @@
         <view class="cx-des">
           <view
             class="login-bottom-box"
-            style="
-              margin-top: 25rpx;
-              display: flex;
-              align-items: center;
-              padding-bottom: 0rpx;
-            "
-          >
-            <view style="width: 92%; display: flex; align-items: center">
-              <image
-                class="sign"
-                :src="`${staticImgs}/shxmp/init/yp-icon.png`"
-              />
-              <text class="title">我的彩铃：</text>
-              <text
-                v-if="!loginFlag"
-                class="content"
-                @click="navigateToLogin()"
-              >
-                登录后显示
-              </text>
-              <text v-else class="content" @click="navigateToEditForAll('cl')">
-                {{ cxMusicContent }}
-              </text>
-            </view>
-          </view>
-
-          <view
-            class="login-bottom-box"
             style="margin-top: 26rpx; display: flex; align-items: center"
           >
             <view style="width: 92%; display: flex; align-items: center">
@@ -101,7 +73,7 @@
     <view class="my-iconlist">
       <text class="my-iconlist-title">我的铃音库</text>
       <eb-icon-list
-        :page-config="{ pageName: 'sell_default-mine' }"
+        :page-config="{ pageName: 'default-mine' }"
         @openLoginPopup="openLoginPopup"
         @open="open"
       />
@@ -212,7 +184,7 @@ export default {
   },
   onLoad () {
     this.pointobj = uni.getMenuButtonBoundingClientRect();
-    this.loginBoxHeight = (this.pointobj.top + 203) * 2;
+    this.loginBoxHeight = (this.pointobj.top + 153) * 2;
   },
   onHide () {
     this.offMonitor();
@@ -528,7 +500,7 @@ page {
   background: #ffffff;
   border-radius: 20rpx;
   margin-top: 24rpx;
-  padding: 42rpx 0;
+  padding-top: 42rpx;
 }
 .my-iconlist-title {
   height: 36rpx;

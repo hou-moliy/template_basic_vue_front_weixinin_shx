@@ -516,6 +516,7 @@ page {
   .custom-tab-title {
     flex: 1;
     text-align: center;
+    font-weight: 700;
   }
 }
 uni-page-body,
