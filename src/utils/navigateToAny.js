@@ -59,7 +59,6 @@ const navigateToAny = (item, callback) => {
 const handleExternalLink = async (item, callback) => {
   let tempEventUrl = item.eventUrl;
   tempEventUrl = await freeLoginFun(item.eventUrl);
-  console.log(tempEventUrl, "tempEventUrl");
   uni.setStorageSync("H5Data", tempEventUrl);
   uni.hideLoading();
   uni.navigateTo({

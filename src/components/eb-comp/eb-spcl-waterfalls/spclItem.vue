@@ -34,7 +34,7 @@
               <view
                 v-if="item.extraInfo.like"
                 class="icon-item like-item"
-                @click.stop="giveLikes(item.ringId, true)"
+                @click.stop="giveLikes(item, true)"
               >
                 <image
                   :src="`${staticImgs}/shxmp/init/dzed-icon.png`"
@@ -47,7 +47,7 @@
               <view
                 v-else
                 class="icon-item like-item"
-                @click.stop="giveLikes(item.ringId, false)"
+                @click.stop="giveLikes(item, false)"
               >
                 <image
                   :src="`${staticImgs}/shxmp/init/dz-icon-white.png`"

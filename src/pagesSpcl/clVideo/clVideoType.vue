@@ -520,7 +520,7 @@ export default {
         this.$showLoginPop(this);
       } else {
         // 处理视频彩铃设置
-        handlePurchaseVideo(item, this.ispurchaseVideo(item));
+        handlePurchaseVideo(item, () => this.ispurchaseVideo(item));
       }
     },
     // 设置成功

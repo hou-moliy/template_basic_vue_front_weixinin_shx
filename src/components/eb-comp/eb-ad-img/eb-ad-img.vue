@@ -68,7 +68,6 @@ export default {
 
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
-    console.log(this.extraStyle);
     this.getAdBanner();
   },
 

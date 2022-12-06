@@ -101,7 +101,6 @@ export default {
       popupInfo: {},
       pageConfig: {},
       activityId: "S20221201fbbdf",
-      templateId: "sell",
     };
   },
   onLoad () {
@@ -129,7 +128,7 @@ export default {
     // 获取页面配置信息
     getPageConfig () {
       TemplateService.getPageConfigByPageName({
-        pageName: `${this.templateId}_${this.activityId}`,
+        pageName: `${this.activityId}`,
       }).then(res => {
         if (res.data.code === 200) {
           this.pageConfig = res.data.data;

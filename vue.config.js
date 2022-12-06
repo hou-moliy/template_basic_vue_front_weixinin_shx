@@ -10,11 +10,11 @@ function replaceManifest (path, value) {
   const lastItem = arr[len - 1];
   let i = 0;
   const ManifestArr = Manifest.split(/\n/);
-  for (let item of ManifestArr) {
+  for (const item of ManifestArr) {
     if (new RegExp(`"${arr[i]}"`).test(item)) ++i;
     if (i === len) {
       const hasComma = /,/.test(item);
-      item = item.replace(new RegExp(`"${lastItem}"[\\s\\S]*:[\\s\\S]*`), `"${lastItem}": ${value}${hasComma ? "," : ""}`);
+      item.replace(new RegExp(`"${lastItem}"[\\s\\S]*:[\\s\\S]*`), `"${lastItem}": ${value}${hasComma ? "," : ""}`);
       break;
     }
   }

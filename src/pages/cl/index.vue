@@ -40,16 +40,6 @@
             </view>
           </view>
         </scroll-view>
-        <view
-          v-if="scrollNavStation != 'right'"
-          class="tab-oper-btn"
-          @click="toLastNav"
-        >
-          <view class="tab-item-xiangyou">
-            <view class="tab-item-box" />
-            <text class="iconfont icon-xiangyou" />
-          </view>
-        </view>
       </view>
     </view>
     <!-- 内容组件区域 -->
@@ -69,6 +59,7 @@
             v-if="swipeItem.pageConfig"
             scroll-y="true"
             :style="{ height: `${windowHeight}px` }"
+            :scroll-top="scrollTop"
             @scrolltolower="scrollToLower"
             @scroll="swiperContainerScroll"
           >
@@ -113,7 +104,7 @@ export default {
     return {
       tabBar: this.$store.getters.tabbarList, // 底部导航栏
       tabList: [], // 头部Tab
-      tabBackground: "transparent",
+      tabBackground: "transparent", // 头部导航背景色
       scrollNavStation: "left", // 导航栏滑动的位置，left左端 right右端 center中间
       switchNavInfo: {}, // 当前的Tab对象
       pageName: "", // 当前的Tab栏name
@@ -125,12 +116,14 @@ export default {
       navHeight: 0, // 手机状态栏的高度
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
+      scrollTop: 0, // 距离顶部高度，新的
+      oldScrollTop: 0, // 距离顶部高度，旧的
     };
   },
   onLoad (options) {
+    uni.hideTabBar();
     this.getPageWidthHeight();
     this.getTabList();
-    this.$store.dispatch("spcl/getUserAllVideoList");
     if (options.tab && options.tab === 1) {
       this.swiperTab = 1;
     } else if (options.tab && options.tab === 0) {
@@ -139,7 +132,6 @@ export default {
     this.pageName = options.pageName;
   },
   onShow () {
-    this.initData();
     this.handleFresh();
     if (uni.getStorageSync("homePageName")) {
       this.pageName = uni.getStorageSync("homePageName");
@@ -159,18 +151,15 @@ export default {
     };
   },
   methods: {
-    // 页面初始化数据
-    initData () {
-      // this.getTabList();
-      this.$store.dispatch("user/getUserSpclStatus");
-      this.$store.dispatch("user/getUserAiStatus");
-      this.$store.dispatch("spcl/getMyLikeVideoIdList");
-    },
-    // 刷新组件信息
+    // 刷新页面信息
     handleFresh () {
       if (this.$refs.EbConfig) {
         this.$refs.EbConfig[this.swiperTab].handleFresh();
       }
+      this.$store.dispatch("user/getUserSpclStatus");
+      this.$store.dispatch("user/getUserAiStatus");
+      this.$store.dispatch("spcl/getMyLikeVideoIdList");
+      this.$store.dispatch("spcl/getUserAllVideoList");
     },
     // 跨页面通信监听
     dispatchPageEvent () {
@@ -199,6 +188,7 @@ export default {
       uni.$off("operitionShow");
       uni.$off("changeAi");
     },
+    // 订购弹窗关闭
     closePopup () {
       this.operitionInfo = {};
       this.$store.commit("window/SET_OPERITION_SHOW", false);
@@ -229,8 +219,12 @@ export default {
       this.currentTab = current;
       this.pageName = this.tabList[this.swiperTab].pageName;
       this.getPageConfig(this.pageName);
+      this.goTop();
     },
+    // scroll-view滚动监听
     swiperContainerScroll (e) {
+      // 记录scroll  位置
+      this.oldScrollTop = e.detail.scrollTop;
       if (e.detail.scrollTop > 30) {
         this.tabBackground = "#DDDDFF";
       } else {
@@ -239,6 +233,15 @@ export default {
         }
       }
     },
+    goTop () {
+      // 视图会发生重新渲染
+      this.scrollTop = this.oldScrollTop;
+      // 当视图渲染结束 重新设置为0
+      this.$nextTick(() => {
+        this.scrollTop = 0;
+      });
+    },
+    // 获取tabList信息
     getTabList () {
       TemplateService.getTabList({ tabTarget: "main" }).then(res => {
         if (res.data.code === 200) {
@@ -246,7 +249,7 @@ export default {
           this.swiperTab = this.currentTab ? this.currentTab - 1 : 0;
           this.tabList.forEach((e, index) => {
             e.pageConfig = "";
-            e.activityId = e.pageName.split("_")[1];
+            e.activityId = e.pageName;
             if (index === 0 && e.pageName) {
               this.pageName = e.pageName;
               this.getPageConfig(e.pageName);
@@ -369,6 +372,9 @@ page {
   width: 100%;
   min-height: 100%;
 }
+.scrollView {
+  height: 100%;
+}
 .swiper-tab {
   flex: 1;
   display: flex;
@@ -407,7 +413,7 @@ page {
   position: relative;
   display: flex;
   align-items: center;
-  height: 80rpx;
+  height: 90rpx;
   box-sizing: border-box;
   margin-left: 10rpx;
 }
@@ -455,6 +461,8 @@ page {
   display: flex;
   align-items: center;
   position: relative;
+  height: 100%;
+  align-items: center;
 }
 
 .empty-nav {
@@ -499,7 +507,7 @@ page {
   image {
     width: 37rpx;
     height: 14rpx;
-    margin-top: 5rpx;
+    margin-top: 10rpx;
   }
 }
 .on {
