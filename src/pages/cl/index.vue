@@ -210,7 +210,7 @@ export default {
     // switch点击防抖
     switchNavDebounce (e) {
       this.switchNavInfo = e;
-      Util.debounce(this.switchNav(e), 200, true)();
+      Util.debounce(() => this.switchNav(e), 200, true)();
     },
     // Tab点击
     switchNav () {
@@ -286,7 +286,7 @@ export default {
       });
     },
     scrollNav (event) {
-      Util.debounce(this.scrollNavFun, 10, true)(event);
+      Util.debounce(() => this.scrollNavFun, 10, true)(event);
     },
     scrollNavFun (event) {
       this.scrollInfo = event.detail;
@@ -308,7 +308,7 @@ export default {
     },
     swiperChange (e) {
       this.swiperChangeInfo = e;
-      Util.debounce(this.swiperNavDebounce, 200, true)();
+      Util.debounce(() => this.swiperNavDebounce, 200, true)();
     },
     // swiper切换防抖
     swiperNavDebounce () {

@@ -1,5 +1,6 @@
 <template>
   <view
+    v-if="wfList.length"
     class="more-news"
     :style="[extraStyle]"
     :class="{ 'no-margin': !compBottom }"
@@ -94,7 +95,6 @@
       icon-type="circle"
       :status="isLoadStatus"
     />
-    <!-- 订购弹窗 -->
   </view>
 </template>
 
@@ -212,17 +212,21 @@ export default {
     },
     // 分享
     shareCountChange (e) {
-      const temObj = {
-        ...e,
+      const index = this.wfList.findIndex(wf => wf.ringId === e.ringId);
+      e.extraInfo.shareCount = e.extraInfo.shareCount + 1;
+      const data = {
+        ringId: e.ringId,
+        target: "fx",
+        opType: 1,
       };
-      temObj.shareCount = parseFloat(temObj.shareCount) + 1;
-      this.wfList.forEach(item => {
-        if (item.imgId === temObj.imgId) {
-          item.shareCount = temObj.shareCount;
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
+        if (res.data.code === 200) {
+          this.$set(this.wfList, index, e);
         }
-      });
-      uni.navigateTo({
-        url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+      }).finally(() => {
+        uni.navigateTo({
+          url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+        });
       });
     },
     // 点赞或取消点赞

@@ -48,12 +48,21 @@
       <view class="mask-bttom" />
       <view class="mask-top" />
     </view>
+    <!-- 提示性弹窗 -->
+    <notifyPop ref="NotifyPop" />
+    <!-- 视频彩铃订购相关弹窗 -->
+    <popupTemplateOperition
+      :popup-info="operitionInfo"
+      :show="Boolean($store.state.window.operitionShow)"
+      @buttonClick="operitionBtnClick"
+      @closePopup="closePopup"
+    />
   </view>
 </template>
 
 <script>
 import videoService from "@/api/cx/video.js";
-
+import { handlePurchaseVideo } from "@/utils/video.js";
 export default {
   data () {
     return {
@@ -66,6 +75,8 @@ export default {
       navMarginHeight: 0, // 自定义导航栏外边距
       navHeight: 0, // 自定义导航栏高度
       titleMargin: 0, // 标题外边距
+      operitionInfo: {}, // 订购弹窗的内容
+      operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
     };
   },
   onLoad (options) {
@@ -77,12 +88,43 @@ export default {
   },
   onShow () {
     this.getVideoByIdJK();
-
     this.sysheight = uni.getSystemInfoSync().windowHeight;
     this.height = `${this.sysheight}px`;
     this.width = "100%";
+    this.dispatchPageEvent();
+  },
+  onHide () {
+    this.offMonitor();
   },
   methods: {
+    // 跨页面通信监听
+    dispatchPageEvent () {
+      // 展示订购、设置类弹窗，按钮点击回调
+      uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
+        this.operitionInfo = popupInfo;
+        this.$store.commit("window/SET_OPERITION_SHOW", true);
+        this.operitionBtnClick = (e) => btnClickCallBack(e);
+      });
+    },
+    // 移除监听
+    offMonitor () {
+      uni.$off("openLoginPopup");
+      uni.$off("operitionShow");
+    },
+    // 点击设置视频彩铃按钮
+    purchaseVideo (item) {
+      // 处理视频彩铃设置
+      handlePurchaseVideo(item, this.updateData);
+    },
+    // 数据更新
+    updateData () {
+      this.videoMsg.isBuyVideo = true;
+    },
+    // 订购弹窗关闭
+    closePopup () {
+      this.operitionInfo = {};
+      this.$store.commit("window/SET_OPERITION_SHOW", false);
+    },
     goBack () {
       uni.navigateBack();
     },
