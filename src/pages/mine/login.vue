@@ -261,10 +261,7 @@ export default {
     // 验证正确手机号
     validatePhone (phoneNumber) {
       const telStr = /^1[3456789]\d{9}$/;
-      if (!telStr.test(phoneNumber)) {
-        return false;
-      }
-      return true;
+      return telStr.test(phoneNumber);
     },
     // 微信获取code
     wxLoginGetCode () {
@@ -519,6 +516,7 @@ page {
   .custom-tab-title {
     flex: 1;
     text-align: center;
+    font-weight: 700;
   }
 }
 uni-page-body,

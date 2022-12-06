@@ -141,10 +141,10 @@ export default {
     },
     pageStatusLoad (val) {
       console.log(val, "pageStatusLoad");
-      if (this.pageStatusLoad == "onShow") {
+      if (this.pageStatusLoad === "onShow") {
         // 获取视频彩铃热搜
         videoService.spclHotKey({ type: 3 }).then(resp => {
-          if (resp.data.code == 200 && resp.data.data.list.length > 0) {
+          if (resp.data.code === 200 && resp.data.data.list.length > 0) {
             this.hotSelectValue = resp.data.data.list.slice(0, 10);
             this.videoList = resp.data.data.list;
             this.total = resp.data.data.total;
@@ -209,77 +209,86 @@ export default {
       uni.$emit("setSearchList", []);
       this.$emit("setSearchList", []);
 
-      const that = this;
       this.isSelecting = true;
       if (this.pageName === "video") {
-        // 历史记录
-        this.getHistory("videoHotKeyArr");
-        this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
-        // this.$analysis.dispatch("sp_search", this.value);
-        this.isSelecting = true;
-        uni.$emit("setSearchList", this.selectList);
-        videoService.spclSearch({
-          searchKey: this.value,
-        }).then((resp) => {
-          that.isSelecting = false;
-          that.isSelectedState = true;
-
-          if (resp.data.code === 200) {
-            const tempList = resp.data.data;
-            if (!tempList.length) {
-              this.selectList = tempList;
-              return uni.$emit("setSearchList", this.selectList);
-            }
-            // 分享和喜欢数据格式化
-            if (uni.getStorageSync("Authorization") && uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[
-              0].vrbtResponse) {
-              const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
-              for (let i = 0; i < tempList.length; i++) {
-                const isBuy = isBuyList.filter(item => tempList[i].ringId === item.ringId);
-                if (isBuy[0]) {
-                  tempList[i].isBuyVideo = true;
-                }
-              }
-            }
-            this.selectList = tempList;
-            uni.$emit("setSearchList", this.selectList);
-          } else {
-            return this.$toast(resp.data.message);
-          }
-        });
+        // 视频彩铃搜索
+        this.videoSearch();
       } else {
-        this.getHistory("musicHotKeyArr");
-        this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
-        // this.$analysis.dispatch("yp_search", this.value);
-        cxService.search({
-          searchKey: this.value,
-        }).then((resp) => {
-          that.isSelecting = false;
-          that.isSelectedState = true;
+        // 音频搜索
+        this.musicSearch();
+      }
+    },
+    // 视频彩铃搜索
+    videoSearch () {
+      const that = this;
+      // 历史记录
+      this.getHistory("videoHotKeyArr");
+      this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
+      this.isSelecting = true;
+      uni.$emit("setSearchList", this.selectList);
+      videoService.spclSearch({
+        searchKey: this.value,
+      }).then((resp) => {
+        that.isSelecting = false;
+        that.isSelectedState = true;
+
+        if (resp.data.code === 200) {
+          const tempList = resp.data.data;
+          if (!tempList.length) {
+            this.selectList = tempList;
+            return uni.$emit("setSearchList", this.selectList);
+          }
           // 分享和喜欢数据格式化
-          if (resp.data.code == 200) {
-            const tempList = resp.data.data;
-            if (!tempList.length) {
-              this.selectList = tempList;
-              return uni.$emit("setSearchList", this.selectList);
-            }
-            if (uni.getStorageSync("Authorization") && uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[
-              0].crbtResponse) {
-              const isBuyList = uni.getStorageSync("userSpclData")[0].crbtResponse;
-              for (let i = 0; i < tempList.length; i++) {
-                const isBuy = isBuyList.filter(item => tempList[i].ringId === item.toneID);
-                if (isBuy[0]) {
-                  tempList[i].isBuyMusic = true;
-                }
+          if (uni.getStorageSync("Authorization") && uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[
+            0].vrbtResponse) {
+            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
+            for (const key of tempList) {
+              const isBuy = isBuyList.filter(item => key.ringId === item.ringId);
+              if (isBuy[0]) {
+                key.isBuyVideo = true;
               }
             }
-            this.selectList = tempList;
-            that.$emit("setSearchList", this.selectList);
-          } else {
-            return this.$toast(resp.data.message);
           }
-        });
-      }
+          this.selectList = tempList;
+          uni.$emit("setSearchList", this.selectList);
+        } else {
+          return this.$toast(resp.data.message);
+        }
+      });
+    },
+    // 音频搜索
+    musicSearch () {
+      const that = this;
+      this.getHistory("musicHotKeyArr");
+      this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
+      cxService.search({
+        searchKey: this.value,
+      }).then((resp) => {
+        that.isSelecting = false;
+        that.isSelectedState = true;
+        // 分享和喜欢数据格式化
+        if (resp.data.code === 200) {
+          const tempList = resp.data.data;
+          if (!tempList.length) {
+            this.selectList = tempList;
+            return uni.$emit("setSearchList", this.selectList);
+          }
+          if (uni.getStorageSync("Authorization") && uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[
+            0].crbtResponse) {
+            const isBuyList = uni.getStorageSync("userSpclData")[0].crbtResponse;
+            for (const key of tempList) {
+              const isBuy = isBuyList.filter(item => key.ringId === item.toneID);
+              if (isBuy[0]) {
+                key.isBuyMusic = true;
+              }
+            }
+          }
+          this.selectList = tempList;
+          that.$emit("setSearchList", this.selectList);
+        } else {
+          return this.$toast(resp.data.message);
+        }
+      });
     },
     getMoreHotList (type) {
       this.placeholder = this.defaultValue;
@@ -288,33 +297,41 @@ export default {
         this.hotSelectValue = this.videoList;
       } else {
         if (this.pageName === "video") {
-          if (!uni.getStorageSync("videoHotKeyArr")) {
-            uni.setStorageSync("videoHotKeyArr", []);
-          }
-          this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
-          videoService.spclHotKey({ type: 3 }).then(resp => {
-            if (resp.data.code == 200 && resp.data.data.list.length > 0) {
-              this.hotSelectValue = resp.data.data.list.slice(0, 10);
-              this.videoList = resp.data.data.list;
-              this.total = resp.data.data.total;
-            }
-          });
+          this.videogetMoreHotList();
         } else {
-          if (!uni.getStorageSync("musicHotKeyArr")) {
-            uni.setStorageSync("musicHotKeyArr", []);
-          }
-          if (type === "more") {
-            this.pageNum++;
-          }
-          this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
-          cxService.hotSearch({ pageNum: this.pageNum, pageSize: 10, type: 4 }).then(resp => {
-            if (resp.data.code == 200 && resp.data.data.list.length > 0) {
-              this.hotSelectValue = this.hotSelectValue.concat(resp.data.data.list);
-              this.total = resp.data.data.total;
-            }
-          });
+          this.musicgetMoreHotList(type);
         }
       }
+    },
+    // 视彩热搜榜单展开更多
+    videogetMoreHotList () {
+      if (!uni.getStorageSync("videoHotKeyArr")) {
+        uni.setStorageSync("videoHotKeyArr", []);
+      }
+      this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
+      videoService.spclHotKey({ type: 3 }).then(resp => {
+        if (resp.data.code === 200 && resp.data.data.list.length > 0) {
+          this.hotSelectValue = resp.data.data.list.slice(0, 10);
+          this.videoList = resp.data.data.list;
+          this.total = resp.data.data.total;
+        }
+      });
+    },
+    // 音频热搜榜单展开更多
+    musicgetMoreHotList (type) {
+      if (!uni.getStorageSync("musicHotKeyArr")) {
+        uni.setStorageSync("musicHotKeyArr", []);
+      }
+      if (type === "more") {
+        this.pageNum++;
+      }
+      this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
+      cxService.hotSearch({ pageNum: this.pageNum, pageSize: 10, type: 4 }).then(resp => {
+        if (resp.data.code === 200 && resp.data.data.list.length > 0) {
+          this.hotSelectValue = this.hotSelectValue.concat(resp.data.data.list);
+          this.total = resp.data.data.total;
+        }
+      });
     },
     getMusicDetail (item) {
       this.$emit("getMusicDetail", item);
@@ -344,6 +361,7 @@ export default {
   margin-left: 18rpx;
   background-image: linear-gradient(to right, #9e79ff, #ff83d9);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 
@@ -426,9 +444,6 @@ export default {
   font-weight: 500;
   text-align: center;
   color: #666666;
-}
-
-.cx_select_history {
 }
 
 .cx_select_history_top {
