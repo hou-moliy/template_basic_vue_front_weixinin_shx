@@ -100,7 +100,7 @@ export default {
 <style>
 page {
   height: 100%;
-  background-color: #f5f7f9;
+  background-color: #fff;
 }
 </style>
 

@@ -213,10 +213,6 @@ export default {
     // 获取动态验证码
     sendCode () {
       // this.$analysis.dispatch('dl_yzm_hqyzm')
-      const param = {
-        authType: 2,
-        phone: rsaEncryption(this.phonenumber),
-      };
       if (this.sendFlag) {
         if (!this.phonenumber) {
           return this.$toast("请输入手机号");
@@ -229,30 +225,38 @@ export default {
             mask: true,
           });
         }
-        loginService.getAuthCodeLn(param).then((resp) => {
-          this.sendFlag = false;
-          uni.hideLoading();
-          if (resp.status === 200) {
-            this.sendFlag = true;
-            if (resp.data.code === 506) {
-              return this.$toast("您不是陕西移动手机号码");
-            } else if (resp.data.code !== 200) {
-              return this.$toast(resp.data.message);
-            }
-            this.$toast("验证码已发送，请注意查收");
-            this.times = 60;
-            this.timesInterVal = setInterval(() => {
-              if (this.times <= 0) {
-                clearInterval(this.timesInterVal);
-              }
-              this.times = this.times - 1;
-            }, 1000);
-          } else {
-            this.sendFlag = true;
-            this.$toast(resp.errMsg);
-          }
-        });
+        this.successVerifySendCode();
       }
+    },
+    // 验证通过后的动态验证码操作
+    successVerifySendCode () {
+      const param = {
+        authType: 2,
+        phone: rsaEncryption(this.phonenumber),
+      };
+      loginService.getAuthCodeLn(param).then((resp) => {
+        this.sendFlag = false;
+        uni.hideLoading();
+        if (resp.status === 200) {
+          this.sendFlag = true;
+          if (resp.data.code === 506) {
+            return this.$toast("您不是陕西移动手机号码");
+          } else if (resp.data.code !== 200) {
+            return this.$toast(resp.data.message);
+          }
+          this.$toast("验证码已发送，请注意查收");
+          this.times = 60;
+          this.timesInterVal = setInterval(() => {
+            if (this.times <= 0) {
+              clearInterval(this.timesInterVal);
+            }
+            this.times = this.times - 1;
+          }, 1000);
+        } else {
+          this.sendFlag = true;
+          this.$toast(resp.errMsg);
+        }
+      });
     },
     // 验证正确手机号
     validatePhone (phoneNumber) {
@@ -279,10 +283,7 @@ export default {
     // 手机验证码登录
     getUserProfile (e) {
       this.$loading("请稍等...", true, 0);
-      if (!this.phonenumber) {
-        return this.$toast("请输入手机号");
-      }
-
+      if (!this.phonenumber) return this.$toast("请输入手机号");
       if (this.phonenumber.length !== 11) {
         this.$toast("请输入正确的手机号");
         this.clickFlag = false;
@@ -291,7 +292,6 @@ export default {
         }, 2000);
         return;
       }
-
       if (!this.password) {
         return this.$toast("请输入验证码");
       }
@@ -310,7 +310,7 @@ export default {
       }
     },
     // 验证码登录
-    async loginByPhone () {
+    loginByPhone () {
       const that = this;
       // 是否授权
       if (that.detail.userInfo) {
@@ -318,72 +318,72 @@ export default {
       } else {
         uni.setStorageSync("isAuth", false);
       }
-
-      if (!this.loginFlag) {
-        return;
-      }
-      if (!this.phonenumber) {
-        return this.$toast("请输入手机号");
-      }
-      if (!this.password) {
-        return this.$toast("请输入验证码");
-      }
+      if (!this.loginFlag) return;
+      if (!this.phonenumber) return this.$toast("请输入手机号");
+      if (!this.password) return this.$toast("请输入验证码");
+      this.verifiedloginByPhone();
+    },
+    async verifiedloginByPhone () {
       await this.wxLoginGetCode();
       this.$loading("请稍等", true, 0);
+      this.loginFlag = false;
       const param = {
         code: this.wxCode,
       };
-      this.loginFlag = false;
+      // 获取openid
+      loginService.getWxIds(param)
+        .then((res) => {
+          uni.setStorageSync("openid", res.data.data.openid);
+          uni.setStorageSync("unionid", res.data.data.unionid);
+        }).catch(() => {
+          uni.hideLoading();
+          this.$toast("微信授权失败");
+          this.loginFlag = true;
+        });
+      this.handleloginByPhone();
+    },
+    // 处理验证码登录
+    async handleloginByPhone () {
+      const param = {
+        optype: 1,
+        authType: 2,
+        phone: rsaEncryption(this.phonenumber),
+        password: rsaEncryption(this.password),
+      };
+      if (this.phonenumber) {
+        if (this.validatePhone(this.phonenumber)) {
+          const res2 = await loginService.getLoginLn(param);
+          console.log(res2, "手机短信登录");
+          if (res2.data.code === 200) {
+            // this.$analysis.dispatch('dl_yzm_dlcg')
+            //     // 渠道数据统计
 
-      const res = await loginService.getWxIds(param);
-      if (res.data.code === 200) {
-        uni.setStorageSync("openid", res.data.data.openid);
-        uni.setStorageSync("unionid", res.data.data.unionid);
-        const param = {
-          optype: 1,
-          authType: 2,
-          phone: rsaEncryption(this.phonenumber),
-          password: rsaEncryption(this.password),
-        };
-        if (this.phonenumber) {
-          if (this.validatePhone(this.phonenumber)) {
-            const res2 = await loginService.getLoginLn(param);
-            console.log(res2, "手机短信登录");
-            if (res2.data.code === 200) {
-              // this.$analysis.dispatch('dl_yzm_dlcg')
-              //     // 渠道数据统计
-
-              //     // if (uni.getStorageSync("channelSource")) {
-              //     //   analysisService
-              //     //     .channelRecord(uni.getStorageSync(
-              //     //       "channelSource"))
-              //     //     .then((res) => {
-              //     //       if (res.data.code == 200 && res.data
-              //     //         .data) {
-              //     //         uni.removeStorageSync(
-              //     //           "channelSource");
-              //     //       }
-              //     //     });
-              //     // }
-              this.successLogin(res2);
-            } else {
-              this.loginFlag = true;
-              this.$toast("登录失败，请重试");
-            }
+            //     // if (uni.getStorageSync("channelSource")) {
+            //     //   analysisService
+            //     //     .channelRecord(uni.getStorageSync(
+            //     //       "channelSource"))
+            //     //     .then((res) => {
+            //     //       if (res.data.code == 200 && res.data
+            //     //         .data) {
+            //     //         uni.removeStorageSync(
+            //     //           "channelSource");
+            //     //       }
+            //     //     });
+            //     // }
+            this.successLogin(res2);
           } else {
-            uni.hideLoading();
             this.loginFlag = true;
-            this.$toast("请输入中国移动手机号码");
+            this.$toast("登录失败，请重试");
           }
         } else {
           uni.hideLoading();
           this.loginFlag = true;
-          this.$toast("请输入11位手机号码");
+          this.$toast("请输入中国移动手机号码");
         }
       } else {
         uni.hideLoading();
-        this.$toast("微信授权失败");
         this.loginFlag = true;
+        this.$toast("请输入11位手机号码");
       }
     },
     // 成功登录
@@ -410,7 +410,12 @@ export default {
       const spclStatusRes = await this.$store.dispatch("user/getUserSpclStatus");
       if (spclStatusRes) {
         // 获取用户铃音库数据
-        await this.$store.dispatch("spcl/getUserAllVideoList");
+        this.$store.dispatch("spcl/getUserAllVideoList")
+          .then(() => {
+          })
+          .catch(() => {
+            this.$toast("登录成功，获取铃音失败");
+          });
       }
       uni.hideLoading();
       // 返回上一级
