@@ -324,6 +324,7 @@ export default {
       await this.wxLoginGetCode();
       this.$loading("请稍等", true, 0);
       this.loginFlag = false;
+      this.handleloginByPhone();
       const param = {
         code: this.wxCode,
       };
@@ -337,7 +338,6 @@ export default {
           this.$toast("微信授权失败");
           this.loginFlag = true;
         });
-      this.handleloginByPhone();
     },
     // 处理验证码登录
     async handleloginByPhone () {
@@ -370,7 +370,7 @@ export default {
             this.successLogin(res2);
           } else {
             this.loginFlag = true;
-            this.$toast("登录失败，请重试");
+            this.$toast(res2.data.message);
           }
         } else {
           uni.hideLoading();

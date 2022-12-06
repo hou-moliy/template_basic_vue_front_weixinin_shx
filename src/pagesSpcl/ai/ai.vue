@@ -217,6 +217,8 @@ export default {
               if (res.data.code === 200) {
                 this.$toast("关闭成功");
                 this.aiTopicArray[this.topicIndex].isOpen = false;
+              } else {
+                this.$toast(res.data.message);
               }
             });
         } else {
@@ -229,6 +231,8 @@ export default {
               if (res.data.code === 200) {
                 this.$toast("开启成功");
                 this.aiTopicArray[index].isOpen = true;
+              } else {
+                this.$toast(res.data.message);
               }
             });
         }
