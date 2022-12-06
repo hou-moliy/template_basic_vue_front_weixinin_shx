@@ -1,22 +1,22 @@
 <template>
-  <cover-view class="tab-bar" :style="{ height: tabBarHeight + 'px' }">
-    <cover-view
+  <view class="tab-bar" :style="{ height: tabBarHeight + 'px' }">
+    <view
       v-for="(item, index) in tabBar.list"
       :key="index"
       class="tab-bar-item"
       @click="tbs_SwitchTab(item, index)"
     >
-      <cover-image class="cover-image" :src="elIconPath(index)" />
-      <cover-view
+      <image class="cover-image" :src="elIconPath(index)" />
+      <view
         class="cover-view"
         :style="{
           color: elColor(index),
         }"
       >
         {{ item.text }}
-      </cover-view>
-    </cover-view>
-  </cover-view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <script>
