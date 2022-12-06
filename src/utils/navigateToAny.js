@@ -57,8 +57,7 @@ const navigateToAny = (item, callback) => {
 };
 //  处理外部跳转
 const handleExternalLink = async (item, callback) => {
-  let tempEventUrl = item.eventUrl;
-  tempEventUrl = await freeLoginFun(item.eventUrl);
+  const tempEventUrl = await freeLoginFun(item.eventUrl);
   uni.setStorageSync("H5Data", tempEventUrl);
   uni.hideLoading();
   uni.navigateTo({
@@ -80,8 +79,7 @@ const handleInternalLink = (item, callback) => {
 
 // 处理跳转外部小程序
 const handleExternalProgram = async (item, callback) => {
-  let tempEventUrl = item.eventUrl;
-  tempEventUrl = await freeLoginFun(item.eventUrl);
+  const tempEventUrl = await freeLoginFun(item.eventUrl);
   uni.hideLoading();
   wx.navigateToMiniProgram({
     appId: item.outAppId,

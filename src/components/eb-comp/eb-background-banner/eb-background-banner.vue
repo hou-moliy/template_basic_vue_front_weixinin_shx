@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view v-if="totalSwiper">
     <view class="ad-banner-container">
       <view :class="compTop ? `ad-banner-swiper-top` : `ad-banner-swiper`">
         <swiper

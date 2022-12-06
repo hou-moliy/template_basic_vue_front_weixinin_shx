@@ -4,13 +4,6 @@
     :style="[extraStyle]"
     :class="{ 'no-margin': !compBottom }"
   >
-    <!-- 标题 -->
-    <view v-if="pageConfig.tagIcon" class="title-wrap">
-      <image :src="pageConfig.tagIcon" class="tag-icon" />
-      <text v-if="pageConfig.title" class="title">
-        {{ pageConfig.title }}
-      </text>
-    </view>
     <!-- 加载中 -->
     <uni-load-more
       v-if="loading"
@@ -19,73 +12,83 @@
       icon-type="circle"
       status="loading"
     />
-    <waterfall
-      v-if="wfList.length"
-      :column-count="3"
-      column-width="auto"
-      class="waterfall-box"
-    >
-      <!-- 左侧 -->
-      <view class="waterfall-column waterfall-column-left">
-        <view v-for="(item, index) in wfList" :key="index">
-          <view v-if="index % 2 === 0" class="more-new-item-column">
-            <!-- 运营位 -->
-            <view v-if="item.imgType === 2" class="recommend-wrap">
-              <operate-item
-                :item="item"
-                @click.native="programaAnalysis(params, item.imgId)"
-                @openLoginPopup="openLoginPopup"
-              />
-            </view>
-            <!-- 元素 -->
-            <view v-else class="video-box-new">
-              <spclItem
-                :item="item"
-                :last-flag="index == wfList.length - 1"
-                :inner-color="pageConfig.innerColor"
-                :spcl-style="pageConfig.spclStyle"
-                @click.native="programaAnalysis(params, item.imgId)"
-                @shareVideo="shareCountChange"
-                @giveLikes="likeCountChange"
-                @purchaseVideo="purchaseVideo"
-                @openLoginPopup="openLoginPopup"
-                @goToPlayVideo="goToPlayVideo"
-              />
+    <block v-if="!loading && wfList.length">
+      <!-- 标题 -->
+      <view v-if="pageConfig.tagIcon" class="title-wrap">
+        <image :src="pageConfig.tagIcon" class="tag-icon" />
+        <text v-if="pageConfig.title" class="title">
+          {{ pageConfig.title }}
+        </text>
+      </view>
+      <waterfall
+        v-if="wfList.length"
+        :column-count="3"
+        column-width="auto"
+        class="waterfall-box"
+      >
+        <!-- 左侧 -->
+        <view class="waterfall-column waterfall-column-left">
+          <view v-for="(item, index) in wfList" :key="index">
+            <view v-if="index % 2 === 0" class="more-new-item-column">
+              <!-- 运营位 -->
+              <view v-if="item.imgType === 2" class="recommend-wrap">
+                <operate-item
+                  :item="item"
+                  @click.native="programaAnalysis(params, item.imgId)"
+                  @openLoginPopup="openLoginPopup"
+                />
+              </view>
+              <!-- 元素 -->
+              <view v-else class="video-box-new">
+                <spclItem
+                  :item="item"
+                  :last-flag="index == wfList.length - 1"
+                  :inner-color="pageConfig.innerColor"
+                  :spcl-style="pageConfig.spclStyle"
+                  @click.native="programaAnalysis(params, item.imgId)"
+                  @shareVideo="shareCountChange"
+                  @giveLikes="likeCountChange"
+                  @purchaseVideo="purchaseVideo"
+                  @openLoginPopup="openLoginPopup"
+                  @goToPlayVideo="goToPlayVideo"
+                />
+              </view>
             </view>
           </view>
         </view>
-      </view>
-      <!-- 右侧 -->
-      <view class="waterfall-column">
-        <view v-for="(item, index) in wfList" :key="index">
-          <view v-if="index % 2 !== 0" class="more-new-item-column">
-            <!-- 运营位 -->
-            <view v-if="item.imgType === 2">
-              <operate-item
-                :item="item"
-                @click.native="programaAnalysis(params, item.imgId)"
-                @openLoginPopup="openLoginPopup"
-              />
-            </view>
-            <!-- 元素 -->
-            <view v-else class="video-box-new">
-              <spclItem
-                :item="item"
-                :inner-color="pageConfig.innerColor"
-                :last-flag="index == wfList.length - 1"
-                :spcl-style="pageConfig.spclStyle"
-                @click.native="programaAnalysis(params, item.imgId)"
-                @shareVideo="shareCountChange"
-                @giveLikes="likeCountChange"
-                @purchaseVideo="purchaseVideo"
-                @openLoginPopup="openLoginPopup"
-                @goToPlayVideo="goToPlayVideo"
-              />
+        <!-- 右侧 -->
+        <view class="waterfall-column">
+          <view v-for="(item, index) in wfList" :key="index">
+            <view v-if="index % 2 !== 0" class="more-new-item-column">
+              <!-- 运营位 -->
+              <view v-if="item.imgType === 2">
+                <operate-item
+                  :item="item"
+                  @click.native="programaAnalysis(params, item.imgId)"
+                  @openLoginPopup="openLoginPopup"
+                />
+              </view>
+              <!-- 元素 -->
+              <view v-else class="video-box-new">
+                <spclItem
+                  :item="item"
+                  :inner-color="pageConfig.innerColor"
+                  :last-flag="index == wfList.length - 1"
+                  :spcl-style="pageConfig.spclStyle"
+                  @click.native="programaAnalysis(params, item.imgId)"
+                  @shareVideo="shareCountChange"
+                  @giveLikes="likeCountChange"
+                  @purchaseVideo="purchaseVideo"
+                  @openLoginPopup="openLoginPopup"
+                  @goToPlayVideo="goToPlayVideo"
+                />
+              </view>
             </view>
           </view>
         </view>
-      </view>
-    </waterfall>
+      </waterfall>
+    </block>
+
     <!-- 加载更多 -->
     <uni-load-more
       v-if="compBottom && wfList.length"
@@ -94,7 +97,6 @@
       icon-type="circle"
       :status="isLoadStatus"
     />
-    <!-- 订购弹窗 -->
   </view>
 </template>
 
@@ -212,17 +214,21 @@ export default {
     },
     // 分享
     shareCountChange (e) {
-      const temObj = {
-        ...e,
+      const index = this.wfList.findIndex(wf => wf.ringId === e.ringId);
+      e.extraInfo.shareCount = e.extraInfo.shareCount + 1;
+      const data = {
+        ringId: e.ringId,
+        target: "fx",
+        opType: 1,
       };
-      temObj.shareCount = parseFloat(temObj.shareCount) + 1;
-      this.wfList.forEach(item => {
-        if (item.imgId === temObj.imgId) {
-          item.shareCount = temObj.shareCount;
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
+        if (res.data.code === 200) {
+          this.$set(this.wfList, index, e);
         }
-      });
-      uni.navigateTo({
-        url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+      }).finally(() => {
+        uni.navigateTo({
+          url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+        });
       });
     },
     // 点赞或取消点赞

@@ -63,7 +63,7 @@ export default {
   onLoad (options) {
     this.activityId = options.activityId;
     this.pageName = options.pageName;
-    this.getPageBaseInfo();
+    this.getActivityStatus();
     // 获取我的喜欢
     this.$store.dispatch("spcl/getMyLikeVideoIdList");
   },
@@ -136,32 +136,40 @@ export default {
     getPageBaseInfo () {
       TemplateService.getPageConfigByActivityId({ id: this.activityId }).then(res => {
         if (res.data.code === 200) {
-          if (res.data.data.releaseStatus === 1) { // 已发布
-            this.pageBaseInfo = res.data.data;
-            uni.setNavigationBarTitle({
-              title: this.pageBaseInfo.activityName,
-            });
-            this.shareObj = {
-              text: this.pageBaseInfo.wechatShareDesc,
-              image: this.pageBaseInfo.wechatShareImg,
-            };
-            this.getPageConfig();
-          } else {
-            this.handleErrorStatus(res.data.data);
-          }
+          this.pageBaseInfo = res.data.data;
+          uni.setNavigationBarTitle({
+            title: this.pageBaseInfo.activityName,
+          });
+          this.shareObj = {
+            text: this.pageBaseInfo.wechatShareDesc,
+            image: this.pageBaseInfo.wechatShareImg,
+          };
+          this.getPageConfig();
         }
       });
     },
     // 处理不正确的状态
-    handleErrorStatus ({ releaseStatus, beforeStartTip, afterEndTip }) { // releaseStatus 0.未发布1.已发布2.下线
+    handleErrorStatus (releaseStatus, msg) { // releaseStatus 0.未发布1.已发布2.下线
       if (releaseStatus === 0) {
-        this.$toast(beforeStartTip || "暂未发布！");
-      } else if (releaseStatus === 2) {
-        this.$toast(afterEndTip || "已下线！");
+        this.$toast(msg || "暂未发布！");
+      } else if (releaseStatus === 1) {
+        this.$toast("不在活动时间内呢");
+      } else {
+        this.$toast(msg || "已下线！");
       }
       setTimeout(() => {
         uni.navigateBack();
       }, 500);
+    },
+    // 获取活动状态
+    getActivityStatus () {
+      TemplateService.getActivityStatusByActivityId({ activityId: this.activityId }).then(res => {
+        if (res.data.code === 200) { // 正常
+          this.getPageBaseInfo();
+        } else { // 不正常
+          this.handleErrorStatus(res.data.data, res.data.message);
+        }
+      });
     },
   },
 };

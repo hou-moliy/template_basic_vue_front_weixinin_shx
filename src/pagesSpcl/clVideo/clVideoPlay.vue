@@ -233,8 +233,8 @@ export default {
     }
     return {
       title: `"${this.videoList[this.index].ringName}"太赞了！老铁看一下！`,
-      path: `/pages/cxVideo/cxVideoPlay?share=true&id=${this.videoList[this.index].ringId}&autoLoadData=${this.shareObj.autoLoadData}&actions=${this.shareObj.actions}`,
-      imageUrl: `${this.staticImgs}/lnmp/share_sp.png`,
+      path: `/pagesCommon/share/openShare?videoId=${this.onLoadId}`,
+      imageUrl: `${this.staticImgs}/shxmp/init/share_main.png`,
     };
   },
   created () {
@@ -331,8 +331,6 @@ export default {
         });
     },
     init () {
-      console.log("onshow");
-
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
       this.$store.commit("spcl/M_changeVideoList", this.$store.state.spcl.videoList);

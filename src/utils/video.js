@@ -29,12 +29,13 @@ const handlePurchaseVideo = (ringItem, setCallBack = () => { }) => {
       if (res === 1) { // 已开通视频彩铃
         const popupInfo = { ...store.state.window.windowAllObj.common_spcl_set };
         popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
-        popupInfo.windowProtocol = store.state.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
+        popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
         uni.$emit("operitionShow", {
           popupInfo, btnClickCallBack: (event) => confirmOrderSpcl({ event, ringItem, setCallBack }),
         });
       } else { // 未开通
         const popupInfo = store.state.window.windowAllObj.common_spcl_open;
+        popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
         uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (event) => operitionBtnClick({ event, ringItem }) });
       }
     });
@@ -88,6 +89,7 @@ const handleOpenSpcl = ({ event, ringItem }) => {
   SpclService.openSpcl({ servType: "001" }).then(res => {
     if (res.data.code === 200) {
       if (event.protocolCheckFlag) { // 勾选了AI换铃
+        store.dispatch("user/getUserSpclStatus"); // 更新视频彩铃状态
         handleOpenAi().then(() => {
           Vue.prototype.$toast("成功开通视频彩铃业务");
           store.commit("window/SET_OPERITION_SHOW", false);
@@ -97,10 +99,12 @@ const handleOpenSpcl = ({ event, ringItem }) => {
         });
       } else {
         Vue.prototype.$toast("成功开通视频彩铃业务");
+        // 更新视频彩铃状态
+        store.dispatch("user/getUserSpclStatus");
         store.commit("window/SET_OPERITION_SHOW", false);
       }
     } else {
-      Vue.prototype.$toast("开通失败请重试");
+      Vue.prototype.$toast("开通失败，请重新开通");
       store.commit("window/SET_OPERITION_SHOW", true);
     }
   });
@@ -110,6 +114,7 @@ const handleOpenAi = (type = 2) => { // type 2 开通, 1取消
   return new Promise((resolve, reject) => {
     SpclService.openAi({ type }).then(res => {
       if (res.data.code === 200) {
+        // 更新ai换铃声状态
         store.dispatch("user/getUserAiStatus");
         resolve(res.data);
       } else {

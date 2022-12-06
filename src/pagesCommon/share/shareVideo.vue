@@ -160,6 +160,8 @@ export default {
         setTimeout(() => {
           this.qrToImg();
         }, 500);
+      }).catch(() => {
+        uni.hideLoading();
       });
     },
     // 二维码转化成图片

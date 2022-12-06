@@ -53,7 +53,7 @@ export default {
   },
   data () {
     return {
-      asyncIdx: 5,
+      asyncIdx: 7,
       asyncLoad: false,
       asyncTiming: 2000,
     };

@@ -31,7 +31,9 @@ export default {
   methods: {
     // 去设置
     toSet () {
-      this.$emit("toSet", this.type);
+      uni.switchTab({
+        url: "/pages/cl/index",
+      });
     },
   },
 };
