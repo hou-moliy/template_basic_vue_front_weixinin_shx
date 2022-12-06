@@ -1,6 +1,7 @@
 import VideoService from "@/api/cx/video.js";
 import SpclService from "@/api/spcl/index.js";
 import videoTools from "@/utils/video.js";
+import { log } from "../../utils/QS-SharePoster/app";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据
   searchList: [], // 搜索结果列表
@@ -141,11 +142,13 @@ const actions = {
     if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
       SpclService.getsplykInfo().then(response => {
+        console.log(response.data, "获取用户铃音");
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
         } else {
           uni.hideLoading();
-          reject(response.data.data);
+          reject(response.data);
+          uni.setStorageSync("failSpcl", 1);
         }
       });
     });

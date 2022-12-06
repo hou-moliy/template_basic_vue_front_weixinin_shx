@@ -11,3 +11,5 @@ const globalData = {
 };
 console.log("当前环境：globalData", process.env);
 export default globalData;
+// https://t133.ebupt.com.cn/eApi/weixin-shx
+// http://10.4.7.239:9502/weixin-shx

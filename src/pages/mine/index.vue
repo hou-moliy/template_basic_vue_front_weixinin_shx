@@ -203,13 +203,11 @@ export default {
       //   purchaseIndexIsShow: false,
       btnType: "",
       loginOutConfirmStatus: false,
-      //   iconList: [],
-      //   isMusicOpenChecked: false,
-      //   isBuyList: [],
       functionList: [], // 更多功能列表
       userInfo: {},
       popupInfo: {}, // 订购弹窗的内容
       show: false, // 订购弹窗的展示控制
+      errFlg: null, // 获取铃音失败flag
     };
   },
   onLoad () {
@@ -260,87 +258,51 @@ export default {
         this.$showLoginPop(this);
       }
     },
+    // 根据开通状态打开订购弹窗或跳转页面
+    async judgeStatusOperation (statusFlag, targetId, e) { // 未开通   1已开通 未设置 2 已开通 并设置
+      uni.showLoading({
+        title: "",
+        mask: true,
+      });
+      await this.$store.dispatch("offlinePopup/getCustomorderList", targetId).then(() => {
+        // 配置了策略
+        if (this.store.state.offlinePopup.loginShow) {
+          return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+        }
+        if (this.store.state.offlinePopup.offlineFlag) { // 展示下线弹窗
+          return;
+        }
+        this.statusOperation(statusFlag, e);
+      }).catch(() => {
+        // 未配置策略
+        if (!uni.getStorageSync("Authorization")) {
+          this.$showLoginPop(this);
+        }
+        this.statusOperation(statusFlag, e);
+      });
+      uni.hideLoading();
+    },
+    // 状态操作
+    statusOperation (statusFlag, e) {
+      // 未开通
+      if (!statusFlag) {
+        this.show = true;
+        this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
+      } else {
+        uni.setStorageSync("userCyMsg", e);
+        uni.switchTab({
+          url: "/pages/cl/index",
+        });
+      }
+    },
     // 跳转至编辑页面
     async navigateToEditForAll (e) {
       // cxVideoStatus:0,//0未开通   1已开通 未设置 2 已开通 并设置
       if (e === "sp") {
         console.log("sp", this.cxVideoStatus);
-        switch (this.cxVideoStatus) {
-          case 0:
-            if (!uni.getStorageSync("Authorization")) {
-              this.$showLoginPop(this);
-            } else {
-              // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdsc");
-              // if (this.$store.state.offlinePopup.offlineFlag) {
-              //   return;
-              // }
-              // console.log("测试配置后");
-              // 弹出开通视频彩铃弹窗
-              this.show = true;
-              this.popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
-            }
-            break;
-          case 1:
-            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdsc");
-            // if (this.$store.state.offlinePopup.offlineFlag) {
-            //   return;
-            // }
-            uni.setStorageSync("userCyMsg", e);
-            uni.switchTab({
-              url: "/pages/cl/index",
-            });
-            break;
-          case 2:
-            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdsc");
-            // if (this.$store.state.offlinePopup.offlineFlag) {
-            //   return;
-            // }
-            uni.setStorageSync("userCyMsg", e);
-            uni.switchTab({
-              url: "/pages/cl/index",
-            });
-            break;
-          default:
-            break;
-        }
+        this.judgeStatusOperation(this.cxVideoStatus, "wdsc", e);
       } else {
-        switch (this.cxMusicStatus) {
-          case 0:
-            if (!uni.getStorageSync("Authorization")) {
-              this.$showLoginPop(this);
-            } else {
-              // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdcl");
-              // if (this.$store.state.offlinePopup.offlineFlag) {
-              //   return;
-              // }
-              // 弹出开通视频彩铃弹窗
-              this.btnType = "open";//
-              // this.$refs.video_open_status.open();
-            }
-            break;
-          case 1:
-            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdcl");
-            // if (this.$store.state.offlinePopup.offlineFlag) {
-            //   return;
-            // }
-            uni.setStorageSync("userCyMsg", e);
-            uni.switchTab({
-              url: "/pages/cl/index",
-            });
-            break;
-          case 2:
-            // await this.$store.dispatch("offlinePopup/getCustomorderList", "wdcl");
-            // if (this.$store.state.offlinePopup.offlineFlag) {
-            //   return;
-            // }
-            uni.setStorageSync("userCyMsg", e);
-            uni.switchTab({
-              url: "/pages/cl/index",
-            });
-            break;
-          default:
-            break;
-        }
+        this.judgeStatusOperation(this.cxMusicStatus, "wdcl", e);
       }
     },
     // 点击订购弹窗
@@ -389,56 +351,67 @@ export default {
       // 判断用户是否登录过
       if (uni.getStorageSync("Authorization")) {
         // 查询是否开通数据，视频
-        this.$store.dispatch("user/getUserSpclStatus").then(res => {
-          // 已开通，订购
-          if (res) {
-            // 查询是否有数据
-            if (uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[0]
-              .vrbtResponse) {
-              const isBuyVideoListTemp = uni.getStorageSync("userSpclData")[0].vrbtResponse.filter(
-                item => {
-                  return uni.getStorageSync("userSpclData")[0].vrbtSettingRes
-                    .findIndex(v => (v === item.ringId && item.hidden !== 1)) > -1;
-                });
-              const isBuyVideoList = [];
-              isBuyVideoListTemp.forEach(v => {
-                isBuyVideoList.push(v.ringId);
-              });
-              if (isBuyVideoList.length) {
-                const n = Math.floor(Math.random() * isBuyVideoList.length);
-                const currentRingId = isBuyVideoList[n];
-                // 根据ID请求详情
-                videoService.getSpclVideoDetail({
-                  ringId: currentRingId,
-                }).then(res => {
-                  if (res.data.code === 200) {
-                    this.cxVideoContent = res.data.data
-                      ? res.data.data.ringName
-                      : "";
-                    this.cxVideoStatus = 2;
-                  } else {
-                    this.cxVideoContent = "立即设置";
-                    this.cxVideoStatus = 1;
-                  }
-                });
-              } else {
-                this.cxVideoContent = "立即设置";
-                this.cxVideoStatus = 1;
-              }
-            } else {
-              this.cxVideoContent = "立即设置";
-              this.cxVideoStatus = 1;
-            }
-          } else {
-            this.cxVideoContent = "立即开通";
-            this.cxVideoStatus = 0;
-          }
-        });
+        this.handleIsOpen();
       } else {
         this.nickName = "未登录";
         this.loginFlag = false;
         this.phoneNumber = "";
         this.isAuth = false;
+      }
+    },
+    async handleIsOpen () {
+      await this.$store.dispatch("user/getUserSpclStatus").then((res) => {
+        // 已开通，订购
+        if (res) {
+          if (uni.getStorageSync("userSpclData")[0] && uni.getStorageSync("userSpclData")[0]
+            .vrbtResponse) {
+            // 随机展示铃音
+            this.randomSpclVideo();
+          } else if (uni.getStorageSync("failSpcl")) {
+            // 获取铃音接口失败
+            this.cxVideoContent = "获取用户铃音失败";
+            this.cxVideoStatus = 1;// 让其跳转到彩铃页面
+          } else {
+            this.cxVideoContent = "立即设置";
+            this.cxVideoStatus = 1;
+          }
+        } else {
+          this.cxVideoContent = "立即开通";
+          this.cxVideoStatus = 0;
+        }
+      });
+    },
+    // 随机展示铃音
+    randomSpclVideo () {
+      const isBuyVideoListTemp = uni.getStorageSync("userSpclData")[0].vrbtResponse.filter(
+        item => {
+          return uni.getStorageSync("userSpclData")[0].vrbtSettingRes
+            .findIndex(v => (v === item.ringId && item.hidden !== 1)) > -1;
+        });
+      const isBuyVideoList = [];
+      isBuyVideoListTemp.forEach(v => {
+        isBuyVideoList.push(v.ringId);
+      });
+      if (isBuyVideoList.length) {
+        const n = Math.floor(Math.random() * isBuyVideoList.length);
+        const currentRingId = isBuyVideoList[n];
+        // 根据ID请求详情
+        videoService.getSpclVideoDetail({
+          ringId: currentRingId,
+        }).then(res => {
+          if (res.data.code === 200) {
+            this.cxVideoContent = res.data.data
+              ? res.data.data.ringName
+              : "";
+            this.cxVideoStatus = 2;
+          } else {
+            this.cxVideoContent = "立即设置";
+            this.cxVideoStatus = 1;
+          }
+        });
+      } else {
+        this.cxVideoContent = "立即设置";
+        this.cxVideoStatus = 1;
       }
     },
     getMyMore () {
@@ -494,6 +467,8 @@ export default {
       uni.removeStorageSync("aiStatus");
       uni.removeStorageSync("spclStatus");
       uni.removeStorageSync("myLikeIds");
+      uni.removeStorageSync("failSpcl");
+      uni.removeStorageSync("userCyMsg");
       this.$refs.popup_login_out.close();
       const moreVideoListTemp = this.$store.state.spcl.moreVideoList;
       moreVideoListTemp.forEach(item => {

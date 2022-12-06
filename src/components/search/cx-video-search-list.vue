@@ -61,7 +61,10 @@ export default {
     spclItem,
   },
   props: {
-    pageStatusLoad: false,
+    pageStatusLoad: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -79,12 +82,10 @@ export default {
   },
   watch: {
     pageStatusLoad (value) {
-      // console.log(value, "搜索列表页面");
       if (value === "onShow") {
         if (this.$store.state.spcl.searchList.length > 0) {
           this.$store.commit("spcl/getSearchList", this.$store.state.spcl.searchList);
           this.selectList = this.$store.state.spcl.searchList;
-          // console.log("仓库搜索列表", this.selectList);
         }
       }
     },
@@ -119,7 +120,6 @@ export default {
     stopMusic () {
       innerAudioContext.pause();
       innerAudioContext.onPause(() => {
-        // console.log("暂停播放");
         this.playStatus = "play";
       });
       innerAudioContext.onError((_res) => {
