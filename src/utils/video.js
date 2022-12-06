@@ -104,7 +104,7 @@ const handleOpenSpcl = ({ event, ringItem }) => {
         store.commit("window/SET_OPERITION_SHOW", false);
       }
     } else {
-      Vue.prototype.$toast("开通失败请重试");
+      Vue.prototype.$toast("开通失败，请重新开通");
       store.commit("window/SET_OPERITION_SHOW", true);
     }
   });

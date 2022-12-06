@@ -65,6 +65,10 @@ export default {
   },
   methods: {
     jumpTo () {
+      if (!this.pageConfig.eventUrl) {
+        this.$toast("无跳转路径");
+        return;
+      }
       if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
         navigateToAnyCheck(this.pageConfig, `seeMore_rec_${this.pageConfig.moduleId}`);

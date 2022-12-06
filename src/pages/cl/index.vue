@@ -148,6 +148,7 @@ export default {
       title:
         "您的好友邀您使用陕西小程序，好听、好看、好玩快来体验吧～",
       path: `/pages/cl/index?currentTab=${this.currentTab}&pageName=${this.pageName}&share=1`,
+      imageUrl: `${this.$staticImgs}/shxmp/init/share_main.png`,
     };
   },
   methods: {
@@ -308,7 +309,7 @@ export default {
     },
     swiperChange (e) {
       this.swiperChangeInfo = e;
-      Util.debounce(() => this.swiperNavDebounce, 200, true)();
+      Util.debounce(() => this.swiperNavDebounce(), 200, true)();
     },
     // swiper切换防抖
     swiperNavDebounce () {

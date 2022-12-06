@@ -141,7 +141,6 @@ const actions = {
     if (!uni.getStorageSync("Authorization")) return;
     return new Promise((resolve, reject) => {
       SpclService.getsplykInfo().then(response => {
-        console.log(response.data, "获取用户铃音");
         if (response.data.code === 200) {
           dispatch("getUserCurVideoList", response).then(() => resolve()).catch(() => resolve());
         } else {
