@@ -143,17 +143,6 @@ export default {
     };
   },
 
-  watch: {
-    index (newVal, oldVal) {
-      const len = this.videoList.filter((item) => item.url).length;
-      // 加载视频
-      if (len - this.index - 1 < this.playCount) {
-        // this.pushVideoList();
-      }
-      this.oldIndex = oldVal;
-    },
-  },
-
   onLoad ({
     id,
     autoLoadData,
@@ -191,7 +180,7 @@ export default {
         this.actions = JSON.parse(actions);
       }
       this.onLoadId = id;
-      this.index = this.videoList.findIndex((item) => item.ringId == id);
+      this.index = this.videoList.findIndex((item) => item.ringId === id);
       uni.setStorageSync("videoPlayIndex", this.index);
       this.autoLoadData = autoLoadData;
       this.isFirst = true;
@@ -248,9 +237,6 @@ export default {
       imageUrl: `${this.staticImgs}/lnmp/share_sp.png`,
     };
   },
-  mounted () {
-    console.log("mounted");
-  },
   created () {
     console.log("created");
     uni.getSystemInfo({
@@ -279,7 +265,6 @@ export default {
     formatCount,
     // 新手引导下一步
     nextStep () {
-      // this.$analysis.dispatch("spcl_dgcl_jx");
       if (this.step === 1) {
         this.step = 2;
       } else if (this.step === 2) {
@@ -291,7 +276,6 @@ export default {
     },
     // 新手引导跳过引导
     jumpGuide () {
-      // this.$analysis.dispatch("spcl_dgcl_tg");
       this.step = 3;
       this.isFirstPlay = true;
     },
@@ -324,12 +308,12 @@ export default {
             }
             this.onLoadId = this.shareObj.id;
             this.index = this.videoList.findIndex(
-              (item) => item.ringId == this.shareObj.id,
+              (item) => item.ringId === this.shareObj.id,
             );
             uni.setStorageSync("videoPlayIndex", this.index);
             this.autoLoadData = this.shareObj.autoLoadData;
             // 分享进入的等同第一次的缓存逻辑
-            if (uni.getStorageSync("userPlayVideo") || share) {
+            if (uni.getStorageSync("userPlayVideo") || this.shareFlag) {
               this.isFirstPlay = false;
             } else {
               this.step = 1;
@@ -362,8 +346,6 @@ export default {
           item.extraInfo.like = true;
         }
       });
-
-      console.log("this.index", this.index);
       // 来自于可加载滑动
       const isFromRecentPlay = uni.getStorageSync("isFromRecentPlay");
       const isFromMyLike = uni.getStorageSync("isFromMyLike");
@@ -374,16 +356,6 @@ export default {
       this.totalNum = this.$store.state.spcl.VedioListTalNum;
       this.activityId = uni.getStorageSync("activityId");
       this.level = uni.getStorageSync("level");
-
-      // this.labelId = this.$store.state.spcl.vedioLabelId;
-      // 来自于最近播放页面
-      // console.log("this.index", this.index, "--8--", this.labelId);
-      // if (this.playStatus) {
-      //   this.$analysis.dispatch("spcl_bf", this.moduleId ? this.playStatus + "_" + this.moduleId + "_" + this.videoList[this.index].ringId : this.playStatus + "_" + this.notModulId + "_" + this.videoList[this.index].ringId);
-      // } else {
-      //   this.$analysis.dispatch("spcl_bf", this.videoList[this.index].ringId);
-      // }
-
       if (uni.getStorageSync("Authorization")) {
         // 播放记录
         const data = {
@@ -396,6 +368,7 @@ export default {
         videoService.getSpclUserBehavior(data).then((res) => { });
       }
     },
+    // 瀑布流组件获取下一页
     getNewVedioList () {
       if (this.isRequest) {
         return;
@@ -410,7 +383,6 @@ export default {
       SpclService.getVideoByActivityIdPage(data)
         .then((res) => {
           this.isRequest = false;
-          // const { data,code } = res.data;
           if (res.data.code === 200) {
             const tempList = Util.SplitArray(res.data.data.list, this.videoList);
             this.pageNum++;
@@ -419,6 +391,7 @@ export default {
           }
         });
     },
+    // 我的喜欢获取下一页
     getMoreMyLikeVideoPlayList () {
       if (this.isRequest) {
         return;
@@ -440,6 +413,7 @@ export default {
         }
       });
     },
+    // 最近播放获取下一页
     getMoreRecentVideoPlayList () {
       if (this.isRequest) {
         return;
@@ -454,23 +428,8 @@ export default {
         this.isRequest = false;
         if (res.data.code === 200) {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
-          if (
-            uni.getStorageSync("Authorization") &&
-            uni.getStorageSync("userSpclData")[0] &&
-            uni.getStorageSync("userSpclData")[0].vrbtResponse
-          ) {
-            const isBuyList = uni.getStorageSync("userSpclData")[0].vrbtResponse;
-            for (let i = 0; i < tempList.length; i++) {
-              const isBuy = isBuyList.filter(
-                (item) => tempList[i].ringId === item.ringId,
-              );
-              if (isBuy[0]) {
-                tempList[i].isBuyVideo = true;
-              }
-            }
-          }
           this.pageNum++;
-          this.videoList = tempList;
+          this.videoList = videoInfoUpdate(tempList);
           this.$store.commit("spcl/M_changeVideoList", this.videoList);
         }
       });
@@ -482,12 +441,6 @@ export default {
       if (this.isFirstPlay) {
         this.isFirstPlay = false;
       }
-      // if (this.playStatus) {
-      //   this.$analysis.dispatch("spcl_bf", this.moduleId ? this.playStatus + "_" + this.moduleId + "_" + this.videoList[this.index].ringId : this.playStatus + "_" + this.notModulId + "_" + this.videoList[this.index].ringId);
-      // } else {
-      //   this.$analysis.dispatch("spcl_bf", this.videoList[this.index].ringId);
-      // }
-
       if (uni.getStorageSync("Authorization")) {
         // 记录
         const data = {
@@ -499,6 +452,10 @@ export default {
         };
         videoService.getSpclUserBehavior(data).then((res) => { });
       }
+      // 加载更多数据
+      this.getMore();
+    },
+    getMore () {
       const isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
       const isFromRecentPlay = uni.getStorageSync("isFromRecentPlay");
       const isFromMyLike = uni.getStorageSync("isFromMyLike");
@@ -517,12 +474,10 @@ export default {
           this.getMoreMyLikeVideoPlayList();
         }
       } else if (!isPlayFromIndex) {
-        console.log("从更多页面来", this.videoList.length, this.index, this.totalNum);
         if (
           this.videoList.length - this.index <= this.loadMoreVideoCount &&
           this.videoList.length < this.totalNum
         ) {
-          console.log("加载新数据");
           this.getNewVedioList();
         }
       }

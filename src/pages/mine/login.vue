@@ -142,13 +142,10 @@
 
 <script>
 import loginService from "@/api/my/my.js";
-// import miguService from "@/api/migu/migu.js";
-// import analysisService from '@/api/analysis/analysis.js'
 import {
   rsaEncryption,
   rsaDecryption,
 } from "@/utils/rsa.js";
-import { log } from "../../utils/QS-SharePoster/app";
 export default {
   name: "LoginPage",
   data () {
@@ -216,8 +213,6 @@ export default {
     // 获取动态验证码
     sendCode () {
       // this.$analysis.dispatch('dl_yzm_hqyzm')
-      // console.log('加密',rsaEncryption(this.phonenumber))
-
       const param = {
         authType: 2,
         phone: rsaEncryption(this.phonenumber),
@@ -472,16 +467,6 @@ export default {
             `Bearer ${res3.data.token}`);
           // this.$analysis.dispatch('dl_vx_dlcg')
           uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
-          // 渠道数据统计
-          // if (uni.getStorageSync('channelSource')) {
-          //   analysisService
-          //     .channelRecord(uni.getStorageSync('channelSource'))
-          //     .then((res) => {
-          //       if (res.data.code == 200 && res.data.data) {
-          //         uni.removeStorageSync('channelSource')
-          //       }
-          //     })
-          // }
           this.bindWxUser();
           // 获取用户视彩开通状态再获取铃音数据
           const spclStatusRes = await this.$store.dispatch("user/getUserSpclStatus");

@@ -76,7 +76,6 @@ export default {
     this.titleMargin = this.navMarginHeight + 145;
   },
   onShow () {
-    // this.$analysis.dispatch("spcl_hjyl");
     this.getVideoByIdJK();
 
     this.sysheight = uni.getSystemInfoSync().windowHeight;
@@ -88,7 +87,6 @@ export default {
       uni.navigateBack();
     },
     getVideoByIdJK () {
-      // console.log();
       videoService.getSpclVideoDetail({
         ringId: this.clid,
       }).then((resp) => {
