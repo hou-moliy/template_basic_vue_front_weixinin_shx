@@ -1,7 +1,6 @@
 import VideoService from "@/api/cx/video.js";
 import SpclService from "@/api/spcl/index.js";
 import videoTools from "@/utils/video.js";
-import { log } from "../../utils/QS-SharePoster/app";
 const state = {
   userSpclData: uni.getStorageSync("userSpclData")[0] || {}, // 用户视频彩铃数据
   searchList: [], // 搜索结果列表

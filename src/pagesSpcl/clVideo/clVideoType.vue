@@ -566,69 +566,78 @@ export default {
     },
     // 点赞
     likeVideo (e, index, flag) {
-      const ringId = e.currentTarget.dataset.videoid;
       if (!uni.getStorageSync("Authorization")) {
         // 提示登录
         this.$showLoginPop(this);
       } else {
-        if (this.isClickLike) {
-          return;
-        }
+        if (this.isClickLike) return;
         this.isClickLike = true;
-        const data = {
-          ringId,
-          target: "dz",
-          opType: flag ? 0 : 1,
-          mainId: this.orderParams.moduleId
-            ? this.orderParams.moduleId
-            : this.orderParams.notModulId,
-          pageName: this.orderParams.playStatus,
-        };
-        this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
-          this.isClickLike = false;
-          if (res.code === 200) {
-            // 取消点赞
-            if (flag) {
-              this.$toast("取消点赞成功");
-              const tempList = this.specialNews.filter(
-                (item) => ringId === item.ringId,
-              );
-              tempList[0].extraInfo.like = false;
-              tempList[0].extraInfo.likeCount -= 1;
-              this.$set(this.specialNews, index, tempList[0]);
-              // 更新更多精彩数据
-              const tempMoreVideoList = this.$store.state.spcl.moreVideoList;
-              const currentIndex = tempMoreVideoList.findIndex(
-                (item) => ringId === item.ringId,
-              );
-              if (currentIndex > -1) {
-                tempMoreVideoList[currentIndex].extraInfo.likeCount -= 1;
-                tempMoreVideoList[currentIndex].extraInfo.like = false;
-                this.$store.commit("spcl/getMoreVideoList", tempMoreVideoList);
-              }
-            } else {
-              this.$toast("点赞成功");
-              const tempList = this.specialNews.filter(
-                (item) => ringId === item.ringId,
-              );
-              tempList[0].extraInfo.like = true;
-              tempList[0].extraInfo.likeCount += 1;
-              this.$set(this.specialNews, index, tempList[0]);
-              // 更新更多精彩数据
-              const tempMoreVideoList = this.$store.state.spcl.moreVideoList;
-              const currentIndex = tempMoreVideoList.findIndex(
-                (item) => ringId === item.ringId,
-              );
-              if (currentIndex > -1) {
-                tempMoreVideoList[currentIndex].extraInfo.likeCount += 1;
-                tempMoreVideoList[currentIndex].extraInfo.like = true;
-                this.$store.commit("spcl/getMoreVideoList", tempMoreVideoList);
-              }
-            }
+        this.handlelikeVideo(e, index, flag);
+      }
+    },
+    handlelikeVideo (e, index, flag) {
+      const ringId = e.currentTarget.dataset.videoid;
+      const data = {
+        ringId,
+        target: "dz",
+        opType: flag ? 0 : 1,
+        mainId: this.orderParams.moduleId
+          ? this.orderParams.moduleId
+          : this.orderParams.notModulId,
+        pageName: this.orderParams.playStatus,
+      };
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
+        this.isClickLike = false;
+        if (res.code === 200) {
+          // 取消点赞
+          if (flag) {
+            this.$toast("取消点赞成功");
+            const tempList = this.specialNews.filter(
+              (item) => ringId === item.ringId,
+            );
+            tempList[0].extraInfo.like = false;
+            tempList[0].extraInfo.likeCount -= 1;
+            this.$set(this.specialNews, index, tempList[0]);
+            // 更新数据
+            this.updateData(index);
           } else {
-            this.$toast(res.message);
+            this.$toast("点赞成功");
+            const tempList = this.specialNews.filter(
+              (item) => ringId === item.ringId,
+            );
+            tempList[0].extraInfo.like = true;
+            tempList[0].extraInfo.likeCount += 1;
+            this.$set(this.specialNews, index, tempList[0]);
+            // 更新数据
+            this.updateData(index);
           }
-        });
+        } else {
+          this.$toast(res.message);
+        }
+      });
+    },
+    // 数据更新
+    updateData (index) {
+      // 更新我的喜欢数据
+      this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.specialNews[index]);
+      // 更新更多精彩数据
+      this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList", index);
+      // 更新视彩分类视频列表
+      this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType", index);
+      // 更新搜索数据
+      this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList", index);
+    },
+    // 更新vux关于like
+    changeStoreLike (typeVideoList, storeMutations, index) {
+      const currentVideoId = this.specialNews[index].ringId;
+      const videoList = typeVideoList;
+      const currentIndex = videoList.findIndex(
+        (item) => currentVideoId === item.ringId,
+      );
+      if (currentIndex > -1) {
+        videoList[currentIndex].extraInfo.likeCount += 1;
+        videoList[currentIndex].extraInfo.like = true;
+        this.$store.commit(storeMutations, videoList);
       }
     },
     // 运营位
