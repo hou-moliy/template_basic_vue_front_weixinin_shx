@@ -7,7 +7,7 @@
       <view class="ad-banner-box">
         <image class="ad-banner-image" :src="dataList[0].portalAd[0].url" />
         <view
-          v-if="$store.state.user.aiStatus == 0"
+          v-if="aiStatus == 0"
           class="oper-btn"
           :style="{ background: `${pageConfig.innerColor}` }"
           @click="openAiFun"
@@ -36,6 +36,11 @@ export default {
       staticImgs: this.$staticImgs,
       dataList: [],
     };
+  },
+  computed: {
+    aiStatus () {
+      return this.$store.state.user.aiStatus;
+    },
   },
   created () {
     this.getAdBanner();

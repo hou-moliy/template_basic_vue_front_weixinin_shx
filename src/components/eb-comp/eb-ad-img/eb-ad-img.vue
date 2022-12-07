@@ -83,8 +83,7 @@ export default {
         }
       });
     },
-
-    async navigateToH5 (event) {
+    navigateToH5 (event) {
       this.$emit("buryBannerId", event.id);
       navigateToAnyCheck(event, `swiper_${event.id}`);
       this.$analysis.dispatch("dj_clgl", event.id);

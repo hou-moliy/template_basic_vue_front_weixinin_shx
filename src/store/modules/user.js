@@ -35,8 +35,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       SpclService.aiStatus().then(res => {
         if (res.data.code === 200) {
-          commit("SET_AI_STATUS", res.data.data.isAIOpen);
-          resolve(res.data.data.isAIOpen);
+          const isAIOpen = res.data?.data?.isAIOpen ?? 0;
+          commit("SET_AI_STATUS", isAIOpen);
+          resolve(isAIOpen);
         } else {
           reject(res.data);
         }

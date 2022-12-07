@@ -35,8 +35,7 @@
   </view>
 </template>
 <script>
-import SpclService from "@/api/spcl/index";
-import { handlePurchaseVideo } from "@/utils/video.js";
+import { handlePurchaseVideo, handleOpenAi, changeAi } from "@/utils/video.js";
 export default {
   props: {
     pageConfigList: {
@@ -95,40 +94,9 @@ export default {
       handlePurchaseVideo(item, this.handleFresh);
     },
     // 开通或关闭AI换铃
-    handleOpenAi (type = 2) { // type 2 开通, 1取消
-      return new Promise((resolve, reject) => {
-        SpclService.openAi({ type }).then(res => {
-          if (res.data.code === 200) {
-            this.$store.dispatch("user/getUserAiStatus");
-            resolve(res.data);
-          } else {
-            reject(res.data);
-          }
-        });
-      });
-    },
+    handleOpenAi,
     // Ai换铃状态切换
-    changeAi () {
-      this.$store.dispatch("user/getUserSpclStatus").then(spclStatus => {
-        if (spclStatus === 1) { // 已开通、展示开启或关闭ai换铃声提示
-          this.$store.dispatch("user/getUserAiStatus").then(isAIOpen => {
-            const type = isAIOpen === 1 ? 1 : 2; // type 1是取消,2是开启
-            const notifyInfo = type === 1 ? this.$store.state.window.windowAllObj.common_ai_cancel : this.$store.state.window.windowAllObj.common_ai_open;
-            uni.$emit("changeAi", {
-              notifyInfo,
-              confirmCallback: () => {
-                this.handleOpenAi(type).then(() => {
-                  type === 1 ? this.$toast("取消成功!") : this.$toast("开启成功!");
-                });
-              },
-            });
-          });
-        } else { // 未开通、展示开通弹窗
-          const popupInfo = this.$store.state.window.windowAllObj.common_spcl_open;
-          uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (item) => this.operitionBtnClick(item) });
-        }
-      });
-    },
+    changeAi,
   },
 };
 </script>

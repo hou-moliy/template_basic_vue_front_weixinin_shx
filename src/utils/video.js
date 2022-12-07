@@ -132,17 +132,25 @@ const changeAi = () => {
         const notifyInfo = type === 1 ? store.state.window.windowAllObj.common_ai_cancel : store.state.window.windowAllObj.common_ai_open;
         uni.$emit("changeAi", {
           notifyInfo,
-          confirmCallback: () => {
-            handleOpenAi(type).then(() => {
-              type === 1 ? Vue.prototype.$toast("取消成功!") : Vue.prototype.$toast("开启成功!");
-            });
-          },
+          confirmCallback: () => handleAiConfirmCallback(type),
         });
       });
     } else { // 未开通、展示开通弹窗
       const popupInfo = store.state.window.windowAllObj.common_spcl_open;
       uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (item) => operitionBtnClick(item) });
     }
+  });
+};
+// 处理AI弹窗点击回调
+const handleAiConfirmCallback = (type) => {
+  const tips = type === 1 ? "取消中" : "开启中";
+  Vue.prototype.$loading(tips, true, 0);
+  handleOpenAi(type).then(() => {
+    type === 1 ? Vue.prototype.$toast("取消成功!") : Vue.prototype.$toast("开启成功!");
+  }).catch(err => {
+    Vue.prototype.$toast(err.message);
+  }).finally(() => {
+    uni.hideLoading();
   });
 };
 

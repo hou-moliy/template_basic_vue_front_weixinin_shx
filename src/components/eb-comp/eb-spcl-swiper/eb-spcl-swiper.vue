@@ -30,7 +30,9 @@
           :animation="index == currentIndex ? animationData : animationData2"
           @click="goToPlayVideo(item)"
         >
-          <image :src="item.openHCoverUrl || item.openVCoverUrl" />
+          <image
+            :src="item.coverUrl || item.openVCoverUrl || item.openHCoverUrl"
+          />
           <view class="more-new-title">
             <view class="more-new-titleText">
               {{ item.ringName }}
