@@ -60,7 +60,7 @@
 <script>
 import {
   formatRichText,
-} from "../popup-module/toos/tools";
+} from "../popup-module/tool/tools";
 export default {
   name: "NotifyPop",
   data () {
