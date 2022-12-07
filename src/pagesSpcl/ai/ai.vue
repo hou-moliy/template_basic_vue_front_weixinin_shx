@@ -276,7 +276,7 @@ export default {
     },
     // 取消开通视频彩铃
     closeOperitionPopup () {
-      this.show(false);
+      this.show = false;
     },
   },
 };
