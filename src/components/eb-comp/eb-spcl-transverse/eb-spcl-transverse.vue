@@ -104,7 +104,7 @@ export default {
       if (opType === 1) {
         this.$toast("点赞成功");
       } else if (opType === 0) {
-        this.$toast("取消点赞成功");
+        this.$toast("成功取消点赞");
       }
       this.getWfList();
     },

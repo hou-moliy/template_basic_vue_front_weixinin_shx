@@ -81,7 +81,7 @@
     </view>
     <!-- 加载更多 -->
     <uni-load-more
-      v-show="loadShow"
+      v-show="loadShow || wfList.length"
       class="loadingicon"
       icon-size="20"
       icon-type="circle"
@@ -207,6 +207,7 @@ export default {
       const likeIds = this.$store.state.spcl.myLikeIds;
       const list = this.wfList.filter(wf => likeIds.find(id => id === wf.ringId));
       this.wfList = [...list];
+      this.loadShow = !!likeIds.length;
     },
     // 展示登录弹窗
     openLoginPopup () {
@@ -263,7 +264,9 @@ export default {
     },
     // 去试听
     goToCx () {
-      console.log("去试听");
+      uni.switchTab({
+        url: "/pages/cl/index",
+      });
     },
   },
 };

@@ -338,10 +338,15 @@ export default {
     // 删除视频彩铃
     delVideoItems () {
       if (this.delCls.length <= 0) return this.$toast("请勾选删除的铃音");
+      const len = this.delCls.length;
       if (this.navFlag === "curt") { // 当前播放页面
         this.handleDelCurt().then(res => {
-          if (res.code !== 200) {
-            this.$toast(res.message);
+          if (res.code === 200) {
+            const notifyInfoSuccess = uni.getStorageSync("windowAllObj").common_spcl_del_success;
+            notifyInfoSuccess.windowDesc = `<div style="color:#999999;text-align: center;">您成功将<span style="color:#B092FF;">${len}</span>首视频彩铃取消当前播放</div>`;
+            this.$showNotifyPop(this, notifyInfoSuccess);
+          } else {
+            this.$toast(res.msg);
           }
         });
       } else { // 我的闲置页面
@@ -381,8 +386,14 @@ export default {
       const contents = this.allVideoList.filter(
         v => this.delCls.findIndex(item => item === v.ringId) === -1,
       );
+      const notifyInfoFail = uni.getStorageSync("windowAllObj").common_spcl_del_fail;
+      const notifyInfoSuccess = uni.getStorageSync("windowAllObj").common_spcl_del_success;
       spclService.delMultiVideo(this.delCls).then(res => {
         if (res.data.code === 200) {
+          notifyInfoFail.windowDesc = notifyInfoFail.windowDesc.replace("#{successNum}", `${res.data.data.success}`);
+          notifyInfoFail.windowDesc = notifyInfoFail.windowDesc.replace("#{failNum}", `${res.data.data.fail}`);
+          notifyInfoSuccess.windowDesc = notifyInfoSuccess.windowDesc.replace("#{successNum}", `${res.data.data.success}`);
+          this.$showNotifyPop(this, res.data.data.fail === 0 ? notifyInfoSuccess : notifyInfoFail);
           // 更新用户铃音库数据
           this.$store.commit("spcl/SET_USER_SPCL_ALL", contents);
           // 更新闲置铃音数据
@@ -465,7 +476,7 @@ export default {
       this.currentObj.extraInfo.like = !flag;
       if (flag) {
         this.currentObj.extraInfo.likeCount--;
-        this.$toast("取消点赞成功");
+        this.$toast("成功取消点赞");
       } else {
         this.currentObj.extraInfo.likeCount++;
         this.$toast("点赞成功");

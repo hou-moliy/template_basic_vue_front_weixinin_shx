@@ -591,7 +591,7 @@ export default {
         if (res.code === 200) {
           // 取消点赞
           if (flag) {
-            this.$toast("取消点赞成功");
+            this.$toast("成功取消点赞");
             const tempList = this.specialNews.filter(
               (item) => ringId === item.ringId,
             );

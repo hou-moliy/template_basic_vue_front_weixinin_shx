@@ -240,7 +240,7 @@ export default {
             // 更新仓库里的数据
             this.updateData();
           } else {
-            this.$toast("取消点赞成功");
+            this.$toast("成功取消点赞");
             // 修改当前数据 更新仓库
             this.videoDetail.extraInfo.like = false;
             this.videoDetail.extraInfo.likeCount -= 1;
