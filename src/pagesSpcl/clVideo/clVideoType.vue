@@ -203,7 +203,7 @@
                       @click="shareVideo($event)"
                     >
                       <image
-                        :src="`${staticImgs}/lnmp/share-icon.png`"
+                        :src="`${staticImgs}/shxmp/init/share-icon.png`"
                         class="share-icon icon"
                       />
                       <text>{{ formatCount(item.extraInfo.shareCount) }}</text>
@@ -311,7 +311,7 @@
               @click="likeVideo($event, index, true)"
             >
               <image
-                :src="`${staticImgs}/lnmp/dzed-icon.png`"
+                :src="`${staticImgs}/shxmp/init/dzed-icon.png`"
                 class="like-icon icon"
               />
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
@@ -323,7 +323,7 @@
               @click="likeVideo($event, index, false)"
             >
               <image
-                :src="`${staticImgs}/lnmp/dz-icon.png`"
+                :src="`${staticImgs}/shxmp/init/dz-icon.png`"
                 class="like-icon icon"
               />
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
@@ -376,7 +376,7 @@ export default {
       pageSize: 6,
       isLoad: "loading",
       isLoadStatus: "loading",
-      showDirection: "V",
+      showDirection: "H",
       pageName: "",
       purchaseIndexIsShow: false,
       purchaseVideoMes: {},
@@ -387,7 +387,6 @@ export default {
       index: 0,
       isClickLike: false,
       init: true,
-      shareObj: {},
       isIop: false,
       orderParams: {}, // 传输到 订购组件
       windowAllList: [], // 弹窗列表
@@ -421,21 +420,23 @@ export default {
       this.currentTab = option.moduleId;
       uni.setStorageSync("recomendLabel", option.moduleId);
     }
-    if (option.pageName && option.pageName !== "undefined") {
-      this.pageName = option.pageName;
+    if (option.showDirection) {
       this.showDirection = option.showDirection;
-      console.log("this.showDirection", this.showDirection);
-      uni.setStorageSync("isRecomend", this.pageName);
-      uni.setNavigationBarTitle({
-        title: this.pageName,
-      });
-    } else {
-      this.pageName = "more";
-      uni.setStorageSync("isRecomend", "more");
+      console.log(this.showDirection);
+      // option.pageName && option.pageName !== "undefined"
+      // this.pageName = option.pageName;
+      // this.showDirection = option.showDirection;
+      // console.log("this.showDirection", this.showDirection);
+      // uni.setStorageSync("isRecomend", this.pageName);
+      // uni.setNavigationBarTitle({
+      //   title: this.pageName,
+      // });
     }
-    this.shareObj = option;
+    this.pageName = "more";
+    uni.setStorageSync("isRecomend", "more");
   },
   onShow () {
+    console.log(this.index, "index");
     this.dispatchPageEvent();
     this.isLoadStatus = "loading";
     this.selectLabel = [];
@@ -472,7 +473,6 @@ export default {
   },
   onHide () {
     this.offMonitor();
-    uni.setStorageSync("videoTypeIndex", this.index);
   },
   // 下拉到底部
   onReachBottom () {
@@ -649,17 +649,12 @@ export default {
       const data = {
         isShow: 1,
       };
-      const vedioTypeIndex = uni.getStorageSync("videoTypeIndex");
       videoService.getSpclLabel(data).then((res) => {
         // console.log(res)
         if (res.data.code === 200) {
           this.lableList = res.data.data;
           this.currentTab = res.data.data[this.index].labelId;
-          if (vedioTypeIndex) {
-            this.showDirection = res.data.data[vedioTypeIndex].showDirection;
-          } else {
-            this.showDirection = res.data.data[0].showDirection;
-          }
+          this.showDirection = res.data.data[0].showDirection;
           if (
             this.$store.state.spcl.videoListFromCxVideoType.length > 0 &&
             !this.init
@@ -1059,7 +1054,7 @@ page {
         .setting-btn {
           width: 168rpx;
           height: 54rpx;
-          background: linear-gradient(to right, #ff6f50 0%, #ff008c 100%);
+          background-color: #9e79ff;
           border-radius: 27rpx;
 
           font-size: 22rpx;

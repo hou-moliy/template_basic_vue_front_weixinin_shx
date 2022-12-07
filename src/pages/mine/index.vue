@@ -450,6 +450,7 @@ export default {
         }
       });
       this.$store.commit("spcl/getMoreVideoList", moreVideoListTemp);
+      this.$store.commit("spcl/SET_USER_SPCL_DATA", {});
       this.$store.commit("spcl/M_changeVideoList", []);
       this.$store.commit("spcl/getVideoLabelId", -1);
       this.$store.commit("spcl/getVedioListTalNum", 0);

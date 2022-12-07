@@ -409,14 +409,21 @@ export default {
         // 获取用户铃音库数据
         this.$store.dispatch("spcl/getUserAllVideoList")
           .then(() => {
+            uni.hideLoading();
+            // 返回上一级
+            uni.navigateBack({ delta: 1 });
           })
           .catch(() => {
             this.$toast("登录成功，获取铃音失败");
+            uni.hideLoading();
+            // 返回上一级
+            uni.navigateBack({ delta: 1 });
           });
+      } else {
+        uni.hideLoading();
+        // 返回上一级
+        uni.navigateBack({ delta: 1 });
       }
-      uni.hideLoading();
-      // 返回上一级
-      uni.navigateBack({ delta: 1 });
     },
 
     // 绑定微信与手机号
