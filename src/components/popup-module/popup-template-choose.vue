@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { formatRichText } from "./toos/tools.js";
+import { formatRichText } from "./tool/tools.js";
 export default {
   name: "EBPopup",
   model: {

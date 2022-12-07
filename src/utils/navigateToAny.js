@@ -65,6 +65,7 @@ const handleExternalLink = async (item, callback) => {
   });
 };
 
+// 处理内部跳转
 const handleInternalLink = (item, callback) => {
   uni.hideLoading();
   uni.navigateTo({
@@ -82,7 +83,7 @@ const handleExternalProgram = async (item, callback) => {
   const tempEventUrl = await freeLoginFun(item.eventUrl);
   uni.hideLoading();
   wx.navigateToMiniProgram({
-    appId: item.outAppId,
+    appId: item.appId,
     path: tempEventUrl,
     extraData: {},
     envVersion: "release",

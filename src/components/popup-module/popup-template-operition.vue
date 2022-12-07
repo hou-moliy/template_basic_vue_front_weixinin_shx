@@ -171,7 +171,7 @@
 <script>
 import {
   formatRichText,
-} from "./toos/tools.js";
+} from "./tool/tools.js";
 export default {
   name: "EBPopup",
   model: {

@@ -67,7 +67,7 @@
             <ebConfigContainerAsync
               key=""
               ref="EbConfig"
-              :activity-id="swipeItem.activityId"
+              :activity-id="swipeItem.pageName"
               :page-config-list="swipeItem.pageConfig"
             />
           </scroll-view>
@@ -250,7 +250,6 @@ export default {
           this.swiperTab = this.currentTab ? this.currentTab - 1 : 0;
           this.tabList.forEach((e, index) => {
             e.pageConfig = "";
-            e.activityId = e.pageName;
             if (index === 0 && e.pageName) {
               this.pageName = e.pageName;
               this.getPageConfig(e.pageName);
