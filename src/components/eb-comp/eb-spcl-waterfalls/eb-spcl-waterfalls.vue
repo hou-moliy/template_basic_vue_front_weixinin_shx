@@ -245,8 +245,10 @@ export default {
         if (res.code === 200) {
           if (flag) {
             item.extraInfo.likeCount -= 1;
+            this.$toast("成功取消点赞");
           } else {
             item.extraInfo.likeCount += 1;
+            this.$toast("点赞成功");
           }
           item.extraInfo.like = !flag;
           // 更新我的喜欢数据

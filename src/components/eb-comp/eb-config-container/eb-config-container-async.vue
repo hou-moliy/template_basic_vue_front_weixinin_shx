@@ -4,6 +4,7 @@
     <template v-if="pageConfigList && pageConfigList.length > asyncIdx">
       <eb-config-container
         :key="pageConfigIndex"
+        ref="EbConfig1"
         :comp-bottom="false"
         :activity-id="activityId"
         :page-config-list="pageConfigList.slice(0, asyncIdx)"
@@ -13,7 +14,7 @@
       <template v-if="asyncLoad">
         <eb-config-container
           :key="pageConfigIndex"
-          ref="EbConfig"
+          ref="EbConfig2"
           :comp-top="false"
           :page-config-list="pageConfigList.slice(asyncIdx)"
           :activity-id="activityId"
@@ -24,7 +25,7 @@
     </template>
     <eb-config-container
       v-else
-      ref="EbConfig"
+      ref="EbConfig3"
       :key="pageConfigIndex"
       :page-config-list="pageConfigList"
       :activity-id="activityId"
@@ -74,7 +75,15 @@ export default {
     },
     // 刷新
     handleFresh () {
-      this.$refs.EbConfig.handleFresh();
+      if (this.$refs.EbConfig1) {
+        this.$refs.EbConfig1.handleFresh();
+      }
+      if (this.$refs.EbConfig2) {
+        this.$refs.EbConfig2.handleFresh();
+      }
+      if (this.$refs.EbConfig3) {
+        this.$refs.EbConfig3.handleFresh();
+      }
     },
     // 打开登录弹窗
     openLoginPopup () {

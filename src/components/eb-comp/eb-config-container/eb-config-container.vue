@@ -286,16 +286,24 @@ export default {
     // 刷新数据
     handleFresh () {
       if (this.$refs.EbSpclWaterFalls) {
-        this.$refs.EbSpclWaterFalls[0].handleFresh();
+        this.$refs.EbSpclWaterFalls.forEach(item => {
+          item.handleFresh();
+        });
       }
       if (this.$refs.EbSpclTransverse) {
-        this.$refs.EbSpclTransverse[0].handleFresh();
+        this.$refs.EbSpclTransverse.forEach(item => {
+          item.handleFresh();
+        });
       }
       if (this.$refs.EbSpclList) {
-        this.$refs.EbSpclList[0].handleFresh();
+        this.$refs.EbSpclList.forEach(item => {
+          item.handleFresh();
+        });
       }
       if (this.$refs.EbSpclSwiper) {
-        this.$refs.EbSpclSwiper[0].handleFresh();
+        this.$refs.EbSpclSwiper.forEach(item => {
+          item.handleFresh();
+        });
       }
     },
     // 子组件打开登录弹窗

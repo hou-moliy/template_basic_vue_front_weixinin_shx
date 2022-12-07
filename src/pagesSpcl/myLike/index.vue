@@ -239,6 +239,7 @@ export default {
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
         if (res.code === 200) {
           this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);
+          this.$toast("成功取消点赞");
           this.updateData();
         } else {
           this.$toast(res.message);
