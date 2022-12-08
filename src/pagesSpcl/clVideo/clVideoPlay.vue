@@ -9,16 +9,14 @@
           height: navHeight + 'px',
         }"
       >
-        <view v-if="!shareStatus" class="icon" @click="goBack">
+        <view
+          v-if="!Boolean($store.state.window.operitionShow)"
+          class="icon"
+          @click="goBack"
+        >
           <image
             class="back"
             :src="`${staticImgs}/shxmp/init/custom_nav_back_btn.png`"
-          />
-        </view>
-        <view v-else class="icon" @click="goHome">
-          <image
-            class="home"
-            :src="`${staticImgs}/shxmp/init/custom_nav_home_btn.png`"
           />
         </view>
       </view>
@@ -111,79 +109,39 @@ export default {
       pageSize: 10,
       id: "",
       autoLoadData: false,
-      labelId: -1,
       totalNum: 0,
       onLoadId: -1,
       isFirst: false,
       isPlayFromIndex: false,
-      isPause: false,
       isRequest: false,
       loadMoreVideoCount: 2,
-      isNewIphone: false,
-      actions: {
-        set: true,
-        like: true,
-        share: true,
-        preview: true,
-      }, // 是否展示设置按钮，默认展示
       shareObj: {}, // 分享参数
-      shareFlag: false,
-      shareId: "",
       navMarginHeight: 0, // 自定义导航栏外边距
       navHeight: 0, // 自定义导航栏高度
-      shareStatus: false, // 是否由分享进入
       step: 0, // 新手引导步骤
       isFirstPlay: false, // 控制引导弹窗的展示
       userLikeVideoList: [],
       playStatus: "", // 是否是组件 状态   0-非组件  1-组件
       moduleId: "", // page_config 的 moduleId
       notModulId: "", // 非组件 id
-      orderParams: {}, // 传输到 订购组件
     };
   },
 
   onLoad ({
     id,
     autoLoadData,
-    actions,
-    share,
     playStatus,
     moduleId,
     notModulId,
   }) {
-    console.log("moduleId---", moduleId);
-    this.shareStatus = share;
-    this.shareObj = {
-      autoLoadData,
-      actions,
-      id,
-    };
-    this.orderParams = {
-      playStatus,
-      moduleId,
-      notModulId,
-    };
-    console.log("share", share);
-    // 分享进入的，需要做vuex处理
-    if (share) {
-      console.log(853);
-      this.shareFlag = true;
-      this.shareId = id;
-      this.onLoadId = id;
-      console.log("this.onLoadId", id, this.onLoadId);
-    } else {
-      // autoLoadData 用来标记是否自动加载数据，如果需要自动加载数据则传autoLoadData，不需要自动加载则不传
-      this.videoList = this.$store.state.spcl.videoList;
-      console.log("===", this.videoList);
-      if (actions) {
-        this.actions = JSON.parse(actions);
-      }
-      this.onLoadId = id;
-      this.index = this.videoList.findIndex((item) => item.ringId === id);
-      uni.setStorageSync("videoPlayIndex", this.index);
-      this.autoLoadData = autoLoadData;
-      this.isFirst = true;
-    }
+    // autoLoadData 用来标记是否自动加载数据，如果需要自动加载数据则传autoLoadData，不需要自动加载则不传
+    this.videoList = this.$store.state.spcl.videoList;
+    console.log("===", this.videoList);
+    this.onLoadId = id;
+    this.index = this.videoList.findIndex((item) => item.ringId === id);
+    uni.setStorageSync("videoPlayIndex", this.index);
+    this.autoLoadData = autoLoadData;
+    this.isFirst = true;
     this.playStatus = playStatus;
     if (moduleId) {
       this.moduleId = moduleId;
@@ -191,7 +149,7 @@ export default {
       this.notModulId = notModulId;
     }
     // 分享进入的等同第一次的缓存逻辑
-    if (uni.getStorageSync("userPlayVideo") || share) {
+    if (uni.getStorageSync("userPlayVideo")) {
       this.isFirstPlay = false;
     } else {
       this.step = 1;
@@ -203,7 +161,6 @@ export default {
   },
 
   async onShow () {
-    const that = this;
     // 获取点赞列表
     if (uni.getStorageSync("Authorization")) {
       const res = await SpclService.getBehaviorIdList({ behaviorType: "dz" });
@@ -211,20 +168,8 @@ export default {
         this.userLikeVideoList = res.data.data;
       }
     }
-
-    if (this.shareFlag) {
-      console.log(1);
-      const flag = await this.getVideoDetail();
-      that.shareFlag = false;
-      if (flag) {
-        that.init();
-      }
-    } else {
-      console.log(2);
-      this.init();
-    }
+    this.init();
   },
-
   onShareAppMessage (res) {
     this.onLoadId = this.videoList[this.index].ringId;
     if (res.from === "button") {
@@ -243,10 +188,8 @@ export default {
         if (res.safeArea.top === 44) {
           // that.globalData.needAdapt = true
           this.sysheight = res.windowHeight - 10;
-          this.isNewIphone = true;
         } else {
           this.sysheight = res.windowHeight;
-          this.isNewIphone = false;
         }
       },
     });
@@ -280,54 +223,6 @@ export default {
     },
     goBack () {
       uni.navigateBack();
-    },
-    goHome () {
-      uni.switchTab({
-        url: "/pages/cl/index",
-      });
-    },
-    getVideoDetail () {
-      return SpclService
-        .getSpclVideoDetail({
-          ringId: this.shareId,
-        })
-        .then((res) => {
-          console.log(582);
-          if (res.data.code === 200) {
-            console.log("res", res.data.data);
-            const newList = [];
-            newList.push(res.data.data);
-            this.$store.commit("spcl/M_changeVideoList", newList);
-            this.videoList = this.$store.state.spcl.videoList;
-            if (
-              this.shareObj.actions &&
-              this.shareObj.actions !== "undefined"
-            ) {
-              this.actions = JSON.parse(this.shareObj.actions);
-            }
-            this.onLoadId = this.shareObj.id;
-            this.index = this.videoList.findIndex(
-              (item) => item.ringId === this.shareObj.id,
-            );
-            uni.setStorageSync("videoPlayIndex", this.index);
-            this.autoLoadData = this.shareObj.autoLoadData;
-            // 分享进入的等同第一次的缓存逻辑
-            if (uni.getStorageSync("userPlayVideo") || this.shareFlag) {
-              this.isFirstPlay = false;
-            } else {
-              this.step = 1;
-              this.isFirstPlay = true;
-            }
-            this.isFirst = true;
-            return true;
-          } else {
-            uni.showToast({
-              title: "出错啦~",
-              icon: "none",
-              duration: 2000,
-            });
-          }
-        });
     },
     init () {
       // 获取数据
@@ -432,9 +327,7 @@ export default {
       });
     },
     changeCurrent (e) {
-      // console.log('滑动', e.detail.current, this.videoList.length)
       this.index = e.detail.current;
-      this.isPause = false;
       if (this.isFirstPlay) {
         this.isFirstPlay = false;
       }
