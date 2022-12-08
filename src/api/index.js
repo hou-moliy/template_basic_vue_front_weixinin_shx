@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-import loginService from "@/api/my/my.js";
+import SsoService from "@/api/sso/index.js";
 axios.defaults.baseURL = "";
 axios.create().defaults.timeout = 5000; // 请求超时
 let loading;
@@ -44,7 +44,7 @@ axios.interceptors.response.use(response => {
     console.log("#####拦截器###有401页面##########");
     console.log(response);
     console.log("####拦截器####有401页面##########");
-    loginService.refreshToken().then((resp) => {
+    SsoService.refreshToken().then((resp) => {
       if (resp.data.code === 200) {
         uni.setStorageSync("Authorization", `${resp.data.data.tokenHead} ${resp.data.data.token}`);
       } else {

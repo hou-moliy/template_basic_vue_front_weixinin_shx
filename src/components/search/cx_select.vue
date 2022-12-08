@@ -89,8 +89,8 @@
 </template>
 
 <script>
-import cxService from "@/api/cx/cx.js";
-import videoService from "@/api/cx/video.js";
+import ClService from "@/api/cl/index.js";
+import SpclService from "@/api/spcl/index.js";
 import cxHotList from "./cx_hot_list.vue";
 export default {
   components: { cxHotList },
@@ -143,7 +143,7 @@ export default {
       console.log(val, "pageStatusLoad");
       if (this.pageStatusLoad === "onShow") {
         // 获取视频彩铃热搜
-        videoService.spclHotKey({ type: 3 }).then(resp => {
+        SpclService.spclHotKey({ type: 3 }).then(resp => {
           if (resp.data.code === 200 && resp.data.data.list.length > 0) {
             this.hotSelectValue = resp.data.data.list.slice(0, 10);
             this.videoList = resp.data.data.list;
@@ -226,7 +226,7 @@ export default {
       this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
       this.isSelecting = true;
       uni.$emit("setSearchList", this.selectList);
-      videoService.spclSearch({
+      SpclService.spclSearch({
         searchKey: this.value,
       }).then((resp) => {
         that.isSelecting = false;
@@ -261,7 +261,7 @@ export default {
       const that = this;
       this.getHistory("musicHotKeyArr");
       this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
-      cxService.search({
+      ClService.search({
         searchKey: this.value,
       }).then((resp) => {
         that.isSelecting = false;
@@ -309,7 +309,7 @@ export default {
         uni.setStorageSync("videoHotKeyArr", []);
       }
       this.hotKeyArr = uni.getStorageSync("videoHotKeyArr");
-      videoService.spclHotKey({ type: 3 }).then(resp => {
+      SpclService.spclHotKey({ type: 3 }).then(resp => {
         if (resp.data.code === 200 && resp.data.data.list.length > 0) {
           this.hotSelectValue = resp.data.data.list.slice(0, 10);
           this.videoList = resp.data.data.list;
@@ -326,7 +326,7 @@ export default {
         this.pageNum++;
       }
       this.hotKeyArr = uni.getStorageSync("musicHotKeyArr");
-      cxService.hotSearch({ pageNum: this.pageNum, pageSize: 10, type: 4 }).then(resp => {
+      ClService.hotSearch({ pageNum: this.pageNum, pageSize: 10, type: 4 }).then(resp => {
         if (resp.data.code === 200 && resp.data.data.list.length > 0) {
           this.hotSelectValue = this.hotSelectValue.concat(resp.data.data.list);
           this.total = resp.data.data.total;

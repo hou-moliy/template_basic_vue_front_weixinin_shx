@@ -1,4 +1,3 @@
-import VideoService from "@/api/cx/video.js";
 import SpclService from "@/api/spcl/index.js";
 import videoTools from "@/utils/video.js";
 const state = {
@@ -133,7 +132,7 @@ const actions = {
   handleSpclUserOperate ({ commit }, { ringId, target, opType, mainId, pageName }) {
     return new Promise((resolve) => {
       // 记录
-      VideoService.getSpclUserBehavior({ ringId, target, opType, mainId, pageName }).then((res) => resolve(res.data));
+      SpclService.getSpclUserBehavior({ ringId, target, opType, mainId, pageName }).then((res) => resolve(res.data));
     });
   },
   // 获取用户所有铃音数据

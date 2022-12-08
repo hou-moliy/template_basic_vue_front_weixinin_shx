@@ -20,7 +20,6 @@
 
 <script>
 import SpclService from "@/api/spcl/index.js";
-import CxVideoService from "@/api/cx/video.js";
 import videoItem from "./videoItem.vue";
 import { programaAnalysis } from "@/utils/common.js";
 export default {
@@ -129,7 +128,7 @@ export default {
       this.handleSpclUserBehavior(params);
     },
     handleSpclUserBehavior (params) {
-      CxVideoService.getSpclUserBehavior(params).then(({ data: res }) => {
+      SpclService.getSpclUserBehavior(params).then(({ data: res }) => {
         this.isClickLike = false;
         if (res.code === 200) {
           this.handleTips(params);
