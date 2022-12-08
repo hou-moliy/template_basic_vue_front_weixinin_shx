@@ -235,7 +235,7 @@ export default {
         authType: 2,
         phone: rsaEncryption(this.phonenumber),
       };
-      SsoService.getAuthCodeLn(param).then((resp) => {
+      SsoService.getAuthCode(param).then((resp) => {
         this.sendFlag = false;
         uni.hideLoading();
         if (resp.status === 200) {
@@ -350,7 +350,7 @@ export default {
       };
       if (this.phonenumber) {
         if (this.validatePhone(this.phonenumber)) {
-          const res2 = await SsoService.getLoginLn(param);
+          const res2 = await SsoService.getLogin(param);
           console.log(res2, "手机短信登录");
           if (res2.data.code === 200) {
             // this.$analysis.dispatch('dl_yzm_dlcg')
