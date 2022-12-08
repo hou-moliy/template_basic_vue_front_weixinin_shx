@@ -5,6 +5,11 @@
       <cl-video
         v-if="videoDetail.ringFilePath"
         ref="clVideo"
+        :poster="
+          videoDetail.coverUrl ||
+          videoDetail.openVCoverUrl ||
+          videoDetail.openHCoverUrl
+        "
         class="video"
         :src="videoDetail.ringFilePath"
         :height="videoHeight"
@@ -172,6 +177,7 @@ export default {
     offMonitor () {
       console.log("移除监听");
       uni.$off("operitionShow");
+      this.closePopup();
     },
     closePopup () {
       this.operitionInfo = {};
@@ -198,10 +204,6 @@ export default {
     },
     // 预览
     previewVideo (ringId) {
-      if (!uni.getStorageSync("Authorization")) {
-        // 提示登录
-        return this.$showLoginPop(this);
-      }
       // 进入预览页面
       uni.navigateTo({
         url: `/pagesSpcl/clVideo/clVideoPreview?videoId=${ringId}`,

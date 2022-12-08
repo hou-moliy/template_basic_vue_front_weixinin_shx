@@ -13,6 +13,7 @@
       :show-play-btn="false"
       class="video"
       :controls="controls"
+      :poster="poster"
       @timeupdate="timeupdate"
       @ended="playEnd"
     >
@@ -140,12 +141,6 @@ export default {
     }
   },
   methods: {
-    // 拖动滑块
-    changeCurrent (e) {
-      console.log("滑动");
-      this.time = e.detail.value;
-      this.videoCtx.seek(this.time);
-    },
     playEnd () {
       this.$emit("playEnd");
     },
