@@ -3,7 +3,7 @@
     <view v-if="isOpen" class="uni-dialog-top_view">
       <image
         class="uni-dialog-top_image"
-        :src="`${staticImgs}/lnmp/vip_open_yp.png`"
+        :src="`${staticImgs}/shxmp/init/vip_open_yp.png`"
       />
     </view>
     <view
@@ -360,6 +360,7 @@ export default {
   font-family: PingFang SC Bold, PingFang SC Bold-Bold;
   font-weight: 700;
   background: linear-gradient(#ff6f50, #ff008c);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -407,6 +408,7 @@ export default {
   font-family: PingFang SC Bold, PingFang SC Bold-Bold;
   font-weight: 700;
   background: linear-gradient(#5e4827, #5e4827);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

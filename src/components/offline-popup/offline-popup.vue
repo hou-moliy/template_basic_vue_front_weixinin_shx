@@ -3,7 +3,7 @@
     <view :class="flag ? 'offline' : 'offlineClose'">
       <image
         class="offline_popup_image"
-        :src="`${staticImgs}/lnmp/offlinePop/offlinePopup.png`"
+        :src="`${staticImgs}/shxmp/init/offlinePopup.png`"
         mode=""
       />
       <view class="offline_title">

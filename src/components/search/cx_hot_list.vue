@@ -54,7 +54,7 @@
               <text>展开更多</text>
               <image
                 class="cx_select_hot_item_moreIcon"
-                :src="`${staticImgs}/lnmp/hotListImg/iconDown.png`"
+                :src="`${staticImgs}/shxmp/init/iconDown.png`"
               />
             </view>
           </view>
@@ -70,17 +70,17 @@
                 <image
                   v-if="index == '0'"
                   class="cx_select_hot_numIcon"
-                  :src="`${staticImgs}/lnmp/hotListImg/firstIcon.png`"
+                  :src="`${staticImgs}/shxmp/init/firstIcon.png`"
                 />
                 <image
                   v-else-if="index == '1'"
                   class="cx_select_hot_numIcon"
-                  :src="`${staticImgs}/lnmp/hotListImg/secondIcon.png`"
+                  :src="`${staticImgs}/shxmp/init/secondIcon.png`"
                 />
                 <image
                   v-else-if="index == '2'"
                   class="cx_select_hot_numIcon"
-                  :src="`${staticImgs}/lnmp/hotListImg/thirdIcon.png`"
+                  :src="`${staticImgs}/shxmp/init/thirdIcon.png`"
                 />
                 <view v-else class="cx_select_hot_numText">
                   {{ index + 1 }}
@@ -91,19 +91,19 @@
                   <image
                     v-if="currentMusic == `${index}` && !isPauseMusic"
                     class="ypcl_col_catagory_left_image"
-                    :src="`${staticImgs}/lnmp/playing_icon.png`"
+                    :src="`${staticImgs}/shxmp/init/playing_icon.png`"
                     @click="pauseMusic(index)"
                   />
                   <image
                     v-else-if="currentMusic == `${index}` && isPauseMusic"
                     class="ypcl_col_catagory_left_image"
-                    :src="`${staticImgs}/lnmp/pause_icon.png`"
+                    :src="`${staticImgs}/shxmp/init/pause_icon.png`"
                     @click="playMusic(index)"
                   />
                   <image
                     v-else
                     class="ypcl_col_catagory_left_image"
-                    :src="`${staticImgs}/lnmp/play_icon.png`"
+                    :src="`${staticImgs}/shxmp/init/play_icon.png`"
                     @click="playMusic(index, item)"
                   />
                 </view>
@@ -131,7 +131,7 @@
                     <view class="ypcl_col_catagory_right_2">
                       <image
                         class="ypcl_col_catagory_right_2_image"
-                        :src="`${staticImgs}/lnmp/set_icon.png`"
+                        :src="`${staticImgs}/shxmp/init/set_icon.png`"
                         @click="navigateToSetting(item)"
                       />
                     </view>
@@ -148,7 +148,7 @@
               <text>展开更多</text>
               <image
                 class="cx_select_hot_item_moreIcon"
-                :src="`${staticImgs}/lnmp/hotListImg/iconDown.png`"
+                :src="`${staticImgs}/shxmp/init/iconDown.png`"
               />
             </view>
           </view>

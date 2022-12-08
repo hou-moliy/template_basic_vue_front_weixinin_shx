@@ -71,7 +71,7 @@
       <view class="cx_selecting">
         <image
           class="cx_selecting_image"
-          :src="`${staticImgs}/lnmp/select-loading.gif`"
+          :src="`${staticImgs}/shxmp/init/select-loading.gif`"
         />
       </view>
     </view>
