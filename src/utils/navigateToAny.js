@@ -26,11 +26,11 @@ const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
 };
 // 跳转-不需要统一验证、登录、升级弹窗的
 const navigateToAny = (item, callback) => {
-  console.log("跳转");
   uni.showLoading({
     title: "",
     mask: true,
   });
+  if (!item.eventUrl) return uni.hideLoading();
   try {
     switch (item.eventType) {
       case 1:
