@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import videoService from "@/api/cx/video.js";
+import SpclService from "@/api/spcl/index.js";
 import { handlePurchaseVideo } from "@/utils/video.js";
 export default {
   data () {
@@ -129,7 +129,7 @@ export default {
       uni.navigateBack();
     },
     getVideoByIdJK () {
-      videoService.getSpclVideoDetail({
+      SpclService.getSpclVideoDetail({
         ringId: this.clid,
       }).then((resp) => {
         const tempList = resp.data.data;

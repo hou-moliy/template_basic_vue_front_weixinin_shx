@@ -83,7 +83,6 @@
 
 <script>
 import ebConfigContainerAsync from "@/components/eb-comp/eb-config-container/eb-config-container-async.vue";
-import aiService from "@/api/ai/index.js";
 import SpclService from "@/api/spcl/index.js";
 import TemplateService from "@/api/template/index";
 
@@ -146,7 +145,7 @@ export default {
     },
     // 获取主题信息
     getAiTopic () {
-      aiService.getAiTopic().then(res => {
+      SpclService.getAiTopic().then(res => {
         if (res.data.code === 200 && res.data.data) {
           this.aiTopicArray = res.data.data;
         }
@@ -208,7 +207,7 @@ export default {
         this.$toast("请先开启AI换铃功能再进行设置");
       } else {
         if (item.isOpen) {
-          aiService
+          SpclService
             .updateUserTopic({
               type: 1,
               topicId: this.topicId,
@@ -222,7 +221,7 @@ export default {
               }
             });
         } else {
-          aiService
+          SpclService
             .updateUserTopic({
               type: 2,
               topicId: item.topicId,

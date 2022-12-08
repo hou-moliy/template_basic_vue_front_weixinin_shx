@@ -1,3 +1,4 @@
+// 以ad开头的相关接口放这里
 import * as axios from "../index.js";
 import globalData from "../../globalData";
 const baseUrl = globalData.portalUrl;

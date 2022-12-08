@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import cxService from "@/api/cx/cx.js";
+import ClService from "@/api/cl/index.js";
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.loop = true;
 export default {
@@ -240,7 +240,7 @@ export default {
       if (item) {
         this.$analysis.dispatch("fxypcl_ss_rsbd_id", `${item.id}`);
       }
-      cxService.userPlayMusic({
+      ClService.userPlayMusic({
         ringId: this.cxMusicList[i].ringId,
         target: "bf",
         opType: 1,

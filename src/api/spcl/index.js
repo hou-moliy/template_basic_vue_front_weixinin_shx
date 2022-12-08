@@ -1,3 +1,4 @@
+// 以spcl开头的相关接口放这里
 import * as axios from "../index.js";
 import globalData from "../../globalData.js";
 const baseUrl = globalData.portalUrl;
@@ -17,6 +18,15 @@ const aiStatus = (params) => axios.get(baseUrl + "/spcl/ai/status", params); // 
 const setSpcl = (params) => axios.post(baseUrl + "/spcl/setUpSpcl", params); // 设置视频彩铃（不在个人铃音库）
 const getBehaviorIdList = (params) => axios.get(baseUrl + "/spcl/userOperateIdInfo", params);// 获取用户行为列表:dz,fx,sc,bf (id数组)
 const getBehaviorList = (params) => axios.get(baseUrl + "/spcl/userDetailsWithPage", params);// 获取用户行为列表:dz,fx,sc,bf (item数组)
+const getAiTopic = params => axios.get(baseUrl + "/spcl/ai/aiTopic", params); // 查询所有ai换铃专题
+const updateUserTopic = params => axios.post(baseUrl + "/spcl/ai/updateUserTopic", params); // 用户主题开关
+const getSpclIcon = (params) => axios.get(baseUrl + "/spcl/icon", params);// 图标
+const spclHotKey = (params) => axios.get(baseUrl + "/spcl/top/hotSearchTop", params);// 搜索 视频 热搜榜单
+const spclSearch = (params) => axios.get(baseUrl + "/spcl/search/", params);// 搜索
+const getSpclLabel = (params) => axios.get(baseUrl + "/spcl/label/", params);// 分类
+const getSpclVideoDetail = (params) => axios.get(baseUrl + "/spcl/videoDetail", params);// 视频详情
+const getSpclUserBehavior = (params) => axios.post(baseUrl + "/spcl/countVideoOperation", params);// 用户行为
+
 export default {
   getsplykInfo,
   getsplykCurrentInfo,
@@ -34,4 +44,12 @@ export default {
   setSpcl,
   getBehaviorIdList,
   getBehaviorList,
+  getAiTopic,
+  updateUserTopic,
+  getSpclIcon,
+  spclHotKey,
+  spclSearch,
+  getSpclLabel,
+  getSpclVideoDetail,
+  getSpclUserBehavior,
 };

@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import videoService from "@/api/cx/video.js";
+import SpclService from "@/api/spcl/index.js";
 import fullScreenVideo from "@/components/full-screen-video/full-screen-video.vue";
 import { formatCount } from "@/utils/tools.js";
 import { videoInfoUpdate } from "@/utils/video";
@@ -103,7 +103,7 @@ export default {
       this.videoId = options.videoId;
     } else {
       uni.switchTab({
-        url: "/pages/ck/index",
+        url: "/pages/cl/index",
       });
     }
     this.initStyle();
@@ -170,7 +170,7 @@ export default {
       const data = {
         ringId: this.videoId,
       };
-      videoService.getSpclVideoDetail(data).then((res) => {
+      SpclService.getSpclVideoDetail(data).then((res) => {
         if (res.data.code === 200 && res.data.data) {
           let list = [res.data.data];
           list = videoInfoUpdate(list);
