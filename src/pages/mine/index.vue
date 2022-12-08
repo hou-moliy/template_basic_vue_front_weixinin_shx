@@ -311,6 +311,9 @@ export default {
           this.cxVideoContent = "立即设置";
           this.cxVideoStatus = 1;
           this.$store.commit("user/SET_SPCL_STATUS", 1);
+          this.$store.commit("user/SET_AI_STATUS", 1);
+        } else {
+          this.$toast("开通失败请重试");
         }
       });
     },

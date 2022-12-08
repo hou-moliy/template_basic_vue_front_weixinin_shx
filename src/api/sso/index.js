@@ -5,13 +5,13 @@ const baseUrl = globalData.portalUrl;
 // 统一认证token
 const tyrzAuth = params => axios.get(baseUrl + "/threelogin/tyrzauth", params);
 const refreshToken = params => axios.get(baseUrl + "/sso/refreshToken", params);
-const getLoginLn = params => axios.post(baseUrl + "/sso/login", params);
+const getLogin = params => axios.post(baseUrl + "/sso/login", params);
 // 获取短信验证码
-const getAuthCodeLn = params => axios.get(baseUrl + "/sso/getAuthCode", params);
+const getAuthCode = params => axios.get(baseUrl + "/sso/getAuthCode", params);
 
 export default {
   tyrzAuth,
   refreshToken,
-  getLoginLn,
-  getAuthCodeLn,
+  getLogin,
+  getAuthCode,
 };

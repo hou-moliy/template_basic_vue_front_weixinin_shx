@@ -78,6 +78,11 @@
       @closePopup="closeOperitionPopup"
     />
     <notifyPop ref="NotifyPop" />
+    <!-- 下线通知 -->
+    <offline-popup
+      v-if="Boolean($store.state.offlinePopup.offlinePopupShow)"
+      ref="offlinePopup"
+    />
   </view>
 </template>
 
@@ -163,15 +168,18 @@ export default {
     },
     // 开通AI换铃
     async handleOpenAi (flag = 2) {
+      this.$loading("请稍等...", true, 0);
       // flag 2 开启 1取消
       const res = await SpclService.openAi({ type: flag });
       if (res.data.code === 200) {
+        uni.hideLoading();
         const mes = flag === 2 ? "开启成功" : "取消成功";
         this.$toast(mes);
         this.aiStatus = flag === 2 ? 1 : 0;
         this.$store.commit("user/SET_AI_STATUS", this.aiStatus);
         this.getAiTopic();
       } else {
+        uni.hideLoading();
         this.$toast(res.data.message);
       }
     },
@@ -270,6 +278,9 @@ export default {
           this.$toast("成功开通视频彩铃业务");
           this.show = false;
           this.$store.commit("user/SET_SPCL_STATUS", 1);
+          this.$store.commit("user/SET_AI_STATUS", 1);
+        } else {
+          this.$toast("开通失败请重试");
         }
       });
     },
