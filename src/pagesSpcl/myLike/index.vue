@@ -157,6 +157,8 @@ export default {
     programaAnalysis,
     // 跨页面通信监听
     dispatchPageEvent () {
+      // 关闭设置弹窗
+      this.$store.commit("window/SET_OPERITION_SHOW", false);
       uni.$on("openLoginPopup", data => {
         this.$showLoginPop(this);
       });

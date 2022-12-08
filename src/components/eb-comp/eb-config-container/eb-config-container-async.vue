@@ -68,8 +68,14 @@ export default {
   methods: {
     // 滑动到底部
     onScrollBottom () {
-      if (this.$refs.EbConfig) {
-        this.$refs.EbConfig.onScrollBottom();
+      if (this.$refs.EbConfig1) {
+        this.$refs.EbConfig1.onScrollBottom();
+      }
+      if (this.$refs.EbConfig2) {
+        this.$refs.EbConfig2.onScrollBottom();
+      }
+      if (this.$refs.EbConfig3) {
+        this.$refs.EbConfig3.onScrollBottom();
       }
     },
     // 刷新

@@ -3,18 +3,37 @@
     <view class="mask" />
     <view v-if="popupInfo.windowScene == 2001" class="popup-box">
       <!-- 头图 -->
-      <view v-if="popupInfo.headImg" class="popup-img">
+      <view v-if="popupInfo.headImg" class="popup-img popup-img1">
         <image :src="popupInfo.headImg" alt="" mode="widthFix" />
-      </view>
-      <view class="popup-padding-box">
         <!-- 标题 -->
-        <view v-if="popupInfo.windowTitle" class="popup-title">
+        <view v-if="popupInfo.windowTitle" class="popup-title popup-title1">
           {{ popupInfo.windowTitle }}
         </view>
+      </view>
+      <view class="popup-padding-box">
         <!-- 内容 -->
         <scroll-view scroll-y="true" class="popup-content">
           <rich-text :nodes="popupDes" />
         </scroll-view>
+        <!-- 协议 -->
+        <view v-if="popupInfo.windowProtocol" class="popup-agreement">
+          <view
+            class="popup-agreement-check"
+            :class="agreementCheckFlag ? 'popup-agreement-checked' : ''"
+            @click="check"
+          >
+            <text v-if="agreementCheckFlag" class="iconfont icon-xuanzhong" />
+          </view>
+          <view class="popup-agreement-content">
+            阅读并同意
+            <text
+              class="popup-agreement-content-text2"
+              @click="toPolicy(popupInfo)"
+            >
+              《{{ popupInfo.windowProtocol }}》
+            </text>
+          </view>
+        </view>
         <!-- 按钮 -->
         <view
           class="popup_button"
@@ -50,25 +69,7 @@
         >
           <text class="closeIcon icon-guanbi iconfont" />
         </view>
-        <!-- 协议 -->
-        <view v-if="popupInfo.windowProtocol" class="popup-agreement">
-          <view
-            class="popup-agreement-check"
-            :class="agreementCheckFlag ? 'popup-agreement-checked' : ''"
-            @click="check"
-          >
-            <text v-if="agreementCheckFlag" class="iconfont icon-xuanzhong" />
-          </view>
-          <view class="popup-agreement-content">
-            阅读并同意
-            <text
-              class="popup-agreement-content-text2"
-              @click="toPolicy(popupInfo)"
-            >
-              《{{ popupInfo.windowProtocol }}》
-            </text>
-          </view>
-        </view>
+
         <!-- 文字注释 -->
 
         <scroll-view scroll-y="true" class="moreDes">
@@ -682,5 +683,16 @@ export default {
     opacity: 1;
     height: 1106rpx;
   }
+}
+
+// 弹窗样式调整
+.popup-img1 {
+  position: relative;
+}
+.popup-title1 {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 55rpx;
 }
 </style>

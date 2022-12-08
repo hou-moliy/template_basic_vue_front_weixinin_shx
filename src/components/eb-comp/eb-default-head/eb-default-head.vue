@@ -65,20 +65,17 @@ export default {
   },
   methods: {
     jumpTo () {
-      if (!this.pageConfig.eventUrl) {
-        this.$toast("无跳转路径");
-        return;
-      }
       if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
         navigateToAnyCheck(this.pageConfig, `seeMore_rec_${this.pageConfig.moduleId}`);
+        // if (this.pageConfig.eventUrl && this.pageConfig.eventType !== 5)
       } else {
         uni.setStorageSync("moreData", this.pageConfig);
         const params = { ...this.pageConfig };
         // 请统一使用eventUrl字段作为跳转路径
-        if (params.eventUrl.indexOf("?") > -1) {
+        if (params.eventUrl && params.eventUrl.indexOf("?") > -1) {
           params.eventUrl = `${params.eventUrl}&moduleId=${params.moduleId}&pageName=${params.title}&showDirection=V`;
-        } else {
+        } else if (params.eventUrl && params.eventUrl.indexOf("?") < -1) {
           params.eventUrl = `${params.eventUrl}?moduleId=${params.moduleId}&pageName=${params.title}&showDirection=V`;
         }
         console.log(params.eventUrl);
