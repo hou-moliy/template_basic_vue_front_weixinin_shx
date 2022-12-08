@@ -356,7 +356,7 @@
 </template>
 
 <script>
-import videoService from "@/api/cx/video.js";
+import SpclService from "@/api/spcl/index.js";
 import Util, { formatCount } from "@/utils/tools.js";
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue";
 import { handlePurchaseVideo, videoInfoUpdate } from "@/utils/video.js";
@@ -545,7 +545,7 @@ export default {
             : this.orderParams.notModulId,
           pageName: this.orderParams.playStatus,
         };
-        videoService.getSpclUserBehavior(params).then((res) => { });
+        SpclService.getSpclUserBehavior(params).then((res) => { });
         // 生成海报
         uni.navigateTo({
           url:
@@ -649,7 +649,7 @@ export default {
       const data = {
         isShow: 1,
       };
-      videoService.getSpclLabel(data).then((res) => {
+      SpclService.getSpclLabel(data).then((res) => {
         // console.log(res)
         if (res.data.code === 200) {
           this.lableList = res.data.data;
@@ -704,7 +704,7 @@ export default {
       };
       this.isLoad = "loading";
       this.isLoadStatus = "loading";
-      videoService.getSpclLabelVideoList(data).then((res) => {
+      SpclService.getSpclListByLabelId(data).then((res) => {
         this.isLoad = "loaded";
         if (res.data.code === 200) {
           this.totalNum = res.data.data.total;

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import videoService from "@/api/cx/video.js";
+import SpclService from "@/api/spcl/index.js";
 export default {
   props: {
     controls: {
@@ -104,7 +104,7 @@ export default {
           target: "bf",
           opType: 1,
         };
-        videoService.getSpclUserBehavior(data).then((res) => { });
+        SpclService.getSpclUserBehavior(data).then((res) => { });
       }
     },
     startTime: {

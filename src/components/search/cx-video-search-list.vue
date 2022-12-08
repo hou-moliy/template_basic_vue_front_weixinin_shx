@@ -153,7 +153,8 @@ export default {
       }
     },
     // 点赞
-    likeCountChange ({ ringId, flag }) { // false 新增点赞 ，true 取消点赞
+    likeCountChange ({ ringItem, flag }) { // false 新增点赞 ，true 取消点赞
+      const { ringId } = ringItem;
       const data = {
         ringId,
         target: "dz",

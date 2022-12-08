@@ -141,7 +141,8 @@
 </template>
 
 <script>
-import loginService from "@/api/my/my.js";
+import SsoService from "@/api/sso/index.js";
+import WxService from "@/api/wx/index.js";
 import {
   rsaEncryption,
   rsaDecryption,
@@ -234,7 +235,7 @@ export default {
         authType: 2,
         phone: rsaEncryption(this.phonenumber),
       };
-      loginService.getAuthCodeLn(param).then((resp) => {
+      SsoService.getAuthCodeLn(param).then((resp) => {
         this.sendFlag = false;
         uni.hideLoading();
         if (resp.status === 200) {
@@ -329,7 +330,7 @@ export default {
         code: this.wxCode,
       };
       // 获取openid
-      loginService.getWxIds(param)
+      WxService.getWxIds(param)
         .then((res) => {
           uni.setStorageSync("openid", res.data.data.openid);
           uni.setStorageSync("unionid", res.data.data.unionid);
@@ -349,7 +350,7 @@ export default {
       };
       if (this.phonenumber) {
         if (this.validatePhone(this.phonenumber)) {
-          const res2 = await loginService.getLoginLn(param);
+          const res2 = await SsoService.getLoginLn(param);
           console.log(res2, "手机短信登录");
           if (res2.data.code === 200) {
             // this.$analysis.dispatch('dl_yzm_dlcg')
@@ -435,7 +436,7 @@ export default {
         openId: uni.getStorageSync("openid"),
         unionId: uni.getStorageSync("unionid"),
       };
-      await loginService.bindWx(param);
+      await WxService.bindWx(param);
     },
     // 微信登录
     async wxLogin (e, eventId) {
@@ -458,7 +459,7 @@ export default {
         this.$toast("取消手机号授权，登录失败");
         return;
       }
-      const res2 = await loginService.getWxIds(param);
+      const res2 = await WxService.getWxIds(param);
       console.log(res2);
       if (res2.data.code === 200) {
         uni.setStorageSync("openid", res2.data.data.openid);
@@ -468,7 +469,7 @@ export default {
           encryptedData: detail.encryptedData,
           iv: detail.iv,
         };
-        const res3 = await loginService.wxuserPhone(param1);
+        const res3 = await WxService.wxuserPhone(param1);
         console.log(res3, "微信手机号授权");
         if (res3.data.code === 200) {
           uni.hideLoading();

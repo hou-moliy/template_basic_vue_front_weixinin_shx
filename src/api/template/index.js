@@ -1,3 +1,4 @@
+// 模板配置化相关接口
 import * as axios from "../index.js";
 import globalData from "../../globalData.js";
 const baseUrl = globalData.portalUrl;

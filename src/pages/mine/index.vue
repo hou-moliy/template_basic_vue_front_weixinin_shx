@@ -145,7 +145,6 @@
 </template>
 
 <script>
-import videoService from "@/api/cx/video.js";
 import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import popupTemplateOperition from "../../components/popup-module/popup-template-operition.vue";
 import { navigateToAny } from "@/utils/navigateToAny.js";
@@ -368,7 +367,7 @@ export default {
         const n = Math.floor(Math.random() * isBuyVideoList.length);
         const currentRingId = isBuyVideoList[n];
         // 根据ID请求详情
-        videoService.getSpclVideoDetail({
+        SpclService.getSpclVideoDetail({
           ringId: currentRingId,
         }).then(res => {
           if (res.data.code === 200) {
@@ -387,7 +386,7 @@ export default {
       }
     },
     getMyMore () {
-      videoService.getSpclIcon({
+      SpclService.getSpclIcon({
         target: "myMore",
       }).then(res => {
         if (res.data.code === 200) {

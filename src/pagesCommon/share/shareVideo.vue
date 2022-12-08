@@ -56,8 +56,8 @@
 
 <script>
 import { getSharePoster } from "@/utils/QS-SharePoster/QS-SharePoster.js";
-import ShareService from "@/api/share/share.js";
-import videoService from "@/api/cx/video.js";
+import WxService from "@/api/wx/index.js";
+import SpclService from "@/api/spcl/index.js";
 import Util from "@/utils/tools.js";
 export default {
   components: {},
@@ -152,7 +152,7 @@ export default {
         `/pagesCommon/share/openShare?phonenumber=${this.phoneNumber}&videoId=${this.videoId}`,
       );
       const mpath = this.shareType === 1 ? shareVideoUrl : shareClUrl;
-      ShareService.qrcode({
+      WxService.qrcode({
         path: mpath,
         width: "600",
       }).then(resp => {
@@ -184,7 +184,7 @@ export default {
         ringId: this.videoId,
       };
       return new Promise((resolve) => {
-        videoService.getSpclVideoDetail(data).then(res => {
+        SpclService.getSpclVideoDetail(data).then(res => {
           if (res.data.code === 200) {
             this.videoDetail = res.data.data;
             resolve(this.videoDetail);

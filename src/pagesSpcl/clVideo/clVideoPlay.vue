@@ -95,7 +95,6 @@
 </template>
 
 <script>
-import videoService from "@/api/cx/video.js";
 import SpclService from "@/api/spcl/index.js";
 import Util, { formatCount } from "@/utils/tools.js";
 import { videoInfoUpdate } from "@/utils/video";
@@ -288,7 +287,7 @@ export default {
       });
     },
     getVideoDetail () {
-      return videoService
+      return SpclService
         .getSpclVideoDetail({
           ringId: this.shareId,
         })
@@ -363,7 +362,7 @@ export default {
           mainId: this.moduleId ? this.moduleId : this.notModulId,
           pageName: this.playStatus,
         };
-        videoService.getSpclUserBehavior(data).then((res) => { });
+        SpclService.getSpclUserBehavior(data).then((res) => { });
       }
     },
     // 瀑布流组件获取下一页
@@ -401,7 +400,7 @@ export default {
         pageCount: this.pageSize,
       };
 
-      videoService.getBehaviorList(data).then((res) => {
+      SpclService.getBehaviorList(data).then((res) => {
         this.isRequest = false;
         if (res.data.code === 200) {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
@@ -422,7 +421,7 @@ export default {
         start: this.pageNum,
         pageCount: this.pageSize,
       };
-      videoService.getBehaviorList(data).then((res) => {
+      SpclService.getBehaviorList(data).then((res) => {
         this.isRequest = false;
         if (res.data.code === 200) {
           const tempList = Util.SplitArray(res.data.data.records, this.videoList);
@@ -448,7 +447,7 @@ export default {
           mainId: this.moduleId ? this.moduleId : this.notModulId,
           pageName: this.playStatus,
         };
-        videoService.getSpclUserBehavior(data).then((res) => { });
+        SpclService.getSpclUserBehavior(data).then((res) => { });
       }
       // 加载更多数据
       this.getMore();
