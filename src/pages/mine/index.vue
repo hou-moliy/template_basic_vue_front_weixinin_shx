@@ -18,7 +18,6 @@
           我的
         </view>
         <!-- 头部 -->
-
         <view class="login-top-box" @click="isLogin()">
           <view class="txbox">
             <view v-if="loginFlag && isAuth" class="userinfo-avatar">
@@ -757,7 +756,7 @@ button::after {
   border-radius: 20rpx;
   // margin-left: 30rpx;
   margin-top: 24rpx;
-  padding: 42rpx 0;
+  padding-top: 42rpx;
 
   .more-tips {
     height: 36rpx;
@@ -831,5 +830,8 @@ button::after {
       }
     }
   }
+}
+.bottom-box view:last-child .fl-cell-right {
+  border-bottom: 0px;
 }
 </style>
