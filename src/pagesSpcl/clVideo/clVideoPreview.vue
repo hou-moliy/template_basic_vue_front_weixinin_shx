@@ -36,7 +36,7 @@
           <view class="title-small">正在呼叫...</view>
         </view>
         <view class="con-intro">
-          <image :src="`${staticImgs}/lnmp/preview-icon.png`" />
+          <image :src="`${staticImgs}/shxmp/init/preview-icon.png`" />
         </view>
         <view class="btn-box">
           <view v-if="videoMsg.isBuyVideo" class="buy-btn-isbuy">已设置</view>
