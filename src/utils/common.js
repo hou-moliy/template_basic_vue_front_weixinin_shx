@@ -18,11 +18,11 @@ export const navigateByEventType = (event, outmethod) => {
 };
 
 // Toast提示
-export const showToast = (title, icon = "none", duration = 2000) => {
+export const showToast = (title, duration = 2000, icon = "none") => {
   uni.showToast({
     title,
     icon,
-    duration: 2000,
+    duration,
   });
 };
 

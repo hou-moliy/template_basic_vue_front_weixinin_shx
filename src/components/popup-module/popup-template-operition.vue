@@ -25,7 +25,7 @@
             <text v-if="agreementCheckFlag" class="iconfont icon-xuanzhong" />
           </view>
           <view class="popup-agreement-content">
-            阅读并同意
+            确认即代表您同意加入
             <text
               class="popup-agreement-content-text2"
               @click="toPolicy(popupInfo)"
@@ -72,7 +72,7 @@
 
         <!-- 文字注释 -->
 
-        <scroll-view scroll-y="true" class="moreDes">
+        <scroll-view v-if="popupInfo.moreDesc" scroll-y="true" class="moreDes">
           <view v-html="popupInfo.moreDesc" />
         </scroll-view>
       </view>
@@ -144,10 +144,21 @@
               </text>
             </view>
           </view>
-          <view class="popup_button popup-button-single-box">
+          <view
+            class="popup_button"
+            :class="[
+              popupInfo.buttons.length > 1
+                ? 'popup-button-multiple-box'
+                : 'popup-button-single-box',
+            ]"
+          >
             <block v-for="(item, index) in popupInfo.buttons" :key="item.id">
               <view
-                :class="['popup-button-single']"
+                :class="[
+                  popupInfo.buttons.length > 1
+                    ? 'popup-button-multiple'
+                    : 'popup-button-single',
+                ]"
                 :style="item.buttonStyle"
                 @click="buttonClick(item, index)"
               >
@@ -199,6 +210,10 @@ export default {
       type: String,
       default: "",
     },
+    checked: { // 是否默认勾选协议
+      type: Boolean,
+      default: true,
+    },
   },
   data () {
     return {
@@ -210,7 +225,7 @@ export default {
   watch: {
     popupInfo: {
       handler: function (newVal) {
-        this.agreementCheckFlag = false;
+        this.agreementCheckFlag = this.checked;
         let tempPopupDes = "";
         this.smsCode = "";
         if (newVal.windowScene === 2002) {
@@ -322,7 +337,6 @@ export default {
     color: #333333;
     line-height: 42rpx;
     margin-top: 30rpx;
-    // text-align: center;
     max-height: 378rpx;
   }
 
@@ -342,7 +356,6 @@ export default {
   }
 
   .popup_button_multiple {
-    // border-top: 1rpx solid #e5e5e5;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -360,10 +373,10 @@ export default {
     box-sizing: border-box;
   }
   .popup-button-single {
-    width: 100%;
+    width: 380rpx;
     box-sizing: border-box;
     height: 84rpx;
-    border-radius: 44rpx;
+    border-radius: 42rpx;
     line-height: 84rpx;
     font-size: 30rpx;
     font-weight: 500;
@@ -396,7 +409,7 @@ export default {
       border: none;
       width: 30rpx;
       height: 30rpx;
-      color: #1f87fc;
+      color: #6b61f5;
     }
 
     .popup-agreement-content {
@@ -428,7 +441,12 @@ export default {
   }
 
   .popup-padding-box {
-    padding: 0rpx 32rpx 50rpx 32rpx;
+    padding: 0rpx 32rpx 44rpx 32rpx;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .close {
