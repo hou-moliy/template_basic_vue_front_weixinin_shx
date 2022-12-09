@@ -64,11 +64,10 @@ export default {
     this.activityId = options.activityId;
     this.pageName = options.pageName;
     this.getActivityStatus();
-    // 获取我的喜欢
-    this.$store.dispatch("spcl/getMyLikeVideoIdList");
   },
   onShow () {
     this.dispatchPageEvent();
+    this.handleFresh();
   },
   onHide () {
     this.offMonitor();
@@ -126,6 +125,16 @@ export default {
       uni.$off("operitionShow");
       uni.$off("changeAi");
     },
+    // 刷新页面信息
+    handleFresh () {
+      if (this.$refs.EbConfigContainerAsync) {
+        this.$refs.EbConfigContainerAsync.handleFresh();
+      }
+      this.$store.dispatch("user/getUserSpclStatus");
+      this.$store.dispatch("user/getUserAiStatus");
+      this.$store.dispatch("spcl/getMyLikeVideoIdList");
+      this.$store.dispatch("spcl/getUserAllVideoList");
+    },
     // 获取页面配置信息
     getPageConfig () {
       TemplateService.getPageConfigByPageName({ pageName: `${this.activityId}` }).then(res => {
@@ -181,7 +190,7 @@ export default {
 .topic-page {
   min-height: 100vh;
   height: auto;
-  // padding-bottom: 100rpx;
+  padding-bottom: 100rpx;
   background-position-y: 9%;
 
   .top-img {

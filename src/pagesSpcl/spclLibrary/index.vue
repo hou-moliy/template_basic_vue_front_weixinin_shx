@@ -26,6 +26,7 @@
             style="transform: scale(0.7)"
             :checked="allFlag.checked"
             :value="allFlag.value"
+            class="round red"
           />
           <text>
             全选({{ delCls.length }}/{{
@@ -143,7 +144,6 @@ import clSharePanel from "../components/cl-share-panel/index.vue";
 import NoData from "../components/no-data/index.vue";
 import spclService from "@/api/spcl/index.js";
 import popupTemplateNotify from "../../components/popup-module/popup-template-notify.vue";
-
 export default {
   name: "SpclLibrary",
   components: {
@@ -173,6 +173,7 @@ export default {
       notifyInfo: {}, // 提示性弹窗内容
       notifyShow: false, // 控制提示性弹窗的展示
       windowCode: "", // 当前展示的弹窗的windowCode
+      btnClick: false, // 防止按钮重复点击
     };
   },
   onLoad (options) {
@@ -338,6 +339,8 @@ export default {
     // 删除视频彩铃
     delVideoItems () {
       if (this.delCls.length <= 0) return this.$toast("请勾选删除的铃音");
+      if (this.btnClick) return this.$toast("请勿重复点击");
+      this.btnClick = true;
       const len = this.delCls.length;
       if (this.navFlag === "curt") { // 当前播放页面
         this.handleDelCurt().then(res => {
@@ -348,6 +351,8 @@ export default {
           } else {
             this.$toast(res.msg);
           }
+        }).finally(() => {
+          this.btnClick = false;
         });
       } else { // 我的闲置页面
         this.handleDelXz();
@@ -393,7 +398,8 @@ export default {
           notifyInfoFail.windowDesc = notifyInfoFail.windowDesc.replace("#{successNum}", `${res.data.data.success}`);
           notifyInfoFail.windowDesc = notifyInfoFail.windowDesc.replace("#{failNum}", `${res.data.data.fail}`);
           notifyInfoSuccess.windowDesc = notifyInfoSuccess.windowDesc.replace("#{successNum}", `${res.data.data.success}`);
-          this.$showNotifyPop(this, res.data.data.fail === 0 ? notifyInfoSuccess : notifyInfoFail);
+          const notifyInfo = res.data.data.fail === 0 ? notifyInfoSuccess : notifyInfoFail;
+          this.$showNotifyPop(this, notifyInfo);
           // 更新用户铃音库数据
           this.$store.commit("spcl/SET_USER_SPCL_ALL", contents);
           // 更新闲置铃音数据
@@ -401,6 +407,8 @@ export default {
         } else {
           this.$toast(res.message);
         }
+      }).finally(() => {
+        this.btnClick = false;
       });
     },
     // 取消勾选、重置选择
@@ -563,7 +571,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss" scoped>
 .container {
   // tab栏样式

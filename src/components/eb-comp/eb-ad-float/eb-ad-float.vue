@@ -2,7 +2,7 @@
   <image
     class="floatImage"
     :src="pageConfig.tagIcon"
-    :style="{ position: [extraStyle.fixed] ? 'fixed' : 'absolute' }"
+    :style="{ position: extraStyle.fixed ? 'fixed' : 'absolute' }"
     :class="[extraStyle.position]"
     @click="floatClick"
   />
@@ -29,6 +29,7 @@ export default {
   },
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
+    console.log(typeof this.extraStyle.fixed, "浮动组件");
   },
   methods: {
     floatClick () {

@@ -2,25 +2,36 @@
   <view v-if="videoHeight" class="full-page">
     <!-- 视频彩铃内容 -->
     <view class="video-box">
-      <cl-video
+      <video
         v-if="videoDetail.ringFilePath"
-        ref="clVideo"
+        :id="`video_${videoDetail.ringFilePath}`"
+        :ref="`video_${videoDetail.ringFilePath}`"
+        :style="{ height: videoHeight, width: '100%' }"
+        :autoplay="true"
+        class="video"
+        object-fit="cover"
+        :src="videoDetail.ringFilePath"
+        loop
+        :show-fullscreen-btn="false"
+        :show-play-btn="false"
+        controls
         :poster="
           videoDetail.coverUrl ||
           videoDetail.openVCoverUrl ||
           videoDetail.openHCoverUrl
         "
-        class="video"
-        :src="videoDetail.ringFilePath"
-        :height="videoHeight"
-        :width="videoWidth"
-        :play="true"
-        :controls="true"
-        :g-duration="videoDetail.duration"
-        :initial-time="videoDetail.initialTime"
-        :video-id="videoDetail.ringId"
-        :object-fit="videoDetail.objectFit"
       >
+        <!-- 播放按钮 -->
+        <view
+          class="stop-play"
+          :style="{ height: videoHeight }"
+          @click="clickVideo"
+        >
+          <image
+            v-show="!isPlayNow"
+            :src="`${staticImgs}/shxmp/init/video-stop-play.png`"
+          />
+        </view>
         <view v-if="actions.set" class="view-left">
           <view class="left-view">
             <view class="left-text">
@@ -96,7 +107,7 @@
             </view>
           </view>
         </view>
-      </cl-video>
+      </video>
       <image
         v-else
         style="background: #000"
@@ -118,13 +129,9 @@
   </view>
 </template>
 <script>
-import clVideo from "@/components/cl-video/cl-video.vue";
 import { formatCount } from "@/utils/tools.js";
 import { handlePurchaseVideo } from "@/utils/video.js";
 export default {
-  components: {
-    clVideo,
-  },
   props: {
     item: {
       type: Object,
@@ -149,6 +156,8 @@ export default {
       videoDetail: null, // 当前展示的video对象
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
+      videoCtx: "", // video播放器
+      isPlayNow: true, // 是否正在播放
     };
   },
   created () {
@@ -184,6 +193,14 @@ export default {
     closePopup () {
       this.operitionInfo = {};
       this.$store.commit("window/SET_OPERITION_SHOW", false);
+    },
+    // 点击视频
+    clickVideo () {
+      // 获取对应的videoDOM
+      this.videoCtx = uni.createVideoContext(`video_${this.videoDetail.ringFilePath}`, this);
+      // 暂停播放
+      this.isPlayNow ? this.videoCtx.pause() : this.videoCtx.play();
+      this.isPlayNow = !this.isPlayNow;
     },
     // 初始化样式
     initStyle () {
@@ -294,12 +311,16 @@ export default {
         // 提示登录
         return this.$showLoginPop(this);
       }
+      const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
       const data = {
         ringId,
         target: "fx",
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
-        const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
+        this.videoDetail.extraInfo.shareCount = this.videoDetail.extraInfo.shareCount + 1;
+        // 更新数据
+        this.updateData();
+      }).finally(() => {
         uni.navigateTo({
           url,
         });
@@ -341,7 +362,25 @@ export default {
     }
   }
 }
+// 播放按钮
+.video {
+  position: relative;
+}
+.stop-play {
+  width: 100%;
+  display: flex;
+  z-index: -1;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
 
+  image {
+    width: 79rpx;
+    height: 94rpx;
+  }
+}
 // 视频彩铃内容
 .video-box {
   flex: 1;
