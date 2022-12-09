@@ -63,7 +63,7 @@
               {{ times }}s
             </button>
             <view v-else class="sms-code-btn" size="mini" @click="sendCode">
-              <p>获取验证码</p>
+              <p>发送验证码</p>
             </view>
           </view>
         </view>
@@ -78,7 +78,7 @@
             </view>
           </view>
           <view class="check-view-conten-text">
-            我已阅读并同意
+            我已阅读并接受
             <view
               style="
                 color: #7f77f5;
@@ -93,12 +93,7 @@
         </view>
 
         <view class="sms_login">
-          <button
-            class="login-btn"
-            size="mini"
-            :class="{ active: phonenumber }"
-            @tap="getUserProfile"
-          >
+          <button class="login-btn" size="mini" @tap="getUserProfile">
             登 录
           </button>
         </view>
@@ -107,7 +102,7 @@
     <view class="bottom-box">
       <view class="wx-login-box">
         <view class="tips-line" />
-        <text class="tips-tips1">其他方式登录</text>
+        <text class="tips-tips1">使用其他登录方式</text>
         <view class="tips-line" style="margin-left: 15rpx" />
       </view>
       <!-- 微信登录 -->
@@ -625,12 +620,8 @@ button::after {
     text-align: center;
     color: #ffffff;
     line-height: 98rpx;
-    background: #d2d2d2;
-
-    &.active {
-      background: linear-gradient(to right, #9e79ff 0%, #e180e5 65%);
-      box-shadow: 0rpx 9rpx 10rpx 0rpx rgba(179, 123, 245, 0.3);
-    }
+    background: linear-gradient(to right, #9e79ff 0%, #e180e5 65%);
+    box-shadow: 0rpx 9rpx 10rpx 0rpx rgba(179, 123, 245, 0.3);
   }
 }
 
@@ -645,14 +636,14 @@ button::after {
   display: inline-block;
   width: 150rpx;
   height: 53rpx;
-  background: #f2f2f2;
-  border-radius: 4rpx;
+  background: #c6c5c8;
+  border-radius: 14rpx;
   text-align: center;
   line-height: 49rpx;
   font-size: 30rpx;
   font-family: PingFang SC Medium, PingFang SC Medium-Medium;
   font-weight: 500;
-  color: #666666;
+  color: #fff;
   border-radius: 26px;
 }
 
