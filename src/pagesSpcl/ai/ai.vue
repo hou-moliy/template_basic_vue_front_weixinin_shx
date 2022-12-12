@@ -77,6 +77,7 @@
       @buttonClick="operitionBtnClick"
       @closePopup="closeOperitionPopup"
     />
+    <!-- 提示类弹窗 -->
     <notifyPop ref="NotifyPop" />
     <!-- 下线通知 -->
     <offline-popup
@@ -104,7 +105,9 @@ export default {
       show: false,
       popupInfo: {},
       pageConfig: {},
+      notifyInfo: {}, // 弹窗信息
       activityId: "S20221201fbbdf",
+      isOpenCount: 0, // 开启AI主题数量
     };
   },
   onLoad () {
@@ -193,19 +196,23 @@ export default {
       } else {
         if (!this.aiStatus) {
           // 未开启ai功能,开通ai换铃方法
-          this.handleOpenAi();
+          const notifyInfo = uni.getStorageSync("windowAllObj").common_ai_open;
+          this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi());
         } else {
           // 已开启ai功能,弹出提示类弹窗
-          const notifyInfo =
-            uni.getStorageSync("windowAllObj").common_ai_cancel;
+          const notifyInfo = uni.getStorageSync("windowAllObj").common_ai_cancel;
           this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi(1));
         }
       }
     },
     // 切换主题
-    themeStatusChange (item, index) {
+    async themeStatusChange (item, index) {
       this.topicId = item.topicId;
       this.topicIndex = index;
+      this.aiTopicArray.forEach(aiItem => {
+        if (aiItem.isOpen) this.isOpenCount += 1;
+      });
+      console.log(this.isOpenCount);
       if (!this.spclStatus) {
         // 是否开通视频彩铃业务
         this.show = true;
@@ -214,36 +221,27 @@ export default {
         // 判定是否开启AI
         this.$toast("请先开启AI换铃功能再进行设置");
       } else {
-        if (item.isOpen) {
-          SpclService
-            .updateUserTopic({
-              type: 1,
-              topicId: this.topicId,
-            })
-            .then(res => {
-              if (res.data.code === 200) {
-                this.$toast("关闭成功");
-                this.aiTopicArray[this.topicIndex].isOpen = false;
-              } else {
-                this.$toast(res.data.message);
-              }
-            });
+        if (this.isOpenCount === 1 && item.isOpen) {
+          this.isOpenCount = 0;
+          return this.$toast("至少开启一个主题哦~");
+        }
+        const type = item.isOpen ? 1 : 2;
+        const res = await SpclService.updateUserTopic({ type, topicId: this.topicId });
+        if (res.data.code === 200) {
+          const message = item.isOpen ? "关闭成功" : "开启成功";
+          this.$toast(message);
+          if (item.isOpen) {
+            this.aiTopicArray[this.topicIndex].isOpen = false;
+            this.isOpenCount -= 1;
+          } else {
+            this.aiTopicArray[index].isOpen = true;
+            this.isOpenCount += 1;
+          }
         } else {
-          SpclService
-            .updateUserTopic({
-              type: 2,
-              topicId: item.topicId,
-            })
-            .then(res => {
-              if (res.data.code === 200) {
-                this.$toast("开启成功");
-                this.aiTopicArray[index].isOpen = true;
-              } else {
-                this.$toast(res.data.message);
-              }
-            });
+          this.$toast(res.data.message);
         }
       }
+      this.isOpenCount = 0;
     },
     // 确认开通视频彩铃
     operitionBtnClick (e) {
