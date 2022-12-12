@@ -68,7 +68,9 @@
         </view>
         <!-- 标题 -->
         <view class="more-new-title">
-          {{ item.ringName }}
+          <view class="title-inner">
+            {{ item.ringName }}
+          </view>
         </view>
         <view class="white-block" />
         <!-- 操作栏样式1 -->
@@ -151,6 +153,8 @@ export default {
   data () {
     return {
       staticImgs: this.$staticImgs,
+      textOverFlag: false, // 文字是否超出两行显示
+      textHeight: 0, // 文字的高度
     };
   },
   computed: {
@@ -271,22 +275,38 @@ export default {
 }
 .more-new-title {
   height: 77rpx;
-  font-size: 28rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
-  font-weight: 700;
-  text-align: left;
-  color: #333333;
-  line-height: 36rpx;
-  overflow: hidden;
-  white-space: normal;
-  -webkit-line-clamp: 2;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  /*! autoprefixer: off */
-  -webkit-box-orient: vertical;
-  /* autoprefixer: on */
-  word-break: break-all;
   padding: 15rpx 12rpx 0rpx 15rpx;
+  .title-inner {
+    font-size: 28rpx;
+    font-family: PingFang SC, PingFang SC-Medium;
+    font-weight: 700;
+    text-align: left;
+    color: #333333;
+    overflow: hidden;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    /*! autoprefixer: off */
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    word-break: break-all;
+  }
+}
+
+.unfoldText {
+  overflow: hidden;
+  display: block;
+}
+.unfoldText:after {
+  z-index: 3;
+  content: "...";
+  position: absolute;
+  bottom: 0px;
+  right: 80px;
+  width: 48px;
+  padding-left: 30px;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0.1), #fff 45%);
 }
 .icon-box {
   display: flex;

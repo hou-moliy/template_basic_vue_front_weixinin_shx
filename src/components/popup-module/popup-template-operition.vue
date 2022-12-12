@@ -225,7 +225,7 @@ export default {
   watch: {
     popupInfo: {
       handler: function (newVal) {
-        this.agreementCheckFlag = this.checked;
+        this.agreementCheckFlag = this.checked && newVal.windowProtocol;
         let tempPopupDes = "";
         this.smsCode = "";
         if (newVal.windowScene === 2002) {
