@@ -108,14 +108,12 @@ export default {
       pageNum: 1,
       pageSize: 10,
       id: "",
-      autoLoadData: false,
       totalNum: 0,
       onLoadId: -1,
       isFirst: false,
       isPlayFromIndex: false,
       isRequest: false,
       loadMoreVideoCount: 2,
-      shareObj: {}, // 分享参数
       navMarginHeight: 0, // 自定义导航栏外边距
       navHeight: 0, // 自定义导航栏高度
       step: 0, // 新手引导步骤
@@ -129,18 +127,15 @@ export default {
 
   onLoad ({
     id,
-    autoLoadData,
     playStatus,
     moduleId,
     notModulId,
   }) {
-    // autoLoadData 用来标记是否自动加载数据，如果需要自动加载数据则传autoLoadData，不需要自动加载则不传
     this.videoList = this.$store.state.spcl.videoList;
     console.log("===", this.videoList);
     this.onLoadId = id;
     this.index = this.videoList.findIndex((item) => item.ringId === id);
     uni.setStorageSync("videoPlayIndex", this.index);
-    this.autoLoadData = autoLoadData;
     this.isFirst = true;
     this.playStatus = playStatus;
     if (moduleId) {
@@ -148,7 +143,7 @@ export default {
     } else {
       this.notModulId = notModulId;
     }
-    // 分享进入的等同第一次的缓存逻辑
+    // 判断是否是第一次播放
     if (uni.getStorageSync("userPlayVideo")) {
       this.isFirstPlay = false;
     } else {
@@ -161,7 +156,7 @@ export default {
   },
 
   async onShow () {
-    // 获取点赞列表
+    // 获取点赞列表，更新点赞
     if (uni.getStorageSync("Authorization")) {
       const res = await SpclService.getBehaviorIdList({ behaviorType: "dz" });
       if (res.data.code === 200) {
@@ -328,6 +323,9 @@ export default {
     },
     changeCurrent (e) {
       this.index = e.detail.current;
+      this.onLoadId = this.videoList[this.index].ringId;
+      // this.onLoadId = this.index;
+      uni.setStorageSync("videoPlayIndex", this.index);
       if (this.isFirstPlay) {
         this.isFirstPlay = false;
       }

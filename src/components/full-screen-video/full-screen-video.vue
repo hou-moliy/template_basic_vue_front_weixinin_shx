@@ -265,7 +265,7 @@ export default {
             // 修改当前数据 更新仓库
             this.videoDetail.extraInfo.like = false;
             this.videoDetail.extraInfo.likeCount -= 1;
-            this.updateData();
+            this.updateData(0);
           }
         } else {
           this.$toast(res.message);
@@ -273,7 +273,7 @@ export default {
       });
     },
     // 数据更新
-    updateData () {
+    updateData (flag = 1) { // 1 点赞 0 取消点赞
       const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
       const list = this.$store.state.spcl.videoList;
       list[index] = this.videoDetail;
@@ -281,22 +281,27 @@ export default {
       // 更新我的喜欢数据
       this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.videoDetail);
       // 更新更多精彩数据
-      this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList");
+      this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList", flag);
       // 更新视彩分类视频列表
-      this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType");
+      this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType", flag);
       // 更新搜索数据
-      this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList");
+      this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList", flag);
     },
     // 更新vux关于like
-    changeStoreLike (typeVideoList, storeMutations) {
+    changeStoreLike (typeVideoList, storeMutations, flag) {
       const currentVideoId = this.videoDetail.ringId;
       const videoList = typeVideoList;
       const currentIndex = videoList.findIndex(
         (item) => currentVideoId === item.ringId,
       );
       if (currentIndex > -1) {
-        videoList[currentIndex].extraInfo.likeCount += 1;
-        videoList[currentIndex].extraInfo.like = true;
+        if (flag) {
+          videoList[currentIndex].extraInfo.likeCount += 1;
+          videoList[currentIndex].extraInfo.like = true;
+        } else {
+          videoList[currentIndex].extraInfo.likeCount -= 1;
+          videoList[currentIndex].extraInfo.like = false;
+        }
         this.$store.commit(storeMutations, videoList);
       }
     },
