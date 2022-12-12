@@ -129,12 +129,6 @@
       @szEvent="szEvent"
     />
     <!-- 提示类弹窗 -->
-    <popup-template-notify
-      :popup-info="notifyInfo"
-      notify-info
-      :show="notifyShow"
-      @buttonClick="handleButtonClick"
-    />
     <notifyPop ref="NotifyPop" />
   </view>
 </template>
@@ -143,13 +137,11 @@
 import clSharePanel from "../components/cl-share-panel/index.vue";
 import NoData from "../components/no-data/index.vue";
 import spclService from "@/api/spcl/index.js";
-import popupTemplateNotify from "../../components/popup-module/popup-template-notify.vue";
 export default {
   name: "SpclLibrary",
   components: {
     clSharePanel,
     NoData,
-    popupTemplateNotify,
   },
   data () {
     return {
@@ -170,9 +162,6 @@ export default {
       videoSettingList: [], // 当前播放铃音，对象数组
       panelShow: false, // 控制更多操作展示
       delCls: [], // 选中的铃音数组
-      notifyInfo: {}, // 提示性弹窗内容
-      notifyShow: false, // 控制提示性弹窗的展示
-      windowCode: "", // 当前展示的弹窗的windowCode
       btnClick: false, // 防止按钮重复点击
     };
   },
@@ -550,16 +539,6 @@ export default {
           this.$toast(res.message);
         }
       });
-    },
-    // 弹窗按钮的点击事件
-    handleButtonClick ({ btnInfo }) {
-      if (btnInfo.type === 1) { // 关闭弹窗
-        this.notifyShow = false;
-      } else if (btnInfo.type === 2) { // 订购逻辑
-        this.handleQxSzEvent();
-      } else if (btnInfo.type === 3) { // 跳转逻辑
-
-      }
     },
     // 预览,跳转视频彩铃播放页面
     seeDetail ({ ringId }) {
