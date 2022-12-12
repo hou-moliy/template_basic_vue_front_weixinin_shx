@@ -46,6 +46,7 @@ const handlePurchaseVideo = (ringItem, setCallBack = () => { }) => {
 // 设置视频彩铃
 const handleSetPcl = (ringItem, setCallBack = () => { }) => {
   SpclService.setSpcl({ ringId: ringItem.ringId }).then(res => {
+    uni.hideLoading();
     if (res.data.code === 200) {
       if (res.data.data.code === 0) {
         Vue.prototype.$toast("耶，设置成功", 4000);
@@ -56,14 +57,13 @@ const handleSetPcl = (ringItem, setCallBack = () => { }) => {
         setCallBack();
         store.commit("window/SET_OPERITION_SHOW", false);
       } else {
-        Vue.prototype.$toast("设置失败，请稍后重试");
+        Vue.prototype.$toast("设置失败，请稍后重试", 4000);
         store.commit("window/SET_OPERITION_SHOW", true);
       }
     } else {
       Vue.prototype.$toast(res.data.message);
       store.commit("window/SET_OPERITION_SHOW", true);
     }
-    uni.hideLoading();
   });
 };
 // 确定订购视频彩铃按钮点击

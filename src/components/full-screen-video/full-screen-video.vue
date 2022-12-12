@@ -316,10 +316,12 @@ export default {
         ringId,
         target: "fx",
       };
-      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
-        this.videoDetail.extraInfo.shareCount = this.videoDetail.extraInfo.shareCount + 1;
-        // 更新数据
-        this.updateData();
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then((res) => {
+        if (res.code === 200) {
+          this.videoDetail.extraInfo.shareCount = this.videoDetail.extraInfo.shareCount + 1;
+          // 更新数据
+          this.updateData();
+        }
       }).finally(() => {
         uni.navigateTo({
           url,

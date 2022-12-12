@@ -16,7 +16,7 @@ const dispatch = (eventId, extraInfo) => {
     eventId,
     extraInfo,
   };
-  analysis.send(param);
+  return analysis.send(param);
 };
 // 采集活动id，用于区分是哪个活动的事件
 const setActivityId = (activityId) => {

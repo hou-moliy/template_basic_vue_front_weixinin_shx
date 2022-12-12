@@ -225,7 +225,7 @@ export default {
         opType: 1,
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
-        if (res.data.code === 200) {
+        if (res.code === 200) {
           this.$set(this.wfList, index, e);
         }
       }).finally(() => {
