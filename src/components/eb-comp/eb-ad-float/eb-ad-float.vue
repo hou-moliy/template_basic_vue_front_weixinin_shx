@@ -17,6 +17,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -29,11 +33,12 @@ export default {
   },
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
-    console.log(typeof this.extraStyle.fixed, "浮动组件");
   },
   methods: {
     floatClick () {
-      navigateToAnyCheck(this.pageConfig);
+      this.$analysis.dispatch("ad_float", this.activityId).finally(() => {
+        navigateToAnyCheck(this.pageConfig);
+      });
     },
   },
 };

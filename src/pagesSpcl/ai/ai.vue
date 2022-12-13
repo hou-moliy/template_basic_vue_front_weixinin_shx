@@ -106,7 +106,7 @@ export default {
       popupInfo: {},
       pageConfig: {},
       notifyInfo: {}, // 弹窗信息
-      activityId: "S20221201fbbdf",
+      activityId: "ai_spcl_page", //  ai换铃配置区域活动id
       isOpenCount: 0, // 开启AI主题数量
     };
   },
