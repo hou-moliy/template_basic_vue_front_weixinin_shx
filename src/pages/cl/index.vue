@@ -324,9 +324,10 @@ export default {
     },
     // 点击查看更多按钮事件
     changeTabByMore (pageName) {
-      const current = this.tabList.filter(e => {
+      const currentList = this.tabList.filter(e => {
         return pageName === e.pageName;
-      })[0].sort;
+      });
+      const current = currentList.length ? currentList[0].sort : 1;
       this.swiperTab = current - 1;
       this.currentTab = current;
       this.pageName = this.tabList[current - 1].pageName;

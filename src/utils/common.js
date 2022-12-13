@@ -19,6 +19,7 @@ export const navigateByEventType = (event, outmethod) => {
 
 // Toast提示
 export const showToast = (title, duration = 2000, icon = "none") => {
+  console.log(duration, "延时时间");
   uni.showToast({
     title,
     icon,

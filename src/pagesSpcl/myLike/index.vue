@@ -130,6 +130,7 @@ export default {
     };
   },
   onLoad () {
+    this.$analysis.dispatch("my_like_pv");
     this.getWfList();
   },
   onShow () {
@@ -217,17 +218,23 @@ export default {
     },
     // 分享
     shareCountChange (e) {
-      const temObj = {
-        ...e,
+      const index = this.wfList.findIndex(wf => wf.ringId === e.ringId);
+      e.extraInfo.shareCount = e.extraInfo.shareCount + 1;
+      const data = {
+        ringId: e.ringId,
+        target: "fx",
+        opType: 1,
       };
-      temObj.shareCount = parseFloat(temObj.shareCount) + 1;
-      this.wfList.forEach(item => {
-        if (item.imgId === temObj.imgId) {
-          item.shareCount = temObj.shareCount;
+      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
+        if (res.code === 200) {
+          this.$set(this.wfList, index, e);
         }
-      });
-      uni.navigateTo({
-        url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+      }).finally(() => {
+        this.$analysis.dispatch("my_like_share_count").finally(() => {
+          uni.navigateTo({
+            url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+          });
+        });
       });
     },
     // 点赞或取消点赞
@@ -242,6 +249,7 @@ export default {
         if (res.code === 200) {
           this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);
           this.$toast("成功取消点赞");
+          this.$analysis.dispatch("my_like_fabulous_count");
           this.updateData();
         } else {
           this.$toast(res.message);
@@ -250,6 +258,7 @@ export default {
     },
     // 设置视频彩铃
     purchaseVideo (e) {
+      this.$analysis.dispatch("my_like_set_count");
       handlePurchaseVideo(e, this.setRingCallBack);
     },
     // 设置成功回调

@@ -17,7 +17,7 @@
                 class="favor-img"
               />
               <text class="favor-text">
-                {{ formatCount(item.extraInfo.favorCount) }}
+                {{ formatCount(item.extraInfo.playCount) }}
               </text>
             </view>
             <!-- 展示转发和点赞，样式3 -->

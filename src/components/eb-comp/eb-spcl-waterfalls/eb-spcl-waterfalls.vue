@@ -224,13 +224,15 @@ export default {
         target: "fx",
         opType: 1,
       };
-      this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
-        if (res.data.code === 200) {
-          this.$set(this.wfList, index, e);
-        }
-      }).finally(() => {
-        uni.navigateTo({
-          url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+      this.$analysis.dispatch("video_share_count").finally(() => {
+        this.$store.dispatch("spcl/handleSpclUserOperate", data).then(res => {
+          if (res.code === 200) {
+            this.$set(this.wfList, index, e);
+          }
+        }).finally(() => {
+          uni.navigateTo({
+            url: `/pagesCommon/share/shareVideo?videoId=${e.ringId}&shareType=1`,
+          });
         });
       });
     },
@@ -250,6 +252,7 @@ export default {
             item.extraInfo.likeCount -= 1;
             this.$toast("成功取消点赞");
           } else {
+            this.$analysis.dispatch("video_fabulous_count");
             item.extraInfo.likeCount += 1;
             this.$toast("点赞成功");
           }
