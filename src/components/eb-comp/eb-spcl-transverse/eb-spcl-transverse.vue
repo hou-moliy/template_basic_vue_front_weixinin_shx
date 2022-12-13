@@ -90,7 +90,7 @@ export default {
           ringId,
           target,
           mainId: this.moduleId,
-          pageName: "1",
+          pageName: this.activityId,
         };
         this.handleSpclUserBehavior(params);
         // 生成海报

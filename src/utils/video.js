@@ -81,6 +81,7 @@ const confirmOrderSpcl = ({ event, ringItem, setCallBack }) => {
 const operitionBtnClick = ({ event, ringItem }) => {
   if (event.btnInfo.type === 1) { // 关闭弹窗
   } else if (event.btnInfo.type === 2) { // 订购
+    Vue.prototype.$analysis.dispatch("video_business_open");
     handleOpenSpcl({ event, ringItem });
   }
 };
@@ -89,6 +90,7 @@ const handleOpenSpcl = ({ event, ringItem }) => {
   SpclService.openSpcl({ servType: "001" }).then(res => {
     if (res.data.code === 200) {
       if (event.protocolCheckFlag) { // 勾选了AI换铃
+        Vue.prototype.$analysis.dispatch("video_business_open_AI");
         store.dispatch("user/getUserSpclStatus"); // 更新视频彩铃状态
         handleOpenAi().then(() => {
           Vue.prototype.$toast("成功开通视频彩铃业务");

@@ -315,12 +315,12 @@ export default {
       this.$emit("changeAi");
     },
     // banner埋点
-    buryBannerId (id) {
-      // this.$analysis.dispatch(this.pageName+"_banner", id)
+    buryBannerId ({ id }) {
+      this.$analysis.dispatch(`${this.activityId}_banner_count`, id);
     },
     // iconList埋点
-    buryIconListId (id) {
-      //  this.$analysis.dispatch(this.pageName+"_icon", id)
+    buryIconListId ({ id }) {
+      this.$analysis.dispatch(`${this.activityId}_icon_count`, id);
     },
     // 设置视频彩铃
     purchaseVideo (e) {
@@ -338,8 +338,10 @@ export default {
       } else {
         uni.setStorageSync("isPlayFromIndex", true);
       }
-      uni.navigateTo({
-        url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
+      this.$analysis.dispatch("video_play_count").finally(() => {
+        uni.navigateTo({
+          url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
+        });
       });
     },
   },

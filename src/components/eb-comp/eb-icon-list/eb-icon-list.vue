@@ -58,7 +58,7 @@ export default {
         });
     },
     async navigateByEvent (event) {
-      this.$emit("buryIconListId", event.id);
+      this.$emit("buryIconListId", event);
       navigateToAnyCheck(event, `icon_${event.id}`);
     },
   },
