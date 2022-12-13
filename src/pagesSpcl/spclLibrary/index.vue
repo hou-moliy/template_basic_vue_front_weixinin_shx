@@ -44,11 +44,7 @@
           </text>
           首
         </view>
-        <view
-          v-if="videoList.length > 0"
-          class="mang-txt"
-          @click="checkShow = true"
-        >
+        <view v-if="videoList.length > 0" class="mang-txt" @click="batchMange">
           批量管理
         </view>
       </view>
@@ -151,7 +147,6 @@ export default {
         value: "cb",
         checked: false,
       }, // 全选标识符
-      currentLists: [],
       navFlag: "curt", // tab栏
       currentObj: {}, // 当前操作的铃音对象
       videoList: [], // 展示的数据
@@ -166,6 +161,7 @@ export default {
     };
   },
   onLoad (options) {
+    this.$analysis.dispatch("video_library_pv");
     // 获取我的喜欢
     this.$store.dispatch("spcl/getMyLikeVideoIdList");
     if (options.navflag) {
@@ -206,6 +202,15 @@ export default {
       if (userSpclDataWithTimeFixed) {
         this.$loading("加载中...");
         this.getVideoListById();
+      }
+    },
+    // 批量管理点击
+    batchMange () {
+      this.checkShow = true;
+      if (this.navFlag === "lyk") { // 闲置
+        this.$analysis.dispatch("video_library_leaveunused_batch_mamage_count");
+      } else {
+        this.$analysis.dispatch("video_library_current_play_batch_mamage_count");
       }
     },
     // 获取用户的所有铃音数据
@@ -274,8 +279,10 @@ export default {
           });
         }
         this.videoList = idleVideoList;
+        this.$analysis.dispatch("video_library_leaveunused_count");
       } else { // 当前播放铃音
         this.videoList = this.videoSettingList;
+        this.$analysis.dispatch("video_library_current_play_count");
       }
     },
     // 每个铃音的选择
@@ -414,8 +421,9 @@ export default {
       this.currentObj = ringObj;
       if (navFlag === "curt") { // 当前播放页面
         this.currentObj.szValue = 0;
+        this.$analysis.dispatch("video_library_current_play_more_count");
       } else { // 我的闲置页面
-        const curtFlag = this.currentLists.findIndex(
+        const curtFlag = this.videoSettingList.findIndex(
           item => item.ringId === this.currentObj.ringId,
         );
         if (curtFlag >= 0) {
@@ -424,6 +432,7 @@ export default {
         } else {
           this.currentObj.szValue = 2; // 设置为彩铃
         }
+        this.$analysis.dispatch("video_library_leaveunused_more_count");
       }
       this.panelShow = true;
     },
@@ -445,6 +454,11 @@ export default {
     // 分享
     shareEvent (ringId) {
       if (uni.getStorageSync("Authorization")) {
+        if (this.navFlag === "lyk") { // 闲置
+          this.$analysis.dispatch("video_library_leaveunused_more_share_count");
+        } else {
+          this.$analysis.dispatch("video_library_current_play_more_share_count");
+        }
         // 把当前面板关了
         this.panelShow = false;
         this.navigateToPages(`/pagesCommon/share/shareVideo?videoId=${ringId}&shareType=1`);
@@ -452,6 +466,11 @@ export default {
     },
     // 点赞
     likeEvent ({ ringItem, flag }) { // flag true 取消点赞， false新增点赞
+      if (this.navFlag === "lyk") { // 闲置
+        this.$analysis.dispatch("video_library_leaveunused_more_like_count");
+      } else {
+        this.$analysis.dispatch("video_library_current_play_more_like_count");
+      }
       const data = {
         ringId: ringItem.ringId,
         target: "dz",
@@ -481,6 +500,7 @@ export default {
     },
     // 点击设为视频彩铃
     szEvent (ringItem) {
+      this.$analysis.dispatch("video_library_leaveunused_set_count");
       this.panelShow = false;
       const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cur_set;
       notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
@@ -523,6 +543,7 @@ export default {
     },
     // 取消设置视频彩铃点击
     qxSzEvent (ringItem) {
+      this.$analysis.dispatch("video_library_current_play_remove_set_count");
       // 展示取消设置弹窗
       this.panelShow = false;
       const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cancel;
