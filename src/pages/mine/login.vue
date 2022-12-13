@@ -275,6 +275,8 @@ export default {
 
     // 手机验证码登录
     getUserProfile (e) {
+      // 埋点 登录点击量
+      this.$analysis.dispatch("Logon_count");
       this.$loading("请稍等...", true, 0);
       if (!this.phonenumber) return this.$toast("请输入手机号");
       if (this.phonenumber.length !== 11) {
@@ -435,6 +437,8 @@ export default {
     },
     // 微信登录
     async wxLogin (e, eventId) {
+      // 埋点微信授权点击量
+      this.$analysis.dispatch("WeChat_count");
       this.$loading("请稍等...", true, 0);
       await this.wxLoginGetCode();
       console.log("e", e, eventId);
@@ -470,7 +474,6 @@ export default {
           uni.hideLoading();
           uni.setStorageSync("Authorization",
             `Bearer ${res3.data.token}`);
-          // this.$analysis.dispatch('dl_vx_dlcg')
           uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
           this.bindWxUser();
           // 获取用户视彩开通状态再获取铃音数据

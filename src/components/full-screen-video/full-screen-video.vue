@@ -166,6 +166,10 @@ export default {
   },
   mounted () {
     this.dispatchPageEvent();
+    // 判断用户是否首次播放
+    if (!uni.getStorageSync("userPlayVideo")) {
+      uni.setStorageSync("userPlayVideo", true);
+    }
   },
   beforeDestroy () {
     this.offMonitor();

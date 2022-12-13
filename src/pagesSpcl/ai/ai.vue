@@ -175,6 +175,9 @@ export default {
       // flag 2 开启 1取消
       const res = await SpclService.openAi({ type: flag });
       if (res.data.code === 200) {
+        // 埋点
+        const analysisParam = !this.aiStatus ? "ai_open_count" : "ai_close_count";
+        this.$analysis.dispatch(analysisParam);
         uni.hideLoading();
         const mes = flag === 2 ? "开启成功" : "取消成功";
         this.$toast(mes);

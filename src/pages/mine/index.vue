@@ -442,6 +442,7 @@ export default {
       uni.removeStorageSync("myLikeIds");
       uni.removeStorageSync("failSpcl");
       uni.removeStorageSync("userCyMsg");
+      // uni.removeStorageSync("userPlayVideo");
       this.$refs.popup_login_out.close();
       const moreVideoListTemp = this.$store.state.spcl.moreVideoList;
       moreVideoListTemp.forEach(item => {

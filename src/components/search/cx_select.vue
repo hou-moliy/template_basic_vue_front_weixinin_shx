@@ -170,6 +170,7 @@ export default {
       this.hotKeyArr = [];
       if (this.pageName === "video") {
         uni.setStorageSync("videoHotKeyArr", this.hotKeyArr);
+        this.$analysis.dispatch("video_search_history_delete_count ");
       } else {
         uni.setStorageSync("musicHotKeyArr", this.hotKeyArr);
       }
