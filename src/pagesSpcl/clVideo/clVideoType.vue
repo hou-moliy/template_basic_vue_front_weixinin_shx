@@ -373,7 +373,7 @@ export default {
       currentTab: "",
       lableList: [],
       pageNum: 1,
-      pageSize: 6,
+      pageSize: 10,
       isLoad: "loading",
       isLoadStatus: "loading",
       showDirection: "H",
@@ -474,6 +474,10 @@ export default {
   onHide () {
     this.offMonitor();
   },
+  onUnload () {
+    console.log("触发视彩分类返回");
+    uni.removeStorageSync("isFromclVideoType");
+  },
   // 下拉到底部
   onReachBottom () {
     // 请求列表
@@ -507,7 +511,7 @@ export default {
     },
     // 移除监听
     offMonitor () {
-      console.log("移除监听");
+      console.log("移除监听-----");
       uni.$off("openLoginPopup");
       uni.$off("operitionShow");
     },
@@ -559,6 +563,7 @@ export default {
     // 播放
     goToPlayVideo (e, videoList) {
       console.log("去看视频");
+      uni.setStorageSync("isFromclVideoType", true);
       this.$store.commit("spcl/M_changeVideoList", videoList);
       this.$store.commit("spcl/getVideoLabelId", this.currentTab);
       this.$store.commit("spcl/getVedioListTalNum", this.totalNum);

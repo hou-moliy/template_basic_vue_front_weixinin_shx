@@ -110,6 +110,7 @@ export default {
       id: "",
       totalNum: 0,
       onLoadId: -1,
+      labelId: -1,
       isFirst: false,
       isPlayFromIndex: false,
       isRequest: false,
@@ -224,6 +225,7 @@ export default {
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
       this.$store.commit("spcl/M_changeVideoList", this.$store.state.spcl.videoList);
       this.videoList = this.$store.state.spcl.videoList;
+      this.labelId = this.$store.state.spcl.vedioLabelId;
       this.index = this.videoList.findIndex(
         (item) => item.ringId === this.onLoadId,
       );
@@ -255,12 +257,39 @@ export default {
         SpclService.getSpclUserBehavior(data).then((res) => { });
       }
     },
-    // 瀑布流组件获取下一页
+    // 瀑布流获取下一页
     getNewVedioList () {
       if (this.isRequest) {
         return;
       }
       this.isRequest = true;
+      const isFromclVideoType = uni.getStorageSync("isFromclVideoType");
+      if (isFromclVideoType) {
+        this.clVideoTypeGetVedioList();
+      } else {
+        this.configWaterfallgetVedioList();
+      }
+    },
+    // 视频分类页瀑布流获取下一页
+    clVideoTypeGetVedioList () {
+      const data = {
+        labelId: this.labelId,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      SpclService.getSpclLabelVideoList(data).then((res) => {
+        this.isRequest = false;
+        if (res.data.code === 200) {
+          const tempList = Util.SplitArray(res.data.data.records, this.videoList);
+          this.pageNum++;
+          this.videoList = videoInfoUpdate(tempList);
+          console.log(this.videoList, "videoList");
+          this.$store.commit("spcl/M_changeVideoList", this.videoList);
+        }
+      });
+    },
+    // 配置化瀑布流组件获取下一页
+    configWaterfallgetVedioList () {
       const data = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
@@ -322,9 +351,9 @@ export default {
       });
     },
     changeCurrent (e) {
+      console.log(e.detail.current, "e.detail.current");
       this.index = e.detail.current;
       this.onLoadId = this.videoList[this.index].ringId;
-      // this.onLoadId = this.index;
       uni.setStorageSync("videoPlayIndex", this.index);
       if (this.isFirstPlay) {
         this.isFirstPlay = false;
