@@ -6,7 +6,7 @@
           v-for="(item, index) in adList"
           :key="index"
           class="eb-ad-roll-item"
-          @click="navigateToAny(item)"
+          @click="navigateToH5(item)"
         >
           <view class="img-box-row" :style="[extraStyle]">
             <image :style="[extraStyle]" :src="item.url" alt="" />
@@ -35,6 +35,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -53,7 +57,10 @@ export default {
     this.getAdLIst();
   },
   methods: {
-    navigateToAny,
+    navigateToH5 (item) {
+      this.$analysis.dispatch(`${this.activityId}_ad_roll_transverse`, item.id).finally(() => navigateToAny(item),
+      );
+    },
     // 使用运营位接口 获取专题列表
     getAdLIst () {
       const params = {

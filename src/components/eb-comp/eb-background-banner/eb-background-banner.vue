@@ -90,8 +90,7 @@ export default {
       this.currentSwiper = event.detail.current + 1;
     },
     navigateToH5 (event) {
-      this.$emit("buryBannerId", event);
-      navigateToAnyCheck(event, `swiper_${event.id}`);
+      this.$analysis.dispatch(`${this.activityId}_banner_count`, event.id).finally(() => navigateToAnyCheck(event, `swiper_${event.id}`));
     },
   },
 };

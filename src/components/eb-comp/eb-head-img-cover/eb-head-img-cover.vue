@@ -12,6 +12,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
