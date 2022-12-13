@@ -60,6 +60,7 @@ export default {
     this.pageStatusLoad = "onLoad";
     this.hotKeyGoToPlayKey = false;
     this.pageStatusLoadForSelect = "onLoad";
+    this.$analysis.dispatch("video_search_pv");// 进入视频搜索的埋点，有音频搜索后需修改
   },
   onShow () {
     if (this.pageStatusLoad === "onHide") {

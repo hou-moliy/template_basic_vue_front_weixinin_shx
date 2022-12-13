@@ -601,7 +601,7 @@ export default {
             tempList[0].extraInfo.likeCount -= 1;
             this.$set(this.specialNews, index, tempList[0]);
             // 更新数据
-            this.updateData(index);
+            this.updateData(index, 0);
           } else {
             this.$toast("点赞成功");
             const tempList = this.specialNews.filter(
@@ -619,26 +619,29 @@ export default {
       });
     },
     // 数据更新
-    updateData (index) {
+    updateData (index, flag = 1) { // 1 点赞 0 取消点赞
       // 更新我的喜欢数据
       this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", this.specialNews[index]);
       // 更新更多精彩数据
-      this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList", index);
-      // 更新视彩分类视频列表
-      this.changeStoreLike(this.$store.state.spcl.videoListFromCxVideoType, "spcl/getVideoListFromCxVideoType", index);
+      this.changeStoreLike(this.$store.state.spcl.moreVideoList, "spcl/getMoreVideoList", index, flag);
       // 更新搜索数据
-      this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList", index);
+      this.changeStoreLike(this.$store.state.spcl.searchList, "spcl/getSearchList", index, flag);
     },
     // 更新vux关于like
-    changeStoreLike (typeVideoList, storeMutations, index) {
+    changeStoreLike (typeVideoList, storeMutations, index, flag) {
       const currentVideoId = this.specialNews[index].ringId;
       const videoList = typeVideoList;
       const currentIndex = videoList.findIndex(
         (item) => currentVideoId === item.ringId,
       );
       if (currentIndex > -1) {
-        videoList[currentIndex].extraInfo.likeCount += 1;
-        videoList[currentIndex].extraInfo.like = true;
+        if (flag) {
+          videoList[currentIndex].extraInfo.likeCount += 1;
+          videoList[currentIndex].extraInfo.like = true;
+        } else {
+          videoList[currentIndex].extraInfo.likeCount -= 1;
+          videoList[currentIndex].extraInfo.like = false;
+        }
         this.$store.commit(storeMutations, videoList);
       }
     },
@@ -656,7 +659,7 @@ export default {
         if (res.data.code === 200) {
           this.lableList = res.data.data;
           this.currentTab = res.data.data[this.index].labelId;
-          this.showDirection = res.data.data[0].showDirection;
+          this.showDirection = res.data.data[this.index].showDirection;
           if (
             this.$store.state.spcl.videoListFromCxVideoType.length > 0 &&
             !this.init
@@ -688,6 +691,7 @@ export default {
       if (this.currentTab === e.currentTarget.dataset.current) {
         return false;
       } else {
+        this.$analysis.dispatch("each_label_more_pv", e.currentTarget.dataset.current);
         this.currentTab = e.currentTarget.dataset.current;
         this.showDirection = item.showDirection;
         this.specialNews = [];

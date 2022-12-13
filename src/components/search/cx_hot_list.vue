@@ -221,6 +221,8 @@ export default {
     clickKey (e, item) {
       const tempArr = [];
       tempArr.push(item);
+      console.log(item, "item");
+      this.$analysis.dispatch("video_search_hot_list_count  ", `${item.ringId}`);
       this.$store.commit("spcl/M_changeVideoList", tempArr);
       this.$emit("clickKey");
       uni.navigateTo({
