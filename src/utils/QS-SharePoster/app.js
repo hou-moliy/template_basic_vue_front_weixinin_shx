@@ -1,11 +1,11 @@
-let log = console.log; // 如果在项目的APP.vue文件中的onlaunch中设置 console.log = ()=> {} 则在此也不会有打印信息
+const log = console.log; // 如果在项目的APP.vue文件中的onlaunch中设置 console.log = ()=> {} 则在此也不会有打印信息
 // log = ()=>{};	// 打开注释则该插件不会打印任何信息
-let _app = {
-  lineFeedTags: ['<br />', '<br/>', '\r\n', '\n\t', '\r', '\n'],	//换行符识别列表
-  tagetLineFeedTag: `❤`,	//将lineFeedTags列表中的字符串替换为该字符, 代表换行符, 只要找一个特殊符号就行，必须是单字符单字符单字符!
-  //交互控制
+const _app = {
+  lineFeedTags: ["<br />", "<br/>", "\r\n", "\n\t", "\r", "\n"],	// 换行符识别列表
+  tagetLineFeedTag: "❤",	// 将lineFeedTags列表中的字符串替换为该字符, 代表换行符, 只要找一个特殊符号就行，必须是单字符单字符单字符!
+  // 交互控制
   log (t) {
-    log(t);
+    // log(t);
   }, // 打印控制,
   showLoading (msg, ifmask) {
     // uni.showLoading({
@@ -23,50 +23,45 @@ let _app = {
     // })
   },
   getPosterUrl (objs) { // 后端获取背景图的url路径方法
-    let {
+    const {
       backgroundImage,
       type,
-      formData
+      formData,
     } = objs;
     return new Promise((rs, rj) => {
       let image;
       if (backgroundImage) {
         image = backgroundImage;
       } else {
-        switch (type) { //根据type获取背景图, 一般要改成request获取
+        switch (type) { // 根据type获取背景图, 一般要改成request获取
           case 1:
-            image = '';
+            image = "";
             break;
           default:
-            image = '/static/1.png';
+            image = "/static/1.png";
             break;
         }
       }
       if (image) {
         rs(image); // resolve图片的路径
       } else {
-        rj('背景图片路径不存在');
+        rj("背景图片路径不存在");
       }
-    })
+    });
   },
 
-
-
-
-
-
-  //下面一般不用动他
+  // 下面一般不用动他
   shareTypeListSheetArray: {
-    array: [0, 1, 2, 3, 4, 5]
+    array: [0, 1, 2, 3, 4, 5],
   }, // 分享类型 0-图文链接 1-纯文字 2-纯图片 3-音乐 4-视频 5-小程序
   isArray (arg) {
-    return Object.prototype.toString.call(arg) === '[object Array]';
+    return Object.prototype.toString.call(arg) === "[object Array]";
   },
   isObject (arg) {
-    return Object.prototype.toString.call(arg) === '[object Object]';
+    return Object.prototype.toString.call(arg) === "[object Object]";
   },
   isPromise (obj) {
-    return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
+    return !!obj && (typeof obj === "object" || typeof obj === "function") && typeof obj.then === "function";
   },
   isNull (arg) {
     return arg === null;
@@ -78,10 +73,10 @@ let _app = {
     return arg === undefined;
   },
   isNotNull_string (arg) {
-    return arg !== null && arg !== undefined && arg !== '';
+    return arg !== null && arg !== undefined && arg !== "";
   },
   isFn (fn) {
-    return fn && typeof fn === 'function';
+    return fn && typeof fn === "function";
   },
   getStorage (key, scb, fcb) {
     uni.getStorage({
@@ -95,17 +90,17 @@ let _app = {
       },
       fail: function () {
         if (fcb) fcb();
-      }
-    })
+      },
+    });
   },
   setStorage (key, data) {
-    log('设置缓存')
-    log('key：' + key)
-    log('data：' + JSON.stringify(data));
+    log("设置缓存");
+    log("key：" + key);
+    log("data：" + JSON.stringify(data));
     uni.setStorage({
       key,
-      data
-    })
+      data,
+    });
   },
   setStorageSync (key, data) {
     uni.setStorageSync(key, data);
@@ -124,41 +119,38 @@ let _app = {
     uni.getImageInfo({
       src: url,
       success (res) {
-        if (cb && typeof (cb) == 'function') cb(res);
+        if (cb && typeof (cb) === "function") cb(res);
       },
       fail (err) {
-        if (fcb && typeof (fcb) == 'function') fcb(err);
-      }
-    })
+        if (fcb && typeof (fcb) === "function") fcb(err);
+      },
+    });
   },
   downloadFile (url, cb) {
     url = checkMPUrl(url);
     uni.downloadFile({
       url,
       success (res) {
-        if (cb && typeof (cb) == 'function') cb(res);
-      }
-    })
+        if (cb && typeof (cb) === "function") cb(res);
+      },
+    });
   },
   downloadFile_PromiseFc (url) {
     return new Promise((rs, rj) => {
-      if (url.substring(0, 4) !== 'http') {
+      if (url.substring(0, 4) !== "http") {
         rs(url);
       } else {
         url = checkMPUrl(url);
-        log('url:' + url);
+        log("url:" + url);
         uni.downloadFile({
           url,
           success (res) {
-            if (res && res.tempFilePath)
-              rs(res.tempFilePath);
-            else
-              rj('not find tempFilePath');
+            if (res && res.tempFilePath) { rs(res.tempFilePath); } else { rj("not find tempFilePath"); }
           },
           fail (err) {
             rj(err);
-          }
-        })
+          },
+        });
       }
     });
   },
@@ -166,21 +158,20 @@ let _app = {
     uni.saveFile({
       tempFilePath: url,
       success (res) {
-        log('保存成功:' + JSON.stringify(res))
-      }
-    })
+        log("保存成功:" + JSON.stringify(res));
+      },
+    });
   },
   downLoadAndSaveFile_PromiseFc (url) {
     return new Promise((rs, rj) => {
-      log('准备下载并保存图片:' + url);
-      if (url.substring(0, 4) === 'http') {
+      log("准备下载并保存图片:" + url);
+      if (url.substring(0, 4) === "http") {
         url = checkMPUrl(url);
         uni.downloadFile({
           url,
           success (d_res) {
-            log('下载背景图成功：' + JSON.stringify(d_res));
+            log("下载背景图成功：" + JSON.stringify(d_res));
             if (d_res && d_res.tempFilePath) {
-
               // #ifdef H5
               rs(d_res.tempFilePath);
               // #endif
@@ -189,128 +180,124 @@ let _app = {
               uni.saveFile({
                 tempFilePath: d_res.tempFilePath,
                 success (s_res) {
-                  log('保存背景图成功:' + JSON.stringify(s_res));
-                  if (s_res && s_res.savedFilePath)
-                    rs(s_res.savedFilePath);
-                  else
-                    rs(d_res.tempFilePath);
+                  log("保存背景图成功:" + JSON.stringify(s_res));
+                  if (s_res && s_res.savedFilePath) { rs(s_res.savedFilePath); } else { rs(d_res.tempFilePath); }
                 },
                 fail (err) {
                   rs(d_res.tempFilePath);
-                }
-              })
+                },
+              });
               // #endif
-
             } else {
-              rj('not find tempFilePath');
+              rj("not find tempFilePath");
             }
           },
           fail (err) {
             rj(err);
-          }
-        })
+          },
+        });
       } else {
         rs(url);
       }
-    })
+    });
   },
   checkFile_PromiseFc (url) {
     return new Promise((rs, rj) => {
       uni.getSavedFileList({
         success (res) {
-          let d = res.fileList;
-          let index = d.findIndex(item => {
+          const d = res.fileList;
+          const index = d.findIndex(item => {
             return item.filePath === url;
-          })
+          });
           rs(index);
         },
         fail (err) {
           rj(err);
-        }
-      })
+        },
+      });
     });
   },
   removeSavedFile (path) {
     uni.getSavedFileList({
       success (res) {
-        let d = res.fileList;
-        let index = d.findIndex(item => {
+        const d = res.fileList;
+        const index = d.findIndex(item => {
           return item.filePath === path;
         });
-        if (index >= 0)
+        if (index >= 0) {
           uni.removeSavedFile({
-            filePath: path
-          })
-      }
-    })
+            filePath: path,
+          });
+        }
+      },
+    });
   },
   fileNameInPath (path) {
-    let s = path.split("/");
+    const s = path.split("/");
     return s[s.length - 1];
   },
   getImageInfo_PromiseFc (imgPath) {
     return new Promise((rs, rj) => {
-      log('准备获取图片信息:' + imgPath);
+      log("准备获取图片信息:" + imgPath);
       imgPath = checkMPUrl(imgPath);
       uni.getImageInfo({
         src: imgPath,
         success: res => {
-          log('获取图片信息成功:' + JSON.stringify(res));
+          log("获取图片信息成功:" + JSON.stringify(res));
           rs(res);
         },
         fail: err => {
-          log('获取图片信息失败:' + JSON.stringify(err));
-          rj(err)
-        }
-      })
+          log("获取图片信息失败:" + JSON.stringify(err));
+          rj(err);
+        },
+      });
     });
   },
   previewImage (urls) {
-    if (typeof (urls) == 'string')
-      urls = [urls];
+    if (typeof (urls) === "string") { urls = [urls]; }
     uni.previewImage({
       urls,
-    })
+    });
   },
   actionSheet (obj, cb) {
-    let sheetArray = [];
+    const sheetArray = [];
     for (let i = 0; i < obj.array.length; i++) {
       switch (obj.array[i]) {
-        case 'sinaweibo':
-          sheetArray[i] = '新浪微博';
+        case "sinaweibo":
+          sheetArray[i] = "新浪微博";
           break;
-        case 'qq':
-          sheetArray[i] = 'QQ';
+        case "qq":
+          sheetArray[i] = "QQ";
           break;
-        case 'weixin':
-          sheetArray[i] = '微信';
+        case "weixin":
+          sheetArray[i] = "微信";
           break;
-        case 'WXSceneSession':
-          sheetArray[i] = '微信好友';
+        case "WXSceneSession":
+          sheetArray[i] = "微信好友";
           break;
-        case 'WXSenceTimeline':
-          sheetArray[i] = '微信朋友圈';
+        case "WXSenceTimeline":
+          sheetArray[i] = "微信朋友圈";
           break;
-        case 'WXSceneFavorite':
-          sheetArray[i] = '微信收藏';
+        case "WXSceneFavorite":
+          sheetArray[i] = "微信收藏";
           break;
         case 0:
-          sheetArray[i] = '图文链接';
+          sheetArray[i] = "图文链接";
           break;
         case 1:
-          sheetArray[i] = '纯文字';
+          sheetArray[i] = "纯文字";
           break;
         case 2:
-          sheetArray[i] = '纯图片';
+          sheetArray[i] = "纯图片";
           break;
         case 3:
-          sheetArray[i] = '音乐';
+          sheetArray[i] = "音乐";
           break;
         case 4:
-          sheetArray[i] = '视频';
+          sheetArray[i] = "视频";
           break;
         case 5:
-          sheetArray[i] = '小程序';
+          sheetArray[i] = "小程序";
           break;
         default:
           break;
@@ -322,52 +309,52 @@ let _app = {
     uni.showActionSheet({
       itemList: sheetArray,
       success: (e) => {
-        if (cb && typeof (cb) == 'function') cb(e.tapIndex);
-      }
-    })
+        if (cb && typeof (cb) === "function") cb(e.tapIndex);
+      },
+    });
   },
   getProvider (type, cb, sheet) {
-    let _this = this;
+    const _this = this;
     uni.getProvider({
       service: type,
       success: function (res) {
         if (sheet) {
-          let obj = {};
+          const obj = {};
           obj.array = res.provider;
           _this.actionSheet(obj, function (index) {
-            if (cb && typeof (cb) == "function") cb(res.provider[index]);
+            if (cb && typeof (cb) === "function") cb(res.provider[index]);
           });
         } else {
-          if (type == 'payment') {
-            let providers = res.provider;
-            let payTypeArray = [];
+          if (type == "payment") {
+            const providers = res.provider;
+            const payTypeArray = [];
             for (let i = 0; i < providers.length; i++) {
-              if (providers[i] == 'wxpay') {
+              if (providers[i] == "wxpay") {
                 payTypeArray[i] = {
-                  name: '微信支付',
+                  name: "微信支付",
                   value: providers[i],
-                  img: '/static/image/wei.png'
+                  img: "/static/image/wei.png",
                 };
-              } else if (providers[i] == 'alipay') {
+              } else if (providers[i] == "alipay") {
                 payTypeArray[i] = {
                   name: "支付宝支付",
                   value: providers[i],
-                  img: '/static/image/ali.png'
+                  img: "/static/image/ali.png",
                 };
               }
             }
-            if (cb && typeof (cb) == "function") cb(payTypeArray);
+            if (cb && typeof (cb) === "function") cb(payTypeArray);
           } else {
-            if (cb && typeof (cb) == "function") cb(res);
+            if (cb && typeof (cb) === "function") cb(res);
           }
         }
       },
-    })
+    });
   },
   // #ifdef APP-PLUS
-  getShare (providerName, WXScene, shareType, title, summary, href, imageUrl, miniProgramObj, mediaUrl, scb, fcb) { //miniProgram: {path: '', type: 0, webUrl: ''}
-    let _this = this;
-    if (typeof (shareType) == 'number' && !isNaN(shareType) && shareType >= 0) {
+  getShare (providerName, WXScene, shareType, title, summary, href, imageUrl, miniProgramObj, mediaUrl, scb, fcb) { // miniProgram: {path: '', type: 0, webUrl: ''}
+    const _this = this;
+    if (typeof (shareType) === "number" && !isNaN(shareType) && shareType >= 0) {
       _this.readyShare(providerName, WXScene, shareType, title, summary, href, imageUrl, miniProgramObj, mediaUrl, scb,
         fcb);
     } else {
@@ -378,43 +365,43 @@ let _app = {
     }
   },
   readyShare (providerName, WXScene, shareType, title, summary, href, imageUrl, miniProgramObj, mediaUrl, scb, fcb) {
-    let _this = this;
+    const _this = this;
     let shareObjData = {};
     switch (shareType) {
       case 0:
         shareObjData = {
-          href: href,
-          summary: summary,
-          imageUrl: imageUrl
+          href,
+          summary,
+          imageUrl,
         };
         break;
       case 1:
         shareObjData = {
-          summary: summary,
-          href: href
+          summary,
+          href,
         };
         break;
       case 2:
         shareObjData = {
-          imageUrl: imageUrl
+          imageUrl,
         };
         break;
       case 3:
         if (mediaUrl) {
-          _this.showToast('暂不支持此分享类型');
+          _this.showToast("暂不支持此分享类型");
           return;
         };
         shareObjData = {
-          mediaUrl: mediaUrl
+          mediaUrl,
         };
         break;
       case 4:
         if (mediaUrl) {
-          _this.showToast('暂不支持此分享类型');
+          _this.showToast("暂不支持此分享类型");
           return;
         };
         shareObjData = {
-          mediaUrl: mediaUrl
+          mediaUrl,
         };
         break;
       case 5:
@@ -422,34 +409,34 @@ let _app = {
           miniProgram: {
             ...miniProgramObj,
             id: miniProgramId,
-            type: miniProgramShareType
+            type: miniProgramShareType,
           },
-          imageUrl: imageUrl
+          imageUrl,
         };
-        providerName = 'weixin';
+        providerName = "weixin";
         break;
       default:
-        _this.showToast('分享参数-shareType错误');
+        _this.showToast("分享参数-shareType错误");
         return;
         break;
     }
     shareObjData.title = title;
     _this.share(providerName, WXScene, shareType, shareObjData, function (res) {
-      if (scb && typeof (scb) == 'function') scb(res);
+      if (scb && typeof (scb) === "function") scb(res);
     }, function (err) {
-      if (fcb && typeof (fcb) == 'function') fcb(err);
+      if (fcb && typeof (fcb) === "function") fcb(err);
     });
   },
   share (providerName, WXScene, shareType, data, scb, fcb) {
-    let _this = this;
-    let shareObj = {
-      provider: '',
+    const _this = this;
+    const shareObj = {
+      provider: "",
       success: Function,
-      fail: Function
+      fail: Function,
     };
-    if (providerName && providerName != '') {
+    if (providerName && providerName != "") {
       shareObj.provider = providerName;
-      if (providerName == 'weixin') {
+      if (providerName == "weixin") {
         _this.readyShareWXScene(WXScene, function (Scene) {
           shareObj.scene = Scene;
           _this.doingShare(shareObj, shareType, data, scb, fcb);
@@ -458,9 +445,9 @@ let _app = {
         _this.doingShare(shareObj, shareType, data, scb, fcb);
       }
     } else {
-      _this.getProvider('share', function (name) {
+      _this.getProvider("share", function (name) {
         shareObj.provider = name;
-        if (name == 'weixin') {
+        if (name == "weixin") {
           _this.readyShareWXScene(WXScene, function (Scene) {
             shareObj.scene = Scene;
             _this.doingShare(shareObj, shareType, data, scb, fcb);
@@ -472,15 +459,15 @@ let _app = {
     }
   },
   readyShareWXScene (WXScene, cb) {
-    let _this = this;
-    let WXScenetypelist = {
-      array: ['WXSceneSession', 'WXSenceTimeline', 'WXSceneFavorite']
+    const _this = this;
+    const WXScenetypelist = {
+      array: ["WXSceneSession", "WXSenceTimeline", "WXSceneFavorite"],
     };
     if (WXScene && WXScene != "") {
-      if (cb && typeof (cb) == 'function') cb(WXScene);
+      if (cb && typeof (cb) === "function") cb(WXScene);
     } else {
       _this.actionSheet(WXScenetypelist, function (index) {
-        if (cb && typeof (cb) == 'function') cb(WXScenetypelist.array[index]);
+        if (cb && typeof (cb) === "function") cb(WXScenetypelist.array[index]);
       });
     }
   },
@@ -488,39 +475,39 @@ let _app = {
     shareObj.type = shareType;
     if (data && data.title) shareObj.title = data.title;
     switch (shareType) {
-      case 0: //图文链接
+      case 0: // 图文链接
         shareObj.href = data.href;
         shareObj.summary = data.summary;
         shareObj.imageUrl = data.imageUrl;
         break;
-      case 1: //纯文字
+      case 1: // 纯文字
         shareObj.summary = data.summary;
         shareObj.href = data.href;
         break;
-      case 2: //纯图片
+      case 2: // 纯图片
         shareObj.imageUrl = data.imageUrl;
         break;
-      case 3: //音乐
+      case 3: // 音乐
         if (!data.mediaUrl) {
-          _this.showToast('暂不支持此分享类型');
+          _this.showToast("暂不支持此分享类型");
           return;
         };
         shareObj.mediaUrl = data.mediaUrl;
         break;
-      case 4: //视频
+      case 4: // 视频
         if (!data.mediaUrl) {
-          _this.showToast('暂不支持此分享类型');
+          _this.showToast("暂不支持此分享类型");
           return;
         };
         shareObj.mediaUrl = data.mediaUrl;
         break;
-      case 5: //小程序
-        if (miniProgramId == '') {
-          uni.showToast('未设置小程序ID, 请使用其他方式分享');
+      case 5: // 小程序
+        if (miniProgramId == "") {
+          uni.showToast("未设置小程序ID, 请使用其他方式分享");
           return;
         }
-        let mp = {
-          id: miniProgramId
+        const mp = {
+          id: miniProgramId,
         };
         mp.path = data.miniProgram.path;
         mp.type = data.miniProgram.type;
@@ -529,29 +516,29 @@ let _app = {
         shareObj.imageUrl = data.imageUrl;
         break;
       default:
-        appJS.showToast('分享参数-shareType错误');
+        appJS.showToast("分享参数-shareType错误");
         break;
     }
     shareObj.success = function (res) {
-      if (scb && typeof (scb) == 'function') scb(res);
-    }
+      if (scb && typeof (scb) === "function") scb(res);
+    };
     shareObj.fail = function (err) {
-      if (fcb && typeof (fcb) == 'function') fcb(err);
-    }
+      if (fcb && typeof (fcb) === "function") fcb(err);
+    };
     log(JSON.stringify(shareObj));
     uni.share(shareObj);
   },
   // #endif
-}
+};
 
 function checkMPUrl (url) {
   // #ifdef MP
   // if(process.env.NODE_ENV !== 'development'){
   // 	if(
-  // 		url.substring(0, 4) === 'http' && 
-  // 		url.substring(0, 5) !== 'https' && 
-  // 		url.substring(0, 12) !== 'http://store' && 
-  // 		url.substring(0, 10) !== 'http://tmp' && 
+  // 		url.substring(0, 4) === 'http' &&
+  // 		url.substring(0, 5) !== 'https' &&
+  // 		url.substring(0, 12) !== 'http://store' &&
+  // 		url.substring(0, 10) !== 'http://tmp' &&
   // 		url.substring(0, 10) !== 'http://usr'
   // 	) {
   // 		url = 'https' + url.substring(4, url.length);

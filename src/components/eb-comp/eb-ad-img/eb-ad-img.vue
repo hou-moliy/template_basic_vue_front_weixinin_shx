@@ -7,37 +7,20 @@
       <image :src="pageConfig.tagIcon" :style="[extraStyle]" />
     </view>
     <block v-for="(inItem, inIndex) in dataList" :key="inIndex">
-      <swiper v-if="inItem.style == 5" class="ad-banner">
-        <swiper-item
-          v-for="(item, index) in inItem.portalAd"
-          :key="index"
-          @click="navigateToH5(item)"
-        >
-          <view class="ad-banner-box">
-            <image
-              class="ad-banner-image"
-              :src="item.url"
-              :style="[extraStyle]"
-            />
-          </view>
-        </swiper-item>
-      </swiper>
-      <block v-if="inItem.style == 1">
-        <view
-          v-for="(contenItem, contentIndex) in inItem.portalAd"
-          :key="contentIndex"
-          class="ad-banner"
-          @click="navigateToH5(contenItem)"
-        >
-          <view class="ad-banner-box">
-            <image
-              class="ad-banner-image"
-              :src="contenItem.url"
-              :style="[extraStyle]"
-            />
-          </view>
+      <view
+        v-for="(contenItem, contentIndex) in inItem.portalAd"
+        :key="contentIndex"
+        class="ad-banner"
+        @click="navigateToH5(contenItem)"
+      >
+        <view class="ad-banner-box">
+          <image
+            class="ad-banner-image"
+            :src="contenItem.url"
+            :style="[extraStyle]"
+          />
         </view>
-      </block>
+      </view>
     </block>
   </view>
 </template>

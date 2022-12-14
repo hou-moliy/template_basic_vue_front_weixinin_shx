@@ -1,9 +1,5 @@
 <template>
-  <view
-    class="bsList"
-    :class="{ 'no-margin': compBottom }"
-    @click="bannerClickEvent(pageConfig)"
-  >
+  <view class="bsList" @click="bannerClickEvent(pageConfig)">
     <view>
       <image
         class="bsList-image"
@@ -49,7 +45,6 @@ export default {
     };
   },
   created () {
-    console.log(this.compBottom, "ppppppppp");
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
   methods: {
@@ -65,13 +60,12 @@ export default {
 page {
   background: #f6f6f6;
 }
-.no-margin {
-  margin-bottom: 0rpx !important;
-}
+
 .bsList {
   margin: 0 auto;
   width: 702rpx;
-  margin-bottom: 40rpx;
+  padding: 40rpx 0rpx 0rpx;
+  box-sizing: border-box;
 
   .bsList-image {
     border-radius: 10rpx 10rpx 0 0;

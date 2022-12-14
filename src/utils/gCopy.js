@@ -5,7 +5,7 @@ const copyAttr = function (sourceBean, targetBean) {
     return sourceBean;
   }
   Object.keys(targetBean).forEach((item, index) => {
-    sourceBean[item] = attrConvertor({ attrName: item, attrValue: targetBean[item] });
+    sourceBean[item] = attrConvertor({ attrName: item, attrValue: targetBean[item] || sourceBean[item] });
   });
   return sourceBean;
 };
