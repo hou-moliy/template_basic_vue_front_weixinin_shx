@@ -229,7 +229,6 @@
 <script>
 import adService from "@/api/ad/index.js";
 import { copyAttr } from "@/utils/gCopy.js";
-import { programaAnalysis } from "@/utils/common.js";
 
 import {
   navigateToAnyCheck,
@@ -240,6 +239,10 @@ export default {
     pageConfig: {
       type: Object,
       default: () => { },
+    },
+    activityId: {
+      type: String,
+      default: "",
     },
   },
   data () {
@@ -288,12 +291,8 @@ export default {
         });
       });
     },
-    async bannerClickEvent (item) {
-      // 埋点
-      programaAnalysis(this.pageConfig, item.id);
-      this.$analysis.dispatch("dj_yywid", item.id);
-      navigateToAnyCheck(item, `runAd_${item.id}`);
-      this.$emit("bannerClickEvent", item);
+    bannerClickEvent (item) {
+      this.$analysis.dispatch(`${this.activityId}_feeds_bg`, item.id).finally(() => navigateToAnyCheck(item, `feeds_bg_${item.id}`));
     },
   },
 };

@@ -58,8 +58,9 @@ export default {
         });
     },
     async navigateByEvent (event) {
-      this.$emit("buryIconListId", event);
-      navigateToAnyCheck(event, `icon_${event.id}`);
+      this.$analysis.dispatch(`${this.activityId}_icon_count`, event.id).finally(() => {
+        navigateToAnyCheck(event, `icon_${event.id}`);
+      });
     },
   },
 };

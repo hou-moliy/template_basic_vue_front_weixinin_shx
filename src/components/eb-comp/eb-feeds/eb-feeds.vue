@@ -196,6 +196,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -247,7 +251,7 @@ export default {
       });
     },
     bannerClickEvent (item) {
-      navigateToAnyCheck(item, `runAd_${item.id}`);
+      this.$analysis.dispatch(`${this.activityId}_feeds`, item.id).finally(() => navigateToAnyCheck(item, `feeds_${item.id}`));
     },
   },
 };

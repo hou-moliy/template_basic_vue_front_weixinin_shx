@@ -117,10 +117,8 @@ export default {
         }
       });
     },
-    async navigateToH5 (event) {
-      this.$emit("watchMore", event.moduleId);
-      this.$analysis.dispatch("dj_ckgd", event.id);
-      navigateToAnyCheck(event, `runAd_${event.moduleId}`);
+    navigateToH5 (event) {
+      this.$analysis.dispatch(`${this.activityId}_watch_more`).finally(() => navigateToAnyCheck(event, `watch_more_${event.moduleId}`));
     },
     goToPlayVideo (item) {
       this.$emit("goToPlayVideo", { item, list: this.dataList });

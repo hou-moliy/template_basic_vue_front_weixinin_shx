@@ -263,6 +263,7 @@ export default {
     },
     // 获取页面配置信息
     getPageConfig (pageName) {
+      this.$analysis.dispatch(`${pageName}_pv`);
       if (this.tabList[this.swiperTab].pageConfig) return;
       TemplateService.getPageConfigByPageName({ pageName }).then(res => {
         if (res.data.code === 200) {

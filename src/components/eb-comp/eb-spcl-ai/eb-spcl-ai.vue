@@ -30,6 +30,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -59,12 +63,13 @@ export default {
       });
     },
     openAiFun () {
-      if (!uni.getStorageSync("Authorization")) {
-        this.$analysis.dispatch("dj_kq");
-        this.$emit("openLoginPopup");
-        return;
-      }
-      this.$emit("changeAi");
+      this.$analysis.dispatch(`${this.activityId}_spcl_ai`).finally(() => {
+        if (!uni.getStorageSync("Authorization")) {
+          this.$emit("openLoginPopup");
+          return;
+        }
+        this.$emit("changeAi");
+      });
     },
   },
 };

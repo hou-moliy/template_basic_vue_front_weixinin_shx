@@ -1,5 +1,9 @@
 <template>
-  <view class="bsList" @click="bannerClickEvent(pageConfig)">
+  <view
+    class="bsList"
+    :class="{ 'no-margin': compBottom }"
+    @click="bannerClickEvent(pageConfig)"
+  >
     <view>
       <image
         class="bsList-image"
@@ -25,8 +29,15 @@ export default {
   props: {
     pageConfig: {
       type: Object,
-      default: () => { }
-      ,
+      default: () => { },
+    },
+    activityId: {
+      type: String,
+      default: "",
+    },
+    compBottom: { // 是否是页面最后一个
+      type: Boolean,
+      default: false,
     },
   },
   data () {
@@ -38,12 +49,13 @@ export default {
     };
   },
   created () {
+    console.log(this.compBottom, "ppppppppp");
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
   methods: {
     bannerClickEvent (item) {
       // 请统一使用eventUrl字段作为跳转路径
-      navigateToAnyCheck(item, `runAd_${item.moduleId}`);
+      this.$analysis.dispatch(`${this.activityId}_business_list`, item.moduleId).finally(() => navigateToAnyCheck(item, `business_list_${item.moduleId}`));
     },
   },
 };
@@ -53,10 +65,13 @@ export default {
 page {
   background: #f6f6f6;
 }
+.no-margin {
+  margin-bottom: 0rpx !important;
+}
 .bsList {
   margin: 0 auto;
-  padding-top: 28rpx;
   width: 702rpx;
+  margin-bottom: 40rpx;
 
   .bsList-image {
     border-radius: 10rpx 10rpx 0 0;
@@ -78,7 +93,18 @@ page {
       font-weight: 500;
       text-align: left;
       color: #333333;
-      padding-left: 24rpx;
+      padding: 0rpx 24rpx;
+      box-sizing: border-box;
+
+      overflow: hidden;
+      white-space: normal;
+      -webkit-line-clamp: 2;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      /*! autoprefixer: off */
+      -webkit-box-orient: vertical;
+      /* autoprefixer: on */
+      word-break: break-all;
     }
 
     .bsList-time {
@@ -87,7 +113,17 @@ page {
       font-weight: 500;
       text-align: left;
       color: #999999;
-      padding-left: 24rpx;
+      padding: 0rpx 24rpx;
+      box-sizing: border-box;
+      overflow: hidden;
+      white-space: normal;
+      -webkit-line-clamp: 2;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      /*! autoprefixer: off */
+      -webkit-box-orient: vertical;
+      /* autoprefixer: on */
+      word-break: break-all;
     }
   }
 }

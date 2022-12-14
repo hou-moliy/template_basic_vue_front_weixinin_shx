@@ -93,14 +93,17 @@ export default {
           pageName: this.activityId,
         };
         this.handleSpclUserBehavior(params);
-        // 生成海报
-        uni.navigateTo({
-          url: `/pagesCommon/share/shareVideo?videoId=${ringId}`,
+        this.$emit("buryShare", () => {
+          // 生成海报
+          uni.navigateTo({
+            url: `/pagesCommon/share/shareVideo?videoId=${ringId}`,
+          });
         });
       }
     },
     handleTips ({ opType }) {
       if (opType === 1) {
+        this.$emit("buryDz");
         this.$toast("点赞成功");
       } else if (opType === 0) {
         this.$toast("成功取消点赞");

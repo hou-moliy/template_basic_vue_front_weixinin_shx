@@ -62,6 +62,7 @@ export default {
   },
   onLoad (options) {
     this.activityId = options.activityId;
+    this.$analysis.dispatch(`${this.activityId}_page_pv`);
     this.pageName = options.pageName;
     this.getActivityStatus();
   },
@@ -190,8 +191,9 @@ export default {
 .topic-page {
   min-height: 100vh;
   height: auto;
-  padding-bottom: 100rpx;
   background-position-y: 9%;
+  padding: 40rpx 0rpx 50rpx;
+  box-sizing: border-box;
 
   .top-img {
     height: 900rpx;

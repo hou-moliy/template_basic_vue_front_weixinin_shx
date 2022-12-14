@@ -46,6 +46,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    activityId: {
+      type: String,
+      default: "",
+    },
   },
   data () {
     return {
@@ -67,22 +71,36 @@ export default {
     jumpTo () {
       if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
-        navigateToAnyCheck(this.pageConfig, `seeMore_rec_${this.pageConfig.moduleId}`);
-        // if (this.pageConfig.eventUrl && this.pageConfig.eventType !== 5)
+        navigateToAnyCheck(this.pageConfig, `seeMore${this.pageConfig.moduleId}`);
       } else {
         uni.setStorageSync("moreData", this.pageConfig);
         const params = { ...this.pageConfig };
-        // 请统一使用eventUrl字段作为跳转路径
-        if (params.eventUrl && params.eventUrl.indexOf("?") > -1) {
-          params.eventUrl = `${params.eventUrl}&moduleId=${params.moduleId}&pageName=${params.title}&showDirection=V`;
-        } else if (params.eventUrl && params.eventUrl.indexOf("?") < -1) {
-          params.eventUrl = `${params.eventUrl}?moduleId=${params.moduleId}&pageName=${params.title}&showDirection=V`;
-        }
-        console.log(params.eventUrl);
-        navigateToAnyCheck(params, `seeMore_rec_${params.moduleId}`);
+        const activityId = this.getUrlSingleParam("activityId", params.eventUrl) || params.eventUrl;
+        this.$analysis.dispatch("more_count", activityId).finally(() => {
+          // 请统一使用eventUrl字段作为跳转路径
+          if (params.eventUrl && params.eventUrl.indexOf("?") > -1) {
+            params.eventUrl = `${params.eventUrl}&moduleId=${params.moduleId}&pageName=${params.title}`;
+          } else if (params.eventUrl && params.eventUrl.indexOf("?") < -1) {
+            params.eventUrl = `${params.eventUrl}?moduleId=${params.moduleId}&pageName=${params.title}`;
+          }
+          console.log(params.eventUrl);
+          navigateToAnyCheck(params, `seeMore${params.moduleId}`);
+        });
       }
     },
-
+    /**
+  * 获取当前 URL 单个 GET 查询参数
+  * 入参：要解析的 URL，不传则默认为当前 URL
+  * 返回：一个<key, value>参数对象
+  */
+    getUrlSingleParam (key, url = location.search) {
+      const reg = new RegExp("(\\?|&)" + key + "=([^&]*)(&|$)");
+      const r = url.match(reg);
+      if (r != null) {
+        return unescape(r[2]);
+      }
+      return null;
+    },
   },
 };
 </script>

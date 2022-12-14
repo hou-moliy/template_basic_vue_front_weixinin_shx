@@ -14,7 +14,6 @@
           :page-config="pageConfig"
           :activity-id="activityId"
           :comp-top="compTop && pageConfigIndex == 0"
-          @buryBannerId="buryBannerId"
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -26,7 +25,6 @@
         <eb-icon-list
           :page-config="pageConfig"
           :activity-id="activityId"
-          @buryIconListId="buryIconListId"
           @openLoginPopup="openLoginPopup"
           @open="open"
         />
@@ -60,6 +58,8 @@
             :activity-id="activityId"
             @openLoginPopup="openLoginPopup"
             @goToPlayVideo="goToPlayVideo"
+            @buryDz="buryDz"
+            @buryShare="buryShare"
           />
         </view>
       </template>
@@ -83,6 +83,8 @@
             @openLoginPopup="openLoginPopup"
             @purchaseVideo="purchaseVideo"
             @goToPlayVideo="goToPlayVideo"
+            @buryDz="buryDz"
+            @buryShare="buryShare"
           />
         </view>
       </template>
@@ -95,6 +97,7 @@
       >
         <eb-default-head
           :page-config="pageConfig"
+          :activity-id="activityId"
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -106,6 +109,7 @@
         <eb-feeds
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
+          :activity-id="activityId"
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -118,6 +122,7 @@
         <eb-feeds-bg
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
+          :activity-id="activityId"
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -132,6 +137,10 @@
         <eb-business-list
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
+          :activity-id="activityId"
+          :comp-bottom="
+            compBottom && pageConfigIndex + 1 == pageConfigList.length
+          "
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -145,6 +154,7 @@
         <eb-head-img-cover
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
+          :activity-id="activityId"
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -156,6 +166,7 @@
       >
         <eb-head-img-cover
           :page-config="pageConfig"
+          :activity-id="activityId"
           :page-load-status="pageLoadStatus"
           @openLoginPopup="openLoginPopup"
         />
@@ -167,6 +178,7 @@
         <eb-spcl-ai
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
+          :activity-id="activityId"
           @openLoginPopup="openLoginPopup"
           @changeAi="changeAi"
         />
@@ -178,6 +190,7 @@
         <eb-ad-img
           :page-config="pageConfig"
           :page-load-status="pageLoadStatus"
+          :activity-id="activityId"
           @openLoginPopup="openLoginPopup"
         />
       </template>
@@ -314,13 +327,13 @@ export default {
     changeAi () {
       this.$emit("changeAi");
     },
-    // banner埋点
-    buryBannerId ({ id }) {
-      this.$analysis.dispatch(`${this.activityId}_banner_count`, id);
+    // 视频彩铃点赞埋点
+    buryDz () {
+      this.$analysis.dispatch("video_fabulous_count", this.activityId);
     },
-    // iconList埋点
-    buryIconListId ({ id }) {
-      this.$analysis.dispatch(`${this.activityId}_icon_count`, id);
+    // 视频彩铃分享埋点
+    buryShare (callBack = () => { }) {
+      this.$analysis.dispatch("video_share_count", this.activityId).finally(() => callBack());
     },
     // 设置视频彩铃
     purchaseVideo (e) {
@@ -338,7 +351,7 @@ export default {
       } else {
         uni.setStorageSync("isPlayFromIndex", true);
       }
-      this.$analysis.dispatch("video_play_count").finally(() => {
+      this.$analysis.dispatch(`${this.activityId}_video_play_count`).finally(() => {
         uni.navigateTo({
           url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
         });
