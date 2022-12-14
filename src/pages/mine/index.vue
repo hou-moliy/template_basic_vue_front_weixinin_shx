@@ -74,6 +74,7 @@
       <eb-icon-list
         :page-config="{ pageName: 'default-mine' }"
         @openLoginPopup="openLoginPopup"
+        @buryIconListId="buryIconListId"
         @open="open"
       />
       <!-- 更多功能 -->
@@ -181,6 +182,7 @@ export default {
     };
   },
   onLoad () {
+    this.$analysis.dispatch("my_pv");
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = (this.pointobj.top + 153) * 2;
   },
@@ -212,6 +214,9 @@ export default {
     this.$store.dispatch("spcl/getMyLikeVideoIdList");
   },
   methods: {
+    buryIconListId () {
+      this.$analysis.dispatch("my_icon_count");
+    },
     // 移除监听
     offMonitor () {
       console.log("移除监听");
@@ -220,6 +225,7 @@ export default {
       uni.$off("changeAi");
     },
     navigateToFunction (item) {
+      this.$analysis.dispatch("my_more_count");
       // 判断用户是否登录 否 提示弹窗 是 调用navgatertoany
       if (uni.getStorageSync("Authorization")) {
         console.log(item);
@@ -398,6 +404,7 @@ export default {
     },
     // 是否登录
     isLogin () {
+      this.$analysis.dispatch("my_log_on_count");
       if (this.loginFlag) {
         this.$refs.popup_login_out.open();
         uni.hideTabBar();
@@ -442,7 +449,6 @@ export default {
       uni.removeStorageSync("myLikeIds");
       uni.removeStorageSync("failSpcl");
       uni.removeStorageSync("userCyMsg");
-      // uni.removeStorageSync("userPlayVideo");
       this.$refs.popup_login_out.close();
       const moreVideoListTemp = this.$store.state.spcl.moreVideoList;
       moreVideoListTemp.forEach(item => {

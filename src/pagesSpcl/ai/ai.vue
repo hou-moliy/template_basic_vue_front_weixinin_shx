@@ -111,6 +111,7 @@ export default {
     };
   },
   onLoad () {
+    this.$analysis.dispatch("ai_pv");
     this.getPageConfig();
   },
   onShow () {
@@ -235,9 +236,11 @@ export default {
           this.$toast(message);
           if (item.isOpen) {
             this.aiTopicArray[this.topicIndex].isOpen = false;
+            this.$analysis.dispatch("ai_theme_closecount", item.topicId);
             this.isOpenCount -= 1;
           } else {
             this.aiTopicArray[index].isOpen = true;
+            this.$analysis.dispatch("ai_theme_opencount", item.topicId);
             this.isOpenCount += 1;
           }
         } else {

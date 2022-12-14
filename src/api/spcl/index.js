@@ -26,6 +26,7 @@ const spclSearch = (params) => axios.get(baseUrl + "/spcl/search/", params);// �
 const getSpclLabel = (params) => axios.get(baseUrl + "/spcl/label/", params);// 分类
 const getSpclVideoDetail = (params) => axios.get(baseUrl + "/spcl/videoDetail", params);// 视频详情
 const getSpclUserBehavior = (params) => axios.post(baseUrl + "/spcl/countVideoOperation", params);// 用户行为
+const getSpclLabelVideoList = (params) => axios.get(baseUrl + "/spcl/label/listWithPageAndType", params);// 分类列表
 
 export default {
   getsplykInfo,
@@ -52,4 +53,5 @@ export default {
   getSpclLabel,
   getSpclVideoDetail,
   getSpclUserBehavior,
+  getSpclLabelVideoList,
 };
