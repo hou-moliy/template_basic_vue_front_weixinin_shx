@@ -97,7 +97,7 @@ export default {
     // 点击设置视频彩铃按钮
     purchaseVideo (item) {
       // 处理视频彩铃设置
-      handlePurchaseVideo(item, this.handleFresh);
+      handlePurchaseVideo(item, this.handleFresh, "video_set_count", this.activityId);
     },
     // 开通或关闭AI换铃
     handleOpenAi,
