@@ -292,7 +292,7 @@ export default {
       });
     },
     bannerClickEvent (item) {
-      this.$analysis.dispatch(`${this.activityId}_feeds_bg`, item.id).finally(() => navigateToAnyCheck(item, `feeds_bg_${item.id}`));
+      this.$analysis.dispatch("feeds_bg", `${this.activityId}_${item.id}`).finally(() => navigateToAnyCheck(item, `feeds_bg_${item.id}`));
     },
   },
 };

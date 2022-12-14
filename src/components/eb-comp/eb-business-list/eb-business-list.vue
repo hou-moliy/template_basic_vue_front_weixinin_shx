@@ -55,7 +55,7 @@ export default {
   methods: {
     bannerClickEvent (item) {
       // 请统一使用eventUrl字段作为跳转路径
-      this.$analysis.dispatch(`${this.activityId}_business_list`, item.moduleId).finally(() => navigateToAnyCheck(item, `business_list_${item.moduleId}`));
+      this.$analysis.dispatch("business_list", `${this.activityId}_${item.moduleId}`).finally(() => navigateToAnyCheck(item, `business_list_${item.moduleId}`));
     },
   },
 };

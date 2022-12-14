@@ -6,4 +6,5 @@ const globalData = {
   weixinUrl: process.env.VUE_APP_BASE_API_WEIXIN,
 };
 console.log("当前环境：globalData", process.env);
+// "http://10.4.5.252:9501/portal-shx" ||
 export default globalData;

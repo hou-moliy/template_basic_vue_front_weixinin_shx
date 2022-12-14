@@ -13,7 +13,6 @@
                   inner-color="#9E79FF"
                   :spcl-style="3"
                   :data-url="'/pagesSpcl/clVideo/clVideoPlay?id=' + item.ringId"
-                  @click.native="programaAnalysis(params, item.imgId)"
                   @shareVideo="shareCountChange"
                   @giveLikes="likeCountChange"
                   @openLoginPopup="openLoginPopup"
@@ -32,7 +31,6 @@
                   inner-color="#9E79FF"
                   :spcl-style="3"
                   :data-url="'/pagesSpcl/clVideo/clVideoPlay?id=' + item.ringId"
-                  @click.native="programaAnalysis(params, item.imgId)"
                   @shareVideo="shareCountChange"
                   @giveLikes="likeCountChange"
                   @openLoginPopup="openLoginPopup"
@@ -49,9 +47,6 @@
 
 <script>
 import { formatCount } from "@/utils/tools.js";
-import {
-  programaAnalysis,
-} from "@/utils/common.js";
 import spclItem from "@/components/eb-comp/eb-spcl-waterfalls/spclItem.vue";
 const innerAudioContext = uni.createInnerAudioContext();
 innerAudioContext.loop = true;
@@ -109,7 +104,6 @@ export default {
   },
   methods: {
     formatCount,
-    programaAnalysis,
     // 跨页面通信监听
     dispatchPageEvent () {
       uni.$on("openLoginPopup", data => {

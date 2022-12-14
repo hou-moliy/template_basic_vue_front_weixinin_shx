@@ -254,6 +254,7 @@ export default {
             e.pageConfig = "";
             if (index === 0 && e.pageName) {
               this.pageName = e.pageName;
+              this.$analysis.dispatch("page_pv", `${this.pageName}`);
               this.getPageConfig(e.pageName);
             }
           });
@@ -263,7 +264,6 @@ export default {
     },
     // 获取页面配置信息
     getPageConfig (pageName) {
-      this.$analysis.dispatch(`${pageName}_pv`);
       if (this.tabList[this.swiperTab].pageConfig) return;
       TemplateService.getPageConfigByPageName({ pageName }).then(res => {
         if (res.data.code === 200) {
@@ -289,7 +289,7 @@ export default {
       });
     },
     scrollNav (event) {
-      Util.debounce(() => this.scrollNavFun, 10, true)(event);
+      Util.debounce(() => this.scrollNavFun(), 10, true)(event);
     },
     scrollNavFun (event) {
       this.scrollInfo = event.detail;
@@ -311,15 +311,16 @@ export default {
     },
     swiperChange (e) {
       this.swiperChangeInfo = e;
-      Util.debounce(() => this.swiperNavDebounce(), 200, true)();
+      Util.debounce(() => this.swiperNavDebounce(e), 200, true)();
     },
     // swiper切换防抖
     swiperNavDebounce () {
       const e = this.swiperChangeInfo;
       const { current } = e.detail;
+      this.pageName = this.tabList[current].pageName;
+      this.$analysis.dispatch("page_pv", `${this.pageName}`);
       this.swiperTab = current;
       this.currentTab = current + 1;
-      this.pageName = this.tabList[current].pageName;
       this.getPageConfig(this.pageName);
       this.changeTab(current);
     },
