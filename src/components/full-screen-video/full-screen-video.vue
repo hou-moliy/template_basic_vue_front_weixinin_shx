@@ -200,6 +200,7 @@ export default {
     },
     // 点击视频
     clickVideo () {
+      this.$analysis.dispatch("video_play_count");
       // 获取对应的videoDOM
       this.videoCtx = uni.createVideoContext(`video_${this.videoDetail.ringFilePath}`, this);
       // 暂停播放
@@ -259,6 +260,7 @@ export default {
         if (res.code === 200) {
           if (opType === 1) {
             this.$toast("点赞成功");
+            this.$analysis.dispatch("video_fabulous_count");
             // 将当前数据改了
             this.videoDetail.extraInfo.like = true;
             this.videoDetail.extraInfo.likeCount += 1;
@@ -322,6 +324,7 @@ export default {
       };
       this.$store.dispatch("spcl/handleSpclUserOperate", data).then((res) => {
         if (res.code === 200) {
+          this.$analysis.dispatch("video_share_count");
           this.videoDetail.extraInfo.shareCount = this.videoDetail.extraInfo.shareCount + 1;
           // 更新数据
           this.updateData();
