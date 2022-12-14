@@ -8,7 +8,6 @@
           :module-id="params.moduleId"
           :icons-class="['light']"
           :video-list="wfList"
-          @click.native="programaAnalysis(params, item.ringId)"
           @giveLikes="giveLikes"
           @shareVideo="shareVideo"
           @goToPlayVideo="goToPlayVideo"
@@ -21,7 +20,6 @@
 <script>
 import SpclService from "@/api/spcl/index.js";
 import videoItem from "./videoItem.vue";
-import { programaAnalysis } from "@/utils/common.js";
 export default {
   name: "FindSceneryRecommend",
   components: {
@@ -61,7 +59,6 @@ export default {
     this.getWfList();
   },
   methods: {
-    programaAnalysis,
     // 强制刷新
     handleFresh () {
       this.getWfList();

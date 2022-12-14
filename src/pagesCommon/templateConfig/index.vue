@@ -62,7 +62,7 @@ export default {
   },
   onLoad (options) {
     this.activityId = options.activityId;
-    this.$analysis.dispatch(`${this.activityId}_page_pv`);
+    this.$analysis.dispatch("page_pv", `${this.activityId}`);
     this.pageName = options.pageName;
     this.getActivityStatus();
   },
@@ -85,11 +85,6 @@ export default {
     if (res.from === "button") {
       // 来自页面内分享按钮
       console.log("页面按钮点击");
-    }
-    if (this.phoneNum) {
-      this.$analysis.dispatch("fx_xcx", JSON.stringify({ activityId: this.activityId, phone: this.phoneNum }));
-    } else {
-      this.$analysis.dispatch("fx_xcx", this.activityId);
     }
     return {
       title: this.shareObj.text

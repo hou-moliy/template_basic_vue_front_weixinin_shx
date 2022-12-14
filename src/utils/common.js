@@ -40,6 +40,3 @@ export const showLoading = (title, mask = true, duration = 2000, callback = () =
     }, duration);
   }
 };
-export const programaAnalysis = (params, id) => {
-  // 埋点暂时未写
-};

@@ -89,9 +89,9 @@ export default {
     },
     navigateToH5 (event) {
       if (event.eventUrl === "/pagesSpcl/clVideo/clVideoSearch") { // 视频搜索埋点
-        this.$analysis.dispatch(`${this.activityId}_video_search_count`).finally(() => navigateToAnyCheck(event, `swiper_${event.id}`));
+        this.$analysis.dispatch("video_search_count", this.activityId).finally(() => navigateToAnyCheck(event, `swiper_${event.id}`));
       } else {
-        this.$analysis.dispatch(`${this.activityId}_ad_img`).finally(() => navigateToAnyCheck(event, `swiper_${event.id}`));
+        this.$analysis.dispatch("ad_img", `${this.activityId}_${event.id}`).finally(() => navigateToAnyCheck(event, `swiper_${event.id}`));
       }
     },
   },

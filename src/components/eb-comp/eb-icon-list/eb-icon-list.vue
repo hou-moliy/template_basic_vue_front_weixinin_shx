@@ -58,7 +58,7 @@ export default {
         });
     },
     async navigateByEvent (event) {
-      this.$analysis.dispatch(`${this.activityId}_icon_count`, event.id).finally(() => {
+      this.$analysis.dispatch("icon_count", `${this.activityId}_${event.id}`).finally(() => {
         navigateToAnyCheck(event, `icon_${event.id}`);
       });
     },

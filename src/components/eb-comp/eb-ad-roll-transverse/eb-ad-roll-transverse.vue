@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     navigateToH5 (item) {
-      this.$analysis.dispatch(`${this.activityId}_ad_roll_transverse`, item.id).finally(() => navigateToAny(item),
+      this.$analysis.dispatch("ad_roll_transverse", `${this.activityId}_${item.id}`).finally(() => navigateToAny(item),
       );
     },
     // 使用运营位接口 获取专题列表

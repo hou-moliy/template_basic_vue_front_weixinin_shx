@@ -118,7 +118,7 @@ export default {
       });
     },
     navigateToH5 (event) {
-      this.$analysis.dispatch(`${this.activityId}_watch_more`).finally(() => navigateToAnyCheck(event, `watch_more_${event.moduleId}`));
+      this.$analysis.dispatch("watch_more", `${this.activityId}`).finally(() => navigateToAnyCheck(event, `watch_more_${event.moduleId}`));
     },
     goToPlayVideo (item) {
       this.$emit("goToPlayVideo", { item, list: this.dataList });

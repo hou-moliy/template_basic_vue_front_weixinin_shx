@@ -251,7 +251,7 @@ export default {
       });
     },
     bannerClickEvent (item) {
-      this.$analysis.dispatch(`${this.activityId}_feeds`, item.id).finally(() => navigateToAnyCheck(item, `feeds_${item.id}`));
+      this.$analysis.dispatch("feeds", `${this.activityId}_${item.id}`).finally(() => navigateToAnyCheck(item, `feeds_${item.id}`));
     },
   },
 };

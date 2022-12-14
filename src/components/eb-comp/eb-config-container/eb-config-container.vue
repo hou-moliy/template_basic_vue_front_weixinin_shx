@@ -351,7 +351,7 @@ export default {
       } else {
         uni.setStorageSync("isPlayFromIndex", true);
       }
-      this.$analysis.dispatch(`${this.activityId}_video_play_count`).finally(() => {
+      this.$analysis.dispatch("video_play_count", `${this.activityId}`).finally(() => {
         uni.navigateTo({
           url: `/pagesSpcl/clVideo/clVideoPlay?id=${item.ringId}`,
         });

@@ -13,11 +13,7 @@
           <view v-if="index % 2 === 0" class="more-new-item-column">
             <!-- 运营位 -->
             <view v-if="item.imgType === 2" class="recommend-wrap">
-              <operate-item
-                :item="item"
-                @click.native="programaAnalysis(params, item.imgId)"
-                @openLoginPopup="openLoginPopup"
-              />
+              <operate-item :item="item" @openLoginPopup="openLoginPopup" />
             </view>
             <!-- 元素 -->
             <view v-else class="video-box-new">
@@ -27,7 +23,6 @@
                 :last-flag="index == wfList.length - 1"
                 inner-color="#9E79FF"
                 :spcl-style="1"
-                @click.native="programaAnalysis(params, item.imgId)"
                 @shareVideo="shareCountChange"
                 @giveLikes="likeCountChange"
                 @purchaseVideo="purchaseVideo"
@@ -44,11 +39,7 @@
           <view v-if="index % 2 !== 0" class="more-new-item-column">
             <!-- 运营位 -->
             <view v-if="item.imgType === 2">
-              <operate-item
-                :item="item"
-                @click.native="programaAnalysis(params, item.imgId)"
-                @openLoginPopup="openLoginPopup"
-              />
+              <operate-item :item="item" @openLoginPopup="openLoginPopup" />
             </view>
             <!-- 元素 -->
             <view v-else class="video-box-new">
@@ -57,7 +48,6 @@
                 :last-flag="index == wfList.length - 1"
                 inner-color="#9E79FF"
                 :spcl-style="1"
-                @click.native="programaAnalysis(params, item.imgId)"
                 @shareVideo="shareCountChange"
                 @giveLikes="likeCountChange"
                 @purchaseVideo="purchaseVideo"
@@ -104,9 +94,6 @@ import operateItem from "@/components/eb-comp/eb-spcl-waterfalls/operateItem.vue
 import spclItem from "@/components/eb-comp/eb-spcl-waterfalls/spclItem.vue";
 import SpclService from "@/api/spcl/index.js";
 import { videoInfoUpdate, handlePurchaseVideo } from "@/utils/video";
-import {
-  programaAnalysis,
-} from "@/utils/common.js";
 export default {
   name: "MyLike",
   components: {
@@ -155,7 +142,6 @@ export default {
     this.getWfList(false);
   },
   methods: {
-    programaAnalysis,
     // 跨页面通信监听
     dispatchPageEvent () {
       // 关闭设置弹窗

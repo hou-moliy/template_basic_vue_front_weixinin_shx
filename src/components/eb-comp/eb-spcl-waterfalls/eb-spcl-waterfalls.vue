@@ -35,11 +35,7 @@
             <view v-if="index % 2 === 0" class="more-new-item-column">
               <!-- 运营位 -->
               <view v-if="item.imgType === 2" class="recommend-wrap">
-                <operate-item
-                  :item="item"
-                  @click.native="programaAnalysis(params, item.imgId)"
-                  @openLoginPopup="openLoginPopup"
-                />
+                <operate-item :item="item" @openLoginPopup="openLoginPopup" />
               </view>
               <!-- 元素 -->
               <view v-else class="video-box-new">
@@ -48,7 +44,6 @@
                   :last-flag="index == wfList.length - 1"
                   :inner-color="pageConfig.innerColor"
                   :spcl-style="pageConfig.spclStyle"
-                  @click.native="programaAnalysis(params, item.imgId)"
                   @shareVideo="shareCountChange"
                   @giveLikes="likeCountChange"
                   @purchaseVideo="purchaseVideo"
@@ -65,11 +60,7 @@
             <view v-if="index % 2 !== 0" class="more-new-item-column">
               <!-- 运营位 -->
               <view v-if="item.imgType === 2">
-                <operate-item
-                  :item="item"
-                  @click.native="programaAnalysis(params, item.imgId)"
-                  @openLoginPopup="openLoginPopup"
-                />
+                <operate-item :item="item" @openLoginPopup="openLoginPopup" />
               </view>
               <!-- 元素 -->
               <view v-else class="video-box-new">
@@ -78,7 +69,6 @@
                   :inner-color="pageConfig.innerColor"
                   :last-flag="index == wfList.length - 1"
                   :spcl-style="pageConfig.spclStyle"
-                  @click.native="programaAnalysis(params, item.imgId)"
                   @shareVideo="shareCountChange"
                   @giveLikes="likeCountChange"
                   @purchaseVideo="purchaseVideo"
@@ -109,9 +99,6 @@ import spclItem from "./spclItem.vue";
 import SpclService from "@/api/spcl/index.js";
 import { copyAttr } from "@/utils/gCopy.js";
 import { videoInfoUpdate } from "@/utils/video";
-import {
-  programaAnalysis,
-} from "@/utils/common.js";
 export default {
   components: {
     spclItem,
@@ -152,7 +139,6 @@ export default {
     this.getWfList();
   },
   methods: {
-    programaAnalysis,
     // 强制刷新
     handleFresh () {
       console.log("刷新啦，eb-spcl-waterfalls");

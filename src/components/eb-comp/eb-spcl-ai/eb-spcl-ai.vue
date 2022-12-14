@@ -63,7 +63,7 @@ export default {
       });
     },
     openAiFun () {
-      this.$analysis.dispatch(`${this.activityId}_spcl_ai`).finally(() => {
+      this.$analysis.dispatch("spcl_ai", `${this.activityId}`).finally(() => {
         if (!uni.getStorageSync("Authorization")) {
           this.$emit("openLoginPopup");
           return;
