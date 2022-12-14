@@ -337,9 +337,7 @@ export default {
     },
     // 设置视频彩铃
     purchaseVideo (e) {
-      this.$analysis.dispatch("video_set_count", this.activityId).finally(() => {
-        this.$emit("purchaseVideo", e);
-      });
+      this.$emit("purchaseVideo", e);
     },
     // 跳转视频彩铃播放页面
     goToPlayVideo ({ item, list, pageConfigTitle }) {
