@@ -258,8 +258,7 @@ export default {
     },
     // 设置视频彩铃
     purchaseVideo (e) {
-      this.$analysis.dispatch("my_like_set_count");
-      handlePurchaseVideo(e, this.setRingCallBack);
+      handlePurchaseVideo(e, this.setRingCallBack, "my_like_set_count");
     },
     // 设置成功回调
     setRingCallBack () {

@@ -23,25 +23,27 @@ const videoInfoUpdate = function (list) {
 };
 
 // 点击设置视频彩铃按钮
-const handlePurchaseVideo = (ringItem, setCallBack = () => { }) => {
-  if (uni.getStorageSync("Authorization")) {
-    store.dispatch("user/getUserSpclStatus").then(res => {
-      if (res === 1) { // 已开通视频彩铃
-        const popupInfo = { ...store.state.window.windowAllObj.common_spcl_set };
-        popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
-        popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
-        uni.$emit("operitionShow", {
-          popupInfo, btnClickCallBack: (event) => confirmOrderSpcl({ event, ringItem, setCallBack }),
-        });
-      } else { // 未开通
-        const popupInfo = store.state.window.windowAllObj.common_spcl_open;
-        popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
-        uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (event) => operitionBtnClick({ event, ringItem }) });
-      }
-    });
-  } else {
-    uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
-  }
+const handlePurchaseVideo = (ringItem, setCallBack = () => { }, eventId = "video_set_count", extraInfo = "") => {
+  Vue.prototype.$analysis.dispatch(eventId, extraInfo).finally(() => {
+    if (uni.getStorageSync("Authorization")) {
+      store.dispatch("user/getUserSpclStatus").then(res => {
+        if (res === 1) { // 已开通视频彩铃
+          const popupInfo = { ...store.state.window.windowAllObj.common_spcl_set };
+          popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+          popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
+          uni.$emit("operitionShow", {
+            popupInfo, btnClickCallBack: (event) => confirmOrderSpcl({ event, ringItem, setCallBack }),
+          });
+        } else { // 未开通
+          const popupInfo = store.state.window.windowAllObj.common_spcl_open;
+          popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
+          uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (event) => operitionBtnClick({ event, ringItem }) });
+        }
+      });
+    } else {
+      uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
+    }
+  });
 };
 // 设置视频彩铃
 const handleSetPcl = (ringItem, setCallBack = () => { }) => {
