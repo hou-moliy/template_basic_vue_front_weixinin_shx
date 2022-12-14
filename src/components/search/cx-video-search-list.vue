@@ -127,6 +127,7 @@ export default {
     },
     // 播放
     goToPlayVideo (item) {
+      this.$analysis.dispatch("video_play_count");
       this.$store.commit("spcl/M_changeVideoList", this.selectList);
       this.$emit("hotKeyGoToPlay", false);
       uni.navigateTo({
@@ -135,6 +136,7 @@ export default {
     },
     // 分享
     shareCountChange (item) {
+      this.$analysis.dispatch("video_share_count");
       const ringId = item.ringId;
       if (!uni.getStorageSync("Authorization")) {
         // 提示登录
@@ -145,6 +147,10 @@ export default {
           target: "fx",
         };
         this.$store.dispatch("spcl/handleSpclUserOperate", data).then(() => {
+          // 更新搜索列表仓库数据
+          const searchList = this.$store.state.spcl.searchList;
+          const currentIndex = searchList.findIndex(searchListItem => searchListItem.ringId === ringId);
+          searchList[currentIndex].extraInfo.shareCount += 1;
           const url = `/pagesCommon/share/shareVideo?videoId=${ringId}&pageName=videoPlay&shareType=1`;
           uni.navigateTo({
             url,
@@ -168,6 +174,7 @@ export default {
         if (res.code === 200) {
           if (!flag) {
             this.$toast("点赞成功");
+            this.$analysis.dispatch("video_fabulous_count");
             // 将当前数据改了
             this.specialNewsLists[0].extraInfo.like = true;
             this.specialNewsLists[0].extraInfo.likeCount += 1;

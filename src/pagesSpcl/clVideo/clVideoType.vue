@@ -95,7 +95,7 @@
                     <view
                       class="icon-item share-item"
                       :data-videoId="item.ringId"
-                      @click="shareVideo($event)"
+                      @click="shareVideo($event, item)"
                     >
                       <image
                         :src="`${staticImgs}/shxmp/init/share-icon.png`"
@@ -200,7 +200,7 @@
                     <view
                       class="icon-item share-item"
                       :data-videoId="item.ringId"
-                      @click="shareVideo($event)"
+                      @click="shareVideo($event, item)"
                     >
                       <image
                         :src="`${staticImgs}/shxmp/init/share-icon.png`"
@@ -296,7 +296,7 @@
             <view
               class="icon-item share-item"
               :data-videoId="item.ringId"
-              @click="shareVideo($event)"
+              @click="shareVideo($event, item)"
             >
               <image
                 :src="`${staticImgs}/shxmp/init/share-icon.png`"
@@ -538,7 +538,8 @@ export default {
       isSet[0].isBuyVideo = true;
     },
     // 分享
-    shareVideo (e) {
+    async shareVideo (e, item) {
+      this.$analysis.dispatch("video_share_count");
       if (!uni.getStorageSync("Authorization")) {
         // 提示登录
         this.$showLoginPop(this);
@@ -551,7 +552,13 @@ export default {
             : this.orderParams.notModulId,
           pageName: this.orderParams.playStatus,
         };
-        SpclService.getSpclUserBehavior(params).then((res) => { });
+        const res = await SpclService.getSpclUserBehavior(params);
+        if (res.data.code === 200) {
+          // 更新仓库视频分类list中的sharecout
+          const clTypeList = this.$store.state.spcl.videoListFromCxVideoType;
+          const currentIndex = clTypeList.findIndex(clTypeListItem => clTypeListItem.ringId === item.ringId);
+          clTypeList[currentIndex].extraInfo.shareCount += 1;
+        }
         // 生成海报
         uni.navigateTo({
           url:
@@ -562,6 +569,7 @@ export default {
     },
     // 播放
     goToPlayVideo (e, videoList) {
+      this.$analysis.dispatch("video_play_count");
       console.log("去看视频");
       uni.setStorageSync("isFromclVideoType", true);
       this.$store.commit("spcl/M_changeVideoList", videoList);
@@ -609,6 +617,7 @@ export default {
             this.updateData(index, 0);
           } else {
             this.$toast("点赞成功");
+            this.$analysis.dispatch("video_fabulous_count");
             const tempList = this.specialNews.filter(
               (item) => ringId === item.ringId,
             );
