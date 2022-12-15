@@ -3,7 +3,7 @@
     class="more-news"
     :style="{
       backgroundColor: [extraStyle.backgroundColor],
-      padding: !loading && wfList.length ? '0rpx 30rpx 30rpx' : '0rpx',
+      padding: !loading && wfList.length ? '30rpx' : '0rpx',
     }"
     :class="{ 'no-margin': !compBottom }"
   >
@@ -265,7 +265,6 @@ export default {
 <style lang="scss" scoped>
 .more-news {
   width: 100%;
-  // padding: 0rpx 30rpx 30rpx;
   box-sizing: border-box;
   border-radius: 40rpx 40rpx 0rpx 0rpx;
 
@@ -291,7 +290,7 @@ export default {
   .title-wrap {
     display: flex;
     align-items: center;
-    padding: 43rpx 0rpx 49rpx;
+    padding: 13rpx 0rpx 49rpx;
     .tag-icon {
       width: 38rpx;
       height: 36rpx;

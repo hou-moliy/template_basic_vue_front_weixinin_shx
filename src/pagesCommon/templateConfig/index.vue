@@ -187,8 +187,8 @@ export default {
   min-height: 100vh;
   height: auto;
   background-position-y: 9%;
-  padding: 40rpx 0rpx 50rpx;
   box-sizing: border-box;
+  padding-bottom: 40rpx;
 
   .top-img {
     height: 900rpx;
