@@ -378,7 +378,6 @@ export default {
 }
 .scenery-out-wrap {
   width: 100%;
-  background-color: #fff;
 }
 .spcl-out-wrap {
   width: 100vw;

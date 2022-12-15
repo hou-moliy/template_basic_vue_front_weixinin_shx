@@ -163,11 +163,11 @@
             autoplay
             indicator-color="rgba(255,255,255,1)"
             indicator-active-color="#FF6953"
+            :style="[inItem.portalAd[0].extraStyle]"
           >
             <swiper-item
               v-for="(item, index) in inItem.portalAd"
               :key="index"
-              :style="[item.extraStyle]"
               @click="bannerClickEvent(item)"
             >
               <view class="ad-banner-box" :style="[item.extraStyle]">
@@ -206,7 +206,7 @@ export default {
       staticImgs: this.$staticImgs,
       portalAd: [],
       extraStyle: {
-        borderRadius: "50rpx",
+        borderRadius: "25rpx",
         height: "",
       },
     };
@@ -241,7 +241,7 @@ export default {
         item.portalAd.forEach(e => {
           const extraStyle = JSON.parse(e.extraStyle);
           if (extraStyle.height === "") {
-            extraStyle.height = "300";
+            extraStyle.height = "240";
           }
           e.extraStyle = {
             height: extraStyle.height + "rpx",
@@ -500,7 +500,7 @@ export default {
 }
 
 .ad-banner {
-  height: 280rpx;
+  // height: 280rpx;
   position: relative;
 
   .indicator {
@@ -529,7 +529,7 @@ export default {
 
 .ad-banner-image {
   width: 686rpx;
-  height: 280rpx;
+  // height: 280rpx;
   border-radius: 20rpx;
 }
 
@@ -542,5 +542,8 @@ export default {
   display: flex;
   justify-content: center;
   box-sizing: border-box;
+}
+image {
+  vertical-align: middle;
 }
 </style>

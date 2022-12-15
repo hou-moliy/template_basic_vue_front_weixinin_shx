@@ -60,6 +60,7 @@
             scroll-y="true"
             :style="{ height: `${windowHeight}px` }"
             :scroll-top="scrollTop"
+            :class="{ 'no-bg-banner': !swipeItem.bgBannerTop }"
             @scrolltolower="scrollToLower"
             @scroll="swiperContainerScroll"
           >
@@ -232,7 +233,7 @@ export default {
         this.tabBackground = "#DDDDFF";
       } else {
         if (this.tabBackground === "#DDDDFF") {
-          this.tabBackground = "transparent";
+          this.tabBackground = this.tabList[this.swiperTab].bgBannerTop ? "transparent" : "#DDDDFF";
         }
       }
     },
@@ -268,6 +269,8 @@ export default {
       TemplateService.getPageConfigByPageName({ pageName }).then(res => {
         if (res.data.code === 200) {
           this.tabList[this.swiperTab].pageConfig = [...res.data.data];
+          // true表示带背景的轮播是页面第一个组件，否则不是
+          this.tabList[this.swiperTab].bgBannerTop = this.tabList[this.swiperTab].pageConfig.findIndex(config => config.pageModule === "eb-background-banner") === 0;
           this.$forceUpdate();
         }
       });
@@ -321,6 +324,7 @@ export default {
       this.$analysis.dispatch("page_pv", `${this.pageName}`);
       this.swiperTab = current;
       this.currentTab = current + 1;
+      this.tabBackground = this.tabList[current].bgBannerTop ? "transparent" : "#DDDDFF";
       this.getPageConfig(this.pageName);
       this.changeTab(current);
     },
@@ -375,7 +379,12 @@ export default {
 <style lang="scss" scoped>
 page {
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
+}
+// 解决页面的第一个组件不是带背景的轮播时页面样式错位问题
+.no-bg-banner {
+  padding-top: 280rpx;
+  box-sizing: border-box;
 }
 .scrollView {
   height: 100%;
