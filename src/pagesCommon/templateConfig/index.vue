@@ -5,7 +5,7 @@
       backgroundImage: pageBaseInfo.backgroundImg
         ? `url(${pageBaseInfo.backgroundImg})`
         : '',
-      backgroundSize: '100%',
+      backgroundSize: '100% 100%',
       backgroundColor: pageBaseInfo.backgroundColor,
     }"
   >

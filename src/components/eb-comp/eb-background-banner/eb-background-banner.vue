@@ -1,6 +1,9 @@
 <template>
   <view v-if="totalSwiper">
-    <view class="ad-banner-container">
+    <view
+      class="ad-banner-container"
+      :style="{ marginBottom: compTop ? '0rpx' : '40rpx' }"
+    >
       <view :class="compTop ? `ad-banner-swiper-top` : `ad-banner-swiper`">
         <swiper
           class="ad-swiper"
@@ -107,13 +110,13 @@ export default {
 }
 
 .ad-banner-swiper {
-  height: 350rpx;
+  // height: 350rpx;
   position: relative;
 }
 
 .ad-swiper {
   width: 100%;
-  height: 350rpx;
+  // height: 350rpx;
   text-align: center;
 }
 

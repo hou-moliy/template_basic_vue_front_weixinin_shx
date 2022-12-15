@@ -147,7 +147,6 @@ export default {
 
 <style lang="scss" scoped>
 .scenery-wrap {
-  background-color: #fff;
   padding: 0 17px;
   margin-bottom: 40rpx;
 }

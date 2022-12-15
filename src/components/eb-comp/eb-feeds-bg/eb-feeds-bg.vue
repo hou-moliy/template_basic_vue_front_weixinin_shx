@@ -196,21 +196,22 @@
                       autoplay
                       indicator-color="rgba(255,255,255,1)"
                       indicator-active-color="#FF6953"
+                      :style="[inItem.portalAd[0].extraStyle]"
                     >
                       <swiper-item
                         v-for="(item, index) in inItem.portalAd"
                         :key="index"
-                        :style="[inItem.portalAd[0].extraStyle]"
+                        :style="[item.extraStyle]"
                         @click="bannerClickEvent(item)"
                       >
                         <view
                           class="ad-recommend-1-5-image"
-                          :style="[inItem.portalAd[0].extraStyle]"
+                          :style="[item.extraStyle]"
                         >
                           <image
                             class="ad-recommend-1-5-image"
                             :src="item.url"
-                            :style="[inItem.portalAd[0].extraStyle]"
+                            :style="[item.extraStyle]"
                           />
                         </view>
                       </swiper-item>
@@ -250,7 +251,7 @@ export default {
       staticImgs: this.$staticImgs,
       portalAds: [],
       extraStyle: {
-        borderRadius: "50rpx",
+        borderRadius: "20rpx",
         height: "",
       },
     };
@@ -282,12 +283,15 @@ export default {
         item.portalAd.forEach(e => {
           const extraStyle = JSON.parse(e.extraStyle);
           if (extraStyle.height === "") {
-            extraStyle.height = "300";
+            e.extraStyle = {
+              borderRadius: this.extraStyle.borderRadius,
+            };
+          } else {
+            e.extraStyle = {
+              height: `${extraStyle.height}rpx`,
+              borderRadius: this.extraStyle.borderRadius,
+            };
           }
-          e.extraStyle = {
-            height: extraStyle.height + "rpx",
-            borderRadius: this.extraStyle.borderRadius,
-          };
         });
       });
     },
@@ -350,7 +354,6 @@ export default {
 
 // 更多推荐样式
 .more-recommend {
-  // background-color: #007AFF;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -388,18 +391,15 @@ export default {
 }
 
 .bgcolor {
-  // background-color: white;
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
 
   .themeLists {
-    // background: linear-gradient(335deg, #3578e3 35%, #b45df7 100%);
     background: white;
     margin: 82rpx 32rpx 60rpx;
     width: 686rpx;
     padding-top: 43rpx;
-    // height: 498rpx;
     background-color: #fff;
     position: relative;
     border-radius: 10rpx;
@@ -410,10 +410,6 @@ export default {
       height: 95rpx;
       position: absolute;
       top: -50rpx;
-      // left: 50%;
-      // margin-left: -183rpx;
-
-      // background-color: #4D69FF;
       image {
         height: 100%;
       }
@@ -435,14 +431,14 @@ export default {
 }
 
 .ad-recommend {
-  padding: 13rpx;
-  width: 660rpx;
+  padding: 0rpx 0rpx 13rpx;
+  box-sizing: border-box;
+  width: 640rpx;
   .ad-recommend-1-1 {
     width: 100%;
-    height: 190rpx;
+    height: 180rpx;
     margin-top: 15rpx;
     margin-bottom: 15rpx;
-    // background-color: #E03997;
     border-radius: 10rpx;
 
     .ad-recommend-1-1-item {
@@ -455,22 +451,18 @@ export default {
   .ad-recommend-1-2 {
     display: flex;
     justify-content: space-between;
+    margin-top: 15rpx;
 
     .ad-recommend-1-2-item {
       width: 49%;
       height: 190rpx;
-      margin-top: 5rpx;
 
-      // background-color: #FF6F50;
       .ad-recommend-1-2-img-box {
         width: 100%;
         height: 190rpx;
-        // background-color: #ffff00;
         border-radius: 10rpx;
 
         .ad-recommend-1-2-img {
-          // border-top-left-radius: 11px;
-          // border-top-right-radius: 11px;
           width: 100%;
           height: 100%;
           border-radius: 20rpx;
@@ -484,7 +476,6 @@ export default {
     justify-content: space-between;
     width: 100%;
     margin-top: 15rpx;
-    // margin: 0 23rpx;
 
     .is-margin {
       margin: 0 13rpx;
@@ -492,9 +483,8 @@ export default {
 
     .ad-recommend-1-3-item {
       background: #ffffff;
-      border: 1px solid #bfbfbf;
       width: 207rpx;
-      height: 286rpx;
+      height: 240rpx;
       border-radius: 20rpx;
       background-repeat: no-repeat;
       background-size: 100% 100%;
@@ -533,19 +523,19 @@ export default {
   }
 
   .ad-recommend-1-4 {
-    height: 398rpx;
+    height: 400rpx;
     overflow: hidden;
     margin-top: 15rpx;
 
     .ad-recommend-1-4-item {
       width: 100%;
-      height: 398rpx;
+      height: 400rpx;
       display: flex;
       justify-content: space-between;
 
       .ad-recommend-1-4-img-box {
-        width: 320rpx;
-        height: 398rpx;
+        width: 304rpx;
+        height: 400rpx;
         border-radius: 10rpx;
       }
 
@@ -557,7 +547,7 @@ export default {
 
       .ad-recommend-1-4-item-right {
         width: 320rpx;
-        height: 398rpx;
+        height: 400rpx;
         display: flex;
         flex-wrap: wrap;
         align-content: space-between;
@@ -592,5 +582,8 @@ export default {
 .bottom1 {
   height: 15rpx;
   width: 100%;
+}
+image {
+  vertical-align: middle;
 }
 </style>
