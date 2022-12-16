@@ -1,39 +1,43 @@
 <template>
   <view
+    class="search-box"
     :style="{
-      height: '100%',
+      background: changeBbcolorFlag ? '#F5F7F9' : '',
     }"
   >
     <view class="head-img-box">
       <image :src="staticImgs + `/shxmp/init/search-bg.png`" />
     </view>
-    <view
-      class="custom-tab"
-      :style="{
-        paddingTop: pointobj.top + 'px',
-        lineHeight: pointobj.height + 'px',
-      }"
-    >
-      <image
-        :src="`${staticImgs}/shxmp/init/leftIcon.png`"
-        style="width: 34rpx; height: 44rpx"
-        @click="getback"
-      />
-      <view class="custom-tab-title">视频彩铃搜索</view>
-    </view>
-    <view>
-      <cxSelect
-        default-page-name="video"
-        :page-status-load="pageStatusLoadForSelect"
-        :hot-list-type="'video'"
-        @hotKeyGoToPlay="hotKeyGoToPlay"
-      />
-    </view>
-    <view>
-      <cxVideoSearchList
-        :page-status-load="pageStatusLoad"
-        @hotKeyGoToPlay="hotKeyGoToPlay"
-      />
+    <view class="main-box">
+      <view
+        class="custom-tab"
+        :style="{
+          paddingTop: pointobj.top + 'px',
+          lineHeight: pointobj.height + 'px',
+        }"
+      >
+        <image
+          :src="`${staticImgs}/shxmp/init/leftIcon.png`"
+          style="width: 34rpx; height: 44rpx"
+          @click="getback"
+        />
+        <view class="custom-tab-title">视频彩铃搜索</view>
+      </view>
+      <view>
+        <cxSelect
+          default-page-name="video"
+          :page-status-load="pageStatusLoadForSelect"
+          :hot-list-type="'video'"
+          @hotKeyGoToPlay="hotKeyGoToPlay"
+        />
+      </view>
+      <view>
+        <cxVideoSearchList
+          :page-status-load="pageStatusLoad"
+          @hotKeyGoToPlay="hotKeyGoToPlay"
+          @getSearchList="getSearchList"
+        />
+      </view>
     </view>
   </view>
 </template>
@@ -54,6 +58,7 @@ export default {
       pageStatusLoadForSelect: "",
       staticImgs: this.$staticImgs,
       pointobj: {},
+      changeBbcolorFlag: false, // 是否更改背景颜色
     };
   },
   onLoad () {
@@ -82,6 +87,10 @@ export default {
     this.pageStatusLoadForSelect = "onUnload";
     this.pageStatusLoad = "onUnload";
   },
+  // 监听页面滚动
+  onPageScroll (e) {
+    console.log(e.scrollTop, "e.scrollTop;");
+  },
   methods: {
     hotKeyGoToPlay (item) {
       console.log("播放了");
@@ -93,6 +102,10 @@ export default {
         url: "/pages/cl/index",
       });
     },
+    // 搜索结果列表onload
+    getSearchList (data) {
+      this.changeBbcolorFlag = data;
+    },
   },
 
 };
@@ -100,20 +113,30 @@ export default {
 
 <style>
 page {
+  display: flex;
   height: 100%;
   background-color: #fff;
 }
 </style>
 
 <style lang="scss">
+.search-box {
+  flex: 1;
+  flex-direction: column;
+  overflow: scroll;
+  height: 100%;
+  background-color: #fff;
+}
 .head-img-box {
   width: 100%;
   position: absolute;
   top: 0;
-  z-index: -100;
   image {
     width: 100%;
   }
+}
+.main-box {
+  position: relative;
 }
 .custom-tab {
   display: flex;
