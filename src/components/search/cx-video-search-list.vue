@@ -78,6 +78,8 @@ export default {
   watch: {
     pageStatusLoad (value) {
       if (value === "onShow") {
+        console.log("加载onShow");
+
         if (this.$store.state.spcl.searchList.length > 0) {
           this.$store.commit("spcl/getSearchList", this.$store.state.spcl.searchList);
           this.selectList = this.$store.state.spcl.searchList;
@@ -86,12 +88,17 @@ export default {
     },
   },
   created () {
+    console.log("加载created");
     uni.$on("setSearchList", (selectList) => {
       this.selectList = selectList;
       this.$store.commit("spcl/getSearchList", this.selectList);
+      const data = Boolean(this.selectList.length);
+      this.$emit("getSearchList", data);
     });
   },
   onLoad () {
+    console.log("加载onLoad");
+
     uni.$on("changeSearchShareCount", () => {
       // console.log('come')
       if (this.$store.state.spcl.searchList.length > 0) {

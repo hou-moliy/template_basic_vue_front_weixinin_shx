@@ -11,6 +11,9 @@
       <view class="no-record-tips2">赶快去设置吧~</view>
       <view class="go-to-see" @click="toSet">去设置</view>
     </block>
+    <view v-else-if="type === 'clvdieoType'" class="no-record-tips3">
+      当前分类暂无视频哦~
+    </view>
     <view v-else class="no-record-tips3">您当前无闲置铃音哦~</view>
   </view>
 </template>
@@ -20,7 +23,7 @@ export default {
   props: {
     type: {
       type: String,
-      default: "curt", // curt当前播放、lyk 我的闲置
+      default: "curt", // curt当前播放、lyk 我的闲置、clvdieoType视频分类
     },
   },
   data () {
