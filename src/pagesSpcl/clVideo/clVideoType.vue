@@ -25,7 +25,7 @@
     </scroll-view>
     <!-- 竖屏 -->
     <view
-      v-if="showDirection === 'V'"
+      v-if="showDirection === 'V' && specialNews.length"
       class="more-news-column"
       :class="{ 'news-style': pageName !== 'more' }"
     >
@@ -337,12 +337,15 @@
       </view>
     </view>
     <uni-load-more
+      v-if="totalNum !== 0"
       class="loadingicon"
       icon-size="20"
       icon-type="circle"
       :status="isLoadStatus"
       :content-text="contentText"
     />
+    <!-- 空白展示 -->
+    <NoData v-if="totalNum === 0" type="clvdieoType" />
     <!-- 提示性弹窗 -->
     <notifyPop ref="NotifyPop" />
     <!-- 视频彩铃订购相关弹窗 -->
@@ -357,6 +360,7 @@
 
 <script>
 import SpclService from "@/api/spcl/index.js";
+import NoData from "../components/no-data/index.vue";
 import Util, { formatCount } from "@/utils/tools.js";
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue";
 import { handlePurchaseVideo, videoInfoUpdate } from "@/utils/video.js";
@@ -364,6 +368,7 @@ import { handlePurchaseVideo, videoInfoUpdate } from "@/utils/video.js";
 export default {
   components: {
     uniLoadMore,
+    NoData,
   },
   data () {
     return {
@@ -383,7 +388,7 @@ export default {
       btnType: "",
       popTit: "温馨提示",
       loginCont: "您还没有登录，请先完成登录",
-      totalNum: 0,
+      totalNum: null,
       index: 0,
       isClickLike: false,
       init: true,
@@ -401,6 +406,7 @@ export default {
       },
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
+
     };
   },
   onLoad (option) {
@@ -709,7 +715,7 @@ export default {
         this.currentTab = e.currentTarget.dataset.current;
         this.showDirection = item.showDirection;
         this.specialNews = [];
-        this.totalNum = 0;
+        this.totalNum = null;
         this.pageNum = 1;
         this.getSpclVideoList();
       }
@@ -764,7 +770,7 @@ page {
 
 .video-type-page {
   height: 100%;
-  background: #f7f8fb;
+  background: #f5f7f9;
   .top-batch {
     // padding: 30rpx 32rpx 0;
     display: flex;
@@ -823,7 +829,7 @@ page {
   .more-news-column {
     // padding-bottom: 50rpx;
     // column-count: 2;
-    background: #f7f8fb;
+    background: #f5f7f9;
 
     .waterfall-box {
       display: flex;
@@ -991,7 +997,7 @@ page {
 
   .more-news-row {
     padding: 10rpx 4% 10rpx 4%;
-    background: #f7f8fb;
+    background: #f5f7f9;
 
     // 横屏
     .more-new-item-row {
