@@ -280,9 +280,9 @@
               :src="
                 item.coverUrl
                   ? item.coverUrl
-                  : item.openVCoverUrl
-                  ? item.openVCoverUrl
                   : item.openHCoverUrl
+                  ? item.openHCoverUrl
+                  : item.openVCoverUrl
               "
             />
           </view>
