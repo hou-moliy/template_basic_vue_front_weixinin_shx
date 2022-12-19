@@ -282,7 +282,7 @@ export default {
       this.portalAds.forEach(item => {
         item.portalAd.forEach(e => {
           const extraStyle = JSON.parse(e.extraStyle);
-          if (extraStyle.height === "") {
+          if (!extraStyle.height) {
             e.extraStyle = {
               borderRadius: this.extraStyle.borderRadius,
             };
@@ -303,88 +303,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bsHl-catagory-box {
-  margin: 0 auto;
-  margin-top: 118rpx;
-  position: relative;
-  background: linear-gradient(335deg, #3578e3 35%, #b45df7 100%);
-  border-radius: 10rpx;
-  width: 686rpx;
-  padding: 56rpx 13rpx 20rpx 13rpx;
-  box-sizing: border-box;
-
-  .bsHl-catagory-title {
-    width: 50%;
-    height: 96rpx;
-    position: absolute;
-    display: flex;
-    vertical-align: top;
-    top: 0rpx;
-    left: 50%;
-    transform: translate(-50%, -65%);
-  }
-
-  .bsHl-catagory-style {
-    margin: 0 auto;
-
-    .bsHl-catagory-style1 {
-      .bsHl-catagory-style1-image {
-        width: 660rpx;
-        height: 190rpx;
-        display: inline-block;
-        vertical-align: top;
-        margin-bottom: 22rpx;
-      }
-    }
-
-    .bsHl-catagory-style2 {
-      width: 660rpx;
-      display: flex;
-      justify-content: space-between;
-
-      .bsHl-catagory-style2-image {
-        width: 320rpx;
-        height: 190rpx;
-        display: inline-block;
-        vertical-align: top;
-      }
-    }
-  }
-}
-
-// 更多推荐样式
-.more-recommend {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 60rpx 0 43rpx;
-  image {
-    width: 281rpx;
-    height: 38rpx;
-  }
-}
-.more-recommend-box {
-  white-space: nowrap;
-  margin: 0 32rpx;
-  width: 686rpx;
-  height: 358rpx;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 98rpx;
-  .more-recommend-info {
-    display: inline-block;
-    width: 214rpx;
-    height: 358rpx;
-    margin-right: 20rpx;
-    image {
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
-
 .clearfix::before {
   content: "";
   display: table;

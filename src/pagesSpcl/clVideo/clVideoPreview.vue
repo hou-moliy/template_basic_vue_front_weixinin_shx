@@ -101,6 +101,9 @@ export default {
     dispatchPageEvent () {
       // 关闭设置弹窗
       this.$store.commit("window/SET_OPERITION_SHOW", false);
+      uni.$on("openLoginPopup", data => {
+        this.$showLoginPop(this);
+      });
       // 展示订购、设置类弹窗，按钮点击回调
       uni.$on("operitionShow", ({ popupInfo, btnClickCallBack = () => { } }) => {
         this.operitionInfo = popupInfo;
