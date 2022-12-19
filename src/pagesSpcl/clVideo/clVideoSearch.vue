@@ -37,7 +37,7 @@
             @hotKeyGoToPlay="hotKeyGoToPlay"
           />
         </view>
-        <view>
+        <view class="searchlist-box">
           <cxVideoSearchList
             :page-status-load="pageStatusLoad"
             @hotKeyGoToPlay="hotKeyGoToPlay"
@@ -168,6 +168,7 @@ page {
 .custom-tab {
   position: fixed;
   top: 0;
+  z-index: 10;
   width: 100%;
   box-sizing: border-box;
   display: flex;
@@ -177,5 +178,8 @@ page {
     flex: 1;
     text-align: center;
   }
+}
+.searchlist-box {
+  margin-top: 49rpx;
 }
 </style>
