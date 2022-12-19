@@ -235,7 +235,7 @@ export default {
         if (res.code === 200) {
           this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);
           this.$toast("成功取消点赞");
-          this.$analysis.dispatch("my_like_fabulous_count");
+          this.$analysis.dispatch("my_like_quxiao_fabulous_count");
           this.updateData();
         } else {
           this.$toast(res.message);

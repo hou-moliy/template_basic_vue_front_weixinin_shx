@@ -1,163 +1,177 @@
 <template>
-  <view v-if="!portalAd.length == 0" class="ad-structure">
-    <view v-if="pageConfig.tagIcon" class="more-topic-top-img">
-      <image :src="pageConfig.tagIcon" mode="widthFix" />
-    </view>
-    <view class="ad-more-data-box">
-      <view
-        v-for="(inItem, inIndex) in portalAd"
-        :key="inIndex"
-        class="ad-structure-type"
-      >
-        <!-- 一行一个 -->
-        <view v-if="inItem.style == 1">
+  <view class="ad-recommend">
+    <block v-for="(inItem, inIndex) in portalAds" :key="inIndex">
+      <!-- 一行一个 -->
+      <block v-if="inItem.style == 1">
+        <block
+          v-for="(contenItem, contentIndex) in inItem.portalAd"
+          :key="contentIndex"
+        >
+          <block v-if="contentIndex < 1">
+            <view
+              class="ad-recommend-1-1"
+              :style="[contenItem.extraStyle]"
+              @click="bannerClickEvent(contenItem)"
+            >
+              <image
+                class="ad-recommend-1-1-item"
+                :src="contenItem.url"
+                :style="[contenItem.extraStyle]"
+              />
+            </view>
+          </block>
+        </block>
+      </block>
+      <!-- 一行两个 -->
+      <block v-else-if="inItem.style == 2">
+        <view class="ad-recommend-1-2 flex flex-wrap">
+          <block
+            v-for="(contenItem, contentIndex) in inItem.portalAd"
+            :key="contentIndex"
+          >
+            <block v-if="contentIndex < 2">
+              <view
+                class="ad-recommend-1-2-item bg-white"
+                :style="[contenItem.extraStyle]"
+                @click="bannerClickEvent(contenItem)"
+              >
+                <view
+                  class="ad-recommend-1-2-img-box"
+                  :style="[contenItem.extraStyle]"
+                >
+                  <image
+                    class="ad-recommend-1-2-img"
+                    :src="contenItem.url"
+                    :style="[contenItem.extraStyle]"
+                  />
+                </view>
+              </view>
+            </block>
+          </block>
+        </view>
+      </block>
+      <!-- 一行三个 -->
+      <block v-else-if="inItem.style == 3">
+        <view class="ad-recommend-1-3">
           <view
             v-for="(contenItem, contentIndex) in inItem.portalAd"
             :key="contentIndex"
             :style="[contenItem.extraStyle]"
           >
-            <view v-if="contentIndex < 1" :style="[contenItem.extraStyle]">
+            <view v-if="contentIndex < 3" :style="[contenItem.extraStyle]">
               <view
-                class="ad-structure-1-1"
-                :style="[contenItem.extraStyle]"
+                class="ad-recommend-1-3-item"
+                :class="{ 'is-margin': contentIndex % 3 === 1 }"
+                :style="{
+                  backgroundImage: `url(${contenItem.url})`,
+                  borderRadius: [contenItem.extraStyle.borderRadius],
+                  height: [contenItem.extraStyle.height],
+                }"
                 @click.stop="bannerClickEvent(contenItem)"
               >
+                <view v-if="contenItem.categoryTitle" class="title">
+                  {{ contenItem.categoryTitle }}
+                </view>
+                <view v-if="contenItem.categoryDesc" class="desc">
+                  {{ contenItem.categoryDesc }}
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+      <!-- 左一右二 -->
+      <block v-else-if="inItem.style == 4">
+        <view class="ad-recommend-1-4">
+          <view class="ad-recommend-1-4-item bg-white">
+            <block
+              v-for="(contenItem, contentIndex) in inItem.portalAd"
+              :key="contentIndex"
+            >
+              <block v-if="contentIndex == 0">
                 <view
-                  class="ad-structure-1-1-item"
-                  :style="[contenItem.extraStyle]"
+                  class="ad-recommend-1-4-img-box"
+                  :style="{ borderRadius: [extraStyle.borderRadius] }"
+                  @click="bannerClickEvent(contenItem)"
                 >
                   <image
-                    class="item-image"
+                    class="ad-recommend-1-4-img"
                     :src="contenItem.url"
-                    alt=""
-                    :style="[contenItem.extraStyle]"
+                    :style="{
+                      borderRadius: [extraStyle.borderRadius],
+                    }"
                   />
                 </view>
-                <view class="ad-structure-1-1-title">
-                  <view v-if="contenItem.categoryTitle" class="title">
-                    {{ contenItem.categoryTitle }}
-                  </view>
-                  <view v-if="contenItem.categoryDesc" class="desc">
-                    {{ contenItem.categoryDesc }}
-                  </view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <!-- 一行两个 -->
-        <template v-else-if="inItem.style == 2">
-          <view class="ad-structure-1-2">
-            <view
-              v-for="(contenItem, contentIndex) in inItem.portalAd"
-              :key="contentIndex"
-              :style="[contenItem.extraStyle]"
-            >
-              <view v-if="contentIndex < 2" :style="[contenItem.extraStyle]">
-                <view
-                  class="ad-structure-1-2-item"
-                  :style="[contenItem.extraStyle]"
-                  @click.stop="bannerClickEvent(contenItem)"
-                >
+              </block>
+            </block>
+
+            <view class="ad-recommend-1-4-item-right">
+              <block
+                v-for="(contenItem, contentIndex) in inItem.portalAd"
+                :key="contentIndex"
+              >
+                <block v-if="contentIndex == 1">
                   <view
-                    class="ad-structure-1-2-item-img-box"
-                    :style="[contenItem.extraStyle]"
+                    class="ad-recommend-1-4-item-right-img"
+                    :style="{
+                      borderRadius: [extraStyle.borderRadius],
+                    }"
+                    @click="bannerClickEvent(contenItem)"
                   >
                     <image
-                      class="imgs"
+                      class="ad-recommend-1-4-img"
+                      :style="{
+                        borderRadius: [extraStyle.borderRadius],
+                      }"
                       :src="contenItem.url"
-                      :style="[contenItem.extraStyle]"
-                      alt=""
                     />
                   </view>
-                </view>
-              </view>
-            </view>
-          </view>
-        </template>
-        <!-- 一行三个 -->
-        <view v-else-if="inItem.style == 3" style="width: 100%">
-          <view class="ad-structure-1-3">
-            <view
-              v-for="(contenItem, contentIndex) in inItem.portalAd"
-              :key="contentIndex"
-              :style="[contenItem.extraStyle]"
-            >
-              <view v-if="contentIndex < 3" :style="[contenItem.extraStyle]">
-                <view
-                  class="ad-structure-1-3-item"
-                  :style="{
-                    backgroundImage: `url(${contenItem.url})`,
-                    borderRadius: [contenItem.extraStyle.borderRadius],
-                    height: [contenItem.extraStyle.height],
-                  }"
-                  @click.stop="bannerClickEvent(contenItem)"
-                >
-                  <view v-if="contenItem.categoryTitle" class="title">
-                    {{ contenItem.categoryTitle }}
+                </block>
+              </block>
+              <block
+                v-for="(contenItem, contentIndex) in inItem.portalAd"
+                :key="contentIndex"
+              >
+                <block v-if="contentIndex == 2">
+                  <view
+                    class="ad-recommend-1-4-item-right-img"
+                    :style="{
+                      borderRadius: [extraStyle.borderRadius],
+                    }"
+                    @click="bannerClickEvent(contenItem)"
+                  >
+                    <image
+                      class="ad-recommend-1-4-img"
+                      :src="contenItem.url"
+                      :style="{
+                        borderRadius: [extraStyle.borderRadius],
+                      }"
+                    />
                   </view>
-                  <view v-if="contenItem.categoryDesc" class="desc">
-                    {{ contenItem.categoryDesc }}
-                  </view>
-                </view>
-              </view>
+                </block>
+              </block>
             </view>
           </view>
         </view>
-        <!-- 左一右二 -->
-        <view v-else-if="inItem.style == 4">
-          <view
-            class="ad-structure-4"
-            @click.stop="bannerClickEvent(inItem.portalAd[0])"
-          >
-            <view
-              class="ad-structure-4-1-item"
-              :style="{ borderRadius: [extraStyle.borderRadius] }"
-            >
-              <image
-                :src="inItem.portalAd[0].url"
-                alt=""
-                :style="{ borderRadius: [extraStyle.borderRadius] }"
-              />
-            </view>
-            <view
-              class="ad-structure-4-2-item"
-              :style="{ borderRadius: [extraStyle.borderRadius] }"
-            >
-              <image
-                class="imgs i-1"
-                :src="inItem.portalAd[1].url"
-                alt=""
-                :style="{ borderRadius: [extraStyle.borderRadius] }"
-                @click.stop="bannerClickEvent(inItem.portalAd[1])"
-              />
-              <image
-                class="imgs i-2"
-                :src="inItem.portalAd[2].url"
-                :style="{ borderRadius: [extraStyle.borderRadius] }"
-                alt=""
-                @click.stop="bannerClickEvent(inItem.portalAd[2])"
-              />
-            </view>
-          </view>
-        </view>
-        <!-- 轮播图 -->
-        <view v-else-if="inItem.style == 5" class="ad-banner-box-5">
+      </block>
+      <!-- 轮播图 -->
+      <block v-else-if="inItem.style == 5">
+        <view class="ad-recommend-1-5" :style="[inItem.portalAd[0].extraStyle]">
           <view
             v-if="inItem.portalAd.length === 1"
-            class="ad-banner-box"
+            class="ad-recommend-1-5-item"
             :style="[inItem.portalAd[0].extraStyle]"
             @click="bannerClickEvent(inItem.portalAd[0])"
           >
             <image
-              class="ad-banner-image"
-              :src="inItem.portalAd[0].url"
+              class="ad-recommend-1-5-image"
               :style="[inItem.portalAd[0].extraStyle]"
+              :src="inItem.portalAd[0].url"
             />
           </view>
           <swiper
             v-else
-            class="ad-banner"
+            class="ad-recommend-1-5-item"
             circular
             :indicator-dots="true"
             autoplay
@@ -168,11 +182,12 @@
             <swiper-item
               v-for="(item, index) in inItem.portalAd"
               :key="index"
+              :style="[item.extraStyle]"
               @click="bannerClickEvent(item)"
             >
-              <view class="ad-banner-box" :style="[item.extraStyle]">
+              <view class="ad-recommend-1-5-image" :style="[item.extraStyle]">
                 <image
-                  class="ad-banner-image"
+                  class="ad-recommend-1-5-image"
                   :src="item.url"
                   :style="[item.extraStyle]"
                 />
@@ -180,15 +195,18 @@
             </swiper-item>
           </swiper>
         </view>
-      </view>
-    </view>
+      </block>
+    </block>
   </view>
 </template>
 
 <script>
 import adService from "@/api/ad/index.js";
-import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 import { copyAttr } from "@/utils/gCopy.js";
+
+import {
+  navigateToAnyCheck,
+} from "@/utils/navigateToAny.js";
 export default {
   components: {},
   props: {
@@ -204,9 +222,9 @@ export default {
   data () {
     return {
       staticImgs: this.$staticImgs,
-      portalAd: [],
+      portalAds: [],
       extraStyle: {
-        borderRadius: "25rpx",
+        borderRadius: "20rpx",
         height: "",
       },
     };
@@ -223,199 +241,116 @@ export default {
         pageName: this.pageConfig.pageName,
         code: this.pageConfig.moduleId,
       };
-      adService
-        .getAdvertisement(params)
-        .then(res => {
-          if (res.data.code === 200) {
-            this.portalAd = res.data.data;
-            this.handleAdExtraStyle();
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      adService.getAdvertisement(params).then(res => {
+        if (res.data.code === 200) {
+          this.portalAds = res.data.data;
+          this.handleAdExtraStyle();
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     },
     // 处理每个Ad的单项的ExtraStyle
     handleAdExtraStyle () {
-      this.portalAd.forEach(item => {
+      this.portalAds.forEach(item => {
         item.portalAd.forEach(e => {
           const extraStyle = JSON.parse(e.extraStyle);
-          if (extraStyle.height === "") {
-            extraStyle.height = "240";
+          if (!extraStyle.height) {
+            e.extraStyle = {
+              borderRadius: this.extraStyle.borderRadius,
+            };
+          } else {
+            e.extraStyle = {
+              height: `${extraStyle.height}rpx`,
+              borderRadius: this.extraStyle.borderRadius,
+            };
           }
-          e.extraStyle = {
-            height: extraStyle.height + "rpx",
-            borderRadius: this.extraStyle.borderRadius,
-          };
         });
       });
     },
     bannerClickEvent (item) {
-      this.$analysis.dispatch("feeds", `${this.activityId}_${item.id}`).finally(() => navigateToAnyCheck(item, `feeds_${item.id}`));
+      this.$analysis.dispatch("feeds_bg", `${this.activityId}_${item.id}`).finally(() => navigateToAnyCheck(item, `feeds_bg_${item.id}`));
     },
   },
 };
 </script>
+
 <style lang="scss" scoped>
-.ad-structure {
-  margin-bottom: 40rpx;
-  .more-topic-top-img {
-    text-align: center;
-    margin-bottom: 40rpx;
+.clearfix::before {
+  content: "";
+  display: table;
+}
 
-    image {
-      width: 100%;
-    }
-  }
-  .ad-more-data-box {
-    padding: 0 33rpx 0 32rpx;
-    box-sizing: border-box;
-  }
+.bottom1 {
+  width: 100%;
+  height: 60rpx;
+}
 
-  &-1-1 {
-    padding: 0 32rpx;
+.flex {
+  display: flex;
+}
 
-    &-item {
-      width: 686rpx;
-      height: 300rpx;
-      border-radius: 20rpx;
-      position: relative;
+.flex-wrap {
+  flex-wrap: wrap;
+}
 
-      .item-image {
-        width: 100%;
-        height: 100%;
-        border-radius: 20rpx;
-      }
-
-      .item-btn {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-left: -39rpx;
-        margin-top: -39rpx;
-        width: 78rpx;
-        height: 78rpx;
-      }
-    }
-
-    &-title {
-      width: 100%;
-
-      .title {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 30rpx;
-        font-weight: 500;
-        text-align: left;
-      }
-
-      .desc {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-size: 24rpx;
-        font-weight: 400;
-        color: #666666;
-        text-align: left;
-      }
-    }
-  }
-
-  &-1-2 {
+.ad-recommend {
+  padding: 0rpx 0rpx 13rpx;
+  box-sizing: border-box;
+  width: 686rpx;
+  margin: 0 auto;
+  .ad-recommend-1-1 {
     width: 100%;
+    height: 180rpx;
+    margin-top: 15rpx;
+    margin-bottom: 15rpx;
+    border-radius: 10rpx;
+
+    .ad-recommend-1-1-item {
+      width: 100%;
+      height: 100%;
+      border-radius: 20rpx;
+    }
+  }
+
+  .ad-recommend-1-2 {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20rpx;
+    margin-top: 15rpx;
 
-    &:last-child {
-      margin-bottom: 0rpx;
-    }
+    .ad-recommend-1-2-item {
+      width: 49%;
+      height: 190rpx;
 
-    &:last-child {
-      margin-bottom: 0rpx;
-    }
+      .ad-recommend-1-2-img-box {
+        width: 100%;
+        height: 190rpx;
+        border-radius: 10rpx;
 
-    &:last-child {
-      margin-bottom: 0rpx;
-    }
-
-    &-item {
-      width: 335rpx;
-
-      &-img-box {
-        width: 335rpx;
-        height: 140rpx;
-        border-radius: 20rpx;
-        position: relative;
-
-        .imgs {
+        .ad-recommend-1-2-img {
           width: 100%;
           height: 100%;
           border-radius: 20rpx;
         }
-
-        .item-btn {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          margin-left: -39rpx;
-          margin-top: -39rpx;
-          width: 78rpx;
-          height: 78rpx;
-        }
-      }
-
-      &-title {
-        margin-top: 10rpx;
-        width: 100%;
-
-        .title {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 28rpx;
-          font-weight: 500;
-          color: #333333;
-          text-align: left;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
-
-        .desc {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          font-size: 24rpx;
-          font-weight: 400;
-          color: #666666;
-          text-align: left;
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
       }
     }
   }
 
-  &-1-3 {
+  .ad-recommend-1-3 {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    // margin: 0 23rpx;
+    margin-top: 15rpx;
 
     .is-margin {
-      margin: 0 23rpx;
+      margin: 0 13rpx;
     }
 
-    &-item {
+    .ad-recommend-1-3-item {
       background: #ffffff;
-      border: 1px solid #bfbfbf;
-      width: 214rpx;
-      height: 286rpx;
+      width: 207rpx;
+      height: 240rpx;
       border-radius: 20rpx;
-      margin-bottom: 22rpx;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       display: flex;
@@ -446,102 +381,72 @@ export default {
         margin-bottom: 15rpx;
       }
 
-      &:last-child {
+      .ad-recommend-1-3:last-child {
         margin-bottom: 0rpx;
       }
     }
   }
 
-  &-4 {
-    display: flex;
+  .ad-recommend-1-4 {
+    height: 400rpx;
+    overflow: hidden;
+    margin-top: 15rpx;
 
-    // justify-content: center;
-    &-item:nth-child(odd) {
-      margin-right: 18rpx;
-    }
+    .ad-recommend-1-4-item {
+      width: 100%;
+      height: 400rpx;
+      display: flex;
+      justify-content: space-between;
 
-    &-1-item {
-      margin-left: 32rpx;
-      width: 334rpx;
-      height: 302rpx;
+      .ad-recommend-1-4-img-box {
+        width: 304rpx;
+        height: 400rpx;
+        border-radius: 10rpx;
+      }
 
-      image {
+      .ad-recommend-1-4-img {
         width: 100%;
         height: 100%;
         border-radius: 20rpx;
       }
-    }
 
-    &-2-item {
-      margin-right: 32rpx;
-      margin-left: 19rpx;
-      width: 334rpx;
+      .ad-recommend-1-4-item-right {
+        width: 320rpx;
+        height: 400rpx;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: space-between;
+        border-radius: 10rpx;
 
-      .imgs {
-        width: 100%;
-        height: 140rpx;
-        border-radius: 20rpx;
+        .ad-recommend-1-4-item-right-img {
+          width: 320rpx;
+          height: 190rpx;
+          border-radius: 10rpx;
+        }
       }
-
-      .i-2 {
-        margin-top: 12rpx;
-      }
     }
   }
-
-  // 样式调整
-  &-1-2 + &-1-2 {
-    margin-top: 24rpx;
-  }
-
-  &-1-2 + &-1-3 {
-    margin-top: 24rpx;
-  }
-}
-
-.ad-banner {
-  // height: 280rpx;
-  position: relative;
-
-  .indicator {
-    position: absolute;
-    z-index: 3;
-    bottom: 46rpx;
-    right: 46rpx;
-    background: rgba($color: #000000, $alpha: 0.4);
-    border-radius: 14px;
-    padding: 4rpx 14rpx;
-    color: #fff;
-    font-size: 22rpx;
-    line-height: 33rpx;
+  .ad-recommend-1-5 {
+    width: 100%;
+    height: 190rpx;
+    margin-top: 15rpx;
+    &-item {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    &-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 20rpx;
+    }
   }
 }
 
-.ad-banner-box-5 {
+.bottom1 {
+  height: 15rpx;
   width: 100%;
-}
-
-.ad-banner-box {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.ad-banner-image {
-  width: 686rpx;
-  // height: 280rpx;
-  border-radius: 20rpx;
-}
-
-// 样式调整
-.ad-structure-type + .ad-structure-type {
-  margin-top: 15rpx;
-}
-
-.ad-structure-type {
-  display: flex;
-  justify-content: center;
-  box-sizing: border-box;
 }
 image {
   vertical-align: middle;
