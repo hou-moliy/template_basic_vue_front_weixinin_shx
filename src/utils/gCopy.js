@@ -4,8 +4,13 @@ const copyAttr = function (sourceBean, targetBean) {
   if (!targetBean) {
     return sourceBean;
   }
-  Object.keys(targetBean).forEach((item, index) => {
-    sourceBean[item] = attrConvertor({ attrName: item, attrValue: targetBean[item] || sourceBean[item] });
+  Object.keys(targetBean).forEach((key, index) => {
+    const realVal = targetBean[key] || sourceBean[key];
+    if (realVal) {
+      sourceBean[key] = attrConvertor({ attrName: key, attrValue: realVal });
+    } else {
+      delete sourceBean[key];
+    }
   });
   return sourceBean;
 };
