@@ -402,22 +402,19 @@ export default {
       // 绑定微信与手机号
       this.bindWxUser();
       // 获取用户视彩开通状态再获取铃音数据
-      const spclStatusRes = await this.$store.dispatch("user/getUserSpclStatus");
-      if (spclStatusRes) {
-        // 获取用户铃音库数据
-        this.$store.dispatch("spcl/getUserAllVideoList")
-          .then(() => {
-            uni.hideLoading();
-            // 返回上一级
-            uni.navigateBack({ delta: 1 });
-          })
-          .catch(() => {
-            this.$toast("登录成功，获取铃音失败");
-            uni.hideLoading();
-            // 返回上一级
-            uni.navigateBack({ delta: 1 });
-          });
-      } else {
+      try {
+        await this.$store.dispatch("user/getUserSpclStatus").then(spclStatusRes => {
+          if (spclStatusRes === 1) {
+            // 获取用户铃音库数据
+            this.$store.dispatch("spcl/getUserAllVideoList").finally(() => {
+              uni.hideLoading();
+              // 返回上一级
+              uni.navigateBack({ delta: 1 });
+            });
+          }
+        });
+      } catch (error) {
+        console.log("异常了");
         uni.hideLoading();
         // 返回上一级
         uni.navigateBack({ delta: 1 });
