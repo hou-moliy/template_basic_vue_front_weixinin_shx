@@ -404,11 +404,11 @@ export default {
     },
     // 是否登录
     isLogin () {
-      this.$analysis.dispatch("my_log_on_count");
       if (this.loginFlag) {
         this.$refs.popup_login_out.open();
         uni.hideTabBar();
       } else {
+        this.$analysis.dispatch("my_log_on_count");
         uni.navigateTo({
           url: "/pages/mine/login",
           fail (res) {

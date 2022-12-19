@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view :style="{ paddingTop: '37rpx' }">
     <view class="cx_select">
       <view class="cx_select-left">
         <view class="cx_select_input_view1">
@@ -351,7 +351,7 @@ export default {
 .cx_select {
   display: flex;
   align-items: center;
-  margin: 31rpx 4% 40rpx 4%;
+  margin: 0rpx 4% 80rpx 4%;
 }
 .cx_select .select-btn {
   font-size: 32rpx;
