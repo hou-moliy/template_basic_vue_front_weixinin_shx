@@ -154,6 +154,9 @@ export default {
       }
     },
   },
+  created () {
+    // this.$emit("changeValue", { value: this.value, isFocus: this.isFocus, isSelectedState: this.isSelectedState, placeholder: this.placeholder });
+  },
   mounted () {
     this.getMoreHotList();
   },
@@ -351,7 +354,7 @@ export default {
 .cx_select {
   display: flex;
   align-items: center;
-  margin: 0rpx 4% 80rpx 4%;
+  margin: 0rpx 4% 0rpx 4%;
 }
 .cx_select .select-btn {
   font-size: 32rpx;
@@ -448,7 +451,7 @@ export default {
 }
 
 .cx_select_history_top {
-  margin: 0 7% 31rpx 4%;
+  margin: 80rpx 7% 31rpx 4%;
   display: flex;
   justify-content: space-between;
 }
