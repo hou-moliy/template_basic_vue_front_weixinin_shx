@@ -176,9 +176,6 @@ export default {
       // flag 2 开启 1取消
       const res = await SpclService.openAi({ type: flag });
       if (res.data.code === 200) {
-        // 埋点
-        const analysisParam = !this.aiStatus ? "ai_open_count" : "ai_close_count";
-        this.$analysis.dispatch(analysisParam);
         uni.hideLoading();
         const mes = flag === 2 ? "开启成功" : "取消成功";
         this.$toast(mes);
@@ -194,15 +191,19 @@ export default {
     aiOpenChange () {
       // ai换铃业务开关接口
       if (!this.spclStatus) {
+        // 埋点
+        this.$analysis.dispatch("ai_open_count");
         // 是否开通视频彩铃业务
         this.show = true;
         this.popupInfo = uni.getStorageSync("windowAllObj").common_spcl_open;
       } else {
         if (!this.aiStatus) {
+          this.$analysis.dispatch("ai_open_count");
           // 未开启ai功能,开通ai换铃方法
           const notifyInfo = uni.getStorageSync("windowAllObj").common_ai_open;
           this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi());
         } else {
+          this.$analysis.dispatch("ai_close_count");
           // 已开启ai功能,弹出提示类弹窗
           const notifyInfo = uni.getStorageSync("windowAllObj").common_ai_cancel;
           this.$showNotifyPop(this, notifyInfo, () => this.handleOpenAi(1));
