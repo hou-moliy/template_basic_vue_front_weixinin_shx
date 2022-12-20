@@ -350,21 +350,6 @@ export default {
           const res2 = await SsoService.getLogin(param);
           console.log(res2, "手机短信登录");
           if (res2.data.code === 200) {
-            // this.$analysis.dispatch('dl_yzm_dlcg')
-            //     // 渠道数据统计
-
-            //     // if (uni.getStorageSync("channelSource")) {
-            //     //   analysisService
-            //     //     .channelRecord(uni.getStorageSync(
-            //     //       "channelSource"))
-            //     //     .then((res) => {
-            //     //       if (res.data.code == 200 && res.data
-            //     //         .data) {
-            //     //         uni.removeStorageSync(
-            //     //           "channelSource");
-            //     //       }
-            //     //     });
-            //     // }
             this.successLogin(res2);
           } else {
             this.loginFlag = true;
@@ -395,6 +380,7 @@ export default {
         "Authorization",
         `${res.data.data.tokenHead} ${res.data.data.token}`,
       );
+      this.$analysis.dispatch("Logon_count_success");
       uni.setStorageSync("phone", this.phonenumber);
       if (this.detail.userInfo) {
         uni.setStorageSync("userInfo", this.detail.userInfo);
@@ -474,6 +460,8 @@ export default {
           uni.hideLoading();
           uni.setStorageSync("Authorization",
             `Bearer ${res3.data.token}`);
+          // 埋点微信授权点击量
+          this.$analysis.dispatch("WeChat_count_success");
           uni.setStorageSync("phone", rsaDecryption(res3.data.phone));
           this.bindWxUser();
           // 获取用户视彩开通状态再获取铃音数据
@@ -518,11 +506,14 @@ page {
 .custom-tab {
   display: flex;
   align-items: center;
-  padding: 44rpx 4% 0 4%;
+  padding: 44rpx 9% 0 4%;
   .custom-tab-title {
     flex: 1;
     text-align: center;
+    color: #252a3e;
     font-weight: 700;
+    font-size: 36rpx;
+    font-family: PingFang SC, PingFang SC-Bold;
   }
 }
 uni-page-body,

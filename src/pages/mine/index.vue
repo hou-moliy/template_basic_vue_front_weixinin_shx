@@ -13,10 +13,12 @@
           :style="{
             paddingTop: pointobj.top + 'px',
             lineHeight: pointobj.height + 'px',
+            background: tabBgcolor,
           }"
         >
           我的
         </view>
+        <view :style="{ height: `${emptyBoxHeight}px` }" />
         <!-- 头部 -->
         <view class="login-top-box" @click="isLogin()">
           <view class="txbox">
@@ -179,12 +181,15 @@ export default {
       popupInfo: {}, // 订购弹窗的内容
       show: false, // 订购弹窗的展示控制
       errFlg: null, // 获取铃音失败flag
+      tabBgcolor: "transparent", // 导航栏背景
+      emptyBoxHeight: 0, // 导航栏下面盒子
     };
   },
   onLoad () {
     this.$analysis.dispatch("my_pv");
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = (this.pointobj.top + 153) * 2;
+    this.emptyBoxHeight = this.pointobj.top + this.pointobj.height + 10;
   },
   onHide () {
     this.offMonitor();
@@ -212,6 +217,13 @@ export default {
     this.getMyMore();
     // 获取我的喜欢
     this.$store.dispatch("spcl/getMyLikeVideoIdList");
+  },
+  onPageScroll (e) {
+    if (e.scrollTop > 30) {
+      this.tabBgcolor = "#ddddff";
+    } else {
+      this.tabBgcolor = "transparent";
+    }
   },
   methods: {
     buryIconListId () {
@@ -529,9 +541,15 @@ page {
   width: 100%;
   text-align: center;
   .custom-tab-title {
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    padding-bottom: 20rpx;
     font-family: PingFang SC, PingFang SC-Bold;
     font-size: 36rpx;
     font-weight: 700;
+    color: #252a3e;
   }
 }
 .sign {
@@ -556,7 +574,7 @@ button::after {
 }
 
 .login-top-box {
-  padding-top: 37rpx;
+  padding-top: 12rpx;
   display: flex;
   align-items: center;
 

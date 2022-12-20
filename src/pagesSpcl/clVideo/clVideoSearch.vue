@@ -5,11 +5,7 @@
       background: changeBbcolorFlag ? '#F5F7F9' : '',
     }"
   >
-    <scroll-view
-      scroll-y="true"
-      :style="{ height: `${windowHeight}px` }"
-      @scroll="scroll"
-    >
+    <scroll-view scroll-y="true" @scroll="scroll">
       <view class="head-img-box">
         <image :src="staticImgs + `/shxmp/init/search-bg.png`" />
       </view>
@@ -32,9 +28,11 @@
         <view :style="{ marginTop: `${mainBoxMarginTop}px` }">
           <cxSelect
             default-page-name="video"
+            :goback-flag="gobackFlag"
             :page-status-load="pageStatusLoadForSelect"
             :hot-list-type="'video'"
             @hotKeyGoToPlay="hotKeyGoToPlay"
+            @getsearchValue="getsearchValue"
           />
         </view>
         <view class="searchlist-box">
@@ -52,6 +50,7 @@
 <script>
 import cxVideoSearchList from "@/components/search/cx-video-search-list.vue";
 import cxSelect from "@/components/search/cx_select.vue";
+import { log } from "../../utils/QS-SharePoster/app";
 export default {
   name: "SearchPage",
   components: {
@@ -69,6 +68,8 @@ export default {
       windowHeight: 0, // 可视高度
       navBackground: "transparent", // 导航栏背景
       mainBoxMarginTop: 0, // 主盒子外边距
+      gobackFlag: false, // 返回搜索主页标杆
+      searchValue: "",
     };
   },
   onLoad () {
@@ -102,11 +103,14 @@ export default {
     this.pageStatusLoad = "onUnload";
   },
   methods: {
-
+    getsearchValue (value) {
+      this.searchValue = value;
+    },
     getPageWidthHeight () {
       uni.getSystemInfo({
         success: res => {
           console.log(res.windowHeight, "res.windowHeight");
+          console.log(res, "res");
           this.windowHeight = res.windowHeight;
         },
       });
@@ -117,17 +121,19 @@ export default {
       } else {
         this.navBackground = "transparent";
       }
-      console.log(e.detail.scrollTop, "e.detail.scrollTop");
     },
     hotKeyGoToPlay (item) {
       console.log("播放了");
       this.hotKeyGoToPlayKey = item;
     },
     getback () {
-      console.log("点击发生");
-      uni.switchTab({
-        url: "/pages/cl/index",
-      });
+      if (this.searchValue) {
+        this.gobackFlag = !this.gobackFlag;
+      } else {
+        uni.switchTab({
+          url: "/pages/cl/index",
+        });
+      }
     },
     // 搜索结果列表onload
     getSearchList (data) {
@@ -173,10 +179,14 @@ page {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 44rpx 4% 20rpx 4%;
+  padding: 44rpx 9% 20rpx 4%;
   .custom-tab-title {
     flex: 1;
     text-align: center;
+    font-size: 36rpx;
+    font-family: PingFang SC, PingFang SC-Bold;
+    font-weight: 700;
+    color: #252a3e;
   }
 }
 .searchlist-box {

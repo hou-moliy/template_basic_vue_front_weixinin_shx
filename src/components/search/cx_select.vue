@@ -111,6 +111,10 @@ export default {
       type: String,
       default: "",
     },
+    gobackFlag: {
+      type: Boolean,
+      default: false,
+    },
   },
   data () {
     return {
@@ -131,6 +135,7 @@ export default {
   },
   watch: {
     value (val) {
+      this.$emit("getsearchValue", val);
       if (val === "") {
         this.isSelecting = false; // 正在搜索
         this.isSelectedState = false; // 是否搜索过
@@ -153,9 +158,12 @@ export default {
         });
       }
     },
-  },
-  created () {
-    // this.$emit("changeValue", { value: this.value, isFocus: this.isFocus, isSelectedState: this.isSelectedState, placeholder: this.placeholder });
+    gobackFlag (val) {
+      this.value = "";
+      this.isFocus = false;
+      this.isSelectedState = false;
+      this.placeholder = "";
+    },
   },
   mounted () {
     this.getMoreHotList();
@@ -474,7 +482,7 @@ export default {
 }
 
 .cx_select_history_label {
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-family: PingFang SC, PingFang SC-Bold;
   font-weight: 700;
   text-align: left;
