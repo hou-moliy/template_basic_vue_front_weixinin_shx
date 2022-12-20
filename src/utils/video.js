@@ -72,6 +72,7 @@ const handleSetPcl = (ringItem, setCallBack = () => { }) => {
 const confirmOrderSpcl = ({ event, ringItem, setCallBack }) => {
   Vue.prototype.$loading("设置中", true, 0);
   if (event.protocolCheckFlag) { // 勾选了AI换铃
+    Vue.prototype.$analysis.dispatch("video_business_open_AI");
     handleOpenAi().then(() => {
       handleSetPcl(ringItem, setCallBack);
     }).catch(() => Vue.prototype.$toast("AI换铃开通,失败请重试"));
