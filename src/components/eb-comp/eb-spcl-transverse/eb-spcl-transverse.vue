@@ -147,8 +147,8 @@ export default {
 
 <style lang="scss" scoped>
 .scenery-wrap {
-  padding: 0 17px;
-  margin-bottom: 40rpx;
+  width: 686rpx;
+  margin: 0 auto 40rpx;
 }
 
 .items-box {
