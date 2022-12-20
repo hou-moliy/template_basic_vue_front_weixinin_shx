@@ -20,7 +20,6 @@ import AdService from "@/api/ad";
 import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 export default {
   name: "EbIconList",
-
   props: {
     pageConfig: {
       type: Object,

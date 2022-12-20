@@ -348,7 +348,7 @@ export default {
 
     .ad-recommend-1-3-item {
       background: #ffffff;
-      width: 207rpx;
+      width: 220rpx;
       height: 240rpx;
       border-radius: 20rpx;
       background-repeat: no-repeat;
@@ -399,7 +399,7 @@ export default {
       justify-content: space-between;
 
       .ad-recommend-1-4-img-box {
-        width: 304rpx;
+        width: 330rpx;
         height: 400rpx;
         border-radius: 10rpx;
       }
@@ -411,7 +411,7 @@ export default {
       }
 
       .ad-recommend-1-4-item-right {
-        width: 320rpx;
+        width: 340rpx;
         height: 400rpx;
         display: flex;
         flex-wrap: wrap;
@@ -419,7 +419,7 @@ export default {
         border-radius: 10rpx;
 
         .ad-recommend-1-4-item-right-img {
-          width: 320rpx;
+          width: 340rpx;
           height: 190rpx;
           border-radius: 10rpx;
         }

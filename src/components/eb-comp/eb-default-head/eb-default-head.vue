@@ -106,13 +106,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 .block {
-  width: 100%;
+  width: 686rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0rpx 34rpx;
   box-sizing: border-box;
-  margin-bottom: 40rpx;
+  margin: 0 auto 40rpx;
 
   &-box {
     width: 100%;
@@ -122,8 +121,6 @@ export default {
     box-sizing: border-box;
 
     &-title {
-      /* margin-left: 34rpx; */
-      /* text-indent: 0.3em; */
       display: flex;
       align-items: center;
 
