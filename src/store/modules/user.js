@@ -26,7 +26,7 @@ const actions = {
         } else {
           reject(res.data);
         }
-      });
+      }).catch(err => reject(err));
     });
   },
   // 获取用户AI换铃开通状态
@@ -41,7 +41,7 @@ const actions = {
         } else {
           reject(res.data);
         }
-      });
+      }).catch(err => reject(err));
     });
   },
 };
