@@ -397,6 +397,10 @@ export default {
               // 返回上一级
               uni.navigateBack({ delta: 1 });
             });
+          } else {
+            uni.hideLoading();
+            // 返回上一级
+            uni.navigateBack({ delta: 1 });
           }
         });
       } catch (error) {
