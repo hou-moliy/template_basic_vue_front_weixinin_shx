@@ -5,7 +5,11 @@
       background: changeBbcolorFlag ? '#F5F7F9' : '',
     }"
   >
-    <scroll-view scroll-y="true" @scroll="scroll">
+    <scroll-view
+      scroll-y="true"
+      :style="{ height: windowHeight + 'px' }"
+      @scroll="scroll"
+    >
       <view class="head-img-box">
         <image :src="staticImgs + `/shxmp/init/search-bg.png`" />
       </view>
@@ -50,7 +54,6 @@
 <script>
 import cxVideoSearchList from "@/components/search/cx-video-search-list.vue";
 import cxSelect from "@/components/search/cx_select.vue";
-import { log } from "../../utils/QS-SharePoster/app";
 export default {
   name: "SearchPage",
   components: {
