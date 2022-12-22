@@ -8,6 +8,7 @@
     <scroll-view
       scroll-y="true"
       :style="{ height: windowHeight + 'px' }"
+      :scroll-top="scrollTop"
       @scroll="scroll"
     >
       <view class="head-img-box">
@@ -24,7 +25,7 @@
         >
           <image
             :src="`${staticImgs}/shxmp/init/leftIcon.png`"
-            style="width: 34rpx; height: 44rpx"
+            :style="{ width: '34rpx', height: '44rpx' }"
             @click="getback"
           />
           <view class="custom-tab-title">视频彩铃搜索</view>
@@ -73,6 +74,8 @@ export default {
       mainBoxMarginTop: 0, // 主盒子外边距
       gobackFlag: false, // 返回搜索主页标杆
       searchValue: "",
+      scrollTop: 0,
+      oldscrollTop: 0,
     };
   },
   onLoad () {
@@ -112,13 +115,12 @@ export default {
     getPageWidthHeight () {
       uni.getSystemInfo({
         success: res => {
-          console.log(res.windowHeight, "res.windowHeight");
-          console.log(res, "res");
           this.windowHeight = res.windowHeight;
         },
       });
     },
     scroll (e) {
+      this.oldscrollTop = e.detail.scrollTop;
       if (e.detail.scrollTop > 30) {
         this.navBackground = "#DDDDFF";
       } else {
@@ -132,6 +134,11 @@ export default {
     getback () {
       if (this.searchValue) {
         this.gobackFlag = !this.gobackFlag;
+        this.scrollTop = this.oldscrollTop;
+        this.$nextTick(function () {
+          this.scrollTop = 0;
+        });
+        this.navBackground = "transparent";
       } else {
         uni.switchTab({
           url: "/pages/cl/index",
