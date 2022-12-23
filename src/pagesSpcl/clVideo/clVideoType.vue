@@ -619,6 +619,7 @@ export default {
             tempList[0].extraInfo.like = false;
             tempList[0].extraInfo.likeCount -= 1;
             this.$set(this.specialNews, index, tempList[0]);
+            this.$store.commit("spcl/getVideoListFromCxVideoType", this.specialNews);
             // 更新数据
             this.updateData(index, 0);
           } else {
@@ -630,6 +631,8 @@ export default {
             tempList[0].extraInfo.like = true;
             tempList[0].extraInfo.likeCount += 1;
             this.$set(this.specialNews, index, tempList[0]);
+            // 更新视彩分类仓库
+            this.$store.commit("spcl/getVideoListFromCxVideoType", this.specialNews);
             // 更新数据
             this.updateData(index);
           }

@@ -179,6 +179,7 @@ export default {
             // 将当前数据改了
             this.specialNewsLists[0].extraInfo.like = true;
             this.specialNewsLists[0].extraInfo.likeCount += 1;
+            this.$store.commit("spcl/getSearchList", this.selectList);
             // 更新仓库里的数据
             this.updateData();
           } else {
@@ -186,6 +187,7 @@ export default {
             // 修改当前数据 更新仓库
             this.specialNewsLists[0].extraInfo.like = false;
             this.specialNewsLists[0].extraInfo.likeCount -= 1;
+            this.$store.commit("spcl/getSearchList", this.selectList);
             this.updateData(0);
           }
         } else {
