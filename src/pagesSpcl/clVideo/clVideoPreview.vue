@@ -124,10 +124,6 @@ export default {
     // 数据更新
     updateData () {
       this.videoMsg.isBuyVideo = true;
-      // 更新仓库数据
-      const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoMsg.ringId);
-      const list = this.$store.state.spcl.videoList;
-      list[index] = this.videoMsg;
     },
     // 订购弹窗关闭
     closePopup () {

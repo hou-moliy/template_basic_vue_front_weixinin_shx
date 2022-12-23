@@ -186,7 +186,6 @@ export default {
     };
   },
   onLoad () {
-    this.$analysis.dispatch("my_pv");
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.loginBoxHeight = (this.pointobj.top + 153) * 2;
     this.emptyBoxHeight = this.pointobj.top + this.pointobj.height + 10;
@@ -195,6 +194,7 @@ export default {
     this.offMonitor();
   },
   onShow () {
+    this.$analysis.dispatch("my_pv");
     this.dispatchPageEvent();
     uni.hideTabBar();
     if (uni.getStorageSync("Authorization")) {

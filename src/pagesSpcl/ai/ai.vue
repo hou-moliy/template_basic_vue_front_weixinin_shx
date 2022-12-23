@@ -111,10 +111,10 @@ export default {
     };
   },
   onLoad () {
-    this.$analysis.dispatch("ai_pv");
     this.getPageConfig();
   },
   onShow () {
+    this.$analysis.dispatch("ai_pv");
     this.init();
     this.handleFresh();
   },

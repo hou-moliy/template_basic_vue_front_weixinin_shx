@@ -83,12 +83,12 @@ export default {
     this.pageStatusLoad = "onLoad";
     this.hotKeyGoToPlayKey = false;
     this.pageStatusLoadForSelect = "onLoad";
-    this.$analysis.dispatch("video_search_pv");// 进入视频搜索的埋点，有音频搜索后需修改
     this.pointobj = uni.getMenuButtonBoundingClientRect();
     this.mainBoxMarginTop = this.pointobj.top + this.pointobj.height + 10;
     console.log(this.pointobj);
   },
   onShow () {
+    this.$analysis.dispatch("video_search_pv");// 进入视频搜索的埋点，有音频搜索后需修改
     if (this.pageStatusLoad === "onHide") {
       this.pageStatusLoadForSelect = "onShow";
     }
