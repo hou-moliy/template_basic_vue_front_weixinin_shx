@@ -924,7 +924,7 @@ page {
                 font-family: PingFang SC Medium, PingFang SC Medium-Medium;
                 font-weight: 500;
                 text-align: left;
-                color: #333333;
+                color: #999;
                 line-height: 30rpx;
                 text-shadow: 0px 2rpx 4rpx 0px rgba(0, 0, 0, 0.1);
                 width: 90rpx;
@@ -932,7 +932,7 @@ page {
                 .icon {
                   width: 30rpx;
                   height: 30rpx;
-                  margin-right: 3rpx;
+                  margin-right: 11rpx;
                   flex-shrink: 0;
                 }
               }
@@ -1063,7 +1063,7 @@ page {
             font-family: PingFang SC Medium, PingFang SC Medium-Medium;
             font-weight: 500;
             text-align: left;
-            color: #333333;
+            color: #999;
             line-height: 30rpx;
             text-shadow: 0px 2rpx 4rpx 0px rgba(0, 0, 0, 0.1);
             width: 110rpx;
@@ -1071,7 +1071,7 @@ page {
             .icon {
               width: 30rpx;
               height: 30rpx;
-              margin-right: 3rpx;
+              margin-right: 11rpx;
             }
           }
 
