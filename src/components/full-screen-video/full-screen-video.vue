@@ -170,10 +170,8 @@ export default {
     },
   },
   created () {
+    this.videoDetail = this.item;
     this.initStyle();
-    uni.$on("updateItemData", () => {
-      this.videoDetail = this.item;
-    });
   },
   mounted () {
     this.dispatchPageEvent();
@@ -255,10 +253,6 @@ export default {
     },
     setSpclFresh () {
       this.videoDetail.isBuyVideo = true;
-      // 更新仓库视彩列表isBuyVideo
-      const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
-      const list = this.$store.state.spcl.videoList;
-      list[index] = this.videoDetail;
     },
     // 点赞 OR 取消点赞
     changeLikeStatus (opType) {

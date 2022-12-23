@@ -964,7 +964,6 @@ page {
               font-size: 24rpx;
               font-family: PingFang SC Medium, PingFang SC Medium-Medium;
               font-weight: 500;
-              text-align: left;
               color: #ffffff;
               line-height: 48rpx;
               text-align: center;
