@@ -160,8 +160,16 @@ export default {
       isPlayNow: true, // 是否正在播放
     };
   },
+  watch: {
+    item: {
+      handler (newVal) {
+        this.videoDetail = newVal;
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   created () {
-    this.videoDetail = this.item;
     this.initStyle();
   },
   mounted () {

@@ -107,6 +107,7 @@ export default {
 <style lang="scss" scoped>
 .block {
   width: 686rpx;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
