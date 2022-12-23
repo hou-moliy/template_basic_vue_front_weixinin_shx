@@ -221,10 +221,12 @@ export default {
       uni.navigateBack();
     },
     init () {
+      console.log("重新获取数据----");
       // 获取数据
       this.isPlayFromIndex = uni.getStorageSync("isPlayFromIndex");
       this.$store.commit("spcl/M_changeVideoList", this.$store.state.spcl.videoList);
       this.videoList = this.$store.state.spcl.videoList;
+      uni.$emit("updateItemData");
       this.labelId = this.$store.state.spcl.vedioLabelId;
       this.index = this.videoList.findIndex(
         (item) => item.ringId === this.onLoadId,

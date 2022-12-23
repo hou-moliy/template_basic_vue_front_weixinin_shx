@@ -171,6 +171,9 @@ export default {
   },
   created () {
     this.initStyle();
+    uni.$on("updateItemData", () => {
+      this.videoDetail = this.item;
+    });
   },
   mounted () {
     this.dispatchPageEvent();
@@ -252,6 +255,10 @@ export default {
     },
     setSpclFresh () {
       this.videoDetail.isBuyVideo = true;
+      // 更新仓库视彩列表isBuyVideo
+      const index = this.$store.state.spcl.videoList.findIndex(i => i.ringId === this.videoDetail.ringId);
+      const list = this.$store.state.spcl.videoList;
+      list[index] = this.videoDetail;
     },
     // 点赞 OR 取消点赞
     changeLikeStatus (opType) {
@@ -334,14 +341,23 @@ export default {
         if (res.code === 200) {
           this.$analysis.dispatch("video_share_count");
           this.videoDetail.extraInfo.shareCount = this.videoDetail.extraInfo.shareCount + 1;
-          // 更新数据
-          this.updateData();
+          // 更新视彩分类数据+ 搜索结果仓库分享数据
+          this.updateShareCountData(this.$store.state.spcl.videoListFromCxVideoType, ringId);
+          this.updateShareCountData(this.$store.state.spcl.searchList, ringId);
         }
       }).finally(() => {
         uni.navigateTo({
           url,
         });
       });
+    },
+    updateShareCountData (list, ringId) {
+      const clTypeList = list;
+      const currentIndex = clTypeList.findIndex(clTypeListItem => clTypeListItem.ringId === ringId);
+      if (currentIndex > -1) {
+        clTypeList[currentIndex].extraInfo.shareCount += 1;
+      }
+      console.log(clTypeList[currentIndex], "currentIndex");
     },
   },
 };
