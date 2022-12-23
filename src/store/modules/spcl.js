@@ -147,7 +147,7 @@ const actions = {
           reject(response.data);
           uni.setStorageSync("failSpcl", 1);
         }
-      });
+      }).catch(err => reject(err));
     });
   },
   // 获取用户当前播放的铃音数据
