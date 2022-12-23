@@ -107,7 +107,6 @@ export default {
       });
     }
     this.initStyle();
-    // 分享进入的等同第一次的缓存逻辑
     if (uni.getStorageSync("userPlayVideo")) {
       this.isFirstPlay = false;
     } else {

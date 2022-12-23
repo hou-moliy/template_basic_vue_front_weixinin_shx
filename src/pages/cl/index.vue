@@ -223,7 +223,6 @@ export default {
       this.currentTab = current;
       this.pageName = this.tabList[this.swiperTab].pageName;
       this.getPageConfig(this.pageName);
-      this.goTop();
     },
     // scroll-view滚动监听
     swiperContainerScroll (e) {
@@ -242,7 +241,9 @@ export default {
       this.scrollTop = this.oldScrollTop;
       // 当视图渲染结束 重新设置为0
       this.$nextTick(() => {
-        this.scrollTop = 0;
+        setTimeout(() => {
+          this.scrollTop = 0;
+        }, 300);
       });
     },
     // 获取tabList信息
@@ -327,6 +328,7 @@ export default {
       this.tabBackground = this.tabList[current].bgBannerTop ? "transparent" : "#DDDDFF";
       this.getPageConfig(this.pageName);
       this.changeTab(current);
+      this.goTop();
     },
     // 点击查看更多按钮事件
     changeTabByMore (pageName) {

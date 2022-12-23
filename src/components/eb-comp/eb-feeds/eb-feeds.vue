@@ -420,7 +420,7 @@ export default {
 
         .ad-recommend-1-4-item-right-img {
           width: 340rpx;
-          height: 190rpx;
+          height: 195rpx;
           border-radius: 10rpx;
         }
       }
