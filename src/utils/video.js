@@ -57,15 +57,15 @@ const handleSetPcl = (ringItem, setCallBack = () => { }) => {
         // 更新当前播放数据
         store.commit("spcl/UPDATE_USER_SPCL_SETTINGS", ringItem.ringId);
         setCallBack();
-        store.commit("window/SET_OPERITION_SHOW", false);
+      } else if (res.data.data.code === 203) {
+        Vue.prototype.$toast("您设置数量已达上限,请前往个人中心,进行处理哦~", 4000);
       } else {
         Vue.prototype.$toast("设置失败，请稍后重试", 4000);
-        store.commit("window/SET_OPERITION_SHOW", true);
       }
     } else {
-      Vue.prototype.$toast(res.data.message);
-      store.commit("window/SET_OPERITION_SHOW", true);
+      Vue.prototype.$toast(res.data.message || "设置失败，请稍后重试");
     }
+    store.commit("window/SET_OPERITION_SHOW", false);
   });
 };
 // 确定订购视频彩铃按钮点击

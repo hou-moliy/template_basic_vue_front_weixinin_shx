@@ -71,7 +71,9 @@ export default {
     jumpTo () {
       if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
-        navigateToAnyCheck(this.pageConfig, `seeMore${this.pageConfig.moduleId}`);
+        this.$analysis.dispatch("more_count", this.pageConfig.eventUrl).finally(() => {
+          navigateToAnyCheck(this.pageConfig, `seeMore${this.pageConfig.moduleId}`);
+        });
       } else {
         uni.setStorageSync("moreData", this.pageConfig);
         const params = { ...this.pageConfig };
@@ -83,7 +85,6 @@ export default {
           } else if (params.eventUrl && params.eventUrl.indexOf("?") < -1) {
             params.eventUrl = `${params.eventUrl}?moduleId=${params.moduleId}&pageName=${params.title}`;
           }
-          console.log(params.eventUrl);
           navigateToAnyCheck(params, `seeMore${params.moduleId}`);
         });
       }
@@ -96,7 +97,7 @@ export default {
     getUrlSingleParam (key, url = location.search) {
       const reg = new RegExp("(\\?|&)" + key + "=([^&]*)(&|$)");
       const r = url.match(reg);
-      if (r != null) {
+      if (r !== null) {
         return unescape(r[2]);
       }
       return null;
@@ -155,7 +156,7 @@ export default {
 
     &-button {
       font-size: 24rpx;
-      font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+      font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
       font-weight: 500;
       display: flex;
       justify-content: center;

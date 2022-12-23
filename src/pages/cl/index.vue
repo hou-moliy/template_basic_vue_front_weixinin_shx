@@ -158,6 +158,7 @@ export default {
       if (this.$refs.EbConfig) {
         this.$refs.EbConfig[this.swiperTab].handleFresh();
       }
+      this.$analysis.dispatch("page_pv", `${this.pageName}`);
       this.$store.dispatch("user/getUserSpclStatus");
       this.$store.dispatch("user/getUserAiStatus");
       this.$store.dispatch("spcl/getMyLikeVideoIdList");
