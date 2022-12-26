@@ -277,7 +277,7 @@ export default {
   margin-top: 20rpx;
   margin-left: 30rpx;
   font-size: 30rpx;
-  font-family: PingFang SC, PingFang SC-Bold;
+  font-family: PingFang SC, PingFang SC-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   color: #222222;
@@ -318,7 +318,7 @@ export default {
         .cx_select_hot_tip {
           height: 36rpx;
           font-size: 26rpx;
-          font-family: PingFang SC, PingFang SC-Bold;
+          font-family: PingFang SC, PingFang SC-Bold, sans-serif;
           text-align: left;
           color: #333333;
           line-height: 36rpx;
@@ -343,8 +343,8 @@ export default {
   width: 30rpx;
   height: 36rpx;
   font-size: 26rpx;
-  font-family: PingFang SC, PingFang SC-Bold;
-  text-align: left;
+  font-family: PingFang SC, PingFang SC-Bold, sans-serif;
+
   color: #999;
   line-height: 36rpx;
   text-align: center;
@@ -357,7 +357,7 @@ export default {
 
 .cx_select_hot_item_more {
   font-size: 26rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #999999;
@@ -386,7 +386,7 @@ export default {
 .ypcl_col_catagory_index {
   color: #666666;
   // font-family: PingFang SC Medium, PingFang SC Medium-Medium;
-  font-family: "Helvetica Neue";
+  font-family: "Helvetica Neue", sans-serif;
   width: 100rpx;
   overflow: hidden;
   white-space: nowrap;
@@ -406,7 +406,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 32rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #333333;
@@ -425,7 +425,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 24rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 350;
   text-align: left;
   color: #999999;
@@ -439,7 +439,7 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 22rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 350;
   text-align: left;
   color: #999999;

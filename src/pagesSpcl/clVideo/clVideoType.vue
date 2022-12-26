@@ -329,7 +329,9 @@
               <text>{{ formatCount(item.extraInfo.likeCount) }}</text>
             </view>
           </view>
-          <view v-if="item.isBuyVideo" class="setting-btn-isBuy">已设置</view>
+          <view v-if="item.isBuyVideo" class="setting-btn-isBuy">
+            已设为视频彩铃
+          </view>
           <view v-else class="setting-btn" @click="purchaseVideo(item)">
             设为视频彩铃
           </view>
@@ -429,14 +431,6 @@ export default {
     if (option.showDirection) {
       this.showDirection = option.showDirection;
       console.log(this.showDirection);
-      // option.pageName && option.pageName !== "undefined"
-      // this.pageName = option.pageName;
-      // this.showDirection = option.showDirection;
-      // console.log("this.showDirection", this.showDirection);
-      // uni.setStorageSync("isRecomend", this.pageName);
-      // uni.setNavigationBarTitle({
-      //   title: this.pageName,
-      // });
     }
     this.pageName = "more";
     uni.setStorageSync("isRecomend", "more");
@@ -613,6 +607,7 @@ export default {
           // 取消点赞
           if (flag) {
             this.$toast("成功取消点赞");
+            this.$analysis.dispatch("video_quxiao_fabulous_count");
             const tempList = this.specialNews.filter(
               (item) => ringId === item.ringId,
             );
@@ -811,7 +806,7 @@ page {
     padding-left: 32rpx;
 
     .video-type-item {
-      font-family: PingFang SC, PingFang SC-Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
       font-size: 30rpx;
       font-weight: 500;
       text-align: center;
@@ -921,7 +916,8 @@ page {
                 display: flex;
                 align-items: center;
                 font-size: 22rpx;
-                font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+                font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+                  sans-serif;
                 font-weight: 500;
                 text-align: left;
                 color: #999;
@@ -943,26 +939,27 @@ page {
             }
 
             .setting-btn {
-              width: 114rpx;
-              height: 48rpx;
+              width: 100rpx;
+              height: 46rpx;
               background-color: #9e79ff;
-              border-radius: 24rpx;
-              font-size: 24rpx;
-              font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+              border-radius: 23rpx;
+              font-size: 26rpx;
+              font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+                sans-serif;
               font-weight: 500;
-              text-align: left;
               color: #ffffff;
               line-height: 48rpx;
               text-align: center;
             }
 
             .setting-btn-isBuy {
-              width: 114rpx;
-              height: 48rpx;
+              width: 100rpx;
+              height: 46rpx;
               background: #c6c5c8;
-              border-radius: 24rpx;
+              border-radius: 23rpx;
               font-size: 24rpx;
-              font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+              font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+                sans-serif;
               font-weight: 500;
               color: #ffffff;
               line-height: 48rpx;
@@ -974,7 +971,7 @@ page {
           .morel-new-title {
             height: 69rpx;
             font-size: 28rpx;
-            font-family: PingFang SC, PingFang SC-Medium;
+            font-family: PingFang SC, PingFang SC-Medium, sans-serif;
             font-weight: 700;
             text-align: left;
             color: #333333;
@@ -1004,14 +1001,11 @@ page {
     // 横屏
     .more-new-item-row {
       -webkit-column-break-inside: avoid;
-      background: #ffffff;
       border-radius: 10px;
       margin-bottom: 30rpx;
       width: 686rpx;
       // height: 512rpx;
       background: #ffffff;
-      border-radius: 10px;
-
       .img-box-more {
         position: relative;
         width: 686rpx;
@@ -1059,7 +1053,8 @@ page {
             display: flex;
             align-items: center;
             font-size: 22rpx;
-            font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+            font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+              sans-serif;
             font-weight: 500;
             text-align: left;
             color: #999;
@@ -1080,13 +1075,13 @@ page {
         }
 
         .setting-btn {
-          width: 168rpx;
+          width: 200rpx;
           height: 54rpx;
           background-color: #9e79ff;
           border-radius: 27rpx;
 
           font-size: 22rpx;
-          font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+          font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
           font-weight: 500;
 
           color: #ffffff;
@@ -1095,14 +1090,13 @@ page {
         }
 
         .setting-btn-isBuy {
-          width: 114rpx;
+          width: 200rpx;
           height: 48rpx;
           background: #c6c5c8;
           border-radius: 24rpx;
-          font-size: 24rpx;
-          font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+          font-size: 22rpx;
+          font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
           font-weight: 500;
-          text-align: left;
           color: #ffffff;
           line-height: 48rpx;
           text-align: center;
@@ -1114,7 +1108,7 @@ page {
         box-sizing: border-box;
         width: 686rpx;
         font-size: 30rpx;
-        font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+        font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
         font-weight: 700;
         text-align: left;
         color: #333333;
