@@ -149,7 +149,7 @@
 <script>
 import uniPopup from "@/components/uni-popup/uni-popup.vue";
 import popupTemplateOperition from "../../components/popup-module/popup-template-operition.vue";
-import { navigateToAny } from "@/utils/navigateToAny.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 import SpclService from "@/api/spcl/index";
 export default {
   name: "Index",
@@ -238,13 +238,7 @@ export default {
     },
     navigateToFunction (item) {
       this.$analysis.dispatch("my_more_count");
-      // 判断用户是否登录 否 提示弹窗 是 调用navgatertoany
-      if (uni.getStorageSync("Authorization")) {
-        console.log(item);
-        navigateToAny(item);
-      } else {
-        this.$showLoginPop(this);
-      }
+      navigateToAnyCheck(item, `myMore_${item.id}`);
     },
     // 根据开通状态打开订购弹窗或跳转页面
     async judgeStatusOperation (statusFlag, targetId, e) { // 未开通   1已开通 未设置 2 已开通 并设置
