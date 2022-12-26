@@ -184,6 +184,7 @@ export default {
             this.updateData();
           } else {
             this.$toast("成功取消点赞");
+            this.$analysis.dispatch("video_quxiao_fabulous_count");
             // 修改当前数据 更新仓库
             this.specialNewsLists[0].extraInfo.like = false;
             this.specialNewsLists[0].extraInfo.likeCount -= 1;
@@ -264,7 +265,7 @@ export default {
       .video-title {
         width: 357rpx;
         font-size: 30rpx;
-        font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+        font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
         font-weight: 700;
         text-align: left;
         color: #333333;
@@ -293,7 +294,8 @@ export default {
             align-items: center;
             width: 90rpx;
             font-size: 22rpx;
-            font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+            font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+              sans-serif;
             font-weight: 500;
             text-align: left;
             color: #999999;
@@ -321,9 +323,8 @@ export default {
           line-height: 54rpx;
           text-align: center;
           font-size: 22rpx;
-          font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+          font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
           font-weight: 500;
-          color: #ffffff;
         }
 
         .setting-btn-isBuy {
@@ -331,11 +332,10 @@ export default {
           height: 54rpx;
           background: #c6c5c8;
           border-radius: 27rpx;
-          color: #ffffff;
           line-height: 54rpx;
           text-align: center;
           font-size: 22rpx;
-          font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+          font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
           font-weight: 500;
           color: #ffffff;
         }
@@ -358,7 +358,7 @@ export default {
 
   .no-info-title {
     font-size: 36rpx;
-    font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+    font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #666666;
@@ -367,7 +367,7 @@ export default {
 
   .no-info-title-small {
     font-size: 28rpx;
-    font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+    font-family: PingFang SC Regular, PingFang SC Regular-Regular, sans-serif;
     font-weight: 400;
     text-align: center;
     color: #999999;
@@ -461,7 +461,8 @@ export default {
               display: flex;
               align-items: center;
               font-size: 22rpx;
-              font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+              font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+                sans-serif;
               font-weight: 500;
               text-align: left;
               color: #333333;
@@ -488,9 +489,10 @@ export default {
             background: #9e79ff;
             border-radius: 24rpx;
             font-size: 24rpx;
-            font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+            font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+              sans-serif;
             font-weight: 500;
-            text-align: left;
+
             color: #ffffff;
             line-height: 48rpx;
             text-align: center;
@@ -502,9 +504,10 @@ export default {
             background: #c6c5c8;
             border-radius: 24rpx;
             font-size: 24rpx;
-            font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+            font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+              sans-serif;
             font-weight: 500;
-            text-align: left;
+
             color: #ffffff;
             line-height: 48rpx;
             text-align: center;
@@ -515,7 +518,7 @@ export default {
         .morel-new-title {
           height: 76rpx;
           font-size: 28rpx;
-          font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+          font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
           font-weight: 700;
           text-align: left;
           color: #333333;

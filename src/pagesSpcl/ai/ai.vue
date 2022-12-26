@@ -328,7 +328,7 @@ export default {
   .introduce-title {
     height: 100rpx;
     font-size: 36rpx;
-    font-family: PingFang SC, PingFang SC-Bold;
+    font-family: PingFang SC, PingFang SC-Bold, sans-serif;
     font-weight: 700;
     text-align: center;
     color: #333333;
@@ -339,7 +339,7 @@ export default {
   .introduce-content {
     text-indent: 26rpx;
     font-size: 26rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 400;
     text-align: left;
     color: #252a3e;
@@ -350,7 +350,7 @@ export default {
   }
   .introduce-subcontent {
     font-size: 24rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 400;
     text-align: left;
     color: #666666;
@@ -377,7 +377,7 @@ export default {
 
     .introduce-button-open {
       font-size: 30rpx;
-      font-family: PingFang SC, PingFang SC-Bold;
+      font-family: PingFang SC, PingFang SC-Bold, sans-serif;
       font-weight: 700;
       text-align: center;
       color: #ffffff;
@@ -386,7 +386,7 @@ export default {
 
     .introduce-button-opened {
       font-size: 30rpx;
-      font-family: PingFang SC, PingFang SC-Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
       font-weight: 500;
       text-align: center;
       color: #999999;
@@ -394,7 +394,7 @@ export default {
 
     .introduce-button-price {
       font-size: 22rpx;
-      font-family: PingFang SC, PingFang SC-Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
       font-weight: 500;
       text-align: center;
       color: #ffec9f;
@@ -406,7 +406,7 @@ export default {
 .theme-name {
   margin: 60rpx 0 40rpx 0rpx;
   font-size: 36rpx;
-  font-family: PingFang SC, PingFang SC-Bold;
+  font-family: PingFang SC, PingFang SC-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   color: #333333;
@@ -443,7 +443,7 @@ export default {
 
       .theme-part-content-tile-name {
         font-size: 32rpx;
-        font-family: PingFang SC, PingFang SC-Bold;
+        font-family: PingFang SC, PingFang SC-Bold, sans-serif;
         font-weight: 700;
         text-align: left;
         color: #333333;
@@ -474,11 +474,10 @@ export default {
 
   .theme-part-introduce {
     font-size: 24rpx;
-    font-family: PingFang SC, PingFang SC-Regular;
+    font-family: PingFang SC, PingFang SC-Regular, sans-serif;
     font-weight: 400;
     text-align: left;
     color: #666666;
-    text-overflow: -o-ellipsis-lastline;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;

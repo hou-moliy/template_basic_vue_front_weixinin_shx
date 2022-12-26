@@ -218,7 +218,7 @@ export default {
 
         .title-big {
           font-size: 40rpx;
-          font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+          font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
           font-weight: 700;
           text-align: center;
           color: #ffffff;
@@ -229,7 +229,7 @@ export default {
 
         .title-small {
           font-size: 24rpx;
-          font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+          font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
           font-weight: 500;
           text-align: center;
           color: #ffffff;
@@ -290,7 +290,7 @@ export default {
           background: linear-gradient(to right, #9e79ff 0%, #ff83d9 100%);
           border-radius: 45rpx;
           font-size: 32rpx;
-          font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+          font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
           font-weight: 700;
           text-align: center;
           color: #ffffff;
@@ -303,7 +303,7 @@ export default {
           background: #c6c5c8;
           border-radius: 45rpx;
           font-size: 32rpx;
-          font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+          font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
           font-weight: 700;
           text-align: center;
           color: #ffffff;

@@ -194,7 +194,7 @@ page {
     flex: 1;
     text-align: center;
     font-size: 36rpx;
-    font-family: PingFang SC, PingFang SC-Bold;
+    font-family: PingFang SC, PingFang SC-Bold, sans-serif;
     font-weight: 700;
     color: #252a3e;
   }

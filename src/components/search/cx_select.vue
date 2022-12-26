@@ -366,7 +366,7 @@ export default {
 }
 .cx_select .select-btn {
   font-size: 32rpx;
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   line-height: 36rpx;
@@ -384,7 +384,6 @@ export default {
   border-radius: 37rpx;
   align-items: center;
   display: flex;
-  align-items: center;
 }
 
 .cx_select_input_view2 {
@@ -427,7 +426,7 @@ export default {
 
 .cx_select_hot_label {
   font-size: 36rpx;
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   color: #000000;
@@ -452,7 +451,7 @@ export default {
   margin-left: 32rpx;
   line-height: 58rpx;
   font-size: 24rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: center;
   color: #666666;
@@ -467,7 +466,7 @@ export default {
 .cx_select_history_del {
   display: flex;
   font-size: 24rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #999999;
@@ -483,7 +482,7 @@ export default {
 
 .cx_select_history_label {
   font-size: 28rpx;
-  font-family: PingFang SC, PingFang SC-Bold;
+  font-family: PingFang SC, PingFang SC-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   color: #000000;
@@ -508,7 +507,7 @@ export default {
   margin-left: 32rpx;
   line-height: 58rpx;
   font-size: 24rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: center;
   color: #333333;
@@ -525,7 +524,7 @@ export default {
 
 .cx_select_noInfo_view1 {
   font-size: 32rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: center;
   color: #222222;
@@ -534,7 +533,7 @@ export default {
 
 .cx_select_noInfo_view2 {
   font-size: 26rpx;
-  font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+  font-family: PingFang SC Regular, PingFang SC Regular-Regular, sans-serif;
   font-weight: 400;
   text-align: center;
   color: #999999;

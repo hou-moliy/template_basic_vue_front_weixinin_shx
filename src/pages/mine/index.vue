@@ -526,7 +526,7 @@ page {
 .my-iconlist-title {
   height: 36rpx;
   font-size: 36rpx;
-  font-family: PingFang SC, PingFang SC-Bold;
+  font-family: PingFang SC, PingFang SC-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   color: #000000;
@@ -546,7 +546,7 @@ page {
     z-index: 10;
     width: 100%;
     padding-bottom: 20rpx;
-    font-family: PingFang SC, PingFang SC-Bold;
+    font-family: PingFang SC, PingFang SC-Bold, sans-serif;
     font-size: 36rpx;
     font-weight: 700;
     color: #252a3e;
@@ -591,14 +591,14 @@ button::after {
       font-weight: bold;
       font-size: 40rpx;
       color: #252a3e;
-      font-family: PingFang SC, PingFang SC-Heavy;
+      font-family: PingFang SC, PingFang SC-Heavy, sans-serif;
       background: unset;
       vertical-align: middle;
     }
 
     .tx-content-text {
       font-size: 40rpx;
-      font-family: PingFang SC, PingFang SC-Heavy;
+      font-family: PingFang SC, PingFang SC-Heavy, sans-serif;
       text-align: left;
       color: #252a3e;
       line-height: 59rpx;
@@ -608,7 +608,7 @@ button::after {
 
 .login-top-box text {
   font-size: 28rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #ffffff;
@@ -616,7 +616,7 @@ button::after {
 
 .login-top-box button {
   font-size: 40rpx;
-  font-family: PingFang SC, PingFang SC-Heavy;
+  font-family: PingFang SC, PingFang SC-Heavy, sans-serif;
   font-weight: 800;
   background: unset;
   vertical-align: middle;
@@ -696,7 +696,7 @@ button::after {
     color: #666666;
     font-size: 32rpx;
     font-weight: 500;
-    font-family: PingFang SC Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   }
 
   .login-out-confirm-button {
@@ -713,7 +713,7 @@ button::after {
       color: #999999;
       font-weight: 500;
       font-size: 30rpx;
-      font-family: PingFang SC Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     }
 
     .login-out-confirm-sure {
@@ -722,7 +722,7 @@ button::after {
       line-height: 89rpx;
       text-align: center;
       font-size: 30rpx;
-      font-family: PingFang SC Bold;
+      font-family: PingFang SC, PingFang SC-Bold, sans-serif;
       font-weight: 700;
       background: #8b6cf0;
       -webkit-background-clip: text;
@@ -754,7 +754,7 @@ button::after {
   width: 150rpx;
 
   font-size: 28rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #767b93;
@@ -764,7 +764,7 @@ button::after {
 .login-bottom-box .content {
   display: inline-block;
   font-size: 28rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #252a3e;
@@ -786,7 +786,7 @@ button::after {
   .more-tips {
     height: 36rpx;
     font-size: 36rpx;
-    font-family: PingFang SC, PingFang SC-Bold;
+    font-family: PingFang SC, PingFang SC-Bold, sans-serif;
     font-weight: 700;
     text-align: left;
     color: #000000;
@@ -827,7 +827,7 @@ button::after {
         margin-left: 20rpx;
         display: inline-block;
         font-size: 30rpx;
-        font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+        font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
         font-weight: 500;
         text-align: center;
         color: #666666;
@@ -836,7 +836,7 @@ button::after {
       }
       .cell-desc2 {
         font-size: 24rpx;
-        font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+        font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
         font-weight: 500;
         text-align: right;
         color: #999999;

@@ -514,7 +514,7 @@ page {
     color: #252a3e;
     font-weight: 700;
     font-size: 36rpx;
-    font-family: PingFang SC, PingFang SC-Bold;
+    font-family: PingFang SC, PingFang SC-Bold, sans-serif;
   }
 }
 uni-page-body,
@@ -565,7 +565,7 @@ uni-page-refresh {
       margin-left: 15rpx;
       display: inline-block;
       font-size: 28rpx;
-      font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+      font-family: PingFang SC Regular, PingFang SC Regular-Regular, sans-serif;
       font-weight: 400;
       text-align: center;
       color: #999999;
@@ -593,7 +593,7 @@ uni-page-refresh {
 
   .wx-text {
     font-size: 28rpx;
-    font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+    font-family: PingFang SC Regular, PingFang SC Regular-Regular, sans-serif;
     color: #2e3346;
   }
 }
@@ -610,7 +610,7 @@ button::after {
     height: 98rpx;
     border-radius: 49rpx;
     font-size: 36rpx;
-    font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+    font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
     font-weight: bold;
     text-align: center;
     color: #ffffff;
@@ -632,11 +632,10 @@ button::after {
   width: 150rpx;
   height: 53rpx;
   background: #c6c5c8;
-  border-radius: 14rpx;
   text-align: center;
   line-height: 49rpx;
   font-size: 30rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   color: #fff;
   border-radius: 26px;
@@ -653,7 +652,7 @@ button::after {
   background: #6b61f5;
   height: 54rpx;
   font-size: 24rpx;
-  font-family: PingFangSC, PingFangSC-Regular;
+  font-family: PingFangSC, PingFangSC-Regular, sans-serif;
   font-weight: 400;
   text-align: center;
   line-height: 54rpx;
@@ -776,7 +775,7 @@ button::after {
 .check-view-conten-text {
   display: inline-block;
   font-size: 24rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   color: #333333;
 }

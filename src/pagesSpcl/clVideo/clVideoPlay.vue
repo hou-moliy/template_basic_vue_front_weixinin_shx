@@ -464,7 +464,7 @@ export default {
 .left-text {
   width: 480rpx;
   font-size: 32rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #ffffff;
@@ -639,7 +639,7 @@ export default {
 .left-text {
   width: 480rpx;
   font-size: 32rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #ffffff;
@@ -704,7 +704,7 @@ export default {
 
 .set-text {
   font-size: 28rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   color: #ffffff;
   line-height: 36rpx;
 }
@@ -749,7 +749,7 @@ export default {
 
 .right-text {
   font-size: 28rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: center;
   color: #ffffff;
