@@ -237,8 +237,8 @@ export default {
           } else {
             item.extraInfo.likeCount += 1;
             this.$toast("点赞成功");
-            this.$emit("buryDz");
           }
+          this.$emit("buryDz", flag);
           item.extraInfo.like = !flag;
           // 更新我的喜欢数据
           this.$store.commit("spcl/UPDATE_MY_LIKE_IDS", ringItem);

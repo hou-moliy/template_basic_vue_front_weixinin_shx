@@ -277,6 +277,7 @@ export default {
             this.updateData();
           } else {
             this.$toast("成功取消点赞");
+            this.$analysis.dispatch("video_quxiao_fabulous_count");
             // 修改当前数据 更新仓库
             this.videoDetail.extraInfo.like = false;
             this.videoDetail.extraInfo.likeCount -= 1;
