@@ -335,11 +335,6 @@ export default {
   }
 }
 
-.bottom1 {
-  width: 100%;
-  height: 60rpx;
-}
-
 .flex {
   display: flex;
 }
@@ -414,7 +409,6 @@ export default {
       .title {
         width: 100%;
         text-align: center;
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -497,10 +491,6 @@ export default {
   }
 }
 
-.bottom1 {
-  height: 15rpx;
-  width: 100%;
-}
 image {
   vertical-align: middle;
 }

@@ -307,7 +307,7 @@ export default {
     }
     .title {
       font-size: 36rpx;
-      font-family: PingFang SC, PingFang SC-Bold;
+      font-family: PingFang SC, PingFang SC-Bold, sans-serif;
       font-weight: 700;
       text-align: left;
       color: #000000;
@@ -328,7 +328,7 @@ export default {
   }
   .no-record-tips1 {
     font-size: 32rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #222222;
@@ -336,7 +336,7 @@ export default {
   }
   .no-record-tips2 {
     font-size: 26rpx;
-    font-family: PingFang SC, PingFang SC-Regular;
+    font-family: PingFang SC, PingFang SC-Regular, sans-serif;
     font-weight: 400;
     text-align: center;
     color: #999999;
@@ -349,7 +349,7 @@ export default {
     background: linear-gradient(-90deg, #ff83d9 0%, #9e79ff 100%);
     border-radius: 10rpx;
     font-size: 32rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #ffffff;

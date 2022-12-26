@@ -298,7 +298,7 @@ export default {
     }
     .title {
       font-size: 36rpx;
-      font-family: PingFang SC, PingFang SC-Bold;
+      font-family: PingFang SC, PingFang SC-Bold, sans-serif;
       font-weight: 700;
       text-align: left;
       color: #000000;

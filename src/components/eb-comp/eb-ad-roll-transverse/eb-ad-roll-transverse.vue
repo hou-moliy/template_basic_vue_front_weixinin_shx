@@ -94,9 +94,8 @@ export default {
       // 标题
       .topic-title-row {
         font-size: 30rpx;
-        font-family: PingFang SC, PingFang SC-Medium;
+        font-family: PingFang SC, PingFang SC-Medium, sans-serif;
         font-weight: 500;
-        text-align: left;
         color: #222;
         line-height: 36rpx;
         margin-top: 20rpx;

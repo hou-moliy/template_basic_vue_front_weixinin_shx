@@ -169,7 +169,7 @@ export default {
   width: 100%;
   height: 116rpx;
   font-size: 32rpx;
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   text-align: left;
   color: #ffffff;

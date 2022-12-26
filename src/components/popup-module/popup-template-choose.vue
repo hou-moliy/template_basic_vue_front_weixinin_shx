@@ -151,7 +151,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .EB-popup {
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   width: 100%;
   height: 100%;
   position: fixed;
@@ -343,7 +343,6 @@ export default {
     font-size: 36rpx;
     font-weight: 500;
     color: #333333;
-    line-height: 36px;
     height: 100rpx;
     line-height: 100rpx;
     text-align: center;

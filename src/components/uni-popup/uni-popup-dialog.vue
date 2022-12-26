@@ -314,7 +314,7 @@ export default {
 
 .uni-dialog-content-text-open {
   font-size: 26rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: center;
   color: #999999;
@@ -351,13 +351,13 @@ export default {
 
 .uni-dialog-button-text {
   font-size: 30rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   color: #999999;
 }
 
 .uni-button-color {
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   background: linear-gradient(#ff6f50, #ff008c);
   background-clip: text;
@@ -405,7 +405,7 @@ export default {
 }
 
 .uni-dialog-content-ok-text-open {
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   background: linear-gradient(#5e4827, #5e4827);
   background-clip: text;
@@ -431,7 +431,6 @@ export default {
   border: 1rpx solid #a6a6a6;
   box-sizing: border-box;
   margin-right: 10rpx;
-  box-sizing: border-box;
 }
 
 .list-checked {
@@ -448,7 +447,7 @@ export default {
 .check-view-conten-text {
   display: inline-block;
   font-size: 22rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   color: #333333;
 }
