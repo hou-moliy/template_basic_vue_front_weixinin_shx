@@ -618,41 +618,6 @@ export default {
   /* #endif */
 }
 
-.left-view {
-  box-sizing: border-box;
-  margin-bottom: 20upx;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 0 30rpx 0 30rpx;
-
-  .set-box {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    height: 210rpx;
-    position: relative;
-  }
-}
-
-.left-text {
-  width: 480rpx;
-  font-size: 32rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
-  font-weight: 500;
-  text-align: left;
-  color: #ffffff;
-  line-height: 48rpx;
-  text-shadow: 0rpx 2rpx 7rpx 0rpx rgba(4, 0, 0, 0.23);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  word-wrap: break-word;
-}
-
 .left-view-right {
   width: 168rpx;
   height: 58rpx;
@@ -772,24 +737,6 @@ export default {
 .preview-img {
   height: 90rpx;
   width: 90rpx;
-}
-
-.mask-top {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  top: 0rpx;
-  left: 0rpx;
-  background: linear-gradient(top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
-}
-
-.mask-bottom {
-  position: absolute;
-  width: 100%;
-  height: 50%;
-  bottom: 0rpx;
-  left: 0rpx;
-  background: linear-gradient(bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
 }
 
 .blank-space {

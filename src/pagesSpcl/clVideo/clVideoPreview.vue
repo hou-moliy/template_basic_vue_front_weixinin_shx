@@ -319,7 +319,11 @@ export default {
     height: 50%;
     bottom: 0rpx;
     left: 0rpx;
-    background: linear-gradient(bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0)
+    );
     // opacity: 0.1;
   }
 
@@ -329,7 +333,7 @@ export default {
     height: 50%;
     top: 0rpx;
     left: 0rpx;
-    background: linear-gradient(top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
     // opacity: 0.1;
   }
 }
