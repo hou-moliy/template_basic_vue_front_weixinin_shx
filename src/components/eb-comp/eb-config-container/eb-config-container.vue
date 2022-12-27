@@ -328,8 +328,12 @@ export default {
       this.$emit("changeAi");
     },
     // 视频彩铃点赞埋点
-    buryDz () {
-      this.$analysis.dispatch("video_fabulous_count", this.activityId);
+    buryDz (flag) { // false 新增点赞 ，true 取消点赞
+      if (flag) {
+        this.$analysis.dispatch("video_quxiao_fabulous_count", this.activityId);
+      } else {
+        this.$analysis.dispatch("video_fabulous_count", this.activityId);
+      }
     },
     // 视频彩铃分享埋点
     buryShare (callBack = () => { }) {
@@ -342,7 +346,7 @@ export default {
     // 跳转视频彩铃播放页面
     goToPlayVideo ({ item, list, pageConfigTitle }) {
       this.$store.commit("spcl/M_changeVideoList", list);
-      if (pageConfigTitle == "moreVideo") {
+      if (pageConfigTitle === "moreVideo") {
         uni.setStorageSync("isPlayFromIndex", false);
         this.$store.commit(
           "spcl/getVedioListTalNum",

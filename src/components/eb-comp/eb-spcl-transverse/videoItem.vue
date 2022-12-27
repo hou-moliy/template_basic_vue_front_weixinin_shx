@@ -186,7 +186,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 30rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #333333;
@@ -195,7 +195,7 @@ export default {
 
 .icon-item {
   font-size: 22rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #ffffff;

@@ -83,7 +83,7 @@ page {
     padding-bottom: 19rpx;
     .bsList-title {
       font-size: 32rpx;
-      font-family: PingFang SC, PingFang SC-Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
       font-weight: 500;
       text-align: left;
       color: #333333;
@@ -103,7 +103,7 @@ page {
 
     .bsList-time {
       font-size: 24rpx;
-      font-family: PingFang SC, PingFang SC-Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
       font-weight: 500;
       text-align: left;
       color: #999999;

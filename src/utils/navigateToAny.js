@@ -16,10 +16,7 @@ const navigateToAnyCheck = async (item, targetId, callback = () => { }) => {
     }
     navigateToAny(item, callback);
   }).catch(() => {
-    // 未配置策略
-    if (!uni.getStorageSync("Authorization")) {
-      return uni.$emit("openLoginPopup", { msg: "展示登录弹窗" });
-    }
+    // 未配置策略、直接进入
     navigateToAny(item, callback);
   });
   uni.hideLoading();

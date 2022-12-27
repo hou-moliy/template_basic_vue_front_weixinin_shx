@@ -62,11 +62,11 @@ export default {
   },
   onLoad (options) {
     this.activityId = options.activityId;
-    this.$analysis.dispatch("page_pv", `${this.activityId}`);
     this.pageName = options.pageName;
     this.getActivityStatus();
   },
   onShow () {
+    this.$analysis.dispatch("page_pv", `${this.activityId}`);
     this.dispatchPageEvent();
     this.handleFresh();
   },
