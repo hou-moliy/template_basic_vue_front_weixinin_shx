@@ -545,8 +545,8 @@ page {
 
 .hideCanvas {
   position: fixed;
-  top: -99999upx;
-  left: -99999upx;
+  top: -99999rpx;
+  left: -99999rpx;
   z-index: -99999;
 }
 

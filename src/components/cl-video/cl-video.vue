@@ -258,8 +258,8 @@ export default {
 }
 
 .progressBar {
-  border-radius: 2upx;
-  height: 4upx;
+  border-radius: 2rpx;
+  height: 4rpx;
   background-color: #ffffff;
   z-index: 999999;
   position: absolute;
@@ -279,23 +279,23 @@ export default {
 
   /** 暂停效果 */
   10% {
-    box-shadow: 0 0 2upx #ffffff;
+    box-shadow: 0 0 2rpx #ffffff;
   }
 
   50% {
-    box-shadow: 0 0 10upx #ffffff;
+    box-shadow: 0 0 10rpx #ffffff;
   }
 
   60% {
-    box-shadow: 0 0 12upx #ffffff;
+    box-shadow: 0 0 12rpx #ffffff;
   }
 
   90% {
-    box-shadow: 0 0 18upx #ffffff;
+    box-shadow: 0 0 18rpx #ffffff;
   }
 
   100% {
-    box-shadow: 0 0 20upx #ffffff;
+    box-shadow: 0 0 20rpx #ffffff;
   }
 }
 
