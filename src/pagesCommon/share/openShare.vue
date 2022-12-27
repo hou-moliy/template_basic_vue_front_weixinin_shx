@@ -250,7 +250,7 @@ export default {
 
 .left-view {
   box-sizing: border-box;
-  margin-bottom: 20upx;
+  margin-bottom: 20rpx;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -352,7 +352,7 @@ export default {
 }
 
 .avater {
-  border-radius: 50upx;
+  border-radius: 50rpx;
   border-color: #fff;
   border-style: solid;
   border-width: 4rpx;
