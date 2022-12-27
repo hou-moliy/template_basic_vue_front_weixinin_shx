@@ -79,7 +79,11 @@
           >
             <view class="infot">
               {{
-                videoItem.ringName.length > 12
+                videoItem.ringRename
+                  ? videoItem.ringRename.length > 12
+                    ? `${videoItem.ringRename.slice(0, 12)}...`
+                    : videoItem.ringRename
+                  : videoItem.ringName.length > 12
                   ? `${videoItem.ringName.slice(0, 12)}...`
                   : videoItem.ringName
               }}
@@ -502,7 +506,7 @@ export default {
       this.$analysis.dispatch("video_library_leaveunused_set_count");
       this.panelShow = false;
       const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cur_set;
-      notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+      notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringRename ? ringItem.ringRename : ringItem.ringName}》`);
       this.$showNotifyPop(this, notifyInfo, () => this.handleSzEvent(ringItem));
     },
     // 处理设为视频彩铃接口
@@ -546,7 +550,7 @@ export default {
       // 展示取消设置弹窗
       this.panelShow = false;
       const notifyInfo = uni.getStorageSync("windowAllObj").common_spcl_cancel;
-      notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+      notifyInfo.windowDesc = notifyInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringRename ? ringItem.ringRename : ringItem.ringName}》`);
       this.$showNotifyPop(this, notifyInfo, () => this.handleQxSzEvent(ringItem));
     },
     // 处理取消视频彩铃当前播放

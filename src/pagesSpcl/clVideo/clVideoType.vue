@@ -86,7 +86,7 @@
                   </view>
 
                   <view class="morel-new-title">
-                    {{ item.ringName }}
+                    {{ item.ringRename ? item.ringRename : item.ringName }}
                   </view>
                 </view>
 
@@ -191,7 +191,7 @@
                   </view>
 
                   <view class="morel-new-title">
-                    {{ item.ringName }}
+                    {{ item.ringRename ? item.ringRename : item.ringName }}
                   </view>
                 </view>
 
@@ -287,7 +287,7 @@
             />
           </view>
           <view class="morel-new-title">
-            {{ item.ringName }}
+            {{ item.ringRename ? item.ringRename : item.ringName }}
           </view>
         </view>
 

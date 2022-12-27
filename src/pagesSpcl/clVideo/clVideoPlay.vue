@@ -172,7 +172,7 @@ export default {
       // 来自页面内分享按钮
     }
     return {
-      title: `"${this.videoList[this.index].ringName}"太赞了！老铁看一下！`,
+      title: `"${this.videoList[this.index].ringRename ? this.videoList[this.index].ringRename : this.videoList[this.index].ringName}"太赞了！老铁看一下！`,
       path: `/pagesCommon/share/openShare?videoId=${this.onLoadId}`,
       imageUrl: `${this.staticImgs}/shxmp/init/share_main.png`,
     };
