@@ -545,7 +545,7 @@ uni-page-refresh {
     input {
       width: 60%;
       font-size: 36rpx;
-      height: 60upx;
+      height: 60rpx;
       font-weight: 700;
     }
   }
@@ -667,13 +667,13 @@ button::after {
 }
 
 .m-input {
-  padding: 10upx;
+  padding: 10rpx;
   display: inline-block;
   vertical-align: middle;
 }
 
 .input-row {
-  margin-bottom: 10upx;
+  margin-bottom: 10rpx;
   position: relative;
   margin-top: 20rpx;
   border-bottom: 2rpx solid rgba(198, 197, 200, 0.5);
