@@ -125,9 +125,8 @@ export default {
   text-align: center;
   padding-top: 215rpx;
   font-size: 36rpx;
-  font-family: PingFang SC, PingFang SC-Bold;
+  font-family: PingFang SC, PingFang SC-Bold, sans-serif;
   font-weight: 700;
-  text-align: center;
   color: #333333;
   line-height: 36rpx;
 }
@@ -149,7 +148,7 @@ export default {
     margin: 0rpx auto;
     margin-top: 30rpx;
     font-size: 26rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #999999;
@@ -159,10 +158,9 @@ export default {
     width: 443rpx;
     margin: 0rpx auto;
     font-size: 26rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
-    color: #999999;
     line-height: 38rpx;
     color: #ff6f50;
   }
@@ -179,7 +177,7 @@ export default {
     line-height: 84rpx;
     box-sizing: border-box;
     font-size: 30rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: white;

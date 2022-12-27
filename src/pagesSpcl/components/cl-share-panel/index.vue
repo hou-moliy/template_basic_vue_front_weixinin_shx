@@ -123,10 +123,9 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    text-align: center;
     padding: 56rpx 68rpx 51rpx;
     font-size: 24rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #222222;
@@ -172,7 +171,7 @@ export default {
     line-height: 100rpx;
     background: #f5f7f9;
     font-size: 30rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #666666;

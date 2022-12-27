@@ -275,7 +275,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .EB-popup {
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   width: 100%;
   height: 100%;
   position: fixed;
@@ -489,7 +489,6 @@ export default {
     font-size: 36rpx;
     font-weight: 500;
     color: #333333;
-    line-height: 36px;
     height: 100rpx;
     line-height: 100rpx;
     text-align: center;
@@ -500,7 +499,6 @@ export default {
     background: #f8f8f8;
     max-height: 378rpx;
 
-    // padding: 14rpx 18rpx;
     .popup-content-box {
       padding: 14rpx 18rpx;
     }
@@ -544,7 +542,7 @@ export default {
 
       .business-prize {
         font-size: 38rpx;
-        font-family: PingFangSC-Semibold, PingFang SC;
+        font-family: PingFangSC-Semibold, PingFang SC, sans-serif;
         font-weight: 600;
         color: #ff6d72;
         line-height: 53rpx;
@@ -576,7 +574,7 @@ export default {
 
       .m-input {
         font-size: 28rpx;
-        font-family: PingFang SC;
+        font-family: PingFang SC, sans-serif;
         font-weight: 400;
         color: #999999;
         line-height: 88rpx;

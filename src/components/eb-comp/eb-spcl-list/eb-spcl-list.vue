@@ -198,7 +198,8 @@ export default {
               display: flex;
               align-items: center;
               font-size: 22rpx;
-              font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+              font-family: PingFang SC Medium, PingFang SC Medium-Medium,
+                sans-serif;
               font-weight: 500;
               text-align: left;
               color: #333333;
@@ -222,13 +223,11 @@ export default {
           .setting-btn {
             width: 334rpx;
             height: 66rpx;
-            // background: linear-gradient(90deg, #FF6F50, #FF008C);
             border-radius: 33rpx;
-            color: #ffffff;
             line-height: 66rpx;
             text-align: center;
             font-size: 30rpx;
-            font-family: Source Han Sans CN;
+            font-family: Source Han Sans CN, sans-serif;
             font-weight: bold;
             color: #ffffff;
             margin-top: 25rpx;
@@ -239,11 +238,10 @@ export default {
             width: 334rpx;
             height: 66rpx;
             border-radius: 33rpx;
-            color: #ffffff;
             line-height: 66rpx;
             text-align: center;
             font-size: 30rpx;
-            font-family: Source Han Sans CN;
+            font-family: Source Han Sans CN, sans-serif;
             font-weight: bold;
             color: #ffffff;
             margin-top: 25rpx;
@@ -254,16 +252,14 @@ export default {
           width: 100%;
           height: 84rpx;
           font-size: 28rpx;
-          font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+          font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
           font-weight: 700;
           text-align: left;
           color: #ffffff;
           background: linear-gradient(180deg, #ffffff00, #000000);
           opacity: 0.85;
           line-height: 36rpx;
-
           border-radius: 20rpx;
-          // padding: 15rpx 12rpx 20rpx 21rpx;
           position: absolute;
           bottom: 9rpx;
           .morel-new-titleText {

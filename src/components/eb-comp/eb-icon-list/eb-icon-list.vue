@@ -103,7 +103,7 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 24rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   color: #2d2d2d;
   line-height: 36px;

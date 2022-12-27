@@ -243,7 +243,7 @@ export default {
 
 .uni-dialog-title-text {
   font-size: 36rpx;
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   text-align: center;
   color: #333333;
@@ -266,7 +266,7 @@ export default {
 
 .uni-dialog-content-text-open {
   font-size: 26rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: center;
   color: #999999;
@@ -303,13 +303,13 @@ export default {
 
 .uni-dialog-button-text {
   font-size: 30rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   color: #999999;
 }
 
 .uni-button-color {
-  font-family: PingFang SC Bold, PingFang SC Bold-Bold;
+  font-family: PingFang SC Bold, PingFang SC Bold-Bold, sans-serif;
   font-weight: 700;
   background: #ff6829;
   background-clip: text;

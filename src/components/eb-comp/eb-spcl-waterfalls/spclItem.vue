@@ -208,33 +208,11 @@ export default {
   background: #fff;
   border-radius: 0rpx 0rpx 10rpx 10rpx;
 }
-// 白色边距
-.white-block {
-  width: 100%;
-  height: 27rpx;
-  background: #fff;
-  border-radius: 0rpx 0rpx 10rpx 10rpx;
-}
-// 白色边距
-.white-block {
-  width: 100%;
-  height: 27rpx;
-  background: #fff;
-  border-radius: 0rpx 0rpx 10rpx 10rpx;
-}
-// 白色边距
-.white-block {
-  width: 100%;
-  height: 27rpx;
-  background: #fff;
-  border-radius: 0rpx 0rpx 10rpx 10rpx;
-}
 // 竖屏
 .more-new-item-column {
   width: 334rpx;
   -webkit-column-break-inside: avoid;
   background: #ffffff;
-  border-radius: 10px;
   margin-bottom: 18rpx;
   border-radius: 20rpx;
 
@@ -278,7 +256,7 @@ export default {
   padding: 15rpx 12rpx 0rpx 15rpx;
   .title-inner {
     font-size: 28rpx;
-    font-family: PingFang SC, PingFang SC-Medium;
+    font-family: PingFang SC, PingFang SC-Medium, sans-serif;
     font-weight: 700;
     text-align: left;
     color: #333333;
@@ -325,9 +303,8 @@ export default {
     background: linear-gradient(to right, #ff6f50 0%, #ff008c 100%);
     border-radius: 24rpx;
     font-size: 24rpx;
-    font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+    font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
     font-weight: 500;
-    text-align: left;
     color: #ffffff;
     line-height: 48rpx;
     text-align: center;
@@ -340,7 +317,7 @@ export default {
     background: #c6c5c8;
     border-radius: 24rpx;
     font-size: 22rpx;
-    font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+    font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
     font-weight: 500;
     text-align: center;
     color: #ffffff;
@@ -352,7 +329,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 22rpx;
-  font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+  font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #333333;
@@ -400,7 +377,7 @@ export default {
   }
   .favor-text {
     font-size: 24rpx;
-    font-family: Alibaba PuHuiTi, Alibaba PuHuiTi-Regular;
+    font-family: Alibaba PuHuiTi, Alibaba PuHuiTi-Regular, sans-serif;
     font-weight: 400;
     text-align: left;
     color: #ffffff;
@@ -419,7 +396,7 @@ export default {
   z-index: 3;
   .icon-item {
     font-size: 24rpx;
-    font-family: Alibaba PuHuiTi, Alibaba PuHuiTi-Regular;
+    font-family: Alibaba PuHuiTi, Alibaba PuHuiTi-Regular, sans-serif;
     font-weight: 400;
     color: #ffffff;
     .icon {

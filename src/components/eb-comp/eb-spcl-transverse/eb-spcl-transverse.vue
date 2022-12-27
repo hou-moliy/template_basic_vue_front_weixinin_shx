@@ -100,11 +100,11 @@ export default {
     },
     handleTips ({ opType }) {
       if (opType === 1) {
-        this.$emit("buryDz");
         this.$toast("点赞成功");
       } else if (opType === 0) {
         this.$toast("成功取消点赞");
       }
+      this.$emit("buryDz", !opType);
       this.getWfList();
     },
     // 点赞

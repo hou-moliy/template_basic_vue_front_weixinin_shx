@@ -160,13 +160,11 @@ export default {
       btnClick: false, // 防止按钮重复点击
     };
   },
-  onLoad (options) {
+  onLoad () {
     this.$analysis.dispatch("video_library_pv");
+    this.$store.commit("user/SET_NAV_FLAG", this.navFlag);
     // 获取我的喜欢
     this.$store.dispatch("spcl/getMyLikeVideoIdList");
-    if (options.navflag) {
-      this.navFlag = options.navflag;
-    }
   },
   onShow () {
     this.getUserAllVideoList();
@@ -180,7 +178,7 @@ export default {
   methods: {
     // 初始化数据
     initData () {
-      this.navFlag = "curt";
+      this.navFlag = this.$store.state.user.navFlag;
       this.checkShow = false;
       this.allFlag = {
         value: "cb",
@@ -201,7 +199,8 @@ export default {
       uni.setStorageSync("userSpclData", [userSpclDataWithTimeFixed]);
       if (userSpclDataWithTimeFixed) {
         this.$loading("加载中...");
-        this.getVideoListById();
+        const flag = this.navFlag === "curt" ? "" : "updateAvailable";
+        this.getVideoListById(flag);
       }
     },
     // 批量管理点击
@@ -564,6 +563,7 @@ export default {
     // 预览,跳转视频彩铃播放页面
     seeDetail ({ ringId }) {
       this.$store.commit("spcl/M_changeVideoList", this.videoList);
+      this.$store.commit("user/SET_NAV_FLAG", this.navFlag);
       uni.navigateTo({
         url: `/pagesSpcl/clVideo/clVideoPlay?id=${ringId}`,
       });
@@ -587,7 +587,7 @@ export default {
       text-align: right;
       letter-spacing: 1rpx;
       font-size: 32rpx;
-      font-family: PingFang SC, PingFang SC-Medium;
+      font-family: PingFang SC, PingFang SC-Medium, sans-serif;
       font-weight: 500;
       color: #666666;
       line-height: 36rpx;
@@ -640,7 +640,7 @@ export default {
       height: 34rpx;
       line-height: 34rpx;
       font-size: 36rpx;
-      font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+      font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
       font-weight: 500;
       text-align: center;
       color: #666666;
@@ -652,7 +652,7 @@ export default {
       height: 26rpx;
       line-height: 26rpx;
       font-size: 28rpx;
-      font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+      font-family: PingFang SC Regular, PingFang SC Regular-Regular, sans-serif;
       font-weight: 400;
       text-align: center;
       color: #999999;
@@ -681,7 +681,7 @@ export default {
 
       .count-ring {
         font-size: 28rpx;
-        font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+        font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
         font-weight: 500;
         text-align: left;
         color: #222222;
@@ -689,7 +689,8 @@ export default {
 
       .mang-txt {
         font-size: 26rpx;
-        font-family: PingFang SC Regular, PingFang SC Regular-Regular;
+        font-family: PingFang SC Regular, PingFang SC Regular-Regular,
+          sans-serif;
         font-weight: 400;
         text-align: right;
         color: #666666;
@@ -698,7 +699,7 @@ export default {
     }
     .cur-ring-m-tips {
       font-size: 24rpx;
-      font-family: PingFang SC, PingFang SC-Bold;
+      font-family: PingFang SC, PingFang SC-Bold, sans-serif;
       font-weight: 700;
       text-decoration: underline;
       text-align: right;
@@ -745,7 +746,7 @@ export default {
         .video-item-index {
           width: 32rpx;
           font-size: 28rpx;
-          font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+          font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
           font-weight: 500;
           text-align: left;
           color: #666666;
@@ -825,7 +826,7 @@ export default {
 
       .del-video-item-tips {
         font-size: 24rpx;
-        font-family: PingFang SC Medium, PingFang SC Medium-Medium;
+        font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
         font-weight: 500;
         text-align: center;
         color: #999999;

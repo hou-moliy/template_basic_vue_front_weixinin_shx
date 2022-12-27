@@ -409,7 +409,7 @@ page {
 
   .title {
     font-size: 36rpx;
-    font-family: PingFang SC, PingFang SC-Bold;
+    font-family: PingFang SC, PingFang SC-Bold, sans-serif;
     font-weight: 700;
     text-align: center;
     color: #252a3e;
@@ -479,7 +479,6 @@ page {
   align-items: center;
   position: relative;
   height: 100%;
-  align-items: center;
 }
 
 .empty-nav {
@@ -505,7 +504,7 @@ page {
 .tab-item {
   margin-left: 30rpx;
   font-size: 32rpx;
-  font-family: PingFang SC, PingFang SC-Medium;
+  font-family: PingFang SC, PingFang SC-Medium, sans-serif;
   font-weight: 500;
   text-align: left;
   color: #767b93;
@@ -529,7 +528,7 @@ page {
 }
 .on {
   font-size: 40rpx;
-  font-family: PingFang SC, PingFang SC-Heavy;
+  font-family: PingFang SC, PingFang SC-Heavy, sans-serif;
   font-weight: 800;
   text-align: left;
   color: #303549;
