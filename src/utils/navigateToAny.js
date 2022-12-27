@@ -117,7 +117,6 @@ const handleFaXianPage = (item, callback) => {
 // 免登地址处理
 const freeLoginFun = (eventUrl) => {
   let tempUrl = eventUrl;
-  // let tempUrl = "https://m.music.migu.cn/v4/mg?ch=014092P&tokentype=ANDT&login=SSO&token=${tyrz_token}";
   return new Promise(function (resolve, reject) {
     if (!tempUrl) return resolve(tempUrl);
     let tokenStr = tempUrl.match(/token=(\S*)/);

@@ -235,7 +235,7 @@ export default {
   opacity: 0.6;
   font-size: 42px;
   color: #fff;
-  font-family: texticons;
+  font-family: texticons, sans-serif;
 }
 
 .bottom {
