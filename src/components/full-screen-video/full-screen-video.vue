@@ -35,7 +35,11 @@
         <view v-if="actions.set" class="view-left">
           <view class="left-view">
             <view class="left-text">
-              {{ videoDetail.ringName }}
+              {{
+                videoDetail.ringRename
+                  ? videoDetail.ringRename
+                  : videoDetail.ringName
+              }}
             </view>
             <view v-if="videoDetail.isBuyVideo" class="setted-video">
               已设置

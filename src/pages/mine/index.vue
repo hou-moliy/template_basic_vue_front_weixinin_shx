@@ -385,9 +385,7 @@ export default {
           ringId: currentRingId,
         }).then(res => {
           if (res.data.code === 200) {
-            this.cxVideoContent = res.data.data
-              ? res.data.data.ringName
-              : "";
+            this.cxVideoContent = res.data.data.ringRename ? res.data.data.ringRename : res.data.data.ringName;
             this.cxVideoStatus = 2;
           } else {
             this.cxVideoContent = "立即设置";

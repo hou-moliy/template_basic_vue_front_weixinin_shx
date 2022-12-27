@@ -69,7 +69,7 @@
         <!-- 标题 -->
         <view class="more-new-title">
           <view class="title-inner">
-            {{ item.ringName }}
+            {{ item.ringRename ? item.ringRename : item.ringName }}
           </view>
         </view>
         <view class="white-block" />
