@@ -38,6 +38,7 @@
               maxlength="11"
               clearable
               placeholder="请输入手机号码"
+              placeholder-style="font-weight:400;font-size:28rpx;color:#999"
             />
             <image
               v-if="phonenumber"
@@ -58,6 +59,7 @@
               type="text"
               clearable
               placeholder="请输入验证码"
+              placeholder-style="font-weight:400;font-size:28rpx;color:#999"
             />
             <button v-if="times > 0" class="sended-btn" size="mini">
               {{ times }}s
@@ -542,8 +544,9 @@ uni-page-refresh {
 
     input {
       width: 60%;
-      font-size: 28rpx;
+      font-size: 36rpx;
       height: 60upx;
+      font-weight: 700;
     }
   }
 }

@@ -68,7 +68,7 @@
       </slot>
     </view>
     <view class="video-item-title">
-      {{ item.ringName }}
+      {{ item.ringRename ? item.ringRename : item.ringName }}
     </view>
   </view>
 </template>

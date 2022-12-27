@@ -38,8 +38,12 @@
               </view>
               <view class="cx_select_hot_tip">
                 {{
-                  item.ringName.length > 15
-                    ? item.ringName.slice(0, 18) + "..."
+                  item.ringRename
+                    ? item.ringRename.length > 15
+                      ? `${item.ringRename.slice(0, 18)}...`
+                      : item.ringRename
+                    : item.ringName.length > 15
+                    ? `${item.ringName.slice(0, 18)}...`
                     : item.ringName
                 }}
               </view>
@@ -109,7 +113,7 @@
                 </view>
                 <view class="ypcl_col_catagory_content">
                   <view class="ypcl_col_catagory_content_name">
-                    {{ item.ringName }}
+                    {{ item.ringRename ? item.ringRename : item.ringName }}
                   </view>
                   <view class="ypcl_col_catagory_content_bottom">
                     <text class="ypcl_col_catagory_content_author">

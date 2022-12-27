@@ -35,7 +35,7 @@
           />
           <view class="more-new-title">
             <view class="more-new-titleText">
-              {{ item.ringName }}
+              {{ item.ringRename ? item.ringRename : item.ringName }}
             </view>
           </view>
         </view>
