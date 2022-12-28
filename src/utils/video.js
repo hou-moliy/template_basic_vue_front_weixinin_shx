@@ -29,7 +29,7 @@ const handlePurchaseVideo = (ringItem, setCallBack = () => { }, eventId = "video
       store.dispatch("user/getUserSpclStatus").then(res => {
         if (res === 1) { // 已开通视频彩铃
           const popupInfo = { ...store.state.window.windowAllObj.common_spcl_set };
-          popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `《${ringItem.ringName}》`);
+          popupInfo.windowDesc = popupInfo.windowDesc.replace("#{ringName}", `${ringItem.ringName}`);
           popupInfo.windowProtocol = store.state.user.aiStatus ? "" : popupInfo.windowProtocol; // 已开通AI换铃不展示选择框
           uni.$emit("operitionShow", {
             popupInfo, btnClickCallBack: (event) => confirmOrderSpcl({ event, ringItem, setCallBack }),
