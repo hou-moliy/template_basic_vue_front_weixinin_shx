@@ -153,13 +153,13 @@ const SplitArray = function (list, sp) {
 const formatCount = function (number, type) {
   if (number && type) {
     const tempNum =
-      number > 9999
-        ? ((number - (number % 1000)) / 10000).toFixed(0) + "w+"
+      number > 999
+        ? ((number - (number % 100)) / 1000).toFixed(0) + "k"
         : number;
     return tempNum;
   } else if (number) {
     const tempNum =
-      number > 9999 ? (number - (number % 1000)) / 10000 + "w+" : number;
+      number > 999 ? (number - (number % 100)) / 1000 + "k" : number;
     return tempNum;
   } else {
     return 0;
