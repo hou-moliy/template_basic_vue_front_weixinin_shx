@@ -26,7 +26,7 @@
 
 <script>
 import AdService from "@/api/ad/index.js";
-import { navigateToAny } from "@/utils/navigateToAny.js";
+import { navigateToAnyCheck } from "@/utils/navigateToAny.js";
 import { copyAttr } from "@/utils/gCopy.js";
 
 export default {
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     navigateToH5 (item) {
-      this.$analysis.dispatch("ad_roll_transverse", `${this.activityId}_${item.id}`).finally(() => navigateToAny(item),
+      this.$analysis.dispatch("ad_roll_transverse", `${this.activityId}_${item.id}`).finally(() => navigateToAnyCheck(item, `ad_roll_transverse_${item.id}`),
       );
     },
     // 使用运营位接口 获取专题列表

@@ -164,7 +164,7 @@
           pageConfig.pageModule === 'eb-head-img' && pageConfig.isShow === 1
         "
       >
-        <eb-head-img-cover
+        <eb-head-img
           :page-config="pageConfig"
           :activity-id="activityId"
           :page-load-status="pageLoadStatus"

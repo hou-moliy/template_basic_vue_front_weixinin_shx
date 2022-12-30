@@ -238,7 +238,7 @@ export default {
     },
     navigateToFunction (item) {
       this.$analysis.dispatch("my_more_count");
-      navigateToAnyCheck(item, `myMore_${item.id}`);
+      navigateToAnyCheck(item, `my_more_count_${item.id}`);
     },
     // 根据开通状态打开订购弹窗或跳转页面
     async judgeStatusOperation (statusFlag, targetId, e) { // 未开通   1已开通 未设置 2 已开通 并设置
