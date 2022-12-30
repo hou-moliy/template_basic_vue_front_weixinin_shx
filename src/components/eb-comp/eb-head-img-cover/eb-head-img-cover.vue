@@ -20,7 +20,7 @@ export default {
   data () {
     return {
       extraStyle: {
-        height: "900rpx",
+        height: "",
       },
     };
   },
@@ -35,6 +35,7 @@ export default {
   image {
     width: 100%;
     height: 100%;
+    vertical-align: middle;
   }
 }
 </style>

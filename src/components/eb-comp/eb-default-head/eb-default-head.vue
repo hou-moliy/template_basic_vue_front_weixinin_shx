@@ -72,7 +72,7 @@ export default {
       if (this.pageConfig.eventType === 5) {
         // eventType为5的时候表示首页swiper切换，此时eventUrl为要切换的swiper-item的pageName
         this.$analysis.dispatch("more_count", this.pageConfig.eventUrl).finally(() => {
-          navigateToAnyCheck(this.pageConfig, `seeMore${this.pageConfig.moduleId}`);
+          navigateToAnyCheck(this.pageConfig, `more_count_${this.pageConfig.moduleId}`);
         });
       } else {
         uni.setStorageSync("moreData", this.pageConfig);
@@ -85,7 +85,7 @@ export default {
           } else if (params.eventUrl && params.eventUrl.indexOf("?") < -1) {
             params.eventUrl = `${params.eventUrl}?moduleId=${params.moduleId}&pageName=${params.title}`;
           }
-          navigateToAnyCheck(params, `seeMore${params.moduleId}`);
+          navigateToAnyCheck(params, `more_count_${params.moduleId}`);
         });
       }
     },

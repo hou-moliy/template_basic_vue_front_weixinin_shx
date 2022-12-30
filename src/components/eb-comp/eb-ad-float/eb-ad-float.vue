@@ -37,7 +37,7 @@ export default {
   methods: {
     floatClick () {
       this.$analysis.dispatch("ad_float", this.activityId).finally(() => {
-        navigateToAnyCheck(this.pageConfig);
+        navigateToAnyCheck(this.pageConfig, `ad_float_${this.pageConfig.id}`);
       });
     },
   },
