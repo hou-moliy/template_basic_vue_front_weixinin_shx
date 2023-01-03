@@ -21,7 +21,7 @@
 import SpclService from "@/api/spcl/index.js";
 import videoItem from "./videoItem.vue";
 export default {
-  name: "FindSceneryRecommend",
+  name: "EbSpclTransverse",
   components: {
     videoItem,
   },
@@ -148,6 +148,7 @@ export default {
 <style lang="scss" scoped>
 .scenery-wrap {
   width: 686rpx;
+  height: 100%;
   margin: 0 auto 40rpx;
 }
 

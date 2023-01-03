@@ -61,6 +61,7 @@
 import SpclService from "@/api/spcl/index.js";
 import { videoInfoUpdate } from "@/utils/video";
 export default {
+  name: "EbSpclSwiper",
   props: {
     pageConfig: {
       type: Object,

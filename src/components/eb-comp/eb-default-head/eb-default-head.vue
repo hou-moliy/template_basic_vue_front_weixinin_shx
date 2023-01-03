@@ -2,20 +2,16 @@
   <view class="block">
     <view class="block-box">
       <view class="block-box-title">
-        <view>
-          <image
-            v-if="pageConfig.tagIcon !== '' && extraStyle.position === 'left'"
-            class="eb-icon"
-            :src="pageConfig.tagIcon"
-          />
-        </view>
+        <image
+          v-if="pageConfig.tagIcon !== '' && extraStyle.position === 'left'"
+          class="eb-icon"
+          :src="pageConfig.tagIcon"
+        />
         <span :style="{ color: extraStyle.color }">{{ pageConfig.title }}</span>
-        <view>
-          <image
-            v-if="pageConfig.tagIcon !== '' && extraStyle.position === 'right'"
-            :src="pageConfig.tagIcon"
-          />
-        </view>
+        <image
+          v-if="pageConfig.tagIcon !== '' && extraStyle.position === 'right'"
+          :src="pageConfig.tagIcon"
+        />
       </view>
       <view
         v-if="pageConfig.showMoreFlag"
@@ -108,7 +104,6 @@ export default {
 <style lang="scss" scoped>
 .block {
   width: 686rpx;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,9 +112,10 @@ export default {
 
   &-box {
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     box-sizing: border-box;
 
     &-title {
@@ -140,9 +136,10 @@ export default {
 
       image {
         width: 37rpx;
-        height: 49rpx;
+        height: 48rpx;
         margin-left: 6rpx;
         padding-bottom: 6rpx;
+        box-sizing: border-box;
       }
 
       .eb-icon {
@@ -156,15 +153,14 @@ export default {
 
     &-button {
       font-size: 24rpx;
+      height: 48rpx;
       font-family: PingFang SC Medium, PingFang SC Medium-Medium, sans-serif;
       font-weight: 500;
       display: flex;
       justify-content: center;
       align-items: center;
-      line-height: 48rpx;
       color: #666666;
       padding: 0 25rpx;
-      box-sizing: border-box;
       border: 1rpx solid #dcdcdc;
     }
   }
@@ -173,5 +169,6 @@ export default {
   width: 13rpx;
   height: 22rpx;
   margin-left: 13rpx;
+  vertical-align: middle;
 }
 </style>

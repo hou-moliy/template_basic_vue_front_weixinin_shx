@@ -27,6 +27,8 @@ export default {
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
+  methods: {
+  },
 };
 </script>
 

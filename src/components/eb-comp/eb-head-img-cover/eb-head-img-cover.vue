@@ -1,6 +1,6 @@
 <template>
   <view class="top-img" :style="[extraStyle]">
-    <image :src="pageConfig.tagIcon" />
+    <image :src="pageConfig.tagIcon" :style="[extraStyle]" />
   </view>
 </template>
 
@@ -27,6 +27,8 @@ export default {
   created () {
     this.extraStyle = copyAttr(this.extraStyle, JSON.parse(this.pageConfig.extraStyle));
   },
+  methods: {
+  },
 };
 </script>
 
@@ -34,7 +36,6 @@ export default {
 .top-img {
   image {
     width: 100%;
-    height: 100%;
     vertical-align: middle;
   }
 }
