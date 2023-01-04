@@ -162,13 +162,23 @@ export default {
     },
     // 查询用户是否开通ai换铃
     async checkPortalUser () {
+      if (!uni.getStorageSync("Authorization")) return;
+      this.$loading("请稍等...", true, 0);
       const res = await this.$store.dispatch("user/getUserAiStatus");
-      this.aiStatus = res;
+      if (typeof res === "number") {
+        this.aiStatus = res;
+        uni.hideLoading();
+      }
     },
     // 查询用户是否开通视频彩铃
     async getSpclStatus () {
+      if (!uni.getStorageSync("Authorization")) return;
+      this.$loading("请稍等...", true, 0);
       const res = await this.$store.dispatch("user/getUserSpclStatus");
-      this.spclStatus = res;
+      if (typeof res === "number") {
+        this.spclStatus = res;
+        uni.hideLoading();
+      }
     },
     // 开通AI换铃
     async handleOpenAi (flag = 2) {
