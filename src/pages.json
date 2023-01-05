@@ -44,7 +44,7 @@
         {
           "path": "share/shareVideo",
           "style": {
-            "navigationBarTitleText": "分享视频彩铃海报",
+            "navigationBarTitleText": "分享视频",
             "enablePullDownRefresh": false
           }
         },
