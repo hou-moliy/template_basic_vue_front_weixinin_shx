@@ -63,7 +63,11 @@ export default {
   onLoad (options) {
     this.activityId = options.activityId;
     this.pageName = options.pageName;
-    this.getActivityStatus();
+    if (options.type === "preview") { // 来自预览
+      this.getPageBaseInfo();
+    } else {
+      this.getActivityStatus();
+    }
   },
   onShow () {
     this.$analysis.dispatch("page_pv", `${this.activityId}`);
