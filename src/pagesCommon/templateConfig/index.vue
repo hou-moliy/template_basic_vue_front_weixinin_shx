@@ -63,7 +63,8 @@ export default {
   onLoad (options) {
     this.activityId = options.activityId;
     this.pageName = options.pageName;
-    if (options.type === "preview") { // 来自预览
+    if (options.preview) { // 来自预览
+      this.activityId = options.preview;
       this.getPageBaseInfo();
     } else {
       this.getActivityStatus();
