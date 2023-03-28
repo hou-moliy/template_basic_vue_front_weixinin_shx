@@ -74,7 +74,7 @@
     <view class="my-iconlist">
       <text class="my-iconlist-title">我的铃音库</text>
       <eb-icon-list
-        :page-config="{ pageName: 'default-mine' }"
+        :page-config="{ pageName: 'defaultMineIcon' }"
         @openLoginPopup="openLoginPopup"
         @buryIconListId="buryIconListId"
         @open="open"

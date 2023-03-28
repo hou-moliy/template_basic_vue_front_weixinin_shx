@@ -10,7 +10,7 @@
     >
       <view class="video-type-scroll-box">
         <text
-          v-for="(item, index) in lableList"
+          v-for="item in lableList"
           :key="item.labelId"
           :class="[
             'video-type-item',
@@ -34,7 +34,7 @@
           v-if="specialNews != ''"
           class="waterfall-column waterfall-column-left"
         >
-          <view v-for="(item, index) in specialNews" :key="index">
+          <view v-for="(item, index1) in specialNews" :key="index1">
             <template v-if="index % 2 === 0">
               <!-- 广告 -->
               <view
@@ -140,7 +140,7 @@
           </view>
         </view>
         <view class="waterfall-column">
-          <view v-for="(item, index) in specialNews" :key="index">
+          <view v-for="(item, index2) in specialNews" :key="index2">
             <template v-if="index % 2 !== 0">
               <!-- 广告 -->
               <view
@@ -676,8 +676,8 @@ export default {
         // console.log(res)
         if (res.data.code === 200) {
           this.lableList = res.data.data;
-          this.currentTab = res.data.data[this.index].labelId;
-          this.showDirection = res.data.data[this.index].showDirection;
+          this.currentTab = res.data?.data[this.index]?.labelId;
+          this.showDirection = res.data?.data[this.index]?.showDirection;
           if (
             this.$store.state.spcl.videoListFromCxVideoType.length > 0 &&
             !this.init
@@ -719,7 +719,11 @@ export default {
       }
     },
     getSpclVideoList () {
-      console.log("this.currentTab", this.currentTab);
+      if (!this.currentTab) {
+        this.isLoadStatus = "noMore";
+        this.totalNum = 0;
+        return;
+      };
       this.orderParams.notModulId = this.currentTab;
       const data = {
         labelId: this.currentTab,
