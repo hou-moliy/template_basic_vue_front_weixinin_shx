@@ -35,7 +35,7 @@
           class="waterfall-column waterfall-column-left"
         >
           <view v-for="(item, index1) in specialNews" :key="index1">
-            <template v-if="index % 2 === 0">
+            <template v-if="index1 % 2 === 0">
               <!-- 广告 -->
               <view
                 v-if="item.labelType === 1"
@@ -141,7 +141,7 @@
         </view>
         <view class="waterfall-column">
           <view v-for="(item, index2) in specialNews" :key="index2">
-            <template v-if="index % 2 !== 0">
+            <template v-if="index2 % 2 !== 0">
               <!-- 广告 -->
               <view
                 v-if="item.labelType === 1"
