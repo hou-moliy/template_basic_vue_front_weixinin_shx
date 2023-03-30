@@ -146,8 +146,8 @@ export default {
     return {
       staticImgs: this.$staticImgs,
       userName: "您的好友",
-      videoHeight: "", // 播放器高度
-      videoWidth: "", // 播放器宽度
+      videoHeight: "667", // 播放器高度
+      videoWidth: "375", // 播放器宽度
       navMarginHeight: 0, // 自定义导航栏外边距
       navHeight: 0, // 自定义导航栏高度
       actions: {
@@ -416,8 +416,10 @@ export default {
 // 视频彩铃内容
 .video-box {
   flex: 1;
-  width: 750rpx;
+  width: 100%;
   .video {
+    width: 100%;
+    height: 100%;
     flex: 1;
   }
   .cover_image {

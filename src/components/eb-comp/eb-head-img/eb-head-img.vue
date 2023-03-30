@@ -1,6 +1,6 @@
 <template>
   <view class="top-img">
-    <image :src="pageConfig.tagIcon" :style="[extraStyle]" />
+    <image :src="pageConfig.tagIcon" :style="[extraStyle]" mode="widthFix" />
   </view>
 </template>
 

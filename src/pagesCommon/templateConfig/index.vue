@@ -12,7 +12,7 @@
     <!-- 分享栏 -->
     <view v-if="pageBaseInfo.getChanceDesc" class="main-share">
       <button class="btn" open-type="share">
-        <image :src="pageBaseInfo.getChanceDesc" alt="" />
+        <image :src="pageBaseInfo.getChanceDesc" alt="" mode="widthFix" />
       </button>
     </view>
     <!-- 配置化组件 -->
@@ -218,20 +218,9 @@ export default {
     line-height: 0;
 
     image {
-      width: 54rpx;
-      height: 56rpx;
+      width: 108rpx;
+      height: 112rpx;
     }
-  }
-  .main-share-image {
-    width: 126rpx;
-    height: 52rpx;
-  }
-
-  .main-share-text {
-    font-weight: Regular;
-    font-size: 26rpx;
-    text-align: center;
-    color: #ffffff;
   }
 }
 button::after {
