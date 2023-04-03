@@ -292,31 +292,30 @@ export default {
   methods: {
     // 滚动到底部监听
     onScrollBottom () {
-      if (this.$refs.EbSpclWaterFalls) {
-        this.$refs.EbSpclWaterFalls[0].onScrollBottom();
+      const refList = this.$refs;
+      for (const key in refList) {
+        if (Object.hasOwnProperty.call(refList, key)) {
+          const element = refList[key];
+          element.forEach(item => {
+            if (item.onScrollBottom) {
+              item.onScrollBottom();
+            }
+          });
+        }
       }
     },
     // 刷新数据
     handleFresh () {
-      if (this.$refs.EbSpclWaterFalls) {
-        this.$refs.EbSpclWaterFalls.forEach(item => {
-          item.handleFresh();
-        });
-      }
-      if (this.$refs.EbSpclTransverse) {
-        this.$refs.EbSpclTransverse.forEach(item => {
-          item.handleFresh();
-        });
-      }
-      if (this.$refs.EbSpclList) {
-        this.$refs.EbSpclList.forEach(item => {
-          item.handleFresh();
-        });
-      }
-      if (this.$refs.EbSpclSwiper) {
-        this.$refs.EbSpclSwiper.forEach(item => {
-          item.handleFresh();
-        });
+      const refList = this.$refs;
+      for (const key in refList) {
+        if (Object.hasOwnProperty.call(refList, key)) {
+          const element = refList[key];
+          element.forEach(item => {
+            if (item.handleFresh) {
+              item.handleFresh();
+            }
+          });
+        }
       }
     },
     // 子组件打开登录弹窗

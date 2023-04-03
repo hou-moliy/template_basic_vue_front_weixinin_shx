@@ -3,7 +3,6 @@
     <!-- 判断配置列表是否大于分页加载数量，大于则采用分批加载策略 -->
     <template v-if="pageConfigList && pageConfigList.length > asyncIdx">
       <eb-config-container
-        :key="pageConfigIndex"
         ref="EbConfig1"
         :comp-bottom="false"
         :activity-id="activityId"
@@ -13,7 +12,6 @@
       />
       <template v-if="asyncLoad">
         <eb-config-container
-          :key="pageConfigIndex"
           ref="EbConfig2"
           :comp-top="false"
           :page-config-list="pageConfigList.slice(asyncIdx)"
@@ -26,7 +24,6 @@
     <eb-config-container
       v-else
       ref="EbConfig3"
-      :key="pageConfigIndex"
       :page-config-list="pageConfigList"
       :activity-id="activityId"
       @purchaseVideo="purchaseVideo"

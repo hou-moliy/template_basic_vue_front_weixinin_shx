@@ -142,7 +142,8 @@ const changeAi = () => {
       });
     } else { // 未开通、展示开通弹窗
       const popupInfo = store.state.window.windowAllObj.common_spcl_open;
-      uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (item) => operitionBtnClick(item) });
+      console.log("***展示开通弹窗***");
+      uni.$emit("operitionShow", { popupInfo, btnClickCallBack: (event) => operitionBtnClick({ event }) });
     }
   });
 };
