@@ -25,6 +25,8 @@ axios.interceptors.request.use(config => {
       indices: false,
     }); // 如果是非上传类型 则 将数据重新组装
   }
+  console.log("config", config);
+
   return config;
 }, error => {
   return Promise.reject(error);

@@ -58,17 +58,16 @@ export default {
       phoneNum: uni.getStorageSync("phone"),
       operitionInfo: {}, // 订购弹窗的内容
       operitionBtnClick: (e) => { }, // 订购弹窗按钮回调
+      preview: "", // 预览的redisKey
     };
   },
   onLoad (options) {
     this.activityId = options.activityId;
     this.pageName = options.pageName;
     if (options.preview) { // 来自预览
-      this.activityId = options.preview;
-      this.getPageBaseInfo();
-    } else {
-      this.getActivityStatus();
+      this.preview = options.preview;
     }
+    this.getPageBaseInfo();
   },
   onShow () {
     this.$analysis.dispatch("page_pv", `${this.activityId}`);
@@ -146,7 +145,11 @@ export default {
     },
     // 获取页面基本信息如背景图、分享等
     getPageBaseInfo () {
-      TemplateService.getPageConfigByActivityId({ id: this.activityId }).then(res => {
+      const headers = {
+        ActivityId: this.activityId,
+        PreviewKey: this.preview,
+      };
+      TemplateService.getPageConfigByActivityId({ ac: this.activityId }, headers).then(res => {
         if (res.data.code === 200) {
           this.pageBaseInfo = res.data.data;
           uni.setNavigationBarTitle({
@@ -157,29 +160,11 @@ export default {
             image: this.pageBaseInfo.wechatShareImg,
           };
           this.getPageConfig();
-        }
-      });
-    },
-    // 处理不正确的状态
-    handleErrorStatus (releaseStatus, msg) { // releaseStatus 0.未发布1.已发布2.下线
-      if (releaseStatus === 0) {
-        this.$toast(msg || "暂未发布！");
-      } else if (releaseStatus === 1) {
-        this.$toast("不在活动时间内呢");
-      } else {
-        this.$toast(msg || "已下线！");
-      }
-      setTimeout(() => {
-        uni.navigateBack();
-      }, 500);
-    },
-    // 获取活动状态
-    getActivityStatus () {
-      TemplateService.getActivityStatusByActivityId({ activityId: this.activityId }).then(res => {
-        if (res.data.code === 200) { // 正常
-          this.getPageBaseInfo();
-        } else { // 不正常
-          this.handleErrorStatus(res.data.data, res.data.message);
+        } else {
+          this.$toast(res.data.message || "获取页面信息失败!请稍后再试");
+          setTimeout(() => {
+            uni.navigateBack();
+          }, 500);
         }
       });
     },

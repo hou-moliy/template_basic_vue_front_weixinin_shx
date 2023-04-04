@@ -292,10 +292,10 @@ export default {
   methods: {
     // 滚动到底部监听
     onScrollBottom () {
-      const refList = this.$refs;
-      for (const key in refList) {
-        if (Object.hasOwnProperty.call(refList, key)) {
-          const element = refList[key];
+      const refObj = this.$refs;
+      for (const key in refObj) {
+        if (Object.hasOwnProperty.call(refObj, key)) {
+          const element = refObj[key];
           element.forEach(item => {
             if (item.onScrollBottom) {
               item.onScrollBottom();
@@ -306,10 +306,10 @@ export default {
     },
     // 刷新数据
     handleFresh () {
-      const refList = this.$refs;
-      for (const key in refList) {
-        if (Object.hasOwnProperty.call(refList, key)) {
-          const element = refList[key];
+      const refObj = this.$refs;
+      for (const key in refObj) {
+        if (Object.hasOwnProperty.call(refObj, key)) {
+          const element = refObj[key];
           element.forEach(item => {
             if (item.handleFresh) {
               item.handleFresh();
