@@ -1,8 +1,8 @@
 {
-  "name": "sx-portal-mp",
-  "version": "0.1.0",
-  "description": "陕西小程序",
-  "author": "houyuanzhen",
+  "name": "{{name}}",
+  "version": "{{version}}",
+  "description": "{{description}}",
+  "author": "{{author}}",
   "private": true,
   "scripts": {
     "serve": "npm run serve:dev",
